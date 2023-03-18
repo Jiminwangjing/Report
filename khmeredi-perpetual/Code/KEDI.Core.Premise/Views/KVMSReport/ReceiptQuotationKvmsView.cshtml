@@ -1,0 +1,461 @@
+﻿@{
+    ViewData["Title"] = "ReceiptQuotationKvmsView";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<head>
+    <style>
+        .options {
+            padding: 20px;
+            background-color: rgba(191, 191, 191, 0.15);
+        }
+
+        .caption {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .option {
+            margin-top: 10px;
+        }
+
+        #gridContainer .dx-datagrid-header-panel .dx-toolbar {
+            margin: 0;
+            padding-right: 20px;
+            background-color: transparent;
+        }
+
+        #gridContainer .dx-datagrid-header-panel .dx-toolbar-items-container {
+            height: 70px;
+        }
+
+        #gridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:not(:first-child) {
+            background-color: rgba(103, 171, 255, 0.6);
+        }
+
+        #gridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:last-child {
+            padding-right: 10px;
+        }
+
+        #gridContainer .dx-datagrid-header-panel .dx-selectbox {
+            margin: 17px 10px;
+        }
+
+        #gridContainer .dx-datagrid-header-panel .dx-button {
+            margin: 17px 0;
+        }
+
+        #gridContainer .informer {
+            height: 70px;
+            width: 130px;
+            text-align: center;
+            color: #fff;
+        }
+
+        #gridContainer .count {
+            padding-top: 15px;
+            line-height: 27px;
+            margin: 0;
+        }
+
+        .input_datefrom, .input_dateto, .input_user, .input_branch, .input_cus {
+            -webkit-transition: all 0.30s ease-in-out;
+            -moz-transition: all 0.30s ease-in-out;
+            -o-transition: all 0.30s ease-in-out;
+            outline: none;
+            padding: 3px 0px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border: 1px solid #DDDDDD;
+            width: 100%;
+            min-width: 100%;
+            height: 34px;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            border-radius: 3px;
+        }
+
+        .lable_branch, .lable_datefrom, .lable_dateto, .lable_user, .lable_cus {
+            font-family: Arial;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .btn-success, .btn-primary {
+            margin-top: 28px;
+            font-size: 12px;
+            font-family: Arial;
+            height: 28px;
+        }
+
+        table.dx-datagrid-table tr.dx-row.dx-column-lines.dx-header-row {
+            background: #5F758B;
+            color: #EEE;
+            opacity: 1;
+            line-height: 20px;
+            transition: all .2s ease-out;
+        }
+
+        table tr {
+            opacity: 1;
+            line-height: 20px;
+            transition: all .2s ease-out;
+        }
+    </style>
+
+</head>
+<body class="dx-viewport">
+    <div class="demo-container">
+        <div class="options">
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="lable_datefrom">@Localizer["Date From"]</label>
+                    <input type="date" class="input_datefrom" id="datefrom" />
+                </div>
+                <div class="col-md-2">
+                    <label class="lable_dateto">@Localizer["Date To"]</label>
+                    <input type="date" class="input_dateto" id="dateto" />
+                </div>
+                <div class="col-md-2">
+                    <label class="lable_branch">@Localizer["By Branch"]</label>
+                    <select type="text" class="input_branch" id="bybranch">
+                        <option value="0"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="lable_user">@Localizer["User Name"] </label>
+                    <select type="text" class="input_user" id="byuser">
+                        <option value="0"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-xs btn-success" id="filter"><i class="fas fa-search" style="margin-right:5px;"></i>@Localizer["Filter"]</button>
+                </div>
+            </div>
+        </div>
+        <div id="gridContainer"></div>
+        <div class="options">
+            <div class="option">
+                <div id="autoExpand"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    $(function () {
+        filterData();
+        //Get branch
+        $.ajax({
+            url: "/KVMSReport/GetBranch",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bybranch").append(data);
+            }
+        });
+        $("#bybranch").on('change', function () {
+            var branchid = $(this).val();
+            // Get Employee
+            $.ajax({
+                url: "/KVMSReport/GetEmployee",
+                type: "Get",
+                dataType: "Json",
+                data: { BranchID: branchid },
+                success: function (respones) {
+                    var data = '';
+                    $("#byuser option:not(:first-child)").remove();
+                    $.each(respones, function (i, item) {
+                        data +=
+                            '<option value="' + item.ID + '">' + item.Employee.Name + '</option>';
+                    });
+                    $("#byuser").append(data);
+                }
+            });
+        });
+        //Get Customer
+        $.ajax({
+            url: "/KVMSReport/GetCustomer",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bycus").append(data);
+            }
+        });
+        $('#filter').click(function () {
+
+            filterData(this);
+        });
+        function filterData(button) {
+            let btn_filter = $(button).children("i.fa-search");
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var branch_id = $("#bybranch").val();
+            var user_id = $("#byuser").val();
+            var cus_id = $("#bycus").val();
+
+            $.ajax({
+                url: "/KVMSReport/GetReceiptQuotationKVMSReport",
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    DateFrom: date_from,
+                    DateTo: date_to,
+                    BranchID: branch_id,
+                    UserID: user_id,
+                    CusID: cus_id
+                },
+                beforeSend: function () {
+                    btn_filter.addClass("fa-spinner fa-spin");
+                },
+                success: function (reponse) {
+                    bindGrid(reponse);
+                    btn_filter.removeClass("fa-spinner fa-spin");
+                }
+            });
+        }
+        function bindGrid(reponse) {
+            var dataGrid = $("#gridContainer").dxDataGrid({
+                dataSource: reponse,
+                allowColumnReordering: true,
+                showBorders: true,
+                allowColumnResizing: true,
+                hoverStateEnabled: true,
+                allowColumnResizing: true,
+                columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: {
+                    columnRenderingMode: "virtual"
+                },
+                grouping: {
+                    autoExpandAll: false,
+                },
+                searchPanel: {
+                    visible: true
+                },
+                filterRow: {
+                    visible: false,
+                    applyFilter: "auto"
+                },
+                //editing: {
+                //    mode: "row",
+                //    allowUpdating: true
+                //},
+                //onEditingStart: function (e) {
+                //    alert('edit')
+                //},
+                //onRowInserted: function (e) {
+                //    e.component.navigateToRow(e.key);
+                //},
+
+                paging: {
+                    pageSize: 10
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20, 50, 100],
+                    showInfo: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                groupPanel: {
+                    visible: false
+                },
+                columns: [
+                    {
+                        caption: "",
+                        width: 110,
+                        cellTemplate: function (container, options) {
+                            $('<button/>').text('Preview').on('dxclick', function () {
+                                var qID = parseInt($(this).parent().parent().children()[1].innerHTML);
+                                window.open("/KVMS/PrintQuoteCus?qid=" + qID + "", "_blank");
+                            }).appendTo(container);
+                        }
+                    },
+                    {
+                        dataField: "ReceiptMID",
+                        caption: "ID",
+                    },
+                    {
+                        dataField: "InvoiceNo",
+                        caption: "Receipt Nº"
+                    },
+                    {
+                        dataField: "CusName",
+                        caption: "Customer Name"
+                    },
+                    {
+                        dataField: "PostingDate",
+                        caption: "PostingDate"
+                    },
+                    {
+                        dataField: "Sub_Total",
+                        caption: "Subtotal",
+                        alignment: "right",
+                    },
+                    {
+                        dataField: "VatValue",
+                        caption: "Vat Value"
+                    },
+                    {
+                        dataField: "Discount",
+                        caption: "Discount"
+                    },
+                    {
+                        dataField: "GrandTotal",
+                        caption: "Grand Total"
+                    }
+                ],
+                summary: {
+                    totalItems: [
+                        {
+                            showInColumn: "InvoiceNo",
+                            column: "SumCount",
+                            summaryType: "max",
+                            displayFormat: "Count : {0} invoice",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "Discount",
+                            column: "SumSoldAmount",
+                            summaryType: "max",
+                            displayFormat: "Sold Amount :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Discount",
+                            column: "SumDisTotal",
+                            summaryType: "max",
+                            displayFormat: "Discount Total :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Discount",
+                            column: "SumVat",
+                            summaryType: "max",
+                            displayFormat: "Vat.Included : ",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Discount",
+                            column: "SumGrandTotal",
+                            summaryType: "max",
+                            displayFormat: "Grand Total SSC :",
+                            alignment: "right"
+                        },
+                        //Value
+                        {
+                            showInColumn: "GrandTotal",
+                            column: "SumSoldAmount",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "GrandTotal",
+                            column: "SumDisTotal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "GrandTotal",
+                            column: "SumVat",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "GrandTotal",
+                            column: "SumGrandTotal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                            @*format: {
+                                type: "fixedPoint",
+                                precision: 2
+                            }*@
+                        }
+                    ]
+
+                },
+
+                export: {
+                    enabled: true
+                },
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('Receipt-Memo-KVMS');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                        topLeftCell: { row: 4, column: 1 }
+                    }).then(function (dataGridRange) {
+                        // header
+                        var headerRow = worksheet.getRow(2);
+                        headerRow.height = 30;
+                        worksheet.mergeCells(2, 1, 2, 8);
+                        headerRow.getCell(1).value = 'Receipt Memo';
+                        headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
+                        headerRow.getCell(1).alignment = { horizontal: 'center' };
+
+                    }).then(function () {
+                        // https://github.com/exceljs/exceljs#writing-xlsx
+                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Receipt-Memo-KVMS.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "refresh",
+                                onClick: function () {
+                                    dataGrid.refresh();
+                                    filterData();
+                                }
+                            }
+                        },
+
+                    );
+                }
+
+            }).dxDataGrid("instance");
+
+            $("#autoExpand").dxCheckBox({
+                value: false,
+                text: "Expand All Groups",
+                onValueChanged: function (data) {
+                    dataGrid.option("grouping.autoExpandAll", data.value);
+                }
+            });
+        }
+
+    })
+
+</script>
+
+
+

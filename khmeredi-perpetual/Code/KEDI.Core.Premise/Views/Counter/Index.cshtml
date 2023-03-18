@@ -1,0 +1,57 @@
+﻿@model IEnumerable<CKBS.Models.Services.POS.Counter>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .tbncrate {
+        margin:10px;
+        background-color: #00bfff;
+        color: white;
+        margin-left: 1px;
+    }
+    .fa-edit {
+        color: #00cc00;
+    }
+</style>
+<a asp-action="Create" class="btn btn-xs tbncrate" title="Create"><i class="fa fa-plus-circle"></i> @Localizer["Create"]</a>
+<div class="wrap-table list">
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    @Localizer["Name"]
+                </th>
+                <th>
+                    @Localizer["Printer Name"]
+                </th>
+                <th>
+                    @Localizer["Delete"]
+                </th>
+
+                <th>@Localizer["Action"]</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrinterName.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Delete)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-edit"></i></a>
+                 
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

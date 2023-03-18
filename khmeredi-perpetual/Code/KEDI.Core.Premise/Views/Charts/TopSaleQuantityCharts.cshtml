@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewData["Title"] = "TopSaleQuantityCharts";    
+}
+
+<head>
+    <link href="~/Admin/DevReport/css/DevReport.css" rel="stylesheet" />
+</head>
+<body class="dx-viewport">
+    <div class="card card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="lable_datefrom">@Localizer["Date From"]</label>
+                    <input type="date" class="input_datefrom" id="datefrom" />
+                </div>
+                <div class="col-md-2">
+                    <label class="lable_dateto">@Localizer["Date To"]</label>
+                    <input type="date" class="input_dateto" id="dateto" />
+                </div>
+                <div class="col-md-2">
+                    <label class="lable_branch">@Localizer["By Branch"]</label>
+                    <select type="text" class="input_branch" id="bybranch">
+                        <option value="0"></option>
+                    </select>
+                </div>
+                <div class="col-md-4 ">
+                    <button class="btn btn-xs btn-kernel" id="filter">@Localizer["Filter"]</button>
+                </div>
+            </div>
+        <div class="demo-container">
+            <div id="chart"></div>
+        </div>
+    </div>
+</body>
+
+<script>
+    $(function () {
+        filterData();
+        //Get Branch
+        $.ajax({
+            url: "/Charts/GetBranch",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bybranch").append(data);
+            }
+        });
+        $('#filter').click(function () {
+            filterData(this);
+        });
+        function filterData(button) {
+            let btn_filter = $(button).children("i.fa-search");
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var branch_id = $("#bybranch").val();
+            $.ajax({
+                url: "/Charts/GetTopSaleQuantity",
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    DateFrom: date_from,
+                    DateTo: date_to,
+                    BranchID: branch_id
+                },
+                beforeSend: function () {
+                    btn_filter.addClass("fa-spinner fa-spin");
+                },
+                success: function (reponse) {
+                    bindGrid(reponse);
+                    btn_filter.removeClass("fa-spinner fa-spin");
+                }
+            });
+        }
+        function bindGrid(reponse)
+        {
+            $("#chart").dxChart({
+                dataSource: reponse,
+                commonSeriesSettings: {
+                    type: "bar",
+                    argumentField: "ItemName",
+                    label: {
+                        visible: true
+                    }
+                },
+                series:
+                [
+                    {
+                        valueField: "Qty",
+                        name: "Quantity",
+                    }
+                ],
+                tooltip: {
+                    enabled: true,
+                    location: "edge",
+                    customizeTooltip: function (arg) {
+                        return {
+                            text: arg.argumentText + " : " + arg.valueText
+                        };
+                    }
+                },
+                legend: {
+                    verticalAlignment: "bottom",
+                    horizontalAlignment: "center"
+                },
+                //valueAxis: {
+                //    title: {
+                //        text: "Grand Totals"
+                //    },
+                //    position: "left"
+                //},
+                "export": {
+                    enabled: true
+                },
+                //onPointClick: function (e) {
+                //    e.target.select();
+                //},
+                title: "Top Sale Quantity Charts"
+            });
+        }
+
+    });
+</script>
+

@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewData["Title"] = "AppointmentListReport";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="~/AutoMobile/css/Appointment.css" rel="stylesheet" />
+<link href="~/AutoMobile/css/_search.css" rel="stylesheet" />
+
+<div id="_listAppReport" hidden>@Json.Serialize(Model)</div>
+<div class="TitleListApp">@Localizer["List of Appointment Report"]</div>
+
+<div class="item group-search-boxes mb-2">
+    <div id="text-search" class="search-box show">
+        <div class="input-box" style="max-width: 326px;">
+            <i id="i-search" class="i-search fas fa-search"></i>
+            <input class="ignore" autocomplete="off" id="search-app-report" name="search-member" type="text" value="" placeholder="@Localizer["Name,Phone,Plate search ..."]">
+            <i id="i-close" class="i-close far fa-times-circle"></i>
+        </div>
+        <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="wrap-table">
+            <table id="list-app-report" class="table table-sm table-striped">
+                <thead class="theadTableApp">
+                    <tr>
+                        <td class="text-center text-light">Nº</td>
+                        <td class="text-light"> @Localizer["Customer Name"] </td>
+                        <td class="text-light"> @Localizer["Phone number"] </td>
+                        <td class="text-light"> @Localizer["Plate"] </td>
+                        <td class="text-light"> @Localizer["Brand"] </td>
+                        <td class="text-light"> @Localizer["Model"] </td>
+                        <td class="text-center text-light"> @Localizer["Status"] </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="paging-app-report"></div>
+    </div>
+</div>
+
+<script src="~/AutoMobile/js/_search.js"></script>
+<script src="~/AutoMobile/js/AppointmentListReport.js"></script>

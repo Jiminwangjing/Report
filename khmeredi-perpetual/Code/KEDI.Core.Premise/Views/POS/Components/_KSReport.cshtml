@@ -1,0 +1,106 @@
+﻿<style>
+    .ml_2 {
+        margin-left: 0.65rem !important;
+    }
+
+    .loading {
+        width: 9%;
+        margin: auto;
+    }
+    .flex{
+        display:block
+    }
+    .dx-toolbar .dx-toolbar-items-container {
+        margin-top: 20px !important;
+        overflow: visible;
+        float: left;
+        justify-content: flex-end;
+        margin-bottom:7px !important; 
+    }
+    .dx-group-panel-item dx-datagrid-action dx-datagrid-drag-action{
+        display:none !important; 
+    }
+    .dx-toolbar-items-container {
+        margin-top: 1000px !important
+    }
+</style>
+<div class="widget-combobox menubox down-right ml_2">
+    <div id="ks-service-report" class="combobox-trigger" title="@Localizer["Report"]">
+        <i class="fas fa-file-pdf fn-white fa-fw fa-lg csr-pointer icon-tab"></i>
+    </div>
+    <div class="combobox-content" style="width: 95vw;">
+        <div class="combobox-header">
+            <h4 class="title">@Localizer["Service"]</h4>
+            <i class="i-close"></i>
+        </div>
+        <div class="combobox-body widget-scrollbar">
+            <div class="widget-tab" style="height: 75vh;">
+                <div class="tab-sheet active">
+                    <div id="tab-ksservice-report" class="tab-title">@Localizer["Service Report"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="wrap-table">
+                            <div class="flex" style="display:flex">
+                                <div>
+                                    <div class="input-group">
+                                        <input type="date" class="form-control font-size" id="from-date">
+                                    </div>
+                                </div>
+                                <div class="ml-3">
+                                    <div class="input-group">
+                                        <input type="date" class="form-control font-size" id="to-date">
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="ks-report"></table>
+                            <div class="options" id="option">
+                                <div class="option">
+                                    <div id="autoExpand"></div>
+                                </div>
+                            </div>
+
+
+                            <div class="row" id="loading-view" hidden style="overflow: hidden; width: 90%;">
+                                <div class="col-md-5"></div>
+                                <div class="col-md-3">
+                                    <img src="~/Images/ajaxloader/loading.gif" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="tab-sheet" id="get-used-service">
+                    <div id="tab-ksservice-used-report" class="tab-title">@Localizer["Used Service Report"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="wrap-table">
+                            <div class="flex">
+                                <div>
+                                    <div class="input-group">
+                                        <input type="date" class="form-control font-size" id="used-from-date">
+                                    </div>
+                                </div>
+                                <div  class="ml-3">
+                                    <div class="input-group">
+                                        <input type="date" class="form-control font-size" id="used-to-date">
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="used-ks-report"></table>
+                            <div class="options" id="used-option">
+                                <div class="option">
+                                    <div id="used-autoExpand"></div>
+                                </div>
+                            </div>
+
+                            <div class="row" id="used-loading-view" hidden style="overflow: hidden; width: 90%;">
+                                <div class="col-md-5"></div>
+                                <div class="col-md-3">
+                                    <img src="~/Images/ajaxloader/loading.gif" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</div>

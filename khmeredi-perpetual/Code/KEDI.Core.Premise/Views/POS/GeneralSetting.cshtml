@@ -1,0 +1,253 @@
+﻿@using  CKBS.Models.Services.POS.Template;
+@model SettingModel;
+<style>
+    .pos-setting .flexbox > input,
+    .pos-setting .flexbox > select {
+        width: 50% !important;
+        -webkit-box-flex: 0;
+        -ms-flex: 0 1 50%;
+        flex: 0 1 50%;
+        border: none;
+        border-bottom: 1px solid #AAA;
+        background-color: transparent;
+        border-radius: 0;
+    }
+
+    * {
+        font-size: 1rem;
+    }
+
+    .pos-setting .flexbox.group-inline {
+        width: 50%;
+    }
+
+        .pos-setting .flexbox .group-inline > * {
+            width: 50%;
+        }
+</style>
+
+<fieldset class="shadow">
+    <legend class="title">@Localizer["POS Setting"]</legend>
+    <form class="pos-setting" action="/POS/UpdateSetting" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="wrap-block col-two">
+            <div class="left-block">
+                <div class="block border myb1" style="height:100%">
+                    <input type="hidden" asp-for="RedirectUrl" />
+                    <input type="hidden" asp-for="Setting.ID" />
+                    <input type="hidden" asp-for="Setting.UserID" />
+                    <input type="hidden" asp-for="Setting.BranchID" />
+                    <input type="hidden" asp-for="Setting.CompanyID" />
+                    <div class="title">@Localizer["Receipt"]</div>
+
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Print Receipt Order"]</div>
+                        <label class="switch">
+                            <input asp-for="Setting.PrintReceiptOrder" type="checkbox" class="print-receipt-order">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Print Label"]</div>
+                        <label class="switch">
+                            <input asp-for="Setting.PrintLabel" type="checkbox" class="print-receipt-label">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Print Receipt Pay"]</div>
+                        <label class="switch">
+                            <input asp-for="Setting.PrintReceiptTender" class="print-receipt-pay" type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Autoqueue"]</div>
+                        <label class="switch">
+                            <input asp-for="Setting.AutoQueue" class="autoqueue" type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="flexbox space-between" id="hide-show-queue">
+                        <div>@Localizer["Max Queue Count"]</div>
+                        <input autofocus autocomplete="off" asp-for="Setting.QueueCount" class="vat-invoice-no" />
+                        @*  <input autocomplete="off" asp-for="Setting.QueueCount" value="0" class="max-queue-count number" />*@
+                    </div>
+                    @*Add new*@
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Queue Option"]</div>
+                        <select asp-items="Model.QueueGroups" asp-for="Setting.QueueOption" class="queue-option"></select>
+                    </div>
+                    @*Add new*@
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Print Label Name"]</div>
+                        <select class="printer-Label-Name" asp-items="Model.PrinterNames" asp-for="Setting.PrintLabelName"></select>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Print All Order"]</div>
+                        <div class="flexbox width-half">
+                            <select class="printerOrder" asp-items="Model.PrinterNames" asp-for="Setting.PrinterOrder"></select>
+                            <input autofocus autocomplete="off" asp-for="Setting.PrintOrderCount" class="print-Order-count number" />
+                        </div>
+                    </div>
+
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Print Bill Name"]</div>
+                        <div class="flexbox width-half">
+                            <select class="printerBillname" asp-items="Model.PrinterNames" asp-for="Setting.PrintBillName"></select>
+                            <input autofocus autocomplete="off" asp-for="Setting.PrintCountBill" class="print-bill-count number" />
+                        </div>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Printer Receipt"]</div>
+                        <div class="flexbox width-half">
+                            <select class="printer" asp-items="Model.PrinterNames"></select>
+                            <input autofocus autocomplete="off" asp-for="Setting.PrintCountReceipt" class="print-receipt-count number" />
+                        </div>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Receipt Size"]</div>
+                        <select asp-for="Setting.Receiptsize" class="receipt-size">
+                            <option value="80mm">80mm</option>
+                            <option value="A4">A4</option>
+                            <option value="A5">A5</option>
+                        </select>
+                    </div>
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["Receipt Template"]</div>
+                        <select asp-for="Setting.ReceiptTemplate" class="receipt-template" asp-items="@ViewBag.SysType"></select>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Print Receipt Template"]</div>
+                        <select asp-items="Model.ReceiptTemplateGroups" asp-for="Setting.PrintReceiptOption" class="receipt-template-option"></select>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Item View"]</div>
+                        <div class="flexbox width-half">
+                            <input asp-for="Setting.ItemPageSize" class="item-page-size" />
+                            <select asp-for="Setting.ItemViewType" class="item-view-type">
+                                <option value="0">@Localizer["Grid"]</option>
+                                <option value="1">@Localizer["List"]</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["WiFi Password"]</div>
+                        <input asp-for="Setting.Wifi" autofocus autocomplete="off" class="password-wifi" />
+                    </div>
+                </div>
+            </div>
+            <div class="right-block">
+                <div class="block border">
+                    <div class="title">@Localizer["Company"]</div>
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["User Order QR"]</div>
+                        <label class="switch">
+                            <input asp-for="Setting.IsOrderByQR" type="checkbox" class="userOrderQr">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["DualScreen"]</div>
+                        <label class="switch">
+                            <input type="checkbox" asp-for="Setting.DaulScreen" class="dual-screen">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Promo Code"]</div>
+                        <label class="switch">
+                            <input type="checkbox" asp-for="Setting.EnablePromoCode" class="enable-promocode">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Count Member"]</div>
+                        <label class="switch">
+                            <input type="checkbox" asp-for="Setting.EnableCountMember" class="enable-countmember">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Customer Price List"]</div>
+                        <label class="switch">
+                            <input type="checkbox" asp-for="Setting.IsCusPriceList" class="enable-customer-price-list">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Remember Customer"]</div>
+                        <label class="switch">
+                            <input type="checkbox" asp-for="Setting.RememberCustomer" class="enable-customer-remenber">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Cash"]</div>
+                        <label class="switch">
+                            <input type="checkbox" asp-for="Setting.Cash" class="enable-customer-cash">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["Vat Invoice No."]</div>
+                        <input autofocus autocomplete="off" asp-for="Setting.VatNum" class="vat-invoice-no" />
+                    </div>
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["Tax Options"]</div>
+                        <select asp-items="Model.TaxGroups" asp-for="Setting.TaxOption" class="tax-option"></select>
+                    </div>
+                    <div class="flexbox space-between myb1" id="hide-show-tax" style="display: none">
+                        <div>@Localizer["Tax"]</div>
+                        <select asp-items="Model.Taxes" asp-for="Setting.Tax" class="tax"></select>
+                    </div>
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["Series"]</div>
+                        <select asp-for="Setting.SeriesID" asp-items="Model.Series" class="series-id"></select>
+                    </div>
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["Customers"]</div>
+                        <select asp-for="Setting.CustomerID" asp-items="Model.Customers" class="customer-id"></select>
+                    </div>
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["Price List"]</div>
+                        <select asp-for="Setting.PriceListID" asp-items="Model.PriceLists" class="price-list-id"></select>
+                    </div>
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["Warehouse"]</div>
+                        <select asp-for="Setting.WarehouseID" asp-items="Model.Warehouses" class="warehouse-id"></select>
+                    </div>
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["Payment Means"]</div>
+                        <select asp-for="Setting.PaymentMeansID" asp-items="Model.PaymentMeans" class="payment-means-id"></select>
+                    </div>
+                    <div class="flexbox space-between">
+                        <div>@Localizer["Close Shift Type"]</div>
+                        <select asp-for="Setting.CloseShift" class="close-shift" asp-items="@Html.GetEnumSelectList<CloseShiftType>()"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-kernel mt-2" ><i class="fas fa-save"></i> @Localizer["Save"]</button>
+    </form>
+</fieldset>
+
+<script>
+    $(document).ready(function () {
+        checkTaxOptions($(".tax-option").val());
+        $(".tax-option").change(function () {
+            checkTaxOptions(this.value);
+        })
+
+        function checkTaxOptions(value) {
+            if (value == 3) {
+                $("#hide-show-tax").css("display", "flex")
+            } else {
+                $("#hide-show-tax").css("display", "none")
+            }
+        }
+    })
+</script>

@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" icon="~/Images/icon/logo.png" type="image/gif" sizes="16x16">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta charset="utf-8" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <title>@ViewData["Title"]</title>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <style>
+        body {
+            font-family: 'Khmer OS Battambang';
+            font-size: 14px;
+            margin: 0;
+            padding: 0;
+            background-color: white !important;
+        }
+
+        .title, .header, .footer {
+            font-size: 18px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div ck-dialog-box-container></div>
+    </header>
+    <div class="wrapper">
+        <div class="content-page" style="margin-top: 1rem;">
+            <main>
+                @RenderBody()
+            </main>
+        </div>
+        <!-- End Custom template -->
+    </div>
+    @*<footer>
+            <partial name="_Scripts" />
+            @RenderSection("Scripts", required: false)
+        </footer>*@
+</body>
+</html>

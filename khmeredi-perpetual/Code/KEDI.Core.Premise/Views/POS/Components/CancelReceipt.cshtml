@@ -1,0 +1,49 @@
+﻿<!--Cancel receipt-->
+<div id='cancel-receipt-content' style="display: none;">
+    <div class="group-search-boxes">
+        <div id="text-search" class="search-box show">
+            <div class="input-box">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-receipt-cancel" autocomplete="off" type="text" value="" placeholder=@Localizer["Search ..."]>
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div class="flexbox">
+        <div class="stack-block width-half">
+            <label>@Localizer["From Date"]</label>
+            <input type="date" class="cancel-date-from" />
+        </div>
+
+        <div class="stack-block width-half">
+            <label>@Localizer["To Date"]</label>
+            <input type="date" class="cancel-date-to" />
+        </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end">
+        <div class="group-multipay mt-1" style="width:200px;">
+            <label>Payment Means:</label>
+            <select id="list-multipay-cancele" style="width:100%"><option>--Select Account--</option> </select>
+        </div>
+    </div>
+    <fieldset id="cancel-receipt" class='shadow widget-scrollbar' style="height: 350px;">
+        <legend class="title">@Localizer["List of receipts"]</legend>
+        <div class="wrap-table">
+            <table class="cancel-receipt-listview">
+                <tr>
+                    <th>@Localizer["Receipt №"]</th>
+                    <th>@Localizer["Cashier"]</th>
+                    <th>@Localizer["Date"]</th>
+                    <th>@Localizer["Time"]</th>
+                    <th hidden>@Localizer["Table"]</th>
+                    <th>@Localizer["Amount"]</th>
+                    <th>@Localizer["Cancel"]</th>
+                </tr>
+            </table>
+        </div>
+
+        <div asp-validation-summary="All"></div>
+    </fieldset>
+
+</div>

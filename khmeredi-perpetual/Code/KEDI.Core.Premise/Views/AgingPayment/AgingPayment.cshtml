@@ -1,0 +1,574 @@
+﻿@{
+    ViewData["Title"] = "AgingPayment";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/js/table.js" defer></script>
+<script src="~/js/warehouse.js"></script>
+<link href="~/css/Modal.css" rel="stylesheet" />
+<link href="~/css/datapaging.css" rel="stylesheet" />
+<link href="~/AutoMobile/css/AgingPaymentStyle.css" rel="stylesheet" />
+
+<div id="error-summary"></div>
+<fieldset class="scheduler-border">
+    <legend class="scheduler-border">@Localizer["AgingPayment"]</legend>
+    <div class="row mt-4">
+        <div class="col-md-4" style="position:relative;">
+            <label class="label_vendor">@Localizer["Customer"]</label>
+            <input type="text" readonly id="txtcus" class="content_cus" />
+            <span id="show-list-cus">
+                <i class="fa fa-plus-circle text-info" style="position:absolute;right:20px;top:12px;cursor:pointer;" title="List Customer"></i>
+            </span>
+            <div style="padding-left:31%;font-weight:600;" vm-for="CustomerID"></div>
+
+            <label class="label_ap">@Localizer["RefNº"]</label>
+            <input class="content_ap" type="text" id="txtref_no" autocomplete="off" />
+            <label class="label_user">@Localizer["User"]</label>
+            <input class="content_user" type="text" value="@User.FindFirst("FullName").Value" id="txtUser" readonly />
+        </div>
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+            <label class="label_reff_no">@Localizer["NumberNº"].</label>
+            <input class="content_reff_no" type="text" id="txtnumber" autocomplete="off" readonly />
+            <div class="content_icon">
+                <label class="label_postingdate">@Localizer["PostingDate"]</label>
+                <input class="content_postingdate" type="date" id="txtPostingdate" autocomplete="off" />
+            </div>
+            <div class="content_icon">
+                <label class="label_documentdate">@Localizer["DocumentDate"]</label>
+                <input class="content_documentdate" type="date" id="txtDocumentDate" autocomplete="off" />
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset class="scheduler-borders">
+    <legend class="scheduler-border">@Localizer["AgingPaymentDetail"]</legend>
+    <div style="font-weight:600;" class="mb-3" vm-for="Details"></div>
+    <div class="wrap-table list">
+        <table id="list-items">
+            <thead>
+                <tr>
+                    <th class="boldth">@Localizer["DocumentNo"]</th>
+                    <th class="boldth">@Localizer["DucumentType"]</th>
+                    <th class="boldth">@Localizer["Date"]</th>
+                    <th class="boldth">@Localizer["OverdueDay"]</th>
+                    <th class="boldth">@Localizer["BalanceDue"]</th>
+                    <th class="boldth">@Localizer["Dis.Rate"] %</th>
+                    <th class="boldth">@Localizer["Dis.Value"] $</th>
+                    <th class="boldth">@Localizer["TotalPayment"]</th>
+                    <th class="boldth">@Localizer["Cash"]</th>
+                    <th class="boldth">@Localizer["Selected"] <input type="checkbox" id="selectall" style="vertical-align:middle;margin:0px 0 0 5px;" /></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</fieldset>
+
+<div class="row">
+    <div class="col-md-3">
+        <label class="lable_remark">@Localizer["Remark"]</label>
+        <textarea class="content_remark" id="txtremark"></textarea>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-7">
+        <label class="lable_total">@Localizer["TotalAmountDue(SYS)"] @ViewBag.SysCur   </label>
+        <span class="currency_text"></span>
+        <input class="content_total" id="totalamount_due" type="text" readonly hidden />
+        <input type="text" class="content_total" id="totalamount_due_asing" readonly />
+    </div>
+</div>
+
+<div class="row btnadd">
+    <div class="col-md-12">
+        <button class="btn btn-sm btn-success btn_add" onclick="saveIncoming()">@Localizer["Add"]</button>
+        <button class="btn btn-sm btn-danger btn_cancel" onclick="ClickCancel()">@Localizer["Cancel"]</button>
+    </div>
+</div>
+
+<div class="modal fade" id="Modal-Customer">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="height:40px;">
+                <h3><b><i class="fa fa-user"> </i>@Localizer["ListCustomer"]</b></h3>
+            </div>
+            <div class="modal-body" style="padding-bottom:0">
+                <div class="wrap-table list" style="height:200px;">
+                    <table id="list-customer">
+                        <tr>
+                            <th>#</th>
+                            <th class="text-center">@Localizer["Code"]</th>
+                            <th>@Localizer["Name"]</th>
+                        </tr>
+                    </table>
+                </div>
+                <div id="paging-cus"></div>
+            </div>
+            <div class="modal-footer" style="padding:3px;">
+                <button class="btn btn-primary" id="cus-choose" data-dismiss="modal">@Localizer["Choose"]</button>
+                <button class="btn btn-primary" id="cus-cancel" data-dismiss="modal">@Localizer["Cancel"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/datapaging.js"></script>
+<script>
+    var db = new Warehouse();
+
+    //tb master
+    var gmaster = {
+        AgingPaymentID: 0,
+        UserID: 0,
+        CustomerID: 0,
+        BranchID: 0,
+        Ref_No: "",
+        PostingDate: 0,
+        DocumentDate: 0,
+        TotalAmountDue: 0,
+        Number: "",
+        Remark: "",
+        AgingPaymentDetails: new Array()
+    }
+    db.insert("tb_Gmaster", gmaster, "IncomingPaymentID")
+
+    $(document).ready(function () {
+        var total = {};
+        total.ID = 1;
+        total.Total_Due= 0;
+        db.insert("tb_total", total, "ID");
+
+        var d = new Date();
+        document.getElementById("txtPostingdate").valueAsDate = d;
+        document.getElementById("txtDocumentDate").valueAsDate = d;
+
+        //GetNumberNo
+        $.ajax({
+            url: "/AgingPayment/GetNumberNo",
+            type: "Get",
+            dataType: "text",
+            success: function (respones) {
+                $("#txtnumber").val(respones);
+            }
+        });
+    });
+
+    $("#show-list-cus").on("click", function () {
+        //GetCustomer
+        $.ajax({
+            url: "/AgingPayment/GetCustomer",
+            type: "GET",
+            dataType: "JSON",
+            success: function (respones) {
+
+                var paging = new Kernel.DataPaging({
+                    pageSize: 5,
+                    style: {
+                        mode: "circle",
+                        border: 0
+                    }
+                });
+                paging.start(respones, function (filtered) {
+                    let index = filtered.current;
+                    if (index > 0) {
+                        index = paging.setting.pageSize * (filtered.current - 1);
+                    }
+                    BindTableCus("#list-customer", filtered.data, index);
+                });
+                $("#paging-cus").html(paging.selfElement);
+            }
+        });
+    });
+
+    function BindTableCus(selector, data, _index) {
+        $("#Modal-Customer").modal("show");
+        $(selector).find("tr:not(:first-child)").remove();
+        if (data.length == 0) {
+            $("#Modal-Customer").append("<tr><td colspan='3'class='text-center'> No Customer </td></tr>")
+        } else {
+            $.each(data, function (i, item) {
+                _index++;
+                var tr = $("<tr data-name='" + item.Name + "' data-id="+ item.ID +"></tr>").on("dblclick click", choosecustomer)
+                tr.append("<td style='min-width:3px;'>" + _index + "</td>")
+                    .append("<td hidden>" + item.ID + "</td>")
+                    .append("<td>" + item.Code + "</td>")
+                    .append("<td>" + item.Name + "</td>")
+                $(selector).append(tr);
+            });
+        }
+    }
+
+    function choosecustomer(event) {
+        if (event.type === "dblclick") {
+            dblCus(this);
+        } else {
+            clickCus(this);
+        }
+    }
+
+    function dblCus(c) {
+        var id = $(c).data("id");
+        var name = $(c).data("name");
+        db.from("tb_Gmaster").where(function (json) {
+            json.CustomerID = id;
+        });
+        FilterCus_findAR(id);
+        $("#txtcus").val(name);
+        $("#Modal-Customer").modal("hide");
+    }
+    var _id_cus = 0;
+    var _cus_name = "";
+    function clickCus(c) {
+        _id_cus = $(c).data("id");
+        _cus_name = $(c).data("name");
+        $(c).addClass("Active").siblings().removeClass("Active");
+    }
+    $("#cus-choose").click(function () {
+        $("#txtcus").val(_cus_name);
+        db.from("tb_Gmaster").where(function (json) {
+            json.CustomerID = _id_cus;
+        });
+        FilterCus_findAR(_id_cus);
+    });
+
+    function FilterCus_findAR(id) {
+        db.table("tb_master").clear();
+        $("#list-items").find("tr:not(:first-child)").remove();
+       var datadetail= $.ajax({
+           url: "/AgingPayment/GetAgingPaymentCus",
+           type: "POST",
+           async: false,
+           dataType: "Json",
+           data: { CusID: id }
+       }).responseJSON;
+        if (datadetail.length != 0) {
+
+            $(".currency_text").text(datadetail.CurrencyName);
+            $.each(datadetail, function (i, value) {
+                var item = {};
+                item.AgingPaymentCustomerID = value.IPCID;
+                item.DocumentNo = value.DocumentNo;
+                item.DocumentType = value.DocumentType;
+                item.Date = value.Date;
+                item.OverdueDays = value.OverdueDays;
+                item.Total = value.Total;
+                item.Applied_Amount = value.Applied_Amount;
+                item.BalanceDue = value.BalanceDue;
+                item.DiscountRate = 0; //Calulate with Balancedue
+                item.DiscountValue = 0; //Calulate with Balancedue
+                item.TotalPayment = value.BalanceDue;
+                item.Cash = value.BalanceDue;
+                item.CurrencyName = value.CurrencyName;
+                item.CurrencyID = value.CurrencyID;
+                item.ExchangeRate = value.ExchangeRate;
+                item.SysName = value.SysName;
+                db.insert("tb_master", item, "AgingPaymentCustomerID");
+            });
+            db.from("tb_master").where(function (Json) {
+                Json.Date = Json.Date.slice(0, 10);
+            });
+            db.from("tb_master").where(function (item) {
+                GetDateTable(item);
+            });
+        }
+    }
+    function GetDateTable(item) {
+        $.updateRow("#list-items", item, "AgingPaymentCustomerID", {
+            hidden_columns: ["AgingPaymentCustomerID", "CurrencyName", "CurrencyID", "ExchangeRate", "SysName", "Total", "Applied_Amount"],
+            html: [
+                {
+                    column:"DocumentNo",
+                    insertion: "replace",
+                    element: '<div class="documentNo">' + item.DocumentNo +'</div>'
+                },
+                {
+                    column: "DocumentType",
+                    insertion: "replace",
+                    element: '<div class="documentType">' + item.DocumentType + '</div>'
+                },
+                {
+                    column: "Date",
+                    insertion: "replace"
+                },
+                {
+                    column: "OverdueDays",
+                    insertion: "replace"
+                },
+                {
+                    column: "BalanceDue",
+                    insertion: "replace",
+                    element: '<div>' + item.CurrencyName + ' ' + '<span class="balance_due">' + parseFloat(item.BalanceDue).toFixed(2) + '</span>' + '</div>',
+                },
+                {
+                    column: "DiscountRate",
+                    insertion: "replace",
+                    element: '<input type="text" class="content_discountrate number" value="' + item.DiscountRate + '"/>',
+                    listener: ["keyup", CheckDiscountRate]
+                },
+                {
+                    column: "DiscountValue",
+                    insertion: "replace",
+                    element: '<input type="text" class="content_discountvalue number" value="' + item.DiscountValue + '"/>',
+                    listener: ["keyup", CheckDiscountValue]
+                },
+                {
+                    column: "TotalPayment",
+                    insertion: "replace",
+                    element: '<div>' + item.CurrencyName + " " + '<span class="content_totalpay">' + parseFloat(item.TotalPayment).toFixed(2) + '</span>' + '</div>',
+                    listener: ["keyup", CheckTotalPay]
+                },
+                {
+                    column: "Cash",
+                    insertion: "replace",
+                    element: '<div class="divcontent">' + '<span class="content_currency"; style="margin-top:9px;">' + item.CurrencyName + '</span>' + '<input type="text" class="content_totalcash number" value="' + parseFloat(item.Cash).toFixed(2) + '"/>' + '<div>',
+                    listener: ["keyup", CheckTotalCash]
+                },
+                {
+                    column: -1,
+                    insertion: "replace",
+                    element: '<input type="checkbox" style="vertical-align:middle;margin:0px 0 0 60px;" class="content_checkbox"/>',
+                    listener: ["click", CheckConfirm]
+                }
+            ]
+
+        });
+        $(".number").asNumber();
+    }
+
+    // sumary
+    var totaldue_amount = 0;
+    function summaryTotal() {
+        var sum = 0;
+        $.each($("#list-items tr"), function (i, tr) {
+            if (i > 0) {
+                var total = $(tr).children().find(".content_totalcash").val();
+                if (total == '' || total == '-') {
+                    total = 0;
+                }
+
+                var currency = '';
+                if ($(tr).children().find(".content_checkbox").prop('checked') == true) {
+                    var ID = $(tr).data("agingpaymentcustomerid");
+                    var master = db.table("tb_master").get(ID);
+                    currency = master.CurrencyName;
+
+                    master.Cash = parseFloat(total);
+                    sum = parseFloat(sum) + parseFloat(total * master.ExchangeRate);
+                    totaldue_amount = sum;
+                }
+                else
+                {
+                    var ID = $(tr).data("agingpaymentcustomerid");
+                    var master = db.table("tb_master").get(ID);
+                    $(tr).children().find(".content_totalcash").val(total);
+                    master.Cash = total;
+                }
+                master.Applied_Amount = parseFloat(total);
+                db.insert("tb_master", master, "ID");
+                var total_due = db.from("tb_total");
+                total_due[0].Total_Due = parseFloat(sum);
+                db.insert("tb_total", total_due, "ID");
+                $("#totalamount_due_asing").val(parseFloat(sum).toFixed(2));
+            }
+        });
+    }
+    let row_select = 0;
+    function CheckConfirm() {
+        var cashvmc = $(this).parent().siblings().children().find(".content_totalcash").val();
+        if (row_select == 0) {
+            //Button unchecked and now u checked it
+            $(this).children().find(".content_checkbox").prop('checked', true);
+            row_select++;
+        }
+        else {
+            //Button checked and now u unchecked it
+            row_select = 0;
+            $(this).children().find(".content_checkbox").prop('checked', false);
+            $(this).parent().siblings().children().find(".content_totalcash").val(cashvmc);
+        }
+        summaryTotal();
+    }
+    let select = 0;
+    $("#selectall").on('click', function () {
+        if (select == 0) {
+            $("#list-items tr").children().find(".content_checkbox").prop('checked', true);
+            select++;
+        }
+        else {
+            select = 0;
+            $("#list-items tr").children().find(".content_checkbox").prop('checked', false);
+            $("#totalamount_due").val(0.00);
+        }
+        summaryTotal();
+    });
+
+    // Change Total Pay
+    function CheckTotalPay() {
+
+    }
+
+    //Discount Rate
+    function CheckDiscountRate() {
+        var dis_rate = $(this).parent().find(".content_discountrate").val();
+
+        if (this.value == '') {
+            this.value = 0;
+            dis_rate = 0;
+        }
+
+        if (dis_rate > 100) {
+            let msg = new DialogBox({
+                type: "ok",
+                content: "@Localizer["Value less than or equal to 100 !"]"
+            });
+            $(this).parent().find(".content_discountrate").val(100);
+            dis_rate = 100;
+        }
+        var master = db.from("tb_master");
+        var balanceduevmc = $(this).parent().siblings().children().find(".balance_due").text();
+        var ID = $(this).parent().parent().data("agingpaymentcustomerid");
+        var master = db.table("tb_master").find(ID);
+
+        //Discount value part
+        var tota_d = (parseFloat(balanceduevmc) * (parseFloat(dis_rate) / 100));
+        $(this).parent().parent().find(".content_discountvalue").val(tota_d);
+
+        $(this).parent().parent().children().find(".content_totalcash").val((balanceduevmc - tota_d).toFixed(2));
+        $(this).parent().siblings().children().find(".content_totalpay").text(balanceduevmc - tota_d);
+        
+        summaryTotal();
+        master.DiscountRate = parseFloat(dis_rate);
+        master.DiscountValue = tota_d;
+        master.TotalPayment = (balanceduevmc - tota_d);
+        db.insert("tb_master", master, "AgingPaymentCustomerID");
+    }
+
+    //Discount Value
+    function CheckDiscountValue() {
+        var balanceduevmc = $(this).parent().siblings().children().find(".balance_due").text();
+        var dis_val = $(this).parent().find(".content_discountvalue").val();
+
+        if (this.value == '' || this.value.match(/[a-z]/i)) {
+            this.value = 0;
+            dis_val = 0;
+        }
+
+        if (parseFloat(dis_val) > parseFloat(balanceduevmc)) {
+                let msg = new DialogBox({
+                    type: "ok",
+                    content: "@Localizer["Value cannot be greater than balance due  !"]"
+                });
+            $(this).parent().find(".content_discountvalue").val(balanceduevmc);
+            dis_val = balanceduevmc;
+        }
+
+        var master = db.from("tb_master");
+        var ID = $(this).parent().parent().data("agingpaymentcustomerid");
+        var master = db.table("tb_master").find(ID);
+
+        //Discount rate part
+        var cash_d = (parseFloat(dis_val) * 100) / (parseFloat(balanceduevmc));
+        $(this).parent().parent().find(".content_discountrate").val(cash_d);
+        
+        $(this).parent().parent().children().find(".content_totalcash").val((balanceduevmc - dis_val).toFixed(2));
+        $(this).parent().siblings().children().find(".content_totalpay").text(balanceduevmc - dis_val);
+
+        summaryTotal();
+        master.DiscountValue = parseFloat(dis_val);
+        master.DiscountRate = cash_d;
+        master.TotalPayment = (balanceduevmc - dis_val);
+        db.insert("tb_master", master, "AgingPaymentCustomerID");
+    }
+
+    //Total Cash
+    function CheckTotalCash() {
+        var balancevmc = parseFloat($(this).parent().siblings().children().find(".balance_due").text());
+        var cashvmc = $(this).parent().children().find(".content_totalcash").val();
+
+        if ($(this).parent().children().find(".content_totalcash")[0].value == '') {
+            $(this).parent().children().find(".content_totalcash")[0].value = 0;
+            cashvmc = 0;
+        }
+
+        if (parseFloat(cashvmc) > parseFloat(balancevmc)) {
+            let msg = new DialogBox({
+                type: "ok",
+                content: "@Localizer["Value cannot be greater than balance due !"]",
+                icon: 'danger'
+            });
+            $(this).find(".content_totalcash").val(balancevmc);
+        } else {
+            $(this).find(".content_totalcash").val(cashvmc);
+        }
+
+        summaryTotal();
+    }
+
+    //Save IncomingPayment
+    function saveIncoming() {
+        var ref_no = $("#txtref_no").val();
+        var number = $("#txtnumber").val();
+        var postingdate = $("#txtPostingdate").val();
+        var documentdate = $("#txtDocumentDate").val();
+        var remark = $("#txtremark").val();
+        //var totalbalance_due = $("#totalamount_due").val();
+        db.table("tb_restore").clear();
+
+        $.each($("#list-items tr"), function (i, tr) {
+            if (i > 0) {
+                if ($(tr).children().find(".content_checkbox").prop('checked') == true) {
+                    var id = $(tr).data("agingpaymentcustomerid");
+                    var mas = db.table("tb_master").get(id);
+                    if (mas != undefined) {
+                        db.insert("tb_restore", mas, "AgingPaymentCustomerID");
+
+                    }
+                }
+            }
+        });
+
+        var total = db.from("tb_total");
+        db.from("tb_Gmaster").where(function (gmaster) {
+            gmaster.UserID = @User.FindFirst("UserID").Value,
+            gmaster.BranchID = @User.FindFirst("BranchID").Value,
+            gmaster.Ref_No = ref_no,
+            gmaster.PostingDate = postingdate,
+            gmaster.DocumentDate = documentdate,
+            gmaster.TotalAmountDue = total[0].Total_Due,
+            gmaster.Number = number,
+            gmaster.Remark = remark,
+            gmaster.AgingPaymentDetails = db.from("tb_restore") == 0 ? new Array() : db.from("tb_restore")
+        });
+
+        
+        $.ajax({
+            url: "/AgingPayment/SaveAgingPayment",
+            type: "Post",
+            dataType: "Json",
+            data: $.antiForgeryToken({ aging: JSON.stringify(db.from("tb_Gmaster")[0]) }),
+            success: function (data) {
+                if (data.Model.Action == 1) {
+                    location.reload();
+                } else {
+                    new ViewMessage({
+                        summary: {
+                            selector: "#error-summary"
+                        },
+                        for: {
+                            attribute: "vm-for",
+                            color: "red"
+                        }
+                    }, data.Model);
+                }
+                $(window).scrollTop(0);
+            }
+        });
+    }
+
+    //Cancel
+    function ClickCancel() {
+        location.reload();
+    }
+</script>
+

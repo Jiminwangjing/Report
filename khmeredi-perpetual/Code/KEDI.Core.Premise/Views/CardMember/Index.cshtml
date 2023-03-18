@@ -1,0 +1,136 @@
+﻿@using KEDI.Core.Premise.Models.Services.CardMembers;
+@model CardMember;
+<style>
+    .hover {
+        cursor: pointer;
+    }
+</style>
+
+<div class="card card-body">
+    <div class="flex">
+        <a class="btn btn-kernel btn-xs" asp-action="RegisterMember" asp-controller="CardMember">@Localizer["Register Member"]</a>
+
+    </div>
+    <br />
+
+</div>
+<div class="widget-scrollbar">
+    <table id="data-card">
+        <tr>
+            <th>@Localizer["#"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Active"]</th>
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+<div class="renew-history-content widget-scrollbar" style="display: none">
+    @*<div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+        <div class="wrap-input show">
+        <i id="i-search" class="i-search fas fa-search"></i>
+        <input class="ignore font-size" id="txtSearch-cus" autocomplete="off" type="text" placeholder="Search ...">
+        <i id="i-close" class="i-close far fa-times-circle"></i>
+        </div>
+        <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+        </div>*@
+    <table id="renew-history-list">
+        <tr>
+            <th>@Localizer["#"]</th>
+            <th>@Localizer["Card Name"]</th>
+            <th>@Localizer["Card Number"]</th>
+            <th>@Localizer["Card Holder Name"]</th>
+            <th>@Localizer["Last Date Valid From"]</th>
+            <th>@Localizer["Last Date Valid To"]</th>
+            <th>@Localizer["Renew Date From"]</th>
+            <th>@Localizer["Renew Date To"]</th>
+            <th>@Localizer["Valid Period"]</th>
+        </tr>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        function renewHistoryDialog(cardId) {
+            let dialog = new DialogBox({
+                content: {
+                    selector: ".renew-history-content"
+                },
+                button: {
+                    ok: {
+                        text: "Close"
+                    }
+                },
+                caption: "Renew Expiration History",
+            });
+            dialog.invoke(function () {
+                const renewTable = ViewTable({
+                    keyField: "ID",
+                    selector: "#renew-history-list",
+                    indexed: true,
+                    paging: {
+                        pageSize: 20,
+                        enabled: true
+                    },
+                    visibleFields: ["CardName", "CardNumber", "CardHolderName", "LastDateExpirationFrom", "LastDateExpirationTo", "RenewDateFrom", "RenewDateTo", "LengthExpireCard"],
+                });
+
+                $.get("/CardMember/GetRenewExpirationHistory", { cardId }, function (res) {
+                    console.log("re", res)
+                    renewTable.bindRows(res);
+                })
+            })
+            dialog.confirm(function () { dialog.shutdown() })
+        }
+        //==========================card number==========================
+        const $datacard = ViewTable({
+            keyField: "ID",
+            selector: "#data-card",
+            indexed: true,
+            paging: {
+                pageSize: 10,
+                enabled: true
+            },
+            visibleFields: ["Code", "Name", "Active"],
+            columns: [
+                {
+                    name: "Active",
+                    template: `<input type="checkbox" disabled/>`
+                }
+
+            ],
+            actions: [
+                {
+                    template: `<i class="fas fa-edit hover text-center" title="Update Card Member"></i>`,
+                    on: {
+                        "click": function (e) {
+                            location.href = "/CardMember/RegisterMember?id=" + e.key;
+                        }
+                    },
+                },
+                {
+                    template: `<i class="fas fa-sync-alt hover" title="Renew expiration date"></i>`,
+                    on: {
+                        "click": function (e) {
+                            location.href = "/CardMember/RenewExpireDateCard?id=" + e.key;
+                        }
+                    },
+                },
+                {
+                    template: `<i class="fas fa-history hover" title="Renew history"></i>`,
+                    on: {
+                        "click": function (e) {
+                            renewHistoryDialog(e.key)
+                        }
+                    },
+                }
+            ]
+        });
+        $.get("/CardMember/GetRegisterMembers", function (res) {
+            //cardMembers.clearRows();
+            $datacard.bindRows(res)
+        })
+    })
+
+</script>

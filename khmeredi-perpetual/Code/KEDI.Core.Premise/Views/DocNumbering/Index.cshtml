@@ -1,0 +1,79 @@
+﻿
+<style>
+    #allw-gl tr td {
+        text-align: center;
+    }
+    .hover{
+        cursor: pointer;
+    }
+
+</style>
+<div class="card card-body">
+<div class="row">
+    <div class="col-md-5">
+        @*<a asp-action="Create" class="btn btn-xs btn-primary"><i class="fa fa-plus-circle"></i> @Localizer["Create"]</a>*@
+    </div>
+    <div class="col-md-7">
+        <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearch" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrap-table myt1" style="height: 65vh">
+    <table id="allw-gl">
+        <thead>
+            <tr id="showtr">
+                <th class="text-center">@Localizer["#"]</th>
+                <th class="text-center">@Localizer["Code"]</th>
+                <th class="text-center">@Localizer["Document"]</th>
+                <th class="text-center">@Localizer["DefaultSeries"]</th>
+                <th class="text-center">@Localizer["FirstNo."]</th>
+                <th class="text-center">@Localizer["NextNo."]</th>
+                <th class="text-center">@Localizer["LastNo."]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div id="list-series-content" style="display:none; height: 400px; overflow: auto" class="widget-scrollbar">
+    @*<div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="txtSearchdl" autocomplete="off" type="text" placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>*@
+    <div id="error-summary"></div>
+    <table id="list-series" class="table-responsive-sm table-responsive-md table-responsive-xl table-responsive-lg">
+        <thead>
+            <tr>
+                <th class="text-center"><i class="fas fa-plus-square hover" id="add-new-series"></i></th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["FirstNo."]</th>
+                <th>@Localizer["NextNo."]</th>
+                <th>@Localizer["LastNo."]</th>
+                <th>@Localizer["Prefix"]</th>
+                <th>@Localizer["PeriodIndecator"]</th>
+                <th>@Localizer["Lock"]</th>
+                <th id="action">@Localizer["Action"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+    </div>
+<input hidden id="idSeries"/>
+<input hidden id="idDocNum"/>
+<input hidden id="idSeriesUpdate"/>
+
+<div id="data" hidden>@Json.Serialize(Model)</div>
+<script src="~/SystemInitialization/PostingPeriod/posting-period-core.js"></script>
+<script src="~/SystemInitialization/DocumentNumbering/js/index.js"></script>

@@ -1,0 +1,344 @@
+﻿@using KEDI.Core.Premise.Models.Services.ServiceContractTemplate;
+
+<style>
+    .loading {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+        position: absolute;
+    }
+
+    i.fa-paperclip {
+        position: relative;
+        z-index: 10;
+    }
+
+        i.fa-paperclip form {
+            width: 10px !important;
+            height: 15px !important;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            margin-top: -15px;
+        }
+
+            i.fa-paperclip form .box_file input[type=file] {
+                margin-top: -5px;
+                display: block;
+                opacity: 0;
+                position: absolute;
+                z-index: 100;
+            }
+</style>
+<div id="data-invoice" hidden>@Json.Serialize(Model)</div>
+<div class="loading" id="loading" hidden>
+    <img class="img-loading" src="~/ajaxloader/loading.gif" />
+</div>
+<div class="card card-body">
+    <div class="row mb-2">
+        <div class="col-md-2"></div>
+        <div class="col-md-9">
+            <div class="row" style="display:flex;justify-content:flex-end">
+                <div class="col-md-4"></div>
+                <div class="col-md-3">
+                    <a id="btn-createnew" href="/SetupContractTemplate/Index/" class="btn btn-kernel btn-xs" hidden><i class="fas fa-plus-circle"></i> @Localizer["Create New"]</a>
+                    <button id="btn-find" class="btn btn-kernel btn-xs">@Localizer["Find"]</button>
+                    <button id="history" class="btn btn-kernel btn-xs">@Localizer["History"]</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-4">
+                    <label>@Localizer["Name"]</label>
+                </div>
+                <div class="col-md-8 cursor d-flex" id="show-list-cus">
+                    <input type="text" id="name" class="form-control font-size" autocomplete="off" >
+                </div>
+                <div class="col-md-4">
+                    <label>@Localizer["Contract Type"]</label>
+                </div>
+                <div class="col-md-8 d-flex mb-2">
+                    <div class="form-group ">
+                        <div class="input-group">
+                            <select id="listoftype" class="form-control font-size" asp-items="ViewBag.ContractType">
+                                <option value="0" selected></option>
+                            </select>
+                            <div class="input-group-append">
+                                <span class="input-group-text cursor" id="setup-list-contractype" style="height:30px !important">
+                                    <i class="fa fa-plus-circle mll_2 mt-2"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label>@Localizer["Response Time"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="responsetime" class="form-control font-size" autocomplete="off">
+
+                </div>
+                <div class="col-md-4 ">
+                    <select id="listhd1" style="width:100%" class=" font-size" asp-items="@Html.GetEnumSelectList<KEDI.Core.Premise.Models.Services.ServiceContractTemplate.Times>()">
+                        <option value=0></option>
+                    </select>
+
+                </div>
+                <div class="col-md-4">
+                    <label>@Localizer["Resultion Time"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="resultiontime" class="form-control font-size" autocomplete="off"/>
+                </div>
+                <div class="col-md-4 ">
+                    <select id="listhd2" style="width:100%" class=" font-size" asp-items="@Html.GetEnumSelectList<KEDI.Core.Premise.Models.Services.ServiceContractTemplate.Times>()">
+                        <option value=0></option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label>@Localizer["Description"]</label>
+                </div>
+                <div class="col-md-8 cursor d-flex" id="show-list-cus">
+                    <input type="text" id="description" class="form-control font-size" autocomplete="off" />
+                </div>
+
+                <div class="col-md-4">
+                    <label><input type="checkbox" id="expired" /></label>
+                    <label>@Localizer["Expired"]</label>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class=" mt-2 col-md-12">
+            <ul class="widget-tab">
+                @*//tap partner*@
+                <li class="tab-sheet active">
+                    <div class="tab-title">@Localizer["Converage"]</div>
+                    <div class="tab-content " style="height:auto;overflow:hidden">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4 mb-2"></div>
+                                    <div class="col-md-4 mb-2">Start Time</div>
+                                    <div class="col-md-4 mb-2">End Time</div>
+
+                                    <div class="col-md-4">
+                                        <label><input type="checkbox" id="mon" /></label>
+                                        <label>@Localizer["Monthday"]</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input disabled value="0" type="time" id="stimemon" class="form-control font-size" />
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <input disabled value="0" type="time" id="etimemon" class="form-control font-size" />
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label><input type="checkbox" id="thue" /></label>
+                                        <label>@Localizer["Thuesday"]</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input disabled type="time" id="stimethue" class="form-control font-size" />
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <input disabled type="time" id="etimethue" class="form-control font-size" />
+                                    </div>
+
+
+                                    <div class="col-md-4">
+                                        <label><input type="checkbox" id="wed" /></label>
+                                        <label>@Localizer["Wednesday"]</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input disabled type="time" id="stimewed" class="form-control font-size" />
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <input disabled type="time" id="etimewed" class="form-control font-size" />
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label><input type="checkbox" id="thur" /></label>
+                                        <label>@Localizer["Thuresday"]</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input disabled type="time" id="stimethur" class="form-control font-size" />
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <input disabled type="time" id="etimethur" class="form-control font-size" />
+                                    </div>
+
+
+                                    <div class="col-md-4">
+                                        <label><input type="checkbox" id="fri" /></label>
+                                        <label>@Localizer["Friday"]</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input disabled type="time" id="stimefri" class="form-control font-size" />
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <input disabled type="time" id="etimefri" class="form-control font-size" />
+                                    </div>
+
+
+                                    <div class="col-md-4">
+                                        <label><input type="checkbox" id="sat" /></label>
+                                        <label>@Localizer["Staturday"]</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input disabled type="time" id="stimesat" class="form-control font-size" />
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <input disabled type="time" id="etimesat" class="form-control font-size" />
+                                    </div>
+
+
+                                    <div class="col-md-4">
+                                        <label><input type="checkbox" id="sun" /></label>
+                                        <label>@Localizer["Sunday"]</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input disabled type="time" id="stimesun" class="form-control font-size" />
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <input disabled value="0" type="time" id="etimesun" class="form-control font-size" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="border:1px solid gray">
+                                <div class="col-md-12">
+                                    <label style="font-weight:bolder">@Localizer["Include"]</label>
+                                </div>
+                                <div class="col-md-12">
+                                    <label><input type="checkbox" id="part" /></label>
+                                    <label>@Localizer["Part"]</label>
+                                </div>
+                                <div class="col-md-12">
+                                    <label><input type="checkbox" id="labor" /></label>
+                                    <label>@Localizer["Labor"]</label>
+                                </div>
+                                <div class="col-md-12">
+                                    <label><input type="checkbox" id="travel" /></label>
+                                    <label>@Localizer["Travel"]</label>
+                                </div>
+                                <div class="col-md-12">
+                                    <label><input type="checkbox" id="holiday" /></label>
+                                    <label>@Localizer["Including Holiday"]</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="tab-sheet ">
+                    <div class="tab-title">@Localizer["Remark"]</div>
+                    <div class="tab-content " style="height:auto;overflow:hidden">
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <textarea id="remark" style=" height: 100% !important; width: 100% !important;" rows="8" cols="80" autofocus></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                </li>
+                <li class="tab-sheet ">
+                    <div class="tab-title">@Localizer["Attachment"]</div>
+                    <div class="tab-content widget-scrollbar" style="height:auto;overflow:hidden">
+                        <div class="row" style="width: 100%;">
+                            <div class="col-sm-10">
+                                <table class="table-responsive-sm" id="tblsprojManagementAttach">
+                                    <tr>
+                                        <th style="width:10px;">@Localizer["No"]</th>
+                                        <th style="width: 200px; text-align:center !important;">@Localizer["Target Path"]</th>
+                                        <th style="width: 200px;">@Localizer["File Name"]</th>
+                                        <th style="width: 100px;">@Localizer["Attachment Date"]</th>
+                                        <th style="width: 16px;">@Localizer["Choose"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="row" style="margin-top:20%">
+        <div class="col-md-12">
+            <div id="error-summary"></div>
+            <button id="submit-data" class="btn btn-kernel increanum" btn-xs">@Localizer["Add"]</button>
+            <button id="update-data" class="btn btn-kernel btn-xs" hidden>@Localizer["Update"]</button>
+            <a asp-action="Activity" asp-controller="BusinessPartner" class="btn btn-kernel btn-xs">@Localizer["Cancel"]</a>
+        </div>
+    </div>
+</div>
+@*//model box of setup contract type*@
+<div id="active-type-content" style="display:none; height:auto; ">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-levelinterest" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="setup-contractype">
+            <thead>
+                <tr>
+                    <th><i id="create-level-description" class="fas fa-plus-square" style="color:sandybrown;"></i></th>
+                    <th style="width:70px">Contract Type</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    <div style="display:flex;justify-content:flex-end"><p id="sms_level"></p></div>
+
+</div>
+@*//=========Model box of list service contract====*@
+<div class="listservicecontract_containers" style="display: none;">
+
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-bus" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+
+    <table id="list-contract" class="mt-3">
+        <tr>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Description"]</th>
+            <th>@Localizer["Contract Type"]</th>
+
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+<div hidden id="model-data">@Json.Serialize(Model)</div>
+<input id="id" hidden>
+<input id="remarkid" hidden>
+<input id="converid" hidden>
+<script src="~/js/Sale/Service-contract-type.js"></script>
+
+
+
+
+
+

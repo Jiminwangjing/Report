@@ -1,0 +1,103 @@
+﻿<div id="main-menu-message" style="display: none;"></div>
+<div class="widget-combobox menubox down-right">
+    <div class="combobox-trigger"> <i class="fas fa-bars fa-fw fa-lg" title="Menu Options"></i></div>
+    <div class="combobox-content">
+        <div class="combobox-header">
+            <img class="i-image" src="/AdminLayout/images/setting.gif">
+            <h4 class="title">@Localizer["Menu Options"]</h4>
+            <i class="i-close"></i>
+        </div>
+        <div class="combobox-body widget-scrollbar">
+            <div class="widget-tab">
+                <div class="tab-sheet active">
+                    <div class="tab-title">@Localizer["General"]</div>
+                    <div class="tab-content">
+                        <div class="group-btns">
+                            <div id="goto-setting" class="wrap-btn">
+                                <div class="btn"><i class="fas fa-cogs"></i></div>
+                                <label class="label">@Localizer["Setting"]</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-tab">
+                <div class="tab-sheet active">
+                    <div class="tab-title">@Localizer["Currency"]</div>
+                    <div class="tab-content">
+                        <div class="group-btns">
+                            <div class="wrap-btn" id="open-shift">
+                                <div class="btn"><i class="fa fa-funnel-dollar" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Open Shift"]</label>
+                            </div>
+
+                            <div class="wrap-btn" id="close-shift">
+                                <div class="btn"><i class="fa fa-money-check-alt" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Close Shift"]</label>
+                            </div>
+                            <div class="wrap-btn" id="change-rate">
+                                <div class="btn"><i class="fas fa-exchange-alt" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Change Rate"]</label>
+                            </div>
+                            <div class="wrap-btn" id="ReprintCloseShift">
+                                <div class="btn"><i class="fa fa-money-check-alt" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Reprint CloseShift"]</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-sheet">
+                    <div class="tab-title">@Localizer["Receipts"]</div>
+                    <div class="tab-content">
+                        <div class="group-btns">
+                            <div id="goto-reprint" class="wrap-btn">
+                                <div class="btn"><i class="fa fa-print" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Reprint"]</label>
+                            </div>
+                            <div id="fx-return-receipts" class="wrap-btn fx-return-receipts">
+                                <div class="btn"><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Return Receipts"]</label>
+                            </div>
+                            <div id="fx-cancel-receipts" class="wrap-btn fx-cancel-receipts">
+                                <div class="btn"><i class="fas fa-trash-restore" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Cancel Receipts"]</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-sheet">
+                    <div class="tab-title">@Localizer["Void"]</div>
+                    <div class="tab-content">
+                        <div class="group-btns">
+                            <div id="goto-pending-void-item" class="wrap-btn">
+                                <div class="btn"><i class="fas fa-broom fa-fw" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Pending Void Item"]</label>
+                            </div>
+                            @*<div id="fx-return-receipts" class="wrap-btn fx-return-receipts">
+                                <div class="btn"><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Return Receipts"]</label>
+                            </div>
+                            <div id="fx-cancel-receipts" class="wrap-btn fx-cancel-receipts">
+                                <div class="btn"><i class="fas fa-trash-restore" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Cancel Receipts"]</label>
+                            </div>*@
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <partial name="Components/Authorization" />
+            <partial name="Components/Shift" />
+            <partial name="Components/Reprint" />
+            <partial name="Components/ReturnReceipt" />
+            <partial name="Components/CancelReceipt" />
+            <partial name="Components/ChangeRate" />
+            <partial name="Components/Setting" />
+            <partial name="Components/SaveReceipts" />
+            <partial name="Components/ListItemsReducedQty" />
+            <partial name="Components/ReprintCloseShift" />
+            <partial name="Components/_PendingVoidItem" />
+        </div>
+        <div class="combobox-footer"></div>
+    </div>
+</div>

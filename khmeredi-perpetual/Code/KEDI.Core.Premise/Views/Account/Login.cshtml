@@ -1,0 +1,30 @@
+﻿@model CKBS.Models.Services.Account.LoginViewModel;
+@{ Layout = "_LoginLayout"; }
+<fieldset class="user-login">
+    <legend class="title">@Localizer["Authentication"]</legend>
+    <form asp-action="Login">
+        @Html.AntiForgeryToken()
+        <div class="company-logo">
+            <img src="/Images/company/@Model.Logo" title="Photo">
+        </div>
+
+        <input asp-for="JwtToken" type="hidden" />
+        <label>@Localizer["Username"] <i class="text-danger">*</i></label>
+        <div class="stack-inline">
+            <i class="fas fa-user-shield" title="Username"></i>
+            <input autofocus autocomplete="off" asp-for="Username" placeholder="Username" />           
+        </div>
+        <span asp-validation-for="Username"></span>
+
+        <label>@Localizer["Password"] <i class="text-danger">*</i></label>
+        <div class="stack-inline">
+            <i class="fas fa-key" title="Password"></i>
+            <input asp-for="Password" type="password" placeholder="Password" autocomplete="off"/>
+        </div>
+        <span asp-validation-for="Password"></span>
+
+        <div class="box-group">
+            <button class="stretch-fill" title="Sign In"><i class="fas fa-sign-in-alt"></i> @Localizer["Sign In"]</button>
+        </div>
+    </form>
+</fieldset>

@@ -1,0 +1,406 @@
+﻿<script src="~/js/warehouse.js"></script>
+<script src="~/js/table.js" defer></script>
+<style>
+
+    .input_datefrom, .input_dateto, .input_user, .input_branch, .input_vendor {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 100%;
+        min-width: 100%;
+        height: 28px;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size: 12px;
+        border-radius: 3px;
+    }
+
+    .lable_branch, .lable_datefrom, .lable_dateto, .lable_user, .lable_vendor {
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .btn-success {
+        margin-top: 22px;
+        font-size: 12px;
+        font-family: Arial;
+        height: 28px;
+    }
+
+    .wrap-table {
+        margin-top: 20px;
+    }
+
+    .grandtotal {
+        margin-left: 15px;
+    }
+
+    .subtotaltd {
+        border-bottom: 1px solid gray;
+        font-weight: 700;
+    }
+
+    .hidden {
+        visibility: collapse !important;
+    }
+
+    .styletr {
+        font-weight: 800;
+    }
+
+    .list_detail {
+        float: right;
+        min-width: 1000px;
+    }
+
+    #list_outgoingpayment {
+        margin-top: 10px;
+    }
+
+</style>
+<div class="row">
+    <div class="col-md-2">
+        <label class="lable_datefrom">@Localizer["Date From"]</label>
+        <input type="date" class="input_datefrom" id="datefrom" />
+        <label class="lable_user">@Localizer["User"]</label>
+        <select type="text" class="input_user" id="byuser">
+            <option value="0"></option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="lable_dateto">@Localizer["Date To"]</label>
+        <input type="date" class="input_dateto" id="dateto" />
+        <label class="lable_vendor">@Localizer["Vendor"]</label>
+        <select type="text" class="input_vendor" id="byvendor">
+            <option value="0"></option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="lable_branch">@Localizer["By Branch"]</label>
+        <select type="text" class="input_branch" id="bybranch">
+            <option value="0"></option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-xs btn-success" id="filter">@Localizer["Filter"]</button>
+    </div>
+   
+</div>
+<div class="wrap-table list">
+    <table id="list_outgoingpayment">
+        <tr style="background:#5F758B;color:white;">
+            <th width="80">@Localizer["Detail"]</th>
+            <th style="min-width:100px;">@Localizer["Number"]</th>
+            <th style="min-width:130px;">@Localizer["Posting Date"]</th>
+            <th style="min-width:130px;">@Localizer["Document Date"]</th>
+            <th style="min-width:150px;" class="text-right">@Localizer["Total Amount Due"]</th>
+        </tr>
+    </table>
+</div>
+<div class="row" style="margin-top:30px;">
+    <div class="col-md-12">
+        <span>@Localizer["Total (SYS)"]</span>
+        <span>:</span>
+        <span id="totalpay"></span>
+    </div>
+</div>
+<link href="~/css/Modal.css" rel="stylesheet" />
+<div class="modal fade" id="ModalAuditReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-adjust "><b class="icone_adjust">@Localizer["Inventory Audit"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="wrap-table list">
+                    <table>
+                        <tr>
+                            <th>@Localizer["Transaction Nº"]</th>
+                            <th>@Localizer["Document Nº"]</th>
+                            <th>@Localizer["Document Type"]</th>
+                            <th>@Localizer["Date"]</th>
+                            <th>@Localizer["Overdue Day"]</th>
+                            <th>@Localizer["Balance Due"]</th>
+                            <th>@Localizer["Discount Value"]</th>
+                            <th>@Localizer["Total Payment"]</th>
+                            <th>@Localizer["Cash"]</th>
+                        </tr>
+                        <tbody id="tb_inventoryAudit"></tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:5px;">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/pos/scripts/krms/numeral.min.js"></script>
+<script>
+    var db = new Warehouse();
+    $(document).ready(function () {
+        $("#totalpay").text("0.00");
+         $('#list_outgoingpayment').append('<tr><td class="text-center" colspan="5">@Localizer["No Data"]</td></tr>');
+        //Get branch
+        $.ajax({
+            url: "/Report/GetBranch",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bybranch").append(data);
+            }
+        });
+        //Get Vendor
+        $.ajax({
+            url: "/Report/GetVendor",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">'+item.Name+'</option>';
+                });
+                $("#byvendor").append(data);
+            }
+        });
+    });
+    // fillter user
+    $("#bybranch").on('change', function () {
+        var branchid = $(this).val();
+        $.ajax({
+            url: "/Report/GetEmployee",
+            type: "Get",
+            dataType: "Json",
+            data: { BranchID: branchid },
+            success: function (respones) {
+                var data = '';
+                $("#byuser option:not(:first-child)").remove();
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Employee.Name + '</option>';
+                });
+                $("#byuser").append(data);
+            }
+        });
+        $.ajax({
+            url: "/Report/GetWarehouse",
+            type: "Get",
+            dataType: "Json",
+            data: { BranchID: branchid },
+            success: function (respones) {
+                var data = '';
+                $("#bywarehouse option:not(:first-child)").remove();
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">'+item.Name+'</option>';
+                });
+                $("#bywarehouse").append(data);
+            }
+        });
+    });
+    //find
+    $("#filter").on('click', function () {
+        var datefrom = $("#datefrom").val();
+        var dateto = $("#dateto").val();
+        var branch = $("#bybranch").val();
+        var user = $("#byuser").val();
+        var vendor = $("#byvendor").val();
+
+        let listSummary = $.ajax({
+            url: "/Report/GetOutgoingpayment",
+            type: "Get",
+            dataType: "Json",
+            async: false,
+            data: { DateFrom: datefrom, DateTo: dateto, BranchID: branch, UserID: user,VendorID:vendor },
+            success: function (respones) {
+
+            }
+        }).responseJSON;
+        db.table("tb_summary").clear();
+        if (listSummary.length !== 0) {
+            $("#list_outgoingpayment tr:not(:first-child)").remove();
+             db.insert("tb_summary", listSummary, "OutID");
+        }
+         else {
+
+            $("#list_outgoingpayment tr:not(:first-child)").remove();
+            $('#list_outgoingpayment').append('<tr><td class="text-center" colspan="5">@Localizer["No Data"]</td></tr>');
+        }
+
+        var subTotal = 0;
+        var sys = '';
+
+        if (db.from("tb_summary") !== 0) {
+            db.from("tb_summary").where(function (item) {
+                subTotal += parseFloat(item.TotalAmountDue);
+                sys = item.SysCurrency;
+                GetDataBindTable(item);
+            });
+        }
+        $(".tabelshow").addClass("fa-plus-circle");
+        if (sys == "KHR" || sys == '៛') {
+            subTotal = numeral(subTotal).format('0,0');
+        }
+        $("#totalpay").text(sys + ' ' + subTotal);
+    });
+    function GetDataBindTable(item) {
+        var data = '';
+        var subtotal = '';
+        if (item.SysCurrency == 'KHR' || item.SysCurrency == '៛') {
+            subtotal = '<td class="text-right">' + '<span style="margin-right:15px;">' + item.SysCurrency + '</span>' + '<span>' + numeral(item.TotalAmountDue).format('0,0') + '</span>' + '</td>';
+        } else {
+            subtotal = '<td class="text-right">' + '<span style="margin-right:15px;">' + item.SysCurrency + '</span>' + '<span>' + item.TotalAmountDue + '</span>' + '</td>';
+        }
+        data +=
+        '<tr style="border-bottom:3px solid #e0e0d1;">' +
+            '<td>' + '<i class="fa  tabelshow" style="color:#008000;" data-id='+item.OutID+'></i>' +'<input hidden type="checkbox" class="check_box" checked/>'+ '</td>' +
+            '<td hidden id="purchase_id">' + item.OutID + '</td>' +
+            '<td >' + item.Number + '</td>' +
+            '<td>' + item.PostingDate + '</td>' +
+            '<td>' + item.DocumentDate + '</td>' +
+            subtotal+
+           '<td hidden>' + item.SysCurrency + '</td>' +
+           '<td hidden>' + item.TotalAmountDue + '</td>' +
+         '</tr>' +
+         '<tr class="nestedtable hidden">' +
+                '<td colspan="5">' +
+                 '<table id=' + item.OutID+' class="table-hover list_detail">'+
+
+                    '</table>' +
+           '</td>' +
+        '<tr>' ;
+        $("#list_outgoingpayment").append(data);
+    }
+    $("#list_outgoingpayment").on('click', '.tabelshow', function () {
+        var outid = $(this).data("id");
+        var cut = $(this).closest('tr');
+        var totaldue = cut.find('td:eq(7)').text();
+        var sys = cut.find('td:eq(6)').text();
+        if ($(this).parent().find(".check_box").is(':checked')) {
+            $(this).parent().find(".check_box").prop('checked',false);
+            $(this).parent().parent().next().toggleClass("hidden");
+            $(this).removeClass("fa-plus-circle");
+            $(this).addClass("fa-minus-circle");
+            $(this).css("color", "red");
+            $.ajax({
+                   url: "/Report/GetDetailOutgoingPayment",
+                    type: "Get",
+                    dataType: "Json",
+                    data: { OutID:parseInt(outid) },
+                    success: function (e) {
+                        $('#' + outid).children().remove();
+                        let header = '<tr class="styletr">' +
+                                '<td></td>'+
+                                '<td>@Localizer["Document Nº"]</td>' +
+                                '<td>@Localizer["Document Type"]</td>' +
+                                '<td>@Localizer["Date"]</td>' +
+                                '<td>@Localizer["Overdue Day"]</td>' +
+                                '<td>@Localizer["Balance Due"]</td>' +
+                                '<td>@Localizer["Discount Value"]</td>' +
+                               '<td>@Localizer["Total Payment"]</td>' +
+                               '<td class="text-right">@Localizer["Cash"]</td>' +
+                            '</tr>';
+                        $('#' + outid).append(header);
+                        $.each(e, function (i, item) {
+                            let _data = $("<tr></tr>").on("click", DeatilPay);
+                            _data.html(
+                                '<td>'+'<i style="color:#008000;" title="@Localizer["Inventory Audit"]" style="color:gray;" class="fa fa-arrow-alt-circle-right" data-toggle="modal" data-target="#ModalAuditReport">' + '</i>'+'</td>'+
+                                '<td id="document_No">' + item.DocumentNo + '</td>' +
+                                '<td>' + item.DocumentType + '</td>' +
+                                '<td>' + item.Date + '</td>' +
+                                '<td>' + item.OverdueDay + '</td>' +
+                                '<td>' + item.LocalCurrency + " " + " " + item.BalanceDue + '</td>' +
+                                '<td>' + item.LocalCurrency + " " + " " + item.Discount + '</td>' +
+                                '<td>' + item.LocalCurrency + " " + " " + item.TotalPay + '</td>' +
+                                '<td class="text-right">' + item.LocalCurrency + " " + " " + item.Cash + '</td>' +
+                                '</tr>'
+                            );
+                            $('#' + outid).append(_data);
+                        });
+                        let data = '<tr>' + '<td></td>' + '<td></td>' + '<td></td>'+ '<td></td>' + '<td></td>' + '<td></td>' + '<td></td>' + '<td style="font-weight:800;">@Localizer["Sub Total"]</td>' + '<td style="font-weight:800;"> ' + '<span>' + sys + '</span>' + '<span style="margin-left:5px;">' + totaldue + '</span>' + '<td>' + '</tr>';
+                        $('#' + outid).append(data);
+                    }
+            }).responseJSON;
+        }
+        else {
+
+            $(this).parent().find(".check_box").prop('checked', true);
+            $(this).parent().parent().next().toggleClass("hidden");
+            $(this).removeClass("fa-minus-circle");
+            $(this).addClass("fa-plus-circle");
+            $(this).css("color", "#008000");
+        }
+    });
+    function DeatilPay() {
+        var invoice = $(this).children("#document_No").text();
+        $.ajax({
+            url: "/Report/GetDetailInvoice",
+            type: "Get",
+            dataType: "Json",
+            data: {Invoice:invoice},
+            success: function (respones) {
+                GetDataTable(respones);
+            }
+        });
+    }
+    function GetDataTable(respones) {
+        var data = "";
+        var d = 1;
+        $.each(respones, function (i, item) {
+            $("#tb_inventoryAudit").children().remove();
+            data += '<tr>' +
+                '<td>' +d+ '</td>' +
+                '<td>' + item.DocumentNo + '</td>' +
+                '<td>' + item.DocumentType + '</td>' +
+                '<td>' + item.Date + '</td>' +
+                '<td>' + item.OverdueDay + '</td>' +
+                '<td>' + item.LocalCurrency + " " + " " + item.BalanceDue + '</td>' +
+                '<td>' + item.LocalCurrency + " " + " " + item.Discount + '</td>' +
+                '<td>' + item.LocalCurrency + " " + " " + item.TotalPay + '</td>' +
+                '<td class="text-right">' + item.LocalCurrency + " " + " " + item.Cash + '</td>' +
+                '</tr>'
+            d++;
+        });
+        $("#tb_inventoryAudit").append(data);
+    }
+    function fnExcelReport() {
+        //$("td:hidden").remove();
+        var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+        var textRange; var j = 0;
+        tab = document.getElementById('list_outgoingpayment'); // id of table
+        for (j = 0; j < tab.rows.length; j++) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+        }
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+        {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+        }
+        else
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+        return (sa);
+    }
+</script>   

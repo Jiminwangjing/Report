@@ -1,0 +1,21 @@
+﻿<form id="form-password" class="text-center" hidden style="width: 400px; height:
+    175px; text-align: center">
+    <div class="stack-block">
+        <label>Username</label>
+        <input id="username" class="width-full" autocomplete="off">
+    </div>
+    <div class="stack-block">
+        <label>Password</label>
+        <input id="password" class="width-full" type="password"
+            autocomplete="off">
+    </div>
+    <div asp-validation-summary="All"></div>
+</form>
+<form id="form-qr" class="text-center" hidden style="width: 400px; height:
+    175px; text-align: center;">
+    <textarea id="access-token" class="width-full" style="opacity: 0; width: 0
+        !important; height: 0;"></textarea>
+    <img id="token-radar" src="~/pos/images/qr-default.png" style="height:
+        100%;" />
+    <div asp-validation-summary="All" style="position: absolute; z-index: 1;"></div>
+</form>

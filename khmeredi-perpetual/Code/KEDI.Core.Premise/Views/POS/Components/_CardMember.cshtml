@@ -1,0 +1,346 @@
+﻿@using KEDI.Core.Premise.Models.Services.CardMembers;
+<style>
+    .hover {
+        cursor: pointer;
+    }
+
+    .text-danger {
+        color: red;
+    }
+
+    .text-info {
+        color: green;
+    }
+    .wrap-block.col-three > .center-block {
+        width: 33.333%;
+        padding-left: 0.5rem;
+        margin-top: 0.5rem;
+    }
+</style>
+<div class="widget-combobox menubox  down-right">
+      @if(!UserManager.CheckEdition(SystemEdition.Basic))
+                   {
+<div id="card-member" class="combobox-trigger">
+        <i class="fas fa-credit-card fn-white fa-fw fa-lg csr-pointer icon-tab"></i>
+    </div>
+                   }
+    
+    <div class="combobox-content" style="width: 80vw;">
+        <div class="combobox-header">
+            <h4 class="title">@Localizer["Card Member"]</h4>
+            <i class="i-close"></i>
+        </div>
+        <div class="combobox-body widget-scrollbar">
+            <div class="widget-tab" style="height: 75vh;">
+                <div class="tab-sheet active" id="tab-ccm">
+                    <div id="tab-buyxgetx" class="tab-title">@Localizer["Create Card Member"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="row" hidden id="filter-block">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control" id="optionCreateCode">
+                                        <option value="1" selected>@Localizer["Manual"]</option>
+                                        <option value="2">@Localizer["Auto"]</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="form-customer" class="wrap-block col-three">
+                            <div class="left-block">
+                                <input id="card-id" hidden value="0" />
+                                <div class="stack-block">
+                                    <label>@Localizer["Card Number"]</label>
+                                    <input class="card-code" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Name"]</label>
+                                    <input class="card-name" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Type Card"]</label>
+                                    <select class="card-type" asp-items="@ViewBag.CardType">
+                                        <option value="0" selected disabled>@Localizer["---Select---"]</option>
+                                    </select>
+                                </div>
+
+                                <div class="stack-block">
+                                    <label>@Localizer["Active"]</label>
+                                    <input type="checkbox" class="card-active" style="margin-left: -40%; margin-top: 10px; height: 25px !important" />
+                                </div>
+                            </div>
+                            <div class="center-block">
+                                <div class="stack-block">
+                                    <label>@Localizer["Extend Period"]</label>
+                                    <select class="form-control card-card-expiry-period" asp-items="@Html.GetEnumSelectList<LengthExpireCard>()">
+                                    </select>
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Valid Date From"]</label>
+                                    <input class="card-exp-date-from" readonly type="date" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Valid Date To"]</label>
+                                    <input class="card-exp-date-to" readonly type="date" />
+                                </div>
+                            </div>
+
+                            <div class="right-block">
+                                <div class="stack-block">
+                                    <label>@Localizer["Posting Date"]</label>
+                                    <input class="card-posting-date" readonly type="date" />
+                                </div>
+                                <div class="stack-block" id="balance" style="display: none">
+                                    <label>@Localizer["Balance"]</label>
+                                    <input class="card-balance" readonly />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Description"]</label>
+                                    <textarea class="card-description" style="height: 90px;"></textarea>
+                                </div>
+                                <div class="stack-block">
+                                    <button id="choose-customer" class="btn" style="float: right;" type="button">@Localizer["Choose Customer"]</button>
+                                </div>
+                            </div>
+                            <div class="wrap-table detail mt-2 widget-scrollbar bTable">
+                                <table id="customer">
+                                    <tr>
+                                        <th>@Localizer["#"]</th>
+                                        <th>@Localizer["Code"]</th>
+                                        <th>@Localizer["Name"]</th>
+                                        <th>@Localizer["Phone"]</th>
+                                        <th>@Localizer["Address"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <button id="save-Card" class="btn" type="button"><i class="fas fa-save"></i> @Localizer["Save"]</button>
+                            <button id="clear-card" class="btn ml-2" type="button"><i class="fas fa-eraser"></i> @Localizer["Clear"]</button>
+                        </div>
+                        <div class="error"></div>
+                    </div>
+                    <div class="customer-dlg" style="display: none">
+                        <div id="right-search-box" class="item group-search-boxes">
+                            <div class="search-box show" title="Text search">
+                                <div class="input-box">
+                                    <i id="i-search" class="i-search fas fa-search"></i>
+                                    <input class="ignore" id="item-customer" type="text" autocomplete="off" placeholder="Search ...">
+                                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                                </div>
+                                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                            </div>
+                        </div>
+                        <table id="customer-dlg">
+                            <tr>
+                                <th>@Localizer["#"]</th>
+                                <th>@Localizer["Code"]</th>
+                                <th>@Localizer["Name"]</th>
+                                <th>@Localizer["Phone"]</th>
+                                <th>@Localizer["Address"]</th>
+                                <th>@Localizer["Action"]</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-sheet" id="list-cards">
+                    <div id="tab-saleCombo" class="tab-title">@Localizer["List Cards"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="row mb-1">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6">
+                                <div class="group-search-boxes">
+                                    <div class="search-box show" title="Text search">
+                                        <div class="input-box">
+                                            <i id="i-search" class="i-search fas fa-search"></i>
+                                            <input class="ignore" id="item-card-member" type="text" autocomplete="off" placeholder="Search ...">
+                                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                                        </div>
+                                        <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table id="cardmember">
+                            <tr>
+                                <th>@Localizer["#"]</th>
+                                <th>@Localizer["Name"]</th>
+                                <th>@Localizer["Card Number"]</th>
+                                <th>@Localizer["Valid From"]</th>
+                                <th>@Localizer["Valid To"]</th>
+                                <th>@Localizer["Active"]</th>
+                                <th>@Localizer["Action"]</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-sheet" id="create-type-card">
+                    <div id="tab-saleCombo" class="tab-title">@Localizer["Type Card"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div id="form-customer" class="wrap-block col-two">
+                            <div class="left-block">
+                                <input class="type-card-id" hidden value="0" />
+                                <div class="stack-block">
+                                    <label>@Localizer["Name"]</label>
+                                    <input class="type-card-name" />
+                                </div>
+                            </div>
+                            <div class="right-block">
+                                <div class="stack-block">
+                                    <label>@Localizer["Code"]</label>
+                                    <input class="type-card-code" type="text" />
+                                </div>
+                            </div>
+                            <div class="left-block">
+                                <div class="stack-block">
+                                    <label>@Localizer["Discount Type"]</label>
+                                    <select class="type-card-discount-type" asp-items="@ViewBag.TypeCardDiscountTypes"></select>
+                                </div>
+                            </div>
+                            <div class="right-block">
+                                <div class="stack-block">
+                                    <label>@Localizer["Discount"]</label>
+                                    <input class="type-card-discount" type="text" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="error-type-card"></div>
+                        <button id="save-type-card" class="btn" type="button"><i class="fas fa-save"></i> @Localizer["Save"]</button>
+                        <button id="clear-type-card" class="btn ml-2" type="button"><i class="fas fa-eraser"></i> @Localizer["Clear"]</button>
+                        <br />
+                        <table id="type-card">
+                            <tr>
+                                <th>@Localizer["#"]</th>
+                                <th>@Localizer["Name"]</th>
+                                <th>@Localizer["Code"]</th>
+                                <th>@Localizer["Discount Type"]</th>
+                                <th>@Localizer["Discount Value"]</th>
+                                <th>@Localizer["Action"]</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-sheet" id="create-type-card">
+                    <div id="tab-saleCombo" class="tab-title">@Localizer["Deposit"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div id="form-customer" class="wrap-block col-two">
+                            <div class="left-block">
+                                <input class="type-card-id" hidden value="0" />
+                                <div class="stack-block">
+                                    <label>@Localizer["Card Number"]</label>
+                                    <input class="deposit-card-code" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Card Name"]</label>
+                                    <input class="deposit-card-name" readonly type="text" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Customer Name"]</label>
+                                    <input class="deposit-cus-name" readonly type="text" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Amount"]</label>
+                                    <input class="deposit-amount" type="text" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Valid From"]</label>
+                                    <input class="valid-from" readonly type="date" />
+                                </div>
+                            </div>
+                            <div class="right-block">
+                                <div class="stack-block">
+                                    <label>@Localizer["No"]</label>
+                                    <select class="deposit-no"></select>
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Number"]</label>
+                                    <input class="deposit-number" readonly type="text" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Posting Date"]</label>
+                                    <input class="deposit-posting-date" readonly type="date" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Price List"]</label>
+                                    <input class="deposit-price-list" readonly type="text" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Valid To"]</label>
+                                    <input class="valid-to" readonly type="date" />
+                                </div>
+                            </div>
+                            <div class="stack-block" style="width: 100% !important;">
+                                <label>@Localizer["Balace"]</label>
+                                <input class="deposit-balance" readonly type="text" />
+                            </div>
+                        </div>
+                        <div class="error-deposit"></div>
+                        <button id="save-deposit" class="btn" type="button"><i class="fas fa-save"></i> @Localizer["Deposit"]</button>
+                        <button id="clear-deposit" class="btn ml-2" type="button"><i class="fas fa-eraser"></i> @Localizer["Clear"]</button>
+                    </div>
+                </div>
+                <div class="tab-sheet" id="renew-expire-card">
+                    <div id="tab-saleCombo" class="tab-title">@Localizer["Renew Card"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div id="form-customer" class="wrap-block col-three">
+                            <div class="left-block">
+                                <input class="renew-card-id" hidden value="0" />
+                                <input class="renew-cus-id" hidden value="0" />
+                                <div class="stack-block">
+                                    <label>@Localizer["Card Number"]</label>
+                                    <input class="renew-card-code" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Card Holder Name"]</label>
+                                    <input class="renew-cus-name" readonly type="text" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Extend Period"]</label>
+                                    <select class="form-control card-extend-expiry-period" asp-items="@Html.GetEnumSelectList<LengthExpireCard>()">
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="center-block">
+                                <div class="stack-block">
+                                    <label>@Localizer["Card Name"]</label>
+                                    <input class="renew-card-name" type="text" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Valid Date From"]</label>
+                                    <input class="renew-exp-date-from" readonly type="date" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Extend Date From"]</label>
+                                    <input class="renew-extend-exp-date-from" readonly type="date" />
+                                </div>
+                            </div>
+
+
+                            <div class="right-block">
+                                <div class="stack-block">
+                                    <label>@Localizer["Type Card"]</label>
+                                    <select class="form-control renew-card-type" disabled asp-items="@ViewBag.CardType">
+                                        <option value="0" selected disabled>@Localizer["---Select---"]</option>
+                                    </select>
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Valid Date To"]</label>
+                                    <input class="renew-exp-date-to" readonly type="date" />
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Extend Date To"]</label>
+                                    <input class="renew-extend-exp-date-to" readonly type="date" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="error-renew"></div>
+                        <button id="save-renew" class="btn" type="button"><i class="fas fa-save"></i> @Localizer["Renew"]</button>
+                        <button id="clear-renew" class="btn ml-2" type="button"><i class="fas fa-eraser"></i> @Localizer["Clear"]</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="data-invoice" hidden>@Json.Serialize(ViewBag.DataInvoice)</div>

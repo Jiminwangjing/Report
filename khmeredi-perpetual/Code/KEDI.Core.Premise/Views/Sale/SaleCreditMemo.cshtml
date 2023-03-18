@@ -1,0 +1,660 @@
+﻿<style>
+    .cursor {
+        cursor: pointer;
+    }
+
+    .font-size {
+        font-size: 13px;
+    }
+
+    .loading {
+        width: 100vw;
+        height: 90%;
+        z-index: 9999999999999999999999999;
+        position: absolute;
+    }
+
+    .img-loading {
+        position: absolute;
+        top: 70%;
+        left: 38%;
+    }
+
+    .bTable {
+        overflow: auto;
+        height: 177px;
+    }
+
+    .loadingitem {
+        position: absolute;
+        top: 46%;
+        left: 46%;
+    }
+
+    .input-group .input-group-text,
+    .input-group select,
+    .input-group input {
+        min-width: 38px !important;
+    }
+
+    .disabled {
+        pointer-events: none;
+    }
+
+    table thead tr th,
+    table tr th,
+    table tbody tr,
+    table tr td {
+        text-align: left;
+    }
+</style>
+<div class="loading" id="loading" hidden>
+    <img class="img-loading" src="~/ajaxloader/loading.gif" />
+</div>
+<div class="card card-body">
+    <partial name="../Components/Sales/_SerialNumber.cshtml" />
+    <partial name="../Components/Sales/_BatchNo.cshtml" />
+    <div class="row">
+        <div class="col-md-12 flexbox flex-end">
+            <a id="History" href="/Sale/SaleCreditMemoHistory" class="btn btn-kernel btn-xs">
+                @Localizer["History"]
+            </a>
+            <a id="btn-addnew" href="/Sale/SaleCreditMemo" class="btn btn-kernel btn-xs" hidden>
+                @Localizer["Create New"]
+            </a>
+            <button id="btn-find" class="btn btn-kernel btn-xs">
+                @Localizer["Find"]
+            </button>
+            <button class="btn btn-xs btn-kernel" id="find-draft">@Localizer["Find Draft"]</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-5">
+                    <label>@Localizer["Customer"]</label>
+                </div>
+                <div class="col-md-7 cursor" id="show-list-cus">
+                    <input type="text" readonly id="cus-id" class="form-control font-size" />
+                </div>
+                <div class="col-md-5">
+                    <label>@Localizer["Warehouse"]</label>
+                </div>
+                <div class="col-md-7">
+                    <select id="ware-id" class="form-control font-size">
+                        <option value="0"></option>
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label>@Localizer["Customer Ref."]</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" id="ref-id" class="form-control font-size" />
+                </div>
+                <div class="col-md-5">
+                    <label>@Localizer["Price List"]</label>
+                </div>
+                <div class="col-md-7">
+                    <select id="cur-id" class="form-control font-size">
+                        <option></option>
+                    </select>
+                </div>
+                 <div class="col-md-5">
+                    <label>@Localizer["Branch"]</label>
+                </div>
+                <div class="col-md-7">
+                    <select id="branch" class="form-control font-size">
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label>@Localizer["Creator"]</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" id="user-id" class="form-control font-size" readonly
+                        value="@User.FindFirst("FullName").Value" />
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-5">
+                    <label>@Localizer["Request by"]</label>
+                </div>
+                <div class="col-md-7 cursor" id="show-list-empre">
+                    <input hidden id="request_by" />
+                    <input type="text" id="request_name" readonly class="form-control font-size" />
+                </div>
+                <div class="col-md-5">
+                    <label>@Localizer["Shipped by"]</label>
+                </div>
+                <div class="col-md-7 cursor" id="show-list-empship">
+                    <input id="shipped_by" hidden />
+                    <input type="text" id="shipped_name" readonly class="form-control font-size" />
+                </div>
+                <div class="col-md-5">
+                    <label>@Localizer["Received by"]</label>
+                </div>
+                <div class="col-md-7 cursor" id="show-list-emprece">
+                    <input hidden id="received_by" />
+                    <input type="text" id="received_name" readonly class="form-control font-size" />
+                </div>
+                <div class="col-md-5">
+                    <label>@Localizer["Sale Employee"]</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="hidden" id="sale-emid" />
+                    <input type="text" id="sale-em" class="form-control font-size" autocomplete="off" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-5">
+                    <label>@Localizer["Invoice No."]</label>
+                </div>
+                <div class="col-md-7">
+                    <select id="invoice-no" class="form-control font-size"></select>
+                </div>
+                <div class="col-md-5">
+                    <label>@Localizer["Number"]</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" readonly id="next_number" class="form-control font-size" />
+                </div>
+                <div class="col-md-5">
+                    <label>@Localizer["Status"]</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" readonly id="sta-id" value="open" class="form-control font-size" />
+                </div>
+
+                <div class="col-md-5">
+                    <label>@Localizer["Posting Date"]</label>
+                </div>
+                <div class="col-md-7" style="position:relative;">
+                    <input data-date="" data-date-format="DD.MM.YYYY" type="date" id="post-date"
+                        class="form-control font-size" />
+                </div>
+                <div class="col-md-5">
+                    <label>@Localizer["Due Date"]</label>
+                </div>
+                <div class="col-md-7" style="position:relative;">
+                    <input data-date="" data-date-format="DD.MM.YYYY" class="form-control font-size" type="date"
+                        id="due-date" />
+                </div>
+                <div class="col-md-5">
+                    <label>@Localizer["Document Date"]</label>
+                </div>
+                <div class="col-md-7">
+                    <input data-date="" data-date-format="DD.MM.YYYY" class="form-control font-size" type="date"
+                        id="document-date" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-11">
+            <input id="barcode-reading" class="form-control font-size" placeholder="@Localizer["Barcode reading..."]"
+                disabled autofocus />
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-kernel btn-xs" id="item-id" disabled>
+                @Localizer["Choose"]
+            </button>
+        </div>
+    </div>
+
+    <div class="wrap-table list widget-scrollbar">
+        <table id="list-detail">
+            <tr>
+                <th>@Localizer["Item Code"]</th>
+                <th>@Localizer["Barcode"]</th>
+                <th>@Localizer["Description"]</th>
+                <th>@Localizer["Quantity"]</th>
+                <th>@Localizer["UoM"]</th>
+                <th>@Localizer["Currency"]</th>
+                <th>@Localizer["Unit Cost"]</th>
+                <th>@Localizer["Unit Price"]</th>
+
+                <th>@Localizer["Tax"]</th>
+                <th>@Localizer["Tax Rate"]</th>
+                <th>@Localizer["Tax Value"]</th>
+                <th>@Localizer["Tax Of Final Discount Value"]</th>
+                @*<th>@Localizer["Tax Sum Final Rate"]</th>
+                    <th>@Localizer["Tax Sum Final Value"]</th>*@
+                <th>@Localizer["Discount Rate"]</th>
+                <th>@Localizer["Discount Value"]</th>
+                <th>@Localizer["Final Discount Rate"]</th>
+                <th>@Localizer["Final Discount Value"]</th>
+                <th>@Localizer["Total After Discount"]</th>
+                <th>@Localizer["Total With Tax"]</th>
+                <th>@Localizer["Final Total Value"]</th>
+                <th>@Localizer["Remarks"]</th>
+                <th id="col-to-append-after-detail">@Localizer["Action"]</th>
+            </tr>
+        </table>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-5">
+                    <label>@Localizer["Exchange Rate"]</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" readonly id="ex-id" class="form-control font-size" />
+                </div>
+
+                <div class="col-md-5">
+                    <label>@Localizer["Remarks"]</label>
+                </div>
+                <div class="col-md-7">
+                    <textarea id="remark-id" style="height:50px;" class="form-control font-size"></textarea>
+                </div>
+
+                <div class="col-md-5">
+                    <label>@Localizer["Source copy"]</label>
+                </div>
+                <div class="col-md-7">
+                    <textarea id="source-copy" style="height: 100px;" class="form-control form-control font-size"
+                        readonly></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <label>@Localizer["Sub Total Before Discount"]</label>
+                </div>
+                <div class="input-group col-md-6">
+                    <div class="input-group-prepend">
+                        <span class="input-group-kernel font-size cur-class">USD</span>
+                    </div>
+                    <input type="text" readonly id="sub-id" class="form-control font-size" value="0" />
+                </div>
+
+                <div class="col-md-6">
+                    <label>@Localizer["Discount"]</label>
+                </div>
+                <div class="input-group col-md-6">
+                    <div class="input-group-prepend">
+                        <select id="sub-dis-id" disabled class="form-control font-size">
+                            <option value="Percent"> % </option>
+                        </select>
+                    </div>
+                    <input type="text" id="dis-rate-id" class="form-control summary font-size" data-number value="0" />
+                    <div class="input-group-prepend">
+                        <select id="sub-dis-id" disabled class="form-control font-size">
+                            <option value="Percent">@Localizer["Cash"]</option>
+                        </select>
+                    </div>
+                    <input type="text" id="dis-value-id" class="form-control summary font-size" data-number value="0" />
+                </div>
+                <div class="col-md-6">
+                    <label>@Localizer["Sub Total After Discount"]</label>
+                </div>
+                <div class="input-group col-md-6">
+                    <div class="input-group-prepend">
+                        <span class="input-group-kernel font-size cur-class">USD</span>
+                    </div>
+                    <input type="text" readonly id="sub-after-dis" class="form-control font-size" value="0" />
+                </div>
+                <div class="col-md-6">
+                    <label>@Localizer["Total Down Payment"]</label>
+                </div>
+                <div class="col-md-6 cursor disabled" id="tdp-dailog">
+                    <input type="text" id="total-dp-value" class="form-control summary font-size" data-number
+                        readonly />
+                </div>
+                <div class="col-md-6">
+                    <label>@Localizer["Freight"]</label>
+                </div>
+                <div class="col-md-6 cursor" id="freight-dailog">
+                    <input type="text" id="freight-value" class="form-control summary font-size" data-number readonly />
+                </div>
+                <div class="col-md-6">
+                    <label>@Localizer["Tax"]</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="vat-value" class="form-control summary font-size" data-number disabled />
+                </div>
+                <div class="col-md-6">
+                    <label>@Localizer["Applied Amount"]</label>
+                </div>
+                <div class="col-md-6 input-group">
+                    <div class="input-group-append"><span class="cur-class font-size input-group-kernel"></span></div>
+                    <input type="text" id="applied-amount" value="0" readonly data-number
+                        class="summary form-control font-size" />
+                </div>
+
+                <div class="col-md-6">
+                    <label>@Localizer["Total Amount"]</label>
+                </div>
+                <div class="col-md-6 input-group">
+                    <div class="input-group-prepend">
+                        <span class="cur-class font-size input-group-kernel font-size"></span>
+                    </div>
+                    <input type="text" id="total-id" class="form-control font-size" readonly value="0" />
+                </div>
+
+                <div class="col-md-6">
+                    <label>@Localizer["Copy From"]</label>
+                </div>
+                <div class="col-md-6">
+                    <select id="copy-from" class="form-control" disabled>
+                        <option value="0"></option>
+                        <option value="4">@Localizer["A/R"]</option>
+                        <option value="10">@Localizer["A/R Edit"]</option>
+                        <option value="7">@Localizer["A/R Down Payment Invoice"]</option>
+                        <option value="9">@Localizer["A/R Reserve invoice"]</option>
+                        <option value="15">@Localizer["A/R Reserve Editable"]</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="error-summary"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <button id="submit-item" class="btn btn-kernel btn-xs"> @Localizer["Save"]</button>
+            <button class="btn btn-xs btn-kernel" id="save-draft">@Localizer["Save Draft"]</button>
+            <a href="/Sale/SaleCreditMemo" class="btn btn-kernel btn-xs">
+                @Localizer["Cancel"]
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div id="cus-content" style="display:none;height:90vh">
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+            <div class="group-search-boxes">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="find-cus" autocomplete="off" type="text"
+                            placeholder="@Localizer["Search ..."]">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="container-list" class="wrap-table myt1 widget-scrollbar" style="height: 57vh;">
+        <table id="list-cus">
+            <tr>
+                <th><i>#</i></th>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Type"]</th>
+                <th>@Localizer["Phone"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="item-master-content" style="display:none;height:90vh">
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+            <div class="group-search-boxes">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="find-item" autocomplete="off" type="text"
+                            placeholder="@Localizer["Search ..."]">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="container-list" class="wrap-table myt1 widget-scrollbar" style="height: 57vh;">
+        <table id="list-item">
+            <tr>
+                <th>No</th>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Description"]</th>
+                <th>@Localizer["Price"]</th>
+                <th>@Localizer["Currency"]</th>
+                <th>@Localizer["Uom"]</th>
+                <th>@Localizer["Barcode"]</th>
+                <th>@Localizer["InStock"]</th>
+                <th id="col-to-append-after">@Localizer["Choose"]</th>
+            </tr>
+        </table>
+        <div id="loadingitem" hidden>
+            <img class="loadingitem" src="~/ajaxloader/loading.gif" />
+        </div>
+    </div>
+</div>
+
+@* Item Copy *@
+<div id="container-list-item-copy" class="wrap-table widget-scrollbar" style="height: 350px; display: none;">
+    <div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore font-size" id="txtSearch-item-copy" autocomplete="off" type="text"
+                    placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table class="item-copy">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>@Localizer["Invoice No"]</th>
+                <th>@Localizer["Posting Date"]</th>
+                <th>@Localizer["Currency"]</th>
+                <th>@Localizer["Sub Total"]</th>
+                <th>@Localizer["Total Amount"]</th>
+                <th>@Localizer["Discount Type"]</th>
+                <th>@Localizer["Remarks"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@*// Model Freight //*@
+<div id="container-list-freight" class="wrap-table widget-scrollbar" style="height: 350px; display: none;">
+    <div style="overflow:hidden">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="freight-lists">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>@Localizer["Freight Name"]</th>
+                            <th>@Localizer["Tax Group"]</th>
+                            <th>@Localizer["Tax %"]</th>
+                            <th>@Localizer["Total Tax Amount"]</th>
+                            <th>@Localizer["Amount"]</th>
+                            <th>@Localizer["Amount With Tax"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>@Localizer["Total Freight Amount"]</label>
+                    <input class="freightSumAmount form-control" readonly />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="empre-content" style="display:none;height:90vh">
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+            <div class="group-search-boxes">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="find-cus" autocomplete="off" type="text"
+                            placeholder="@Localizer["Search ..."]">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="container-list" class="wrap-table myt1 widget-scrollbar" style="height: auto">
+        <table id="list-empre">
+            <tr>
+                <th><i>#</i></th>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Phone"]</th>
+                <th>@Localizer["Email"]</th>
+                <th>@Localizer["Address"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </table>
+    </div>
+</div>
+@*// Model Total Down Payment //*@
+<div id="container-list-tdp" class="wrap-table widget-scrollbar" style="height: 350px; display: none;">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="tdp-lists">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>@Localizer["Document Number"]</th>
+                        <th>@Localizer["Document Type"]</th>
+                        <th>@Localizer["Remarks"]</th>
+                        <th>@Localizer["Currency"]</th>
+                        <th>@Localizer["Amount"]</th>
+                        <th>@Localizer["Document Date"]</th>
+                        <th>@Localizer["Selection"]</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+@*// Model Total Down Payment Details//*@
+<div id="container-list-tdpd" class="wrap-table widget-scrollbar" style="height: 350px; display: none;">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="tdpd-lists">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>@Localizer["Barcode"]</th>
+                        <th>@Localizer["Item Code"]</th>
+                        <th>@Localizer["Item Name"]</th>
+                        <th>@Localizer["Currency"]</th>
+                        <th>@Localizer["Quantity"]</th>
+                        <th>@Localizer["UnitPrice"]</th>
+                        <th>@Localizer["UoM Name"]</th>
+                        <th>@Localizer["Tax Code"]</th>
+                        <th>@Localizer["Tax Rate"]</th>
+                        <th>@Localizer["Tax Value"]</th>
+                        <th>@Localizer["Tax Of Final Discount Value"]</th>
+                        <th>@Localizer["Tax Down Payment Value"]</th>
+                        <th>@Localizer["Discount Rate"]</th>
+                        <th>@Localizer["Discount Value"]</th>
+                        <th>@Localizer["Final Discount Rate"]</th>
+                        <th>@Localizer["Final Discount Value"]</th>
+                        <th>@Localizer["Total After Discount"]</th>
+                        <th>@Localizer["Total With Tax"]</th>
+                        <th>@Localizer["Final Total Value"]</th>
+                        <th>@Localizer["Remarks"]</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+@*Modal Sale Employee*@
+<div id="em-content" class="widget-scrollbar" style="display:none; height: 90vh;">
+    <div class="group-search-boxes mb-3">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="txtsearchsaleem" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: auto;">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+
+    </div>
+    <table id="list_saleem">
+        <tr>
+            <th class="text-center">@Localizer["No"]</th>
+            <th class="text-center">@Localizer["Code"]</th>
+            <th class="text-center">@Localizer["Name"]</th>
+            <th class="text-center">@Localizer["Gender"]</th>
+            <th class="text-center">@Localizer["Position"]</th>
+            <th class="text-center">@Localizer["Phone"]</th>
+            <th class="text-center">@Localizer["Email"]</th>
+            <th class="text-center">@Localizer["Adress"]</th>
+            <th class="text-center">@Localizer["Type"]</th>
+            <th class="text-center">@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+<div id="Draft-list" class="wrap-table widget-scrollbar" style="height: 350px; display: none;">
+    <div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore font-size" id="txtSearchdraft" autocomplete="off" type="text"
+                    placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="Draft-Data">
+        <thead>
+            <tr>
+                <th>@Localizer["#"]</th>
+                <th>@Localizer["DocType"]</th>
+                <th>@Localizer["Draft Name"]</th>
+                <th>@Localizer["Posting Date"]</th>
+                <th>@Localizer["Currency"]</th>
+                <th>@Localizer["Sub Total"]</th>
+                <th>@Localizer["Total Amount"]</th>
+                <th>@Localizer["Remarks"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div id="form-Draft-name" style="height:30%;width:60%;padding-top:2%;display:none">
+    <label>@Localizer["Draft Name"] :</label>
+    <input id="draftname" style="width:73%" />
+</div>
+<div hidden id="data-invoice">@Json.Serialize(Model)</div>
+<input id="copykey" hidden />
+<input id="basedonid" hidden />
+<input hidden id="DocumentTypeID" />
+<input hidden id="SeriesDetailID" />
+<input hidden id="number" />
+<input hidden id="JEID" />
+<input hidden id="JENumber" />
+<input hidden value="0" id="seriesID" />
+<input hidden id="checkingSerialString" value="unchecked" />
+<input hidden id="checkingBatchString" value="unchecked" />
+<script src="~/js/Sale/sale-creditmemo.js"></script>

@@ -1,0 +1,165 @@
+﻿@model IEnumerable<CKBS.Models.Services.ReportSale.dev.GroupTransferStock>
+@{
+    ViewData["Title"] = "Print​​ Transfer Stock";
+    Layout = "~/Views/Shared/_Layout_Print.cshtml";
+}
+
+<div>
+    <div class="row">
+        <div class="col-xs-4">
+            <img src="~/Images/company/@Model.First().TFHeader.Logo" width="150" height="130" style="padding:0px 0px 0px 10px;" />
+        </div>
+        <div class="col-xs-5" style="margin-top:70px;">
+            <div class="text-center" style="opacity:0;">.</div>
+            <div class="text-center" style="font-size:30px; margin-top:-20px; margin-left:-65px;"> របាយការណ៍ផ្ទេរស្តុកទំនិញ </div>
+            <div class="text-center" style="font-size:30px; margin-top:10px; margin-left:-65px;"> Transfer Stock Report </div>
+            <div class="row" style="margin-top:75px;"></div>
+        </div>
+        <div class="col-xs-4"> </div>
+    </div>
+    <div class="row" style="margin: 0px -1px 20px -10px">
+        <div class="col-xs-4">
+            <table>
+                <tr>
+                    <th class="header">@Localizer["BranchFrom"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header"> @Model.First().TFHeader.BranchFrom </td>
+                </tr>
+                <tr>
+                    <th class="header">@Localizer["BranchTo"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header"> @Model.First().TFHeader.BranchTo </td>
+                </tr>
+                <tr>
+                    <th class="header">@Localizer["Emp. Name"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header"> @Model.First().TFHeader.EmpName </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-4">
+            <table>
+                <tr>
+                    <th class="header">@Localizer["WareHouseFrom"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header"> @Model.First().TFHeader.WHFrom </td>
+                </tr>
+                <tr>
+                    <th class="header">@Localizer["WareHouseTo"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header"> @Model.First().TFHeader.WHTo </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-4">
+            <table>
+                <tr style="margin-left:100px;">
+                    <th class="header">@Localizer["Date From"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header"> @Model.First().TFHeader.DateFrom </td>
+                </tr>
+                <tr>
+                    <th class="header">@Localizer["Date To"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header"> @Model.First().TFHeader.DateTo </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div>
+        <table class="table" border="1" cellpadding="3" cellspacing="0">
+            <thead style="background:#5F758B;">
+                <tr style="color:white;">
+                    <th width="150">@Localizer["Trans. Num"]</th>
+                    <th>@Localizer["BarCode"]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Khmer Name"]</th>
+                    <th>@Localizer["Qty"]</th>
+                    <th>@Localizer["Cost"]</th>
+                    <th>@Localizer["UoM"]</th>
+                    <th>@Localizer["Expire Date"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="header" style="border:none; background-color:lightgray" colspan="8">
+                            <span> @item.Number </span>
+                            <span style="margin-left:35px;"> Posting Date: @item.PosDate </span>
+                            <span style="margin-left:50px;"> Document Date: @item.DocDate </span>
+                            <span style="margin-left:75px;"> Time: @item.Time </span>
+                        </td>
+                         @*<td class="header" style="border:none; background-color:lightgray" colspan="8">
+                            <span>@item.Number</span>
+                        </td>
+                         <td class="header" style="border:none; background-color:lightgray" colspan="8">
+                            <span>@item.Number</span>
+                        </td>
+                         <td class="header" style="border:none; background-color:lightgray" colspan="8">
+                            <span>@item.Number</span>
+                        </td>*@
+                    </tr>
+
+                    @foreach (var detail in item.Goods)
+                    {
+                        <tr>
+                            <td style="border:none;width:50px;"></td>
+                            <td>@detail.Barcode</td>
+                            <td>@detail.Code</td>
+                            <td>@detail.KhName</td>
+                            <td>@detail.Qty</td>
+                            <td>@detail.Cost</td>
+                            <td>@detail.Uom</td>
+                            <td></td>
+                        </tr>
+                    }
+
+                    <tr>
+                        <td colspan="6" style="border-right:none;"></td>
+                        <td style="font-weight:700; text-align:right;">@Localizer["Sub Total :"]</td>
+                        <td style="font-weight:700; text-align:right;">@string.Format("{0:n2}", item.Subtotal)</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <table class="table table-bordered">
+            <tr> </tr>
+            <tr style="background-color:#5F758B;padding:0px;">
+                <th style="font-size:20px;color:white;">** @Localizer["Summary"]</th>
+                <th></th>
+            </tr>
+            <tr></tr>
+            <tr>
+                <th> @Localizer["Grand Total"] : </th>
+                <th class="text-danger">@Model.First().GRFooter.Currency @string.Format("{0:n2}", @Model.Sum(x => x.GRFooter.SumGrandTotal))</th>
+            </tr>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-xs-4">
+            <label> ** @Localizer["Acknowledge"] </label>
+            <hr style="margin-top:-3px; background-color:gray; color:gray; height:1px; width:80%; float:left;" />
+            <div style="margin-top:65px;">
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Published by"] </u></b></div>
+        </div>
+        <div class="col-xs-4" style="margin-top:95px;">
+            <div>
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Reviewed by"] </u></b></div>
+        </div>
+        <div class="col-xs-4" style="margin-top:95px;">
+            <div>
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Approved by"] </u></b></div>
+        </div>
+    </div>
+</div>

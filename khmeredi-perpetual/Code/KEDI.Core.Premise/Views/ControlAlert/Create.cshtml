@@ -1,0 +1,26 @@
+﻿@using CKBS.Models.Services.AlertManagement;
+@model AlertMaster;
+<style>
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-6">            
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label>@Localizer["Code"]</label>
+                    <input asp-for="Code" class="input-box-kernel" id="code" />
+                </div>
+                <div class="form-group">
+                    <label>@Localizer["Name"]</label>
+                    <select asp-for="TypeOfAlert" class="input-box-kernel" asp-items="@Html.GetEnumSelectList<TypeOfAlert>()"></select>
+                </div>
+                <button class="btn btn-kernel" type="submit">@Localizer["Save"]</button>
+                <a id="back" class="btn btn-kernel" style="padding-top: 4px;" asp-action="Index" asp-controller="ControlAlert">@Localizer["Back"]</a>
+            </form>
+        </div>
+    </div>
+</div>

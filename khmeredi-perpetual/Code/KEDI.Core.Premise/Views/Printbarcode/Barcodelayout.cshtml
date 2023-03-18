@@ -1,0 +1,175 @@
+﻿
+@using KEDI.Core.Premise.Models.ServicesClass.PrintBarcode;
+@model PrinterNameModel
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-2">
+            <div>@Localizer["Price List"]</div>
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" id="plId" asp-items="@ViewBag.PriceLists"></select>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-xs btn-kernel" id="choose-items">@Localizer["Choose Item"]</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="item-lists" style="display: none;">
+    <form asp-controller="Printbarcode" asp-action="Index" target="_blank" method="post">
+        <div class="flexbox space-between">            
+            <div class="item group-search-boxes">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="search-barcode-items" autocomplete="off" type="text" placeholder="Search ...">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+            <button class="btn btn-kernel float-right m-2" type="submit">@Localizer["Apply"]</button>
+        </div>
+        <div class="wrap-table" style="display: none;">
+            <table id="list-barcode-items">
+                <thead>
+                    <tr>
+                        <th>@Localizer["#"]</th>
+                        <th>@Localizer["Code"]</th>
+                        <th>@Localizer["Barcode"]</th>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["UnitPrice"]</th>
+                        <th>@Localizer["Choose"]</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+       
+    </form>
+    <div class="wrap-table " style="height: 70vh;">
+        <table class="item-table" style="height: auto;">
+            <thead>
+                <tr>
+                    <th>@Localizer["#"]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Barcode"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["UnitPrice"]</th>
+                    <th>@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+         
+        $("#choose-items").click(function () {
+            const itemDialog = new DialogBox({
+                content: {
+                    selector: ".item-lists"
+                },
+                caption: "Item Master Data",
+                type: "ok", 
+                button:{
+                   ok:{ text: "Close" }
+                }
+            });
+
+            itemDialog.invoke(function () {
+                let $chosenItems = ViewTable({
+                    keyField: "LineID",
+                    selector: "#list-barcode-items",
+                    model:{
+                        ItemPrintBarcodes:[]
+                    },
+                     paging: {
+                        enabled: false
+                    },
+                });
+
+                let itemTable = ViewTable({
+                    keyField: "LineID",
+                    selector: ".item-table",                
+                    dataSynced: true,
+                    indexed: true,
+                    paging: {
+                        pageSize: 20,
+                        enabled: true
+                    },
+                    visibleFields: ["ItemCode", "ItemBarcode", "ItemName", "UnitPrice", "IsSelected"],
+                    columns:[
+                        {
+                            name: "IsSelected",
+                            template: "<input type='checkbox' />",
+                            on:{
+                                "change": function(e){
+                                    var chosens = $.grep(itemTable.yield(), function(item){
+                                        return item.IsSelected;
+                                    });
+                                    $chosenItems.bindRows(chosens);
+                                }
+                            }
+                        }
+                    ]
+                });
+                const plId = $("#plId").val()
+                $.get(
+                    "/Printbarcode/GetItemMasterData",
+                    { plId },
+                    function (res) {
+                        console.log("res", res);
+                        itemTable.bindRows(res);
+                        searchBarcodeItems(itemTable, $chosenItems, res);
+                    });
+            });
+
+            itemDialog.confirm(function () {
+               itemDialog.shutdown();
+            });       
+        })
+    });
+
+    function searchBarcodeItems($listview, $chosenListview, items){
+        $("#search-barcode-items").on("keyup", function(){
+            var _items = [];
+            _items = searchItems(items, this.value);
+            $listview.clearRows();
+            $listview.bindRows(_items);
+
+            var chosens = $.grep(_items, function(item){
+                return item.IsSelected;
+            });
+            $chosenListview.clearRows();
+            $chosenListview.bindRows(chosens);
+        });
+    }
+
+    function loadScreen(enabled = true) {
+        if (enabled) {
+            $(".widget-loadscreen").show();
+        } else {
+            $(".widget-loadscreen").hide();
+        }
+    }
+
+    function searchItems(items, keyword = "") {
+        let input = keyword.replace(/\s+/g, '');
+        let regex = new RegExp(input, "ig");
+        var filtereds = $.grep(items, function (item, i) {
+            var nameEn = isEmpty(item.ItemName2) ? "" : item.ItemName2.replace(/\s+/g, '');
+            return regex.test(item.ItemName.replace(/\s+/g, ''))
+                || regex.test(nameEn)
+                || regex.test(item.ItemCode.replace(/\s+/g, ''))
+                || regex.test(item.UnitPrice.toString().replace(/\s+/g, ''))
+                || regex.test(item.ItemBarcode);
+        });
+        return filtereds;
+    }
+
+    function isEmpty(value) {
+        return value == undefined || value == null || value == "";
+    }
+</script>

@@ -1,0 +1,92 @@
+﻿<style>
+    #loadingitem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+<div class="card card-body">
+    <form id="form-submit">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="widget-scrollbar">
+                    <table id="table-can-ring-setup">
+                        <thead>
+                            <tr>
+                                <th id="new-can-ring-setup"><i class="fas fa-plus-circle fa-lg csr-pointer text-dark"></i></th>
+                                <th>@Localizer["Name"]</th>
+                                <th>@Localizer["Price List"]</th>
+                                <th>@Localizer["Item Name"]</th>
+                                <th>@Localizer["Qty"]</th>
+                                <th>@Localizer["Uom"]</th>
+                                <th>@Localizer["Item Change"]</th>
+                                <th>@Localizer["Qty Change"]</th>
+                                <th>@Localizer["Uom Change"]</th>
+                                <th>@Localizer["Charge"]</th>
+                                <th>@Localizer["Action"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-1 col-sm-2 col-xs-3">
+                <label>@Localizer["Total"] </label>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input readonly type="text" style="height: 35px; line-height: 25px" id="total" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="error-message"></div>
+        <br />
+        <div class="flex">
+            <button type="button" id="submit-data" class="btn btn-kernel btn-xs">@Localizer["Add"]</button>
+            <a asp-action="Index" class="btn btn-kernel btn-xs">@Localizer["Back"]</a>
+        </div>
+    </form>
+    <div id="item-master-content" style="display:none;">
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <div class="group-search-boxes">
+                    <div id="text-search" class="wrap-search-box">
+                        <div class="wrap-input show">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="find-item" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="container-list" class="wrap-table myt1 widget-scrollbar" style="height: 400px">
+            <table id="list-item">
+                <tr>
+                    <th>No</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Description"]</th>
+                    <th>@Localizer["Price"]</th>
+                    <th>@Localizer["Currency"]</th>
+                    <th>@Localizer["Uom"]</th>
+                    <th>@Localizer["Barcode"]</th>
+                    <th id="col-to-append-after">@Localizer["Choose"]</th>
+                </tr>
+                <tr id="no-data" hidden>
+                    <td colspan="8" class="text-capitalize text-center">@Localizer["No Data"]</td>
+                </tr>
+            </table>
+            <div id="loadingitem" hidden>
+                <img class="loadingitem" src="~/ajaxloader/loading.gif" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="data-dis-cur" hidden>@Json.Serialize(Model)</div>
+<script src="~/Admin/CanRing/can-ring-setup.js"></script>

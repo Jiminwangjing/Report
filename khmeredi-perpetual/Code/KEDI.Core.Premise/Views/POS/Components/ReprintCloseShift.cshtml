@@ -1,0 +1,45 @@
+﻿
+<div id='reprint-closeshift' class="widget-scrollbar" style="display: none;">
+    <div class="group-search-boxes">
+        <div id="text-search" class="search-box show">
+            <div class="input-box">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-reprint-closeshift" type="text" value="" placeholder=@Localizer["Search ..."]>
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div class="flexbox">
+        <div class="stack-block width-half">
+            <label>@Localizer["Date From"]</label>
+            <input type="date" class="closeshift-date-from" />
+        </div>
+        <div class="stack-block width-half">
+            <label>@Localizer["Date To"]</label>
+            <input type="date" class="closeshift-date-to" />
+        </div>
+    </div>
+
+    <fieldset id="reprint-closeshift" class='shadow wrap-table widget-scrollbar' style="height: 350px;">
+        <legend class="title">@Localizer["List of Close Shifts"]</legend>
+        <div class="widget-scrollbar" style="overflow: auto">
+            <table class="reprint-closeshift-listview" border="1">
+                <tr>
+                    <th>@Localizer["Emp Name"]</th>
+                    <th>@Localizer["Trant"]</th>
+                    <th>@Localizer["DateIn"]</th>
+                    <th>@Localizer["TimeIN"]</th>
+                    <th>@Localizer["DateOut"]</th>
+                    <th>@Localizer["TimeOut"]</th>
+                    <th>@Localizer["Cash In"]</th>
+                    <th>@Localizer["Total"]</th>
+                    <th>@Localizer["Total Cash Out"]</th>
+                    <th>@Localizer["Cash Out"]</th>
+                    <th>@Localizer["Option"]</th>
+                </tr>
+            </table>
+        </div>
+
+    </fieldset>
+</div>

@@ -1,0 +1,211 @@
+﻿@model Employee
+@{
+    ViewData["Title"] = "Update";
+}
+<style>
+
+    input[type="file"] {
+        height: auto;
+        width: auto;
+        visibility: hidden;
+    }
+
+    .input-value {
+        position: relative;
+        top: 0;
+        text-align: left;
+    }
+
+    .image {
+        margin-top: 24px;
+        border-bottom-left-radius: 100px;
+        border-bottom-right-radius: 100px;
+        border-top-left-radius: 100px;
+        border-top-right-radius: 100px;
+    }
+
+    input {
+        height: 40px;
+    }
+
+    select {
+        height: 40px;
+    }
+
+    .ch {
+        margin-left: 10px;
+    }
+
+    .fa {
+        margin-right: 4px;
+    }
+
+    .form-group {
+        padding: 0px;
+        margin: 0px;
+    }
+</style>
+<div class="card card-body">
+    <form asp-action="Update" enctype="multipart/form-data" method="post">
+        <div class="row">
+            <div class="col-md-12">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="hidden" asp-for="ID" />
+                            <label asp-for="Code" class="control-label">@Localizer["Code"] :</label>
+                            <input asp-for="Code" class="form-control" />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                            <div class="text-danger">@ViewBag.Error</div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label">@Localizer["Name"] :</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Gender" class="control-label"></label>
+                            <select asp-for="Gender" class="form-control" asp-items="@new SelectList(Enum.GetNames(typeof(Gender)))">
+                                @Localizer["Gender"]
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Birthdate" class="control-label">@Localizer["Birthdate"] :</label>
+                            <div class="input-group">
+                                <input asp-for="Birthdate" class="form-control" id="txtBirthdate" type="date" />
+                            </div>
+                            <span asp-validation-for="Birthdate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Hiredate" class="control-label">@Localizer["Hiredate"] :</label>
+                            <div class="input-group">
+                                <input asp-for="Hiredate" class="form-control" id="txtHiredate" type="date" />
+                            </div>
+                            <span asp-validation-for="Hiredate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Position" class="control-label">@Localizer["Position"] :</label>
+                            <input asp-for="Position" class="form-control" />
+                            <span asp-validation-for="Position" class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group form-inline">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="IsUser" />@Localizer["User Account"]
+                                    </label>
+                                    @*<label class="form-check-label">
+                <input class="form-check-input" asp-for="Stopwork" />@Localizer["Stop work"]
+            </label>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div>
+                            <input id="img" asp-for="Photo" hidden />
+                            <label class="file">
+                                <img src="~/Images/employee/@Model.Photo" id="imgpro" class="StyleImge" width="150" height="150" />
+                                <input hidden asp-for="Image" type="file" id="inputimg" name="img"
+                                       aria-invalid="false" onchange="imgURL(this);"
+                                       accept=".ico , .png , .jpg , .jpeg , .gif" />
+                                @*<input type="text" asp-for="Photo" hidden />*@
+                            </label>
+                            <span asp-validation-for="Image" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EMType" class="control-label">@Localizer["Type"] :</label>
+                            <input asp-for="EMTypeID" id="empTypeId" hidden />
+                            <input asp-for="EMType" class="input-box-kernel" id="EMType" readonly autocomplete="off" />
+                            <span asp-validation-for="EMType" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Phone" class="control-label">@Localizer["Phone"] :</label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label">@Localizer["Email"] :</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Address" class="control-label">@Localizer["Address"] :</label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 pull-left">
+                <div class="form-group form-inline">
+                    <button type="submit" class="btn btn-kernel btn-sm ">@Localizer["Save"]</button> &nbsp;
+                    <a asp-action="Index" class="btn btn-kernel btn-sm">@Localizer["Back"]</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@*Modal customer*@
+<div id="em-content" style="display:none; height: 364px;">
+    <div class="row">
+        <div class="col-sm-9">
+            <div class="for-group">
+                &nbsp;&nbsp;&nbsp;<label>Set Type:</label>
+                <input type="text" id="txt_type" autocomplete="off" />
+            </div>
+        </div>
+        <div class="col-sm-3"><div id="error-summarys" style="height:15px;"></div></div>
+    </div>
+
+
+    <div class="group-search-boxes mb-3">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="txtsearchativity" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+
+    </div>
+    <div class="wrap-table myt1" style="height: 65vh">
+        <table id="list_activity">
+
+            <tr>
+                <th class="text-center">@Localizer["No"]</th>
+                <th class="text-center" style="width:50px !important;">@Localizer["Type"]</th>
+                <th class="text-center">@Localizer["Action"]</th>
+            </tr>
+        </table>
+    </div>
+
+</div>
+<script src="~/js/humanresource/humanresource.js"></script>
+<script type="text/javascript">
+
+    function imgURL(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imgpro').attr('src', e.target.result);
+                $('#img').val(input.files[0].name);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+</script>

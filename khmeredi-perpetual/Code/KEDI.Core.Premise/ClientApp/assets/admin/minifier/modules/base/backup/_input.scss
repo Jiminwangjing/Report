@@ -1,0 +1,57 @@
+.input-box {
+    position: relative;
+    min-width: auto;
+    width: 300px;
+    margin-top: .5rem;
+}
+
+.input-box * {
+    box-sizing: border-box;
+}
+
+.input-box input ~ .line,
+.input-box select ~ .line,
+.input-box textarea ~ .line {     
+    position: absolute;          
+    display: block;           
+    border-bottom: 1px solid #87ceeb;              
+    bottom: 0;     
+    width: 0;          
+    transform: scaleX(0);
+    transform-origin: 0%;
+    transition: .2s linear;
+}
+
+.input-box input:focus ~ .line, 
+.input-box select:focus ~ .line,
+.input-box textarea:focus ~ .line
+{            
+    transform: scaleX(1);
+    width: 100%;          
+    border-bottom: 2px solid #87ceeb;
+    transition: .2s linear;
+}
+
+.input-box textarea ~ .line {
+    bottom: 3.5px;
+}
+        
+.input-box input, .input-box select {
+    outline: none;
+    border:none;
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    width: 100%;
+    padding: 0 5px;
+    height: 30px;
+    line-height: normal;
+}
+
+.input-box textarea {
+    text-align: left;
+    width: 100%;
+    border-radius: 2px;
+    height: 30;
+    line-height: normal;
+    padding: 5px;
+    resize: none;
+}

@@ -1,0 +1,47 @@
+
+.dialog-box.origin {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transform: translate(0);
+        -ms-transform: translate(0);
+            transform: translate(0);
+    transition: all .2s;
+}
+
+.dialog-box.origin-left {
+    -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+            transform: translateX(-50%);
+    transition: all .2s;  
+}
+
+.dialog-box.origin-right {
+    -webkit-transform: translateX(50%);
+        -ms-transform: translateX(50%);
+            transform: translateX(50%);
+    transition: all .2s;  
+}
+
+.dialog-box.origin-bottom {
+    -webkit-transform: translateY(50%);
+        -ms-transform: translateY(50%);
+            transform: translateY(50%);
+    transition: all .2s;  
+}
+
+.dialog-box.origin-top {
+    -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+    transition: all .2s;  
+}
+
+.dialog-box.fade {
+    opacity: 0;
+    visibility: collapse;
+    -webkit-transform: translate(0);
+        -ms-transform: translate(0);
+            transform: translate(0);
+    transition: all .2s; 
+}
+

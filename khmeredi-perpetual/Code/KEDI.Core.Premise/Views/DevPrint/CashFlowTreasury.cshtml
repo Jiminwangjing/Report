@@ -1,0 +1,124 @@
+﻿@model CKBS.Models.ServicesClass.FinancailReportPrint.PirntCashFlowForTreasuryViewModel
+@{
+    ViewData["Title"] = "Preview Cash Flow For Treasury";
+    Layout = "~/Views/Shared/_Layout_Print.cshtml";
+}
+
+<div>
+    <div class="row">
+        <div class="col-xs-4">
+            @*<img src="~/Images/company/@Model.First().HeaderCloseShift.Logo" width="150" height="130" style="padding:0px 0px 0px 10px;" />*@
+        </div>
+        <div class="col-xs-5" style="margin-top:70px;">
+            <div class="text-center" style="opacity:0;">.</div>
+            <div class="text-center" style="font-size:30px; margin-top:-20px;"> លំហូរសាច់ប្រាក់សម្រាប់រតនាគារ </div>
+            <div class="text-center" style="font-size:30px; margin-top:10px;"> Cash Flow For Treasury </div>
+            <div class="row" style="margin-top:75px;"></div>
+        </div>
+        <div class="col-xs-4"> </div>
+    </div>
+    <div class="row" style="margin: 0px -1px 20px -10px">
+        <div class="col-xs-4">
+            <table>
+                <tr>
+                    <th class="header">@Localizer["From Date"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header"> @Model.HeaderCashflow.FromDate</td>
+                </tr>
+                <tr>
+                    <th class="header">@Localizer["To Date"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header"> @Model.HeaderCashflow.ToDate</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-2"></div>
+    </div>
+    <div>
+        <table class="table" id="expectedTable" border="1" cellpadding="3" cellspacing="0">
+            <thead style="background-color:#5F758B;">
+                <tr>
+                    <th class="header" style="color:white;">@Localizer["Posting Date"]</th>
+                    <th class="header" style="color:white;">@Localizer["Origin"]</th>
+                    <th class="header" style="color:white;">@Localizer["Referrence"]</th>
+                    <th class="header" style="color:white;">@Localizer["Controll Account"]</th>
+                    <th class="header" style="color:white;">@Localizer["GL/Account /BPCode"]</th>
+                    <th class="header" style="color:white;" colspan="6">@Localizer["Remarks"]</th>
+                    <th class="header" style="color:white;">@Localizer["Debit"]</th>
+                    <th class="header" style="color:white;">@Localizer["Credit"]</th>
+                    <th class="header" style="color:white;">@Localizer["Total"]</th>
+                    <th class="header" style="color:white;">@Localizer["Balance"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model.CashFlowForTreasuryViewModels)
+                {
+                    <tr><td class="header" style="border:none; background-color:lightgray" colspan="16"><span>@group.Key</span></td></tr>
+                    @foreach (var item in group)
+                        {
+                            <tr>
+                                <td colspan="2" class="text-right">@item.Origin</td>
+                                <td>@item.Referrence</td>
+                                <td>@item.ControlAccount</td>
+                                <td>@item.GLAccBPCode</td>
+                                <td colspan="6">@item.Remarks</td>
+                                <td>@item.Debit
+                                <td>@item.Credit</td>
+                                <td>@item.Total</td>
+                                <td>@item.Balance</td>
+                            </tr>
+                        }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <table class="table table-bordered">
+            <tr> </tr>
+            <tr style="background-color:#5F758B; padding:0px;">
+                <th class="header" style="color:white;"> *** @Localizer["Summary"] </th>
+                <th></th>
+            </tr>
+            <tr> </tr>
+            <tr>
+                <th> @Localizer["Total Debit"] :</th>
+                <th class="text-danger">@Model.Summary.DebitTotal</th>
+            </tr>
+            <tr>
+                <th> @Localizer["Total Credit"] : </th>
+                <th class="text-danger">@Model.Summary.CreditTotal</th>
+            </tr>
+            <tr>
+                <th> @Localizer["Total Summary"] : </th>
+                <th class="text-danger">@Model.Summary.TotalSummary</th>
+            </tr>
+            <tr>
+                <th> @Localizer["Final Total"] : </th>
+                <th class="text-danger">@Model.Summary.BalanceTotal</th>
+            </tr>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-xs-4">
+            <label> **@Localizer["Acknowledge"] </label>
+            <hr style="margin-top:-3px; background-color:gray; color:gray; height:1px; width:80%; float:left;" />
+            <div style="margin-top:65px;">
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Published by"] </u></b></div>
+        </div>
+        <div class="col-xs-4" style="margin-top:95px;">
+            <div>
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Reviewed by"] </u></b></div>
+        </div>
+        <div class="col-xs-4" style="margin-top:95px;">
+            <div>
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Approved by"] </u></b></div>
+        </div>
+    </div>
+</div>
+

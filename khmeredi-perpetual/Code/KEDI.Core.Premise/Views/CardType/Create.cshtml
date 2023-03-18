@@ -1,0 +1,57 @@
+﻿@model CKBS.Models.Services.Promotions.CardType
+
+@{
+    ViewData["Title"] = "Create";
+}
+<style>
+    .fa{
+        margin-right:4px;
+    }
+    .form-group{
+        padding:0px;
+        margin:0px;
+    }
+</style>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Name"] :</label>
+                    <input asp-for="Name" class="input-box-kernel" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Discount"] :</label>
+                    <input asp-for="Discount" class="input-box-kernel" id="txtdiscount" />
+                    <span asp-validation-for="Discount" class="text-danger"></span>
+                    &nbsp;<span id="errmsg"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["TypeDiscount"] :</label>
+                    <select class="input-box-kernel" asp-for="TypeDis">
+                        <option value="" selected disabled>--- Select --- </option>
+                        <option value="Percent">Percent ( % )</option>
+                        <option value="Cash">Cash ( $ )</option>
+                    </select>
+                    <span asp-validation-for="TypeDis" class="text-danger"></span>
+                    <div class="text-danger">@ViewBag.type_requried</div>
+                </div>
+                <div class="form-group" style="margin-top:10px;">
+                    <button type="submit" class="btn btn-kernel btn-xs">@Localizer["Add"]</button>
+                    <a class="btn btn-kernel btn-xs" asp-action="Index">@Localizer["Back"]</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $("#txtdiscount").keypress(function (e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            $("#errmsg").html("Digits Only").show().fadeOut("slow");
+            return false;
+        }
+    });
+</script>
+

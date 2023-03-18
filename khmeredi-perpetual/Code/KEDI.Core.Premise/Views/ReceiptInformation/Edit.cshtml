@@ -1,0 +1,168 @@
+﻿@model CKBS.Models.Services.Administrator.General.ReceiptInformation
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<style>
+    .fa {
+        margin-right: 4px;
+    }
+    .stylebutton {
+        margin-top:10px;
+    }
+
+    .StyleImge {
+        height: 100px;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        width: 100px;
+    }
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 50px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            cursor: inherit;
+            display: block;
+        }
+
+    #imagestyle {
+        border-radius: 50px;
+        margin-left: 14px;
+        margin-top: 10px;
+        box-shadow: 0px 0px 4px;
+        color: blue;
+    }
+    .form-group{
+        padding:0px;
+        margin:0px;
+    }
+</style>
+<div class="card card-body">
+<form asp-action="Edit" enctype="multipart/form-data" method="post"> 
+    <div class="row">
+        <div class="col-md-6">
+            <input type="hidden" asp-for="ID" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Title1"] :</label>
+                <input asp-for="Title" class="input-box-kernel" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Title2"] :</label>
+                    <input asp-for="Title2" class="input-box-kernel" />
+                    <span asp-validation-for="Title2" class="text-danger"></span>
+                </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Branch"]</label>
+                <select class="input-box-kernel" asp-for="BranchID" asp-items="ViewBag.BranchID">
+                    <option value="0" selected disabled>---select---</option>
+                </select>
+                <div class="required_branch text-danger">@ViewData["required_branch"]</div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Tel1"] :</label>
+                <input asp-for="Tel1" class="input-box-kernel" />
+                <span asp-validation-for="Tel1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Tel2"] :</label>
+                <input asp-for="Tel2" class="input-box-kernel" />
+                <span asp-validation-for="Tel2" class="text-danger"></span>
+            </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Email"] :</label>
+                    <input asp-for="Email" type="email" class="input-box-kernel" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["VATTIN"] :</label>
+                    <input asp-for="VatTin" class="input-box-kernel" />
+                    <span asp-validation-for="VatTin" class="text-danger"></span>
+                </div>
+            
+        </div>
+        <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Description1"] :</label>
+                    <input asp-for="KhmerDescription" class="input-box-kernel" />
+                    <span asp-validation-for="KhmerDescription" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Description2"] :</label>
+                    <input asp-for="EnglishDescription" class="input-box-kernel" />
+                    <span asp-validation-for="EnglishDescription" class="text-danger"></span>
+                </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Address1"] :</label>
+                <textarea asp-for="Address" class="input-box-kernel"></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+                <div class="form-group" style="margin-top:-10px;">
+                    <label class="control-label">@Localizer["Address2"] :</label>
+                    <textarea asp-for="Address2" class="input-box-kernel"></textarea>
+                    <span asp-validation-for="Address2" class="text-danger"></span>
+                </div>
+
+
+
+                <div class="form-group" style="margin-top:-6px;">
+                <label class="control-label">@Localizer["Team&Condition1"] :</label>
+                <textarea asp-for="TeamCondition" class="input-box-kernel"></textarea>
+                <span asp-validation-for="TeamCondition" class="text-danger"></span>
+            </div>
+                <div class="form-group" style="margin-top:-6px;">
+                    <label class="control-label">@Localizer["Team&Condition2"] :</label>
+                    <textarea asp-for="TeamCondition2" class="input-box-kernel"></textarea>
+                    <span asp-validation-for="TeamCondition2" class="text-danger"></span>
+                </div>
+               
+                <div class="form-group" style="margin-top:-6px;">
+                    <label class="control-label">@Localizer["Website"] :</label>
+                    <input asp-for="Website" class="input-box-kernel" />
+                    <span asp-validation-for="Website" class="text-danger"></span>
+                </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["PowerBy"] :</label>
+                <input asp-for="PowerBy" class="input-box-kernel" />
+                <span asp-validation-for="PowerBy" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row pull-left">
+        <div class="col-md-12 stylebutton">
+            <button class="btn btn-kernel btn-xs" type="submit">@Localizer["Save"]</button>
+            <button class="btn btn-xs btn-kernel" asp-action="Index">@Localizer["Back"]</button>
+        </div>
+    </div>
+</form>
+    </div>
+<script>
+    function show(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+
+            filerdr.onload = function (e) {
+                $('#logo').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+            $("#LogoCopy").val("");
+        }
+    }
+</script>
+
+
+

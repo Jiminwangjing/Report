@@ -1,0 +1,169 @@
+﻿@model IEnumerable<KEDI.Core.Premise.Models.Sale.Print.PrintSaleHistory>
+@{
+    ViewData["Title"] = "SaleARHistory";
+    Layout = "_Layout_print";
+    var num = 0;
+    double sub_Total = 0;
+    double DisValue = 0;
+    double Vatvalue = 0;
+    double Applied_Amount = 0;
+    double Totalamount = 0;
+
+}
+
+<style>
+    body {
+        font-family: 'Khmer OS Battambang';
+        font-size: 18px;
+    }
+
+    #th {
+        border: hidden;
+        border-top: solid;
+        border-right: solid
+    }
+
+    #th1 {
+        border-bottom: hidden;
+        border-right: hidden
+    }
+
+    #th2 {
+        text-align: center;
+        border-right: solid;
+        border-bottom: hidden
+    }
+
+    #th3 {
+        border-right: hidden;
+        border-bottom: solid
+    }
+
+    #th4 {
+        text-align: center;
+        border-right: solid;
+        border-bottom: solid
+    }
+</style>
+<hr style="border: 2px solid #2874A6;">
+<div class="row">
+    <div class="col-xs-4">
+        <img src="~/Images/company/@Model.First().Logo" width="200" height="170" />
+    </div>
+    <div class="col-xs-3">
+        <p>លេខឯកសារ</p>
+        <p>Document Number:</p>
+        <p><b>@Model.First().PreFix-@Model.FirstOrDefault().Invoice</b></p>
+    </div>
+    <div class="col-xs-2">
+        <p>កាលបរិច្ឆេទ</p>
+        <p>Date:</p>
+        <p><b>@Model.FirstOrDefault().PostingDate</b></p>
+    </div>
+    <div class="col-xs-3" style="padding-left:6%">
+        <p>លេខសំគាល់អតិថិជន</p>
+        <p>Customer ID:</p>
+        <p><b>@Model.FirstOrDefault().CusNo</b></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-5" style="margin-bottom:10px">
+        <h1 style="color:blue;">SALES INVOICE</h1>
+        <p style="color: #2874A6">@Model.First().Tel1 / @Model.FirstOrDefault().Tel2</p>
+        <p>@Model.FirstOrDefault().Addresskh</p>
+        <p>@Model.FirstOrDefault().AddressEng</p>
+    </div>
+    <div class="col-xs-7" style="padding-top:35px">
+        <p>ជូនចំពោះ / Attention :<b> @Model.FirstOrDefault().CusName</b></p>
+        <p>ក្រុមហ៊ុន / Company :<b></b></p>
+        <p>លេខទូរស័ព្ទ / Tel :<b> @Model.FirstOrDefault().Phone</b></p>
+        <p>អាស័យដ្ឋាន / Address :<b> @Model.FirstOrDefault().Address</b></p>
+        <p>សុពលភាពដល់ / Valid till :<b> @Model.FirstOrDefault().DueDate</b></p>
+        <p>លេខយោង / Reference number :<b> @Model.FirstOrDefault().RefNo</b></p>
+    </div>
+</div>
+
+<div style="min-height:660px">
+    <table class="table table-bordered">
+        <thead style="background: #2874A6;border:solid">
+            <tr style="color:white;">
+                <th class="text-center">No.</th>
+                <th class="text-center" width="25%">Description</th>
+                <th class="text-center" width="15%">Code</th>
+                <th class="text-center" width="10%">Q'nty</th>
+                <th class="text-center" width="10%">Unit</th>
+                <th class="text-center" width="12%">Unit Price</th>
+                <th class="text-center" width="8%">Discount.item</th>
+                <th class="text-center" width="20%">Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                num++;
+                sub_Total += item.Sub_Total;
+                DisValue = item.DiscountValue;
+                Vatvalue = item.VatValue;
+                Applied_Amount = item.Applied_Amount;
+                Totalamount = item.Sub_Total;
+
+                <tr style="border: 1px dashed #c2c2c2;border:solid">
+                    <td style="text-align:center">@num</td>
+                    <td>@item.ItemNameKh</td>
+                    <td style="text-align:center">@item.ItemCode</td>
+                    <td style="text-align:center">@item.Qty</td>
+                    <td style="text-align:center">@item.UomName</td>
+                    <td style="text-align:center">@item.Price</td>
+                    <td style="text-align:center">@item.DiscountRate_Detail%</td>
+                    <td style="text-align:center">@item.Sub_Total</td>
+                </tr>
+            }
+        </tbody>
+        <tr>
+            <td colspan="5" id="th"></td>
+            <th id="th1">SubTotal:</th>
+            <th colspan="2" id="th2">@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n0}", sub_Total))</th>
+        </tr>
+        <tr>
+            <td colspan="5" id="th"></td>
+            <th id="th1">Discount(@Model.FirstOrDefault().DiscountRate%):</th>
+            <th colspan="2" id="th2">@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n0}", DisValue))</th>
+        </tr>
+        <tr>
+            <td colspan="5" id="th"></td>
+            <th id="th1">Vat(@Model.FirstOrDefault().TaxRate%):</th>
+            <th colspan="2" id="th2">@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n0}", Vatvalue))</th>
+        </tr>
+        <tr>
+            <td colspan="5" id="th"></td>
+            <th id="th1">Applied_Amount:</th>
+            <th colspan="2" id="th2">@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n0}", Applied_Amount))</th>
+        </tr>
+        <tr>
+            <td colspan="5" id="th"></td>
+            <th id="th3">TotalAmount:</th>
+            <th colspan="2" id="th4">@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n0}", Totalamount - Applied_Amount))</th>
+        </tr>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <p><b>Remark :</b> @Model.FirstOrDefault().Remarks</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-6">
+        <p>ឯកសារចេញដោយ៖</p>
+        <p>ឈ្មោះ៖</p>
+        <p>លេខទូរស័ព្ទ៖</p>
+    </div>
+    <div class="col-xs-6">
+        <p>ទទួលដោយ៖</p>
+        <p>ឈ្មោះ៖</p>
+        <p>លេខទូរស័ព្ទ៖</p>
+        <p>កាលបរិច្ឆេទ៖</p>
+    </div>
+</div>

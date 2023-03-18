@@ -1,0 +1,469 @@
+﻿
+@{
+    ViewData["Title"] = "SaleARView";
+}
+
+<head>
+    <link href="~/Admin/DevReport/css/DevReport.css" rel="stylesheet" />
+</head>
+<body class="dx-viewport">
+    <div class="card card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <label class="lable_datefrom">@Localizer["Date From"]</label>
+                <input type="date" class="input_datefrom" id="datefrom" />
+            </div>
+            <div class="col-md-2">
+                <label class="lable_dateto">@Localizer["Date To"]</label>
+                <input type="date" class="input_dateto" id="dateto" />
+            </div>
+            <div class="col-md-2">
+                <label class="lable_branch">@Localizer["Contract Type"]</label>
+                <select type="text" class="input_branch" id="contracttype">
+                    <option value="All">All</option>
+                    <option value="Renewal">Renewal</option>
+                    <option value="New">New</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="lable_branch">@Localizer["Payment Status"]</label>
+                <select type="text" class="input_branch" id="pay_status">
+                    <option value="All">All</option>
+                    <option value="FullyPaid">Fully Paid</option>
+                    <option value="UnPaid">Un Paid</option>
+                    <option value="NotYetFullyApplied">Not Yet Fully Applied</option>
+                    <option value="Outstanding">Outstanding</option>
+
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="lable_branch">@Localizer["Expried"]</label>
+                <select type="text" class="input_branch" id="expried">
+                    <option value="All">All</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-xs btn-kernel" id="filter">@Localizer["Filter"]</button>
+            </div>
+        </div>
+        <div id="gridContainer"></div>
+        <div class="options">
+            <div class="option">
+                <div id="autoExpand"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    $(function () {
+        
+        filterData();
+        $.ajax({
+            url: "/SaleReport/GetApliedAmount",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                $("#pay_status").val()
+            }
+        });
+        $('#filter').click(function () {
+
+            filterData(this);
+        });
+        function filterData(button) {
+            let btn_filter = $(button).children("i.fa-search");
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var contracttype = $("#contracttype").val();
+            var pay_status = $("#pay_status").val();
+            var expried = $("#expried").val();
+            $.ajax({
+                url: "/SaleReport/GetServicContract",
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    DateFrom: date_from,
+                    DateTo: date_to,
+                    ContractType: contracttype,
+                    PaymentStatus: pay_status,
+                    Expried: expried,
+                },
+                beforeSend: function () {
+                    btn_filter.addClass("fa-spinner fa-spin");
+                },
+                success: function (reponse) {
+                    bindGrid(reponse);
+                    btn_filter.removeClass("fa-spinner fa-spin");
+                }
+            });
+        }
+        function bindGrid(reponse) {
+            var dataGrid = $("#gridContainer").dxDataGrid({
+                dataSource: reponse,
+                allowColumnReordering: true,
+                showBorders: true,
+                allowColumnResizing: true,
+                hoverStateEnabled: true,
+                allowColumnResizing: true,
+                columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: {
+                    columnRenderingMode: "virtual"
+                },
+                grouping: {
+                    autoExpandAll: false,
+                },
+                searchPanel: {
+                    visible: true
+                },
+                filterRow: {
+                    visible: false,
+                    applyFilter: "auto"
+                },
+                indexed: true,
+                paging: {
+                    pageSize: 10
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20, 50, 100],
+                    showInfo: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                groupPanel: {
+                    visible: false
+                },
+                columns: [
+                    {
+                        dataField: "CusCode",
+                        width: 100,
+                        groupIndex: 0,
+                        caption: "Customer Code"
+                    },
+                    {
+                        dataField: "CusName",
+                        width: 200,
+
+                        caption: "Customer Name"
+                    },
+                    {
+                        dataField: "DocumentNo",
+                        width: 100,
+                        caption: "Document No"
+                    },
+                    {
+                        dataField: "Amount",
+                        width: 150,
+                        caption: "Amount"
+                    },
+                    {
+                        dataField: "ContractStartDate",
+                        width:150,
+                        caption: "Contract Start Date"
+                    },
+                    {
+                        dataField: "ContractEndDate",
+                        width:150,
+                        caption: "Contract Endt Date"
+                    },
+                    {
+                        dataField: "NumExpiresOfDay",
+                        width: 150,
+                        caption: "Expried In Day"
+                    },
+                    {
+                        dataField: "ContractRenewalDate",
+                        width: 150,
+                        caption: "Contract Renewal Date"
+                    },
+                    {
+                        dataField: "ContractType",
+                        width:150,
+                        caption: "Contract Type"
+                    },
+                    {
+                        dataField: "ContractNameTemplate",
+                        width: 170,
+                        caption: "Contract  Template Name"
+                    },
+                    {
+                        dataField: "SubContractTypeTemplate",
+                        width: 170,
+                        caption: "Contract  Template Type"
+                    },
+                    {
+                        dataField: "Remark",
+                        width: 400,
+                        caption: "Remark"
+                    },
+                   
+                ],
+                summary: {
+                    groupItems: [
+                        {
+                            showInColumn: "ItemCode",
+                            column: "CusName",
+                            summaryType: "max",
+                            displayFormat: "{0}"
+                        },
+                        {
+                            showInColumn: "Amount",
+                            column: "SumGrandTotal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            showInGroupFooter: false,
+                            alignByColumn: true
+                        },
+                        {
+                            showInColumn: "UnitPrice",
+                            column: "VatValue",
+                            summaryType: "max",
+                            displayFormat: "Vat. Included: {0}",
+                            showInGroupFooter: false,
+                            alignByColumn: true,
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "UnitPrice",
+                            column: "Discount",
+                            summaryType: "max",
+                            displayFormat: "Dis. Inv: {0}",
+                            showInGroupFooter: true,
+                            alignByColumn: true,
+                            alignment: "left"
+                        },
+                       
+                        {
+                            showInColumn: "Total",
+                            column: "TotalAmount",
+                            summaryType: "max",
+                            displayFormat: "Amount: {0}",
+                            showInGroupFooter: false,
+                            alignByColumn: true,
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "DisItem",
+                            column: "PLC",
+                            summaryType: "max",
+                            displayFormat: "PLC : {0}",
+                            showInGroupFooter: false,
+                            alignByColumn: true,
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "DisItem",
+                            column: "DisItem",
+                            summaryType: "sum",
+                            displayFormat: "Dis. Item: {0}",
+                            showInGroupFooter: true,
+                            alignByColumn: true,
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "Sub_Total",
+                            summaryType: "max",
+                            displayFormat: "Sub-Total: {0}",
+                            showInGroupFooter: true,
+                            alignByColumn: true
+                        },
+                    ],
+                    totalItems: [
+                        {
+                            showInColumn: "ItemCode",
+                            column: "SumCount",
+                            summaryType: "max",
+                            displayFormat: "Count : {0} Invoice",
+                            alignment: "left"
+                        },
+                        //{
+                        //    showInColumn: "DisItem",
+                        //    column: "SumSoldAmount",
+                        //    summaryType: "max",
+                        //    displayFormat: "Sold Amount :",
+                        //    alignment: "right"
+                        //},
+                        {
+                            showInColumn: "DisItem",
+                            column: "SumDisItem",
+                            summaryType: "max",
+                            displayFormat: "Discount Item :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "DisItem",
+                            column: "SumDisTotal",
+                            summaryType: "max",
+                            displayFormat: "Discount Total :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "DisItem",
+                            column: "SumVat",
+                            summaryType: "max",
+                            displayFormat: "Vat.Included : ",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "DisItem",
+                            column: "SumGrandTotalSys",
+                            summaryType: "max",
+                            displayFormat: "Grand Total SSC :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "DisItem",
+                            column: "SumGrandTotal",
+                            summaryType: "max",
+                            displayFormat: "Grand Total LC :",
+                            alignment: "right"
+                        },
+
+                        //Value
+                        //{
+                        //    showInColumn: "Total",
+                        //      column: "SumSoldAmount",
+                        //    summaryType: "max",
+                        //    displayFormat: "{0}",
+                        //    alignment: "right"
+                        //},
+                        {
+                            showInColumn: "Total",
+                            column: "SumDisItem",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SumDisTotal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SumVat",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SumGrandTotalSys",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SumGrandTotal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        //{
+                        //    showInColumn: "Total",
+                        //    column: "SumAppliedAmount",
+                        //    summaryType: "max",
+                        //    displayFormat: "{0}",
+                        //    alignment: "right"
+                        //},
+                        //{
+                        //    showInColumn: "Total",
+                        //    column: "SumAppliedAmount",
+                        //    summaryType: "max",
+                        //    displayFormat: "{0}",
+                        //    alignment: "right"
+                        //}
+                    ]
+
+                },
+
+                export: {
+                    enabled: true
+                },
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('sale-AR-Report');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                        topLeftCell: { row: 4, column: 1 }
+                    }).then(function (dataGridRange) {
+                        // header
+                        var headerRow = worksheet.getRow(2);
+                        headerRow.height = 30;
+                        worksheet.mergeCells(2, 1, 2, 8);
+                        headerRow.getCell(1).value = 'Sale AR';
+                        headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
+                        headerRow.getCell(1).alignment = { horizontal: 'center' };
+
+                    }).then(function () {
+                        // https://github.com/exceljs/exceljs#writing-xlsx
+                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Sale-AR-Report.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "refresh",
+                                onClick: function () {
+                                    dataGrid.refresh();
+                                    filterData();
+                                }
+                            }
+                        },
+
+                    );
+                }
+
+            }).dxDataGrid("instance");
+
+            $("#autoExpand").dxCheckBox({
+                value: false,
+                text: "Expand All Groups",
+                onValueChanged: function (data) {
+                    dataGrid.option("grouping.autoExpandAll", data.value);
+                }
+            });
+        }
+
+    })
+
+    $.ajax({
+        url: "http://192.168.0.73:8081/Home/GetCurrencyRates",
+        success: function (data) {}
+    });
+
+</script>
+
+
+
+
+
+
+

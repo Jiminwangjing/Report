@@ -1,0 +1,20 @@
+﻿
+@using (Html.BeginForm("Index", "Home", FormMethod.Post))
+{
+    <input type="text" name="inputText" id="inputText" />
+    
+}
+<button onclick="GenerateQR()">Click</button>
+<hr />
+@if (ViewBag.QRCode != null)
+{
+    <img src="@ViewBag.QRCode" style="width:300px; height:300px" />
+}
+<script>
+    function GenerateQR() {
+        var input = $("#inputText").val();
+        
+    }
+</script>
+
+

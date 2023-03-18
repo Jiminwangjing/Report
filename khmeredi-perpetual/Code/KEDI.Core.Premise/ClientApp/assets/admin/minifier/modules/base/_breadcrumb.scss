@@ -1,0 +1,107 @@
+.breadcrumb {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    list-style: none;
+    margin: 0;
+    transform: scaleX(1);
+    transform-origin: left;
+    height: 35px;
+    align-items: center;
+    transition: all .3s;
+}
+
+.breadcrumb * {
+    box-sizing: border-box;
+}
+
+.breadcrumb.hide {
+    transform: scaleX(0);
+    transition: all .3s;
+    width: 0;
+}
+
+.breadcrumb>.step {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    //   background-color: #999;
+    padding: 0 8px 0 8px;
+    margin: .5px 14px .5px 5px;
+    color: #fff;
+    cursor: pointer;
+    line-height: 30px;
+    height: 30px;
+    list-style: none;
+}
+
+// .breadcrumb>.step.active,
+// .breadcrumb>.step:hover {
+//     background-color: darken(#999, 10%);
+// }
+
+.breadcrumb>.step::after {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    content: '';
+    border: 15px solid transparent;
+    border-right-width: 0px;
+    border-left-width: 15px;
+    z-index: 10;
+    // border-left-color: #999;
+}
+
+.breadcrumb>.step.active::after,
+.breadcrumb>.step:hover::after {
+    border: 15px solid transparent;
+    // border-left-color: darken(#999, 10%);
+}
+
+.breadcrumb>.step.active::before,
+.breadcrumb>.step:hover::before {
+    // border: 15px solid darken(#999, 10%);
+    border-left-width: 15px;
+    border-right-width: 0px;
+    border-left-color: transparent;
+}
+
+.breadcrumb>.step:first-child::before {
+    // border-left-color: #999;
+    border-left-width: 5px;
+}
+
+// .breadcrumb>.step:first-child.active::before,
+// .breadcrumb>.step:first-child:hover::before {
+//     border-left-color: darken(#999, 10%);
+// }
+
+.breadcrumb>.step::before {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 100%;
+    content: '';
+    border: 15px solid #999;
+    // border-left-width: 15px;
+    border-right-width: 0px;
+    border-left-color: transparent;
+}
+
+@media(max-width: 320px) {
+    .breadcrumb.column-stack>.step {
+        margin-top: .5px;
+        width: max-content;
+    }
+
+    .breadcrumb.column-stack {
+        flex-direction: column;
+    }
+
+    // .breadcrumb.column-stack>.step::before {
+    //     border-left-color: #999;
+    // }
+}

@@ -1,0 +1,80 @@
+@model IEnumerable<CKBS.Models.Services.Banking.IncomingPaymentCustomer>
+@{
+    ViewData["Title"] = "Preview Summary Sale";
+    Layout = "~/Views/Shared/_Layout_Print.cshtml";
+}
+@{
+    double grandtotalPay = @Model.Sum(i => i.TotalPayment);
+    double grandtotalApplyamount = @Model.Sum(i => i.Applied_Amount);
+    double grandtotalbalance = @Model.Sum(i => i.BalanceDue);
+}
+<h3 class="text-center">Customer Statement Report</h3>
+<div class="text-center"> From @Model.FirstOrDefault().DateFrom To
+    @Model.FirstOrDefault().DateTo</div>
+<div class="text-center" style="font-weight: bold;">@Model.FirstOrDefault().CustomerName</div>
+<div class="text-center" style="font-weight: bold;">
+    @Model.FirstOrDefault().EmployeeName </div>
+
+<table class="table" border="1">
+    <thead style="background-color:#e7e9eb;">
+        <tr style="border:1px solid black;">
+            <th class="text-center" style="width:13%; font-size:1.5
+                px;border:none;">@Localizer["SaleID"]</th>
+            <th class="text-center" style="width:10%; font-size:1.5
+                px;border:none;">@Localizer["Sale Date"]</th>
+            <th class="text-center" style="width:12%; font-size:1.5
+                px;border:none;">@Localizer["Required Date"]</th>
+            <th class="text-center" style="width:10%; font-size:1.5
+                px;border:none;">@Localizer["Employee"]</th>
+            <th class="text-center" style="width:10%; font-size:1.5
+                px;border:none;">@Localizer["Operated By"]</th>
+            <th class="text-center" style="width:10%; font-size:1.5
+                px;border:none;">@Localizer["Sale Amount"]</th>
+            <th class="text-center" style="width:10%; font-size:1.5
+                px;border:none;">@Localizer["Amount Paid"]</th>
+            <th class="text-center" style="width:10%; font-size:1.5
+                px;border:none;">@Localizer["Outstanding"]</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            string postingdate = @item.PostingDate.ToString("dd-MM-yyyy");
+            string date = @item.Date.ToString("dd-MM-yyyy");
+            <tr>
+                <td style="border: none;border-left:1px solid
+                white;border-bottom:2px solid white;">@item.InvoiceNumber</td>
+                <td style="border: none;border-bottom:2px solid white;">@postingdate</td>
+                <td style="border: none;border-bottom:2px solid white;">@date</td>
+                <td style="border: none;border-bottom:2px solid white;">@item.EmName</td>
+                <td style="border: none;">@item.CreatorName</td>
+                <td style="border: none;">@item.SysName @string.Format("{0:n2}",
+                @item.TotalPayment)</td>
+                <td style="border: none;">@item.SysName @string.Format("{0:n2}",
+                @item.Applied_Amount)</td>
+                <td style="border: none;border-right:1px solid white;">@item.SysName
+                    @string.Format("{0:n2}", @item.BalanceDue)</td>
+
+            </tr>
+        }
+        <tr>
+            <td colspan="5" style="border-left:1px solid white;border-bottom:1px
+                solid white;"></td>
+            <td style="border-left:1px solid white;border-bottom:1px solid
+                white;border-top: 2px solid black;font-weight: bold;">@Model.FirstOrDefault().SysName
+                @string.Format("{0:n2}", @grandtotalPay)</td>
+            <td style="border-left:1px solid white;border-bottom:1px solid
+                white;border-top: 2px solid black;font-weight: bold;">@Model.FirstOrDefault().SysName
+                @string.Format("{0:n2}", @grandtotalApplyamount)</td>
+            <td style="border-left:1px solid white;border-bottom:1px solid
+                white;border-right:1px solid white;border-top: 2px solid
+                black;font-weight: bold;">@Model.FirstOrDefault().SysName
+                @string.Format("{0:n2}", @grandtotalbalance)</td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+

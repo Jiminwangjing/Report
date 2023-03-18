@@ -1,0 +1,854 @@
+<link href="~/Admin/FinancialReports/trial-balance-report.css" rel="stylesheet">
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="font-size">@Localizer["From BP"]</label>
+                        <div class="from-bp-choose cursor">
+                            <input type="text" readonly id="from-bp" class="input-box-kernel font-size">
+                            <input type="text" id="from-bp-id" hidden>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="font-size">@Localizer["To BP"]</label>
+                        <div class="to-bp-choose cursor">
+                            <input type="text" id="to-bp-id" hidden>
+                            <input type="text" readonly id="to-bp" class="input-box-kernel font-size">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2" style="margin: 13px 0px 0;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="checkAccGl">
+                        <label class="form-check-label font-size" for="checkAccGl" style="margin: 0px 33px 0;">
+                            @Localizer["GLAccount"]
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-2" style="margin: 13px 0px 0;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="checkBP">
+                        <label class="form-check-label font-size" for="checkBP" style="margin: 0px 33px 0;">
+                            @Localizer["BP"]
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="font-size">@Localizer["Display Report"]</label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <select class="input-box-kernel font-size" id="d-report-select">
+                                    <option selected value="0">@Localizer["Annual Report"]</option>
+                                    <option value="1">@Localizer["Quarterly Report"]</option>
+                                    <option value="2">@Localizer["Monthly Report"]</option>
+                                    @* <option value="3">@Localizer["Periodic Report"]</option>*@
+                                </select>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="checkAccZero">
+                                    <label class="form-check-label font-size" for="checkAccZero"
+                                        style="margin: 0px 11px 0;">
+                                        @Localizer["Accounts with Balance of Zero"]
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3" hidden>
+                    <div class="form-group">
+                        <label class="font-size">@Localizer["Customer Group"]</label>
+                        <div class="select-cus-gp cursor">
+                            <select id="cus-gp" class="input-box-kernel font-size">
+                                <option value="all">@Localizer["All"]</option>
+                                <option value="Customer">@Localizer["Customer"]</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3" hidden>
+                    <div class="form-group">
+                        <label class="font-size">@Localizer["Vender Group"]</label>
+                        <div class="select-ven-gp cursor">
+                            <select id="ven-gp" class="input-box-kernel font-size">
+                                <option value="all">@Localizer["All"]</option>
+                                <option value="Vender">@Localizer["Vender"]</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="font-size">@Localizer["Date"]</label>
+                        <select class="input-box-kernel font-size" disabled id="date-select">
+                            @* <option value="0">---@Localizer["Select"]---</option> *@
+                            <option value="1">@Localizer["Posting Date"]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <label class="font-size">@Localizer["From"]</label>
+                        <div class="input-group">
+                            <input type="date" class="form-control font-size" id="from-date">
+                            <div class="input-group-append">
+                                <span class="input-group-text from-sh-posting-period cursor">
+                                    <i class="fa fa-plus-circle mll_2"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <label class="font-size">@Localizer["To"]</label>
+                        <div class="input-group">
+                            <input type="date" class="form-control font-size" id="to-date">
+                            <div class="input-group-append">
+                                <span class="input-group-text to-sh-posting-period cursor">
+                                    <i class="fa fa-plus-circle mll_2"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="col-md-3 mt5">-->
+                @* <div class="form-group">
+                    <div class="cursor flex-hide-title">
+                    <input type="checkbox" disabled id="hide-title" class="input-box-kernel">
+                    <label>@Localizer["Hide Title"]</label>
+                    </div>
+                    </div> *@
+                <!--</div>-->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="mt4">
+                            <button type="button" class="btn btn-kernel font-size" id="btn-ok">@Localizer["Ok"]</button>
+                            @*<button class="btn btn-kernel" id="print">@Localizer["Print"]</button>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="show-hide-loader" hidden>
+    <div class="col-md-5"></div>
+    <div class="col-md-5">
+        <img src="~/Images/ajaxloader/loading.gif" />
+    </div>
+</div>
+<div class="row m-0 bg-white" id="content">
+    <div id="tree-view" class="col-md-12 m-0 col-sm-12 widget-scrollbar overflow " style="height: 65vh">
+        <div id="annual_report" hidden>
+            <div class="row h-row-width">
+                <div class="col-md-5">
+                    <span class="font-size">@Localizer["Name"]</span>
+                </div>
+                <div class="col-md-3">
+                    <span class="font-size">@Localizer["Debit"]</span>
+                </div>
+                <div class="col-md-3">
+                    <span class="font-size">@Localizer["Credit"]</span>
+                </div>
+                <div class="col-md-3">
+                    <span class="font-size">@Localizer["Balance"]</span>
+                </div>
+            </div>
+
+            <hr class="mt__2" />
+            <div id="data-AnnualReport" class="amt3 row"></div>
+            <div id="data1-AnnualReport" class="amt3 row"></div>
+            <div id="data2-AnnualReport" class="amt3 row"></div>
+            <div id="turnover-AnnualReport" class="amt3 row"></div>
+            <div id="cost-of-sales-AnnualReport" class="amt3 row"></div>
+            <div id="operating-costs-AnnualReport" class="amt3 row"></div>
+            <div id="non-operating-income-expenditure-AnnualReport" class="amt3 row"></div>
+            <div id="taxation-extraordinary-items-AnnualReport" class="amt3 row"></div>
+            <div id="totalDCB" class="row h-row-width border-bottom border-top">
+                <div class="col-md-5">
+                    <span class="font-size pm">@Localizer["Total"]</span>
+                </div>
+                <div class="col-md-3">
+                    <span class="font-size dotBorder" id="totalDebit"></span>
+                </div>
+                <div class="col-md-3">
+                    <span class="font-size dotBorder" id="totalCredit"></span>
+                </div>
+                <div class="col-md-3">
+                    <span class="font-size dotBorder" id="TotalBalance"></span>
+                </div>
+            </div>
+            <div class="cv-hide-show" hidden>
+                <div class="cus-gp-AnnualReport amt3"></div>
+                <div class="ven-gp-AnnualReport amt3"></div>
+            </div>
+        </div>
+        <div id="quarterly_report" hidden>
+            <div class="row maxWith">
+                <div class="col-md-5">
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["Total"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["1st Quarter"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["2nd Quarter"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["3rd Quarter"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["4th Quarter"]</span>
+                </div>
+            </div>
+            <div class="row maxWith">
+                <div class="col-md-5">
+                    <span class="font-size">@Localizer["Name"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt__2" />
+            <div id="data-QuarterlyReport" class="mt3 row"></div>
+            <div id="data1-QuarterlyReport" class="mt3 row"></div>
+            <div id="data2-QuarterlyReport" class="mt3 row"></div>
+            <div id="turnover-QuarterlyReport" class="mt3 row"></div>
+            <div id="cost-of-sales-QuarterlyReport" class="mt3 row"></div>
+            <div id="operating-costs-QuarterlyReport" class="mt3 row"></div>
+            <div id="non-operating-income-expenditure-QuarterlyReport" class="mt3 row"></div>
+            <div id="taxation-extraordinary-items-QuarterlyReport" class="mt3 row"></div>
+            <div id="totalDCBQ" class="row hq-row-width">
+                <div class="col-md-5 border-bottom border-top">
+                    <span class="font-size">@Localizer["Total"]</span>
+                </div>
+                <div class="col-md-5 border-left-right border-bottom border-top">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dq"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cq"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bq"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right border-bottom border-top hq-ml1">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dq1"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cq1"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bq1"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right border-bottom border-top hq-ml2">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dq2"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cq2"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bq2"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right border-bottom border-top hq-ml3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dq3"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cq3"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bq3"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right border-bottom border-top hq-ml4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dq4"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cq4"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bq4"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cv-hide-show" hidden>
+                <div class="cus-gp-QuarterlyReport row cgmt3"></div>
+                <div class="ven-gp-QuarterlyReport row cgmt3"></div>
+            </div>
+        </div>
+        <div id="monthly_report" hidden>
+            <div class="row MmaxWith">
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["Total"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["January"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["February"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["March"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["April"]</span>
+                </div>
+
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["May"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["June"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["July"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["August"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["September"]</span>
+                </div>
+
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["October"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["November"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <span class="font-size padding_LR">@Localizer["December"]</span>
+                </div>
+            </div>
+            <div class="row MmaxWith">
+                <div class="col-md-4">
+                    <span class="font-size">@Localizer["Name"]</span>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border-left-right">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Debit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Credit"]</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size">@Localizer["Balance"]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt__2" />
+            <div id="data-MonthlyReport" class="mmtd3 row"></div>
+            <div id="data1-MonthlyReport" class="mmtd3 row"></div>
+            <div id="data2-MonthlyReport" class="mmtd3 row"></div>
+            <div id="turnover-MonthlyReport" class="mmtd3 row"></div>
+            <div id="cost-of-sales-MonthlyReport" class="mmtd3 row"></div>
+            <div id="operating-costs-MonthlyReport" class="mmtd3 row"></div>
+            <div id="non-operating-income-expenditure-MonthlyReport" class="mmtd3 row"></div>
+            <div id="taxation-extraordinary-items-MonthlyReport" class="mmtd3 row"></div>
+            <div id="totalDCBM" class="row vhm-row-width">
+                <div class="col-md-4">
+                    <span class="font-size">@Localizer["Total"]</span>
+                </div>
+                <div class="col-md-5 mt-ml">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml1">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm1"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm1"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm1"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml2">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm2"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm2"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm2"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm3"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm3"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm3"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm4"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm4"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm4"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml5">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm5"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm5"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm5"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm6"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm6"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm6"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml7">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm7"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm7"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm7"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml8">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm8"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm8"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm8"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml9">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm9"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm9"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm9"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml10">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm10"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm10"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm10"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml11">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm11"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm11"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm11"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-ml12">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="font-size dm12"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size cm12"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="font-size bm12"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cv-hide-show" hidden>
+                <div class="cus-gp-MonthlyReport row mmt3"></div>
+                <div class="ven-gp-MonthlyReport row mmt3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="bp-content" style="display:none;">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <select id="select-bp" class="input-box-kernel font-size">
+                    <option value="All">@Localizer["All"]</option>
+                    <option value="Customer">@Localizer["Customer"]</option>
+                    <option value="Vendor">@Localizer["Vendor"]</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="item group-search-boxes">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore font-size" id="find-bp" autocomplete="off" type="text"
+                            placeholder="Search ...">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="container-list-bp" class="wrap-table  widget-scrollbar" style="height: 55vh">
+        <table class="bp">
+            <thead>
+                <tr>
+                    <th class="text-center font-size">@Localizer["#"]</th>
+                    <th class="text-center font-size">@Localizer["Code"]</th>
+                    <th class="text-center font-size">@Localizer["Name"]</th>
+                    <th class="text-center font-size">@Localizer["Phone"]</th>
+                    <th class="text-center font-size">@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<div id="postingPeriod-content" style="display:none; height: 90vh">
+    <div class="item group-search-boxes">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore font-size" id="find-cus" autocomplete="off" type="text" placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div id="container-list-posting-period" class="wrap-table  widget-scrollbar" style="height: auto">
+        <table class="posting-period">
+            <thead>
+                <tr>
+                    <th class="text-center font-size">@Localizer["#"]</th>
+                    <th class="text-center font-size">@Localizer["Period Code"]</th>
+                    <th class="text-center font-size">@Localizer["Period Name"]</th>
+                    <th class="text-center font-size">@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script src="/Admin/FinancialReports/trial-balance-report.js"></script>

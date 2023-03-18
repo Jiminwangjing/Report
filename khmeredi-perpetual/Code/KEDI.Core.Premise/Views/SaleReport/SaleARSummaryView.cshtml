@@ -1,0 +1,405 @@
+@{
+    ViewData["Title"] = "Summary Sale Report";
+}
+<body class="dx-viewport">
+    <div class="card card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <label class="form-label">@Localizer["Date From"]</label>
+                <input type="date" class="form-control" id="datefrom" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">@Localizer["Date To"]</label>
+                <input type="date" class="form-control" id="dateto" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">@Localizer["By Branch"]</label>
+                <select type="text" class="form-control" id="bybranch">
+                    <option value="0">All Branch</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">@Localizer["User Name"] </label>
+                <select type="text" class="form-control" id="byuser">
+                    <option value="0"></option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label>@Localizer["Price List"]</label>
+                <select class="form-control" id="plid" asp-items="@ViewBag.PriceLists">
+                    <option value="0"></option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-xs btn-kernel mt-4" id="filter">@Localizer["Filter"]</button>
+            </div>
+        </div>
+
+        <br />
+        <div id="gridContainer"></div>
+        <div class="options">
+            <div class="option">
+                <div id="autoExpand"></div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<script>
+
+    $(function () {
+        filterData();
+        //Get branch
+        $.ajax({
+            url: "/SaleReport/GetBranch",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bybranch").append(data);
+            }
+        });
+        $("#bybranch").on('change', function () {
+            var branchid = $(this).val();
+            // Get Employee
+            $.ajax({
+                url: "/SaleReport/GetEmployee",
+                type: "Get",
+                dataType: "Json",
+                data: { BranchID: branchid },
+                success: function (respones) {
+                    var data = '';
+                    $("#byuser option:not(:first-child)").remove();
+                    $.each(respones, function (i, item) {
+                        data +=
+                            '<option value="' + item.ID + '">' + item.Employee.Name + '</option>';
+                    });
+                    $("#byuser").append(data);
+                }
+            })
+        });
+
+        $('#filter').click(function () {
+            filterData(this);
+        });
+        function filterData(button) {
+            let btn_filter = $(button).children("i.fa-search");
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var branch_id = $("#bybranch").val();
+            var user_id = $("#byuser").val();
+            var doctype = $("#douType").val();
+            var plid = $("#plid").val();
+            $.ajax({
+                url: "/SaleReport/SummarySaleARReport",
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    DateFrom: date_from,
+                    DateTo: date_to,
+                    BranchID: branch_id,
+                    UserID: user_id,
+                    DouType: doctype,
+                    plid: plid
+                },
+                beforeSend: function () {
+                    btn_filter.addClass("fa-spinner fa-spin");
+                },
+                success: function (reponse) {
+                    bindGrid(reponse);
+                    btn_filter.removeClass("fa-spinner fa-spin");
+                }
+            });
+        }
+        function bindGrid(reponse) {
+            var dataGrid = $("#gridContainer").dxDataGrid({
+                dataSource: reponse,
+                allowColumnReordering: true,
+                showBorders: true,
+                hoverStateEnabled: true,
+                allowColumnResizing: true,
+                columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: {
+                    columnRenderingMode: "virtual"
+                },
+                columnChooser: {
+                    enabled: true,
+                    mode: 'select',
+                },
+                grouping: {
+                    autoExpandAll: false,
+                },
+                searchPanel: {
+                    visible: true
+                },
+                filterRow: {
+                    visible: false,
+                    applyFilter: "auto"
+                },
+                paging: {
+                    pageSize: 20
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [20, 50, 100, 150],
+                    showInfo: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                groupPanel: {
+                    visible: false
+                },
+
+                columns: [
+                    {
+                        dataField: "BranchName",
+                        groupIndex: 0,
+                        caption: "Branch Name"
+                    },
+                    {
+                        dataField: "EmpName",
+                        width: 150,
+                        caption: "Emp. Name",
+                    },
+                    {
+                        dataField: "ReceiptNo",
+                        //width: 250,
+                        caption: "Receipt No",
+
+                    },
+                    {
+                        caption: "Posting Date",
+                        dataField: "DateOut",
+                        alignment: "right"
+                    },
+                    {
+                        caption: "Discount Invoice",
+                        dataField: "DiscountItem",
+                        alignment: "right"
+                    },
+                    {
+                        caption: "AmountFreight",
+                        dataField: "AmountFreight",
+                        alignment: "right"
+                    },
+                    {
+                        caption: "Currency",
+                        dataField: "Currency",
+                        alignment: "right"
+                    },
+                    {
+                        caption: "Total",
+                        dataField: "GrandTotal",
+                        alignment: "right",
+                    }
+                ],
+
+                summary: {
+                    groupItems: [
+                        {
+                            column: "ReceiptNo",
+                            summaryType: "count",
+                            displayFormat: "{0} receipts",
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "GrandTotalBrand",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            showInGroupFooter: true,
+                            alignByColumn: true
+                        }
+                    ],
+                    totalItems: [
+                        {
+                            showInColumn: "EmpName",
+                            column: "DateFrom",
+                            summaryType: "max",
+                            displayFormat: "Date From : {0}",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "ReceiptNo",
+                            column: "DateTo",
+                            summaryType: "max",
+                            displayFormat: "Date To : {0}",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "DateIn",
+                            column: "SCount",
+                            summaryType: "max",
+                            displayFormat: "Count : {0} receipts",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "AmountFreight",
+                            column: "SDiscountItem",
+                            summaryType: "max",
+                            displayFormat: "Discount Item   :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "AmountFreight",
+                            column: "SDiscountTotal",
+                            summaryType: "max",
+                            displayFormat: "Discount Total  :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "AmountFreight",
+                            column: "SVat",
+                            summaryType: "max",
+                            displayFormat: "Vat. Included   :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "AmountFreight",
+                            column: "SGrandTotalSys",
+                            summaryType: "max",
+                            displayFormat: "Grand Total SSC :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "AmountFreight",
+                            column: "SGrandTotal",
+                            summaryType: "max",
+                            displayFormat: "Grand Total LCC :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SDiscountItem",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SDiscountTotal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SVat",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SGrandTotalSys",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right",
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SGrandTotal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right",
+                        }
+                    ]
+                },
+                export: {
+                    enabled: true
+                },
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('summary-sale-report');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                        topLeftCell: { row: 4, column: 1 }
+                    }).then(function (dataGridRange) {
+                        // header
+                        var headerRow = worksheet.getRow(2);
+                        headerRow.height = 30;
+                        worksheet.mergeCells(2, 1, 2, 7);
+                        headerRow.getCell(1).value = 'Summary Sale Report';
+                        headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
+                        headerRow.getCell(1).alignment = { horizontal: 'center' };
+                    }).then(function () {
+                        // https://github.com/exceljs/exceljs#writing-xlsx
+                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'summary-sale-report.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "refresh",
+                                onClick: function () {
+                                    dataGrid.refresh();
+                                    filterData();
+                                }
+                            }
+                        }
+                        @* {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "fas fa-file-pdf",
+                                onClick: function () {
+                                    printPdf();
+                                }
+                            },
+                            title: 'Export to PDF'
+                        } *@
+                    );
+                }
+
+            }).dxDataGrid("instance");
+            $("#autoExpand").dxCheckBox({
+                value: false,
+                text: "Expand All Groups",
+                onValueChanged: function (data) {
+                    dataGrid.option("grouping.autoExpandAll", data.value);
+                }
+            });
+        }
+
+    })
+
+    function printPdf() {
+        var datefrom = $("#datefrom").val();
+        var dateto = $("#dateto").val();
+        var branch = $("#bybranch").val();
+        var user = $("#byuser").val();
+        var plid = $("#plid").val();
+        if (datefrom == "" || dateto == "") {
+            $("#datefrom").css("border-color", "red");
+            $("#dateto").css("border-color", "red");
+            return;
+        } else {
+            $("#datefrom").css("border-color", "#DDDDDD");
+            $("#dateto").css("border-color", "#DDDDDD");
+            window.open(`/DevPrint/PrintSummarySaleAR?DateFrom=${datefrom}&DateTo=${dateto}&BranchID=${branch}&UserID=${user}&plid=${plid}`, "_blank");
+        }
+    }
+
+</script>
+

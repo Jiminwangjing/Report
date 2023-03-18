@@ -1,0 +1,985 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<input type="text" id="txtid" hidden />
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-2">
+            <input type="checkbox" id="bpcode" />
+            <span>Business Partner</span>
+        </div>
+
+        <div class="col-md-2">
+            <input type="checkbox" id="stage" />
+            <span>Stage</span>
+        </div>
+        <div class="col-md-2">
+            <input type="checkbox" id="date" />
+            <span>Date</span>
+        </div>
+        <div class="col-md-2">
+            <input type="checkbox" id="amount" />
+            <span>Amount</span>
+        </div>
+        <div class="col-md-2">
+            <input type="checkbox" id="per" />
+            <span>Percentage Rate</span>
+        </div>
+        <div class="col-md-2 mt-2">
+            <input type="checkbox" id="com" />
+            <span>Compeitior</span>
+        </div>
+
+    </div>
+    <div class="wrap-table myt1">
+        <table id="list-wonreports">
+            <thead>
+                <tr>
+                    <th>
+                        @Localizer["Opportunity No "]
+                    </th>
+                    <th>
+                        @Localizer["Opportunity Name"]
+                    </th>
+                    <th>
+                        @Localizer[" Code"]
+                    </th>
+                    <th>
+                        @Localizer["Name"]
+                    </th>
+                    <th>
+                        @Localizer["Closing%"]
+                    </th>
+                    <th>
+                        @Localizer["Potential Amont"]
+                    </th>
+                    <th>
+                        @Localizer["Weight Amount"]
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@*//====model sale employee====*@
+<div class="sale-emp" style="display: none;">
+
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-bus" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+
+    <table id="list-saleemp" class="mt-3">
+        <tr>
+            <th>@Localizer["Name"]</th>
+
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+@*//====model bpcode====*@
+<div id="active-edit-content" style="display:none; height: 254px; ">
+    <div class="row">
+        <div class="col-md-3">
+            <p>Code</p>
+        </div>
+        <div class="col-md-5 input-group ">
+            <span>From</span>
+
+            <input type="text" id="from_code" disabled />
+            <div title="List Customer" id="show-list-itemster1" class="input-group-append">
+                <i class="fas fa-plus-circle text-info input-group-icon"></i>
+            </div>
+        </div>
+        <div class="col-md-4 input-group ">
+            <span>To</span>
+            <input type="text" id="to_code" disabled />
+            <div title="List Customer" id="show-list-itemster2" class="input-group-append">
+                <i class="fas fa-plus-circle text-info input-group-icon"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>Bussiness Partner</span>
+        </div>
+        <div class="col-md-4">
+            <select id="btype" class="form-control">
+                <option value=""></option>
+                <option value="All">All</option>
+                <option value="Customer">Customer</option>
+                <option value="Vendor">Vendor</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-3">
+            <span id="titlecus">Customer Group</span>
+        </div>
+        <div class="col-md-4">
+            <select id="cusgroup" class="form-control" asp-items="ViewBag.A">
+                <option value="0"></option>
+
+            </select>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-3">
+            <span id="titleven">Vendor Group</span>
+        </div>
+        <div class="col-md-4">
+            <select id="vengroup" class="form-control" asp-items="ViewBag.B">
+                <option value="0"></option>
+            </select>
+        </div>
+    </div>
+</div>
+
+@*//====model bpcode====*@
+<div id="active-edit-content" style="display:none; height: 254px; ">
+    <div class="row">
+        <div class="col-md-3">
+            <p>Code</p>
+
+        </div>
+        <div class="col-md-5 input-group ">
+            <span>From</span>
+
+            <input type="text" id="from_code" disabled />
+            <div title="List Customer" id="show-list-itemster1" class="input-group-append">
+                <i class="fas fa-plus-circle text-info input-group-icon"></i>
+            </div>
+        </div>
+        <div class="col-md-4 input-group ">
+            <span>To</span>
+            <input type="text" id="to_code" disabled />
+            <div title="List Customer" id="show-list-itemster2" class="input-group-append">
+                <i class="fas fa-plus-circle text-info input-group-icon"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>Bussiness Partner</span>
+        </div>
+        <div class="col-md-4">
+            <select id="btype" class="form-control">
+                <option value=""></option>
+                <option value="All">All</option>
+                <option value="Customer">Customer</option>
+                <option value="Vendor">Vendor</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-3">
+            <span id="titlecus">Customer Group</span>
+        </div>
+        <div class="col-md-4">
+            <select id="cusgroup" class="form-control" asp-items="ViewBag.A">
+                <option value="0"></option>
+
+            </select>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-3">
+            <span id="titleven">Vendor Group</span>
+        </div>
+        <div class="col-md-4">
+            <select id="vengroup" class="form-control" asp-items="ViewBag.B">
+                <option value="0"></option>
+            </select>
+        </div>
+    </div>
+</div>
+@*//====MODE BOX BP===*@
+<div class="bp_containers doctypeno_containers  widget-scrollbar" style="display: none;height:auto">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-bp" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="list-bp" class="mt-3">
+        <tr>
+
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+@*//=======Model box of date=====*@
+<div id="content-date" style="display:none; height: 254px; ">
+    <div class="row">
+        <div class="col-md-2">
+            <span>StartDate </span>
+        </div>
+        <div class="col-md-4">
+            <span>From </span>
+            <input type="date" id="datestfrom">
+        </div>
+        <div class="col-md-4">
+            <span>To </span>
+            <input type="date" id="datestto">
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-2">
+            <span>ClosingDate </span>
+        </div>
+        <div class="col-md-4">
+            <span>From </span>
+            <input type="date" id="dateclfrom">
+        </div>
+        <div class="col-md-4">
+            <span>To </span>
+            <input type="date" id="dateclto">
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-2">
+            <span>Predicet Closing Date </span>
+        </div>
+        <div class="col-md-4">
+            <span>From </span>
+            <input type="date" id="prfrom">
+        </div>
+        <div class="col-md-4">
+            <span>To </span>
+            <input type="date" id="prto">
+        </div>
+    </div>
+
+
+</div>
+@*======model box amount=======*@
+@*==========model box of percentabe======*@
+<div id="content-percent" style="display:none; height: 254px; ">
+    <div class="row">
+        <div class="col-md-2">
+            <span>Closing% </span>
+        </div>
+        <div class="col-md-4">
+            <span>From </span>
+            <input type="text" id="perfrom">
+        </div>
+        <div class="col-md-4">
+            <span>To </span>
+            <input type="text" id="perto">
+        </div>
+    </div>
+
+
+
+
+</div>
+<div id="model-amount" style="display:none; height: 254px; ">
+    <div class="row">
+        <div class="col-md-3">
+            <p>Potential Amount</p>
+        </div>
+        <div class="col-md-4 ">
+            <span>From</span>
+            <input type="text" id="amfrom" />
+
+        </div>
+        <div class="col-md-4  ">
+            <span>To</span>
+            <input type="text" id="amto" />
+
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-3">
+            <p>Weight Amount</p>
+        </div>
+        <div class="col-md-4 ">
+            <span>From</span>
+            <input type="text" id="wefrom" />
+
+        </div>
+        <div class="col-md-4  ">
+            <span>To</span>
+            <input type="text" id="weto" />
+
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-3">
+            <p>Gross Profit Amount</p>
+        </div>
+        <div class="col-md-4 ">
+            <span>From</span>
+            <input type="text" id="grfrom" />
+
+        </div>
+        <div class="col-md-4  ">
+            <span>To</span>
+            <input type="text" id="grto" />
+
+        </div>
+    </div>
+
+</div>
+@*//========model box of competitor========*@
+<div class="list-comp doctypeno_containers  widget-scrollbar" style="display: none;height:auto">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-bp" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="list-com" class="mt-3">
+        <tr>
+
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+
+@*//====MODE BOX Of stage===*@
+<div class="stage_containers doctypeno_containers  widget-scrollbar" style="display: none;height:auto">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-bp" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="list-stage" class="mt-3">
+        <tr>
+
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+<div hidden id="model-data">@Json.Serialize(Model)</div>
+<input id="frombpid" hidden />
+<input id="tobpid" hidden />
+<input id="type" hidden />
+<input id="cus_gr" hidden />
+<input id="ven_gr" hidden />
+<input id="stfrom" hidden />
+<input id="stto" hidden />
+<input id="clfrom" hidden />
+<input id="clto" hidden />
+@*//=========date========*@
+<input id="dstfrom" hidden />
+<input id="dstto" hidden />
+<input id="dclfrom" hidden />
+<input id="dclto" hidden />
+<input id="dprfrom" hidden />
+<input id="dprto" hidden />
+<input id="valamfrom" hidden />
+<input id="valamto" hidden />
+<input id="valwefrom" hidden />
+<input id="valweto" hidden />
+<input id="valgramountfr" hidden />
+<input id="valgramountto" hidden />
+<input id="valperfrom" hidden />
+<input id="valperto" hidden />
+
+<script>
+    $(document).ready(function () {
+        let arr_com = [];
+        const compeitor = {
+            OpportunityMasterData: new Array()
+        }
+        let arr_stage = [];
+        const stage = {
+            OpportunityMasterData: new Array()
+        }
+        function filter() {
+            //let bpfrom = $("#frombpid").val();
+            //let bpto = $("#tobpid").val();
+            //let type = $("#type").val();
+            //let cusgr = $("#cus_gr").val();
+            //let vengr = $("#ven_gr").val();
+            //let sartfrom = $("#dstfrom").val();
+            //let startto = $("#dstto").val();
+            //let closefrom = $("#dclfrom").val();
+            //let closeto = $("#dclto").val();
+            //let dstfrom = $("#dstfrom").val();
+            //let dstto = $("#dstto").val();
+            //let prfrom = $("#dprfrom").val();
+            //let prto = $("#dprto").val();
+            //let amfrom = $("#valamfrom").val();
+            //let amto = $("#valamto").val();
+            //let wefrom = $("#valwefrom").val();
+            //let weto = $("#valweto").val();
+            //let grfrom = $("#valgramountfr").val()
+            //let grto = $("#valgramountto").val()
+            //let perfrom = $("#perfrom").val();
+            //let perto = $("#perto").val();
+
+
+            let bpfrom = $("#frombpid").val();
+            let bpto = $("#tobpid").val();
+            let type = $("#btype").val();
+            let cusgr = $("#cusgroup").val();
+            let vengr = $("#vengroup").val();
+            let sartfrom = $("#datestfrom").val();
+            let startto = $("#datestto").val();
+            let closefrom = $("#dateclfrom").val();
+            let closeto = $("#dateclto").val();
+            let dstfrom = $("#prfrom").val();
+            let dstto = $("#prto").val();
+            let prfrom = $("#amfrom").val();
+            let prto = $("#amto").val();
+            let amfrom = $("#wefrom").val();
+            let amto = $("#weto").val();
+            let wefrom = $("#wefrom").val();
+            let weto = $("#weto").val();
+            let grfrom = $("#grfrom").val()
+            let grto = $("#grto").val()
+            let perfrom = $("#perfrom").val();
+            let perto = $("#perto").val();
+
+            const data = {
+                BPFrom: bpfrom,
+                BPTo: bpto,
+                Type: type,
+                Cusgroup: cusgr,
+                Vengroup: vengr,
+                StartFrom: sartfrom,
+                StartTo: startto,
+                CloseFrom: closefrom, 
+                CloseTo: closeto, 
+                DateStartFrom: dstfrom, 
+                DateStartTo: dstto, 
+                DateCloseFrom: closefrom,
+                DateCloseTo: closeto,
+                DatePrFrom: prfrom, 
+                DatePrTo: prto, 
+                PoAmountFrom: amfrom, 
+                PoAmountTo: amto, 
+                WeAmountFrom: wefrom, 
+                WeAmountTo: weto, 
+                GrPrFrom: grfrom,
+                GrPrTo: grto,
+                PerFrom: perfrom, 
+                PerTo: perto, 
+                Competitor: arr_com,
+                Stages: arr_stage
+            }
+
+            compeitor.OpportunityMasterData = JSON.stringify(arr_com);
+            stage.OpportunityMasterData = JSON.stringify(arr_stage);
+            $.ajax({
+                url: "/Opportunity/SearchByBpFilterLostOpp",
+                type: "Get",
+                data: { strObject: JSON.stringify(data)},
+                dataType: "Json",
+                success: function (respones) {
+                    datareports(respones)
+
+                }
+            })
+        }
+        function datareports(data) {
+            let $listView = ViewTable({
+                keyField: "ID",
+                selector: "#list-wonreports",
+                paging: {
+                    enabled: false,
+                    pageSize: 10
+                },
+                visibleFields: [
+                    "OpportunityNo",
+                    "OpportunityName",
+                    "BPName",
+                    "BPCode",
+                    "CloseingPerecnt",
+                    "PotentialAmount",
+                    "WeightAmount",
+                ],
+            });
+            $listView.clearRows();
+            $listView.bindRows(data)
+
+        }
+        Getlist();
+        function Getlist() {
+            $.ajax({
+                url: "/Opportunity/GetDataLostReports",
+                type: "Get",
+                dataType: "Json",
+                success: function (response) {
+                    datareports(response);
+
+                }
+            });
+        }
+        $("#per").click(function () {
+            percent();
+        })
+        function percent() {
+
+            var checkbpcode = document.getElementById("per");
+            if (checkbpcode.checked == true) {
+                let dialog = new DialogBox({
+                    button: {
+                        ok: {
+                            text: "OK"
+                        }
+                    },
+                    type: "ok-cancel",
+                    content: {
+                        selector: "#content-percent"
+                    }
+                });
+                dialog.reject(function () {
+
+                    dialog.shutdown();
+                });
+                dialog.invoke(function () {
+
+                });
+                dialog.confirm(function () {
+                    filter();
+                    $("#perfrom").val("")
+                    $("#perto").val("")
+                    dialog.shutdown();
+                });
+
+
+            }
+        }
+        $("#com").click(function () {
+            $.ajax({
+                url: "/Opportunity/GetComFitler",
+                type: "Get",
+                dataType: "Json",
+                success: function (response) {
+                    com(response);
+                }
+            });
+        })
+        function com(res) {
+            let dialog = new DialogBox({
+                content: {
+                    selector: ".list-comp"
+                },
+                caption: "Bussines Partner"
+            });
+            dialog.invoke(function () {
+                const __listcom = ViewTable({
+                    keyField: "ID",
+                    selector: "#list-com",
+                    paging: {
+                        pageSize: 10,
+                        enabled: true
+                    },
+                    visibleFields: ["Name", "Action"],
+                    columns: [
+                        {
+                            name: "Action",
+                            template: `<input type="checkbox">`,
+                            on: {
+                                "click": function (e) {
+                                    const __checked = $(this).prop("checked") ? true : false;
+                                __listcom.updateColumn(e.key, "Action", __checked);
+                                    if (__checked) {
+                                        arr_com.push({ ID: e.key })
+                                    }
+                                    if (!__checked) {
+                                        arr_com = arr_com.filter(i => i.ID != e.key);
+                                    }
+                                }
+                            },
+                        }
+                    ]
+                });
+                __listcom.bindRows(res)
+            });
+            dialog.confirm(function () {
+                filter();
+                dialog.shutdown();
+            })
+        }
+        $("#stage").click(function () {
+            $.ajax({
+                url: "/Opportunity/GetListSetupStage",
+                type: "Get",
+                dataType: "Json",
+                success: function (response) {
+                    Stage(response);
+                }
+            });
+        })
+        function Stage(res) {
+            let dialog = new DialogBox({
+                content: {
+                    selector: ".stage_containers"
+                },
+                caption: "List Stage"
+            });
+            dialog.invoke(function () {
+                const __liststage = ViewTable({
+                    keyField: "ID",
+                    selector: "#list-stage",
+                    paging: {
+                        pageSize: 10,
+                        enabled: true
+                    },
+                    visibleFields: ["Name", "Action"],
+                    columns: [
+                        {
+                            name: "Action",
+                            template: `<input type="checkbox">`,
+                            on: {
+                                "click": function (e) {
+                               
+                                    const __checked = $(this).prop("checked") ? true : false;
+                                    __liststage.updateColumn(e.key, "Action", __checked);
+                                
+                                    if (__checked) {
+                                        arr_stage.push({ID: e.key})
+                                    }
+                                    if (!__checked) {
+                                        arr_stage = arr_stage.filter(i => i.ID != e.key);
+                                    }
+                                }
+                            },
+                        }
+                    ]
+                });
+                __liststage.clearRows();
+                __liststage.bindRows(res)
+            });
+            dialog.confirm(function () {
+                filter();
+                dialog.shutdown();
+            })
+        }
+        $("#amount").click(function () {
+            amount();
+        })
+        function amount() {
+            // Get the checkbox
+            var checkbpcode = document.getElementById("amount");
+            if (checkbpcode.checked == true) {
+                let dialog = new DialogBox({
+                    button: {
+                        ok: {
+                            text: "OK"
+                        }
+                    },
+                    type: "ok-cancel",
+                    content: {
+                        selector: "#model-amount"
+                    }
+                });
+                dialog.reject(function () {
+
+                    dialog.shutdown();
+                });
+                dialog.invoke(function () {
+
+                });
+                dialog.confirm(function () {
+                    filter()
+                    dialog.shutdown();
+                });
+
+
+            }
+        }
+        $("#date").click(function () {
+            date();
+        })
+        function date() {
+            // Get the checkbox
+            var checkbpcode = document.getElementById("date");
+            if (checkbpcode.checked == true) {
+                let dialog = new DialogBox({
+                    button: {
+                        ok: {
+                            text: "OK"
+                        }
+                    },
+                    type: "ok-cancel",
+                    content: {
+                        selector: "#content-date"
+                    }
+                });
+                dialog.reject(function () {
+
+                    dialog.shutdown();
+                });
+                dialog.confirm(function () {
+                    filter();
+                    dialog.shutdown();
+                });
+                dialog.invoke(function () {
+                });
+
+            }
+        }
+        $("#bpcode").click(function () {
+            bpcode()
+        })
+        function bpcode() {
+            // Get the checkbox
+            var checkbpcode = document.getElementById("bpcode");
+            if (checkbpcode.checked == true) {
+                let dialog = new DialogBox({
+                    button: {
+                        ok: {
+                            text: "OK"
+                        }
+                    },
+                    type: "ok-cancel",
+                    content: {
+                        selector: "#active-edit-content"
+                    }
+                });
+                dialog.reject(function () {
+
+                    dialog.shutdown();
+                });
+                dialog.confirm(function () {
+                    filter();
+                    dialog.shutdown();
+                });
+                dialog.invoke(function () {
+                });
+
+            }
+        }
+        $("#show-list-itemster1").click(function () {
+            $.ajax({
+                url: "/Opportunity/GetBPLostFitler",
+                type: "Get",
+                dataType: "Json",
+                success: function (response) {
+                    bindBPFrom(response);
+                }
+            });
+        });
+        function bindBPFrom(res) {
+            let dialog = new DialogBox({
+                content: {
+                    selector: ".bp_containers"
+                },
+                caption: "Bussines Partner"
+            });
+            dialog.invoke(function () {
+                const __listBussinesPartner = ViewTable({
+                    keyField: "ID",
+                    selector: "#list-bp",
+                    paging: {
+                        pageSize: 10,
+                        enabled: true
+                    },
+                    visibleFields: ["Code", "Name", "Choose"],
+                    actions: [
+                        {
+                            template: `<i class="fas fa-arrow-circle-down" id="close"></i>`,
+                            on: {
+                                "click": function (e) {
+
+                                    $("#from_code").val(e.data.Code);
+                                    $("#frombpid").val(e.data.ID);
+                                    dialog.shutdown();
+                                }
+                            },
+                        }
+                    ]
+                });
+                __listBussinesPartner.bindRows(res)
+            });
+            dialog.confirm(function () {
+                $("#from_code").val(" ");
+                $("#frombpid").val("");
+                dialog.shutdown();
+            })
+        }
+        $("#show-list-itemster2").click(function () {
+            $.ajax({
+                url: "/Opportunity/GetBPFilter",
+                type: "Get",
+                dataType: "Json",
+                success: function (response) {
+                    bindBPTo(response);
+                }
+            });
+        });
+        function bindBPTo(res) {
+            let dialog = new DialogBox({
+                content: {
+                    selector: ".bp_containers"
+                },
+                caption: "Bussines Partner"
+            });
+            dialog.invoke(function () {
+                const __listBussinesPartner = ViewTable({
+                    keyField: "ID",
+                    selector: "#list-bp",
+                    paging: {
+                        pageSize: 10,
+                        enabled: true
+                    },
+                    visibleFields: ["Code", "Name", "Choose"],
+                    actions: [
+                        {
+                            template: `<i class="fas fa-arrow-circle-down" id="close"></i>`,
+                            on: {
+                                "click": function (e) {
+
+                                    $("#to_code").val(e.data.Code);
+                                    $("#tobpid").val(e.data.ID);
+                                    dialog.shutdown();
+                                }
+                            },
+                        }
+                    ]
+                });
+                __listBussinesPartner.bindRows(res)
+            });
+            dialog.confirm(function () {
+                dialog.shutdown();
+            })
+        }
+        $("#btype").change(function () {
+            $("#type").val(this.value);
+            if (this.value == "Customer") {
+                $("#vengroup").hide();
+                $("#titleven").hide();
+                $("#cusgroup").show();
+                $("#titlecus").show();
+
+            }
+            if (this.value == "Vendor") {
+                $("#cusgroup").hide();
+                $("#titlecus").hide();
+                $("#vengroup").show();
+                $("#titleven").show();
+
+
+            }
+            if (this.value == "All") {
+                $("#cusgroup").show();
+                $("#titlecus").show();
+                $("#vengroup").show();
+                $("#titleven").show();
+            }
+        })
+        $("#cusgroup").change(function () {
+            $("#cus_gr").val(this.value);
+        })
+        $("#vengroup").change(function () {
+            $("#ven_gr").val(this.value);
+        })
+        $("#datestfrom").change(function () {
+            $("#dstfrom").val(this.value)
+        })
+        $("#datestto").change(function () {
+            $("#dstto").val(this.value)
+        })
+        $("#dateclfrom").change(function () {
+
+            $("#dclfrom").val(this.value);
+        })
+        $("#dateclto").change(function () {
+            $("#dclto").val(this.value);
+        })
+        $("#prfrom").change(function () {
+            $("#dprfrom").val(this.value);
+        })
+        $("#prto").change(function () {
+            $("#dprto").val(this.value);
+        })
+        $("#amfrom").keyup(function () {
+            $("#valamfrom").val(this.value);
+        })
+        $("#amto").keyup(function () {
+            $("#valamto").val(this.value);
+        })
+        $("#wefrom").keyup(function () {
+            $("#valwefrom").val(this.value);
+        })
+        $("#weto").keyup(function () {
+            $("#valweto").val(this.value);
+        })
+        $("#grfrom").keyup(function () {
+            $("#valgramountfr").val(this.value)
+        })
+        $("#grto").keyup(function () {
+            $("#valgramountto").val(this.value)
+        })
+        $("#perfrom").keyup(function () {
+            $("#valperfrom").val(this.value);
+        })
+        $("#perto").keyup(function () {
+            $("#valperto").val(this.value);
+        })
+        $("#bpcode").click(function () {
+            $("#date").prop("checked", false);
+            $("#amount").prop("checked", false);
+            $("#per").prop("checked", false);
+            $("#com").prop("checked", false);
+            $("#stage").prop("checked", false);
+        })
+        $("#stage").click(function () {
+            $("#date").prop("checked", false);
+            $("#amount").prop("checked", false);
+            $("#per").prop("checked", false);
+            $("#com").prop("checked", false);
+            $("#bpcode").prop("checked", false);
+        })
+        $("#date").click(function () {
+            $("#stage").prop("checked", false);
+            $("#amount").prop("checked", false);
+            $("#per").prop("checked", false);
+            $("#com").prop("checked", false);
+            $("#bpcode").prop("checked", false);
+        })
+        $("#amount").click(function () {
+            $("#stage").prop("checked", false);
+            $("#date").prop("checked", false);
+            $("#per").prop("checked", false);
+            $("#com").prop("checked", false);
+            $("#bpcode").prop("checked", false);
+        })
+        $("#per").click(function () {
+            $("#stage").prop("checked", false);
+            $("#amount").prop("checked", false);
+            $("#date").prop("checked", false);
+            $("#com").prop("checked", false);
+            $("#bpcode").prop("checked", false);
+        })
+        $("#com").click(function () {
+            $("#stage").prop("checked", false);
+            $("#amount").prop("checked", false);
+            $("#date").prop("checked", false);
+            $("#per").prop("checked", false);
+            $("#bpcode").prop("checked", false);
+        })
+    });
+</script>

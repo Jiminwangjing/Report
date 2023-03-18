@@ -1,0 +1,37 @@
+/*Scrollbar UI */
+.widget-scrollbar {
+    overflow: auto;
+}
+
+.widget-scrollbar.scroll-x {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.widget-scrollbar.scroll-y {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.widget-scrollbar::-webkit-scrollbar {
+    width: 12.5px;
+    height: 15px;
+}
+
+.widget-scrollbar::-webkit-scrollbar-track {
+    border-radius: 10px;
+    margin: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, .25);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, .25);
+}
+
+.widget-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #9EA5B5;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, .25);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, .25);
+}
+
+.widget-scrollbar.copper-lite::-webkit-scrollbar-thumb {
+    background-color: #B5AE9E;
+}

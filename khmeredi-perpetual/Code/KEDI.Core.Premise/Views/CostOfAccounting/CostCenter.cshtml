@@ -1,0 +1,172 @@
+﻿@model CKBS.Models.Services.CostOfAccounting.CostOfCenter
+<link href="~/Admin/CostCenter/css/costcenter.css" rel="stylesheet" />
+<div class="card card-body">
+    <div class="glaccount-container flexbox space-between">
+        <form>
+            @*  <div class="row">
+                <div class="col-md-5">*@
+            @*<div class="form-check" style="margin-left:-20px;">
+                    <input class="form-check-input" type="checkbox" value="" id="dimension">
+                    <label class="form-check-label" for="dimension" style="margin-left: 43px;">
+                        Dimension
+                    </label>
+                </div>*@
+            <div class="form-group">
+                <label class="control-label">@Localizer["Cost Center"] :</label>
+                <input asp-for="CostCenter" autocomplete="off" class="input-box-kernel" id="cc" />
+                <span asp-validation-for="CostCenter" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Name"] :</label>
+                <input asp-for="Name" autocomplete="off" class="input-box-kernel" id="name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Owner"] :</label>
+                <div id="ch-ower">
+                    <input class="input-box-kernel hover" autocomplete="off" id="ownerName" disabled />
+                </div>
+                <input class="input-box-kernel" hidden id="ownerNameId" />
+                <span id="error" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Short Code"] :</label>
+                <input class="input-box-kernel" autocomplete="off" id="shortCode" />
+                <span id="error" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">@Localizer["Cost Center Type"] :</label>
+
+                <div class="input-group">
+                    @*<div class="ch-cct">*@
+                        <input class="input-box-kernel hover ch-cct" autocomplete="off" id="costCenterType" />
+                    @*</div>*@
+                    <input class="input-box-kernel hover" autocomplete="off" hidden id="costCenterTypeid" />
+                    <div class="input-group-append">
+                        <i class="fa fa-plus-circle mll_2 hover" id="create-cct"></i>
+                    </div>
+
+                </div>
+                <input class="input-box-kernel" hidden id="costCenterTypeId" />
+                <span id="error" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>@Localizer["Effective From"]</label>
+                <input type="date" autocomplete="off" class="input-box-kernel" id="edfrom" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>@Localizer["Effective To"]</label>
+                <input type="date" autocomplete="off" class="input-box-kernel" id="edto" />
+                <span class="text-danger"></span>
+            </div>
+
+            <div class="form-check" style="margin-left: -20px;">
+                <input class="form-check-input" type="checkbox" value="" id="active">
+                <label class="form-check-label" for="active" style="margin-left: 43px;">
+                    Active
+                </label>
+            </div>
+
+            <div id="error-summary"></div>
+            <div class="form-group">
+                <button type="button" class="btn btn-xs btn-kernel" id="save" hidden>@Localizer["Save"]</button>
+                <button type="button" class="btn btn-xs btn-kernel" id="add" disabled>@Localizer["Add"]</button>
+                <button type="button" class="btn btn-xs btn-kernel" id="update" disabled>@Localizer["Update"]</button>
+                <button type="button" id="cancel" class="btn btn-xs btn-kernel" hidden>@Localizer["Cancel"]</button>
+            </div>
+            @*</div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6" id="dimension">
+                    </div>
+                </div>*@
+        </form>
+        <div class='treeview-container'>
+            <ul class='treeview'></ul>
+        </div>
+        <div class="v-menu-box">
+            <ul id="cate_container" class="menu-group widget-default-scrollbar">
+                <li class="menu-item" id="noneName"></li>
+            </ul>
+        </div>
+    </div>
+</div>
+@*// hidden Input //*@
+<input hidden id="mainParentId" />
+<input hidden id="level" />
+<input hidden id="parentId" />
+@* Emp Dialog *@
+<div id="container-list-emps" class="wrap-table widget-scrollbar" style="height: 350px; display: none;">
+    <div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="txtSearch" autocomplete="off" type="text" placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table class="emps">
+        <thead>
+            <tr>
+                <th class="text-center">@Localizer["#"]</th>
+                <th class="text-center">@Localizer["Name"]</th>
+                <th class="text-center">@Localizer["Code"]</th>
+                <th class="text-center">@Localizer["Position"]</th>
+                <th class="text-center">@Localizer["Choose"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+@* Cost Of Center Type Dialog *@
+<div id="container-list-cct" class="wrap-table widget-scrollbar" style="height: 350px; display: none;">
+    <div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="txtSearchcct" autocomplete="off" type="text" placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table class="cct">
+        <thead>
+            <tr>
+                <th class="text-center">@Localizer["#"]</th>
+                <th class="text-center">@Localizer["Code"]</th>
+                <th class="text-center">@Localizer["Name"]</th>
+                <th class="text-center">@Localizer["Choose"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+@* Create CCT *@
+<div id="container-list-cct-create" class="wrap-table widget-scrollbar" style="height: 350px; display: none;">
+    <div class="card card-body" style="height: 100%;">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label>@Localizer["Code"]</label>
+                    <input type="text" autocomplete="off" class="input-box-kernel" id="cct-code" />
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label>@Localizer["Name"]</label>
+                    <input type="text" autocomplete="off" class="input-box-kernel" id="cct-name" />
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <button class="btn btn-kernel" id="save-cct">@Localizer["Save"]</button>
+            <button class="btn btn-kernel" id="cancel-cct">@Localizer["Cancel"]</button>
+        </div>
+    </div>
+</div>
+<div hidden id="empty-data">@Json.Serialize(Model)</div>
+<script src="~/Admin/CostCenter/js/cost-center.js"></script>

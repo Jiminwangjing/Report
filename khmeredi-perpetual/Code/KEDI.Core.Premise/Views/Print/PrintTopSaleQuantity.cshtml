@@ -1,0 +1,95 @@
+﻿@model IEnumerable<CKBS.Models.Services.ReportSale.TopSaleQuantity>
+@{
+    ViewData["Title"] = "PrintTopSaleQuantity";
+    Layout = "_Layout_print";
+    var num = 0;
+    double totalqty = 0;
+    
+    var datefrom = Convert.ToDateTime(Model.First().DateFrom);
+    var dateto = Convert.ToDateTime(Model.First().DateTo);
+}
+
+<style>
+    body {
+        font-family: 'Khmer OS Battambang';
+        font-size: 14px;
+    }
+    .tbfontsize {
+        font-size: 16px;
+    }
+</style>
+<div class="text-center" style="margin-top: 20px; padding:10px;">
+    <h3>របាយការណ៍ទំនិញលក់ដាច់ជាងគេ</h3>
+    <h3>Top Sale Quantity Report</h3>
+</div>
+<div class="row" style="margin: 30px -1px 20px -10px">
+    <div class="col-xs-5">
+        <table class="tbfontsize">
+            <tr>
+                <th>Branch</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@Model.First().Branch</td>
+            </tr>
+            <tr>
+                <th>Date From</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@datefrom.ToString("dd-MM-yyyy")</td>
+            </tr>
+            <tr>
+                <th>Date To</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@dateto.ToString("dd-MM-yyyy")</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-2"></div>
+    <div class="col-xs-5">
+        <table>
+            
+        </table>
+    </div>
+</div>
+
+<div style="min-height:300px; border: 1px outset grey">
+    <table class="table">
+        <thead>
+            <tr style="background:#5F758B;color:white;">
+                <th width="30">No.</th>
+                <th>Code</th>
+                <th>Khmer Name</th>
+                <th>English Name</th>
+                <th>Date Out</th>
+                <th>Time Out</th>
+                <th>Qty</th>
+                <th>Uom</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                num++;
+                totalqty += item.Qty;
+                var dateout = Convert.ToDateTime(item.DateOut);
+                <tr>
+                    <td>@num</td>
+                    <td>@item.Code</td>
+                    <td>@item.KhmerName</td>
+                    <td>@item.EnglishName</td>
+                    <td>@dateout.ToString("dd-MM-yyyy")</td>
+                    <td>@item.TimeOut</td>
+                    <td>@item.Qty</td>
+                    <td>@item.Uom</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div style="float:right; border:1px outset grey; border-top:0px !important; padding:10px 64px 10px 40px; width:35%">
+    <table>
+        <tr>
+            <th>Sub Total</th>
+            <td style="padding: 0 40px 0 25px">:</td>
+            <td>@totalqty</td>
+        </tr>
+    </table>
+</div>

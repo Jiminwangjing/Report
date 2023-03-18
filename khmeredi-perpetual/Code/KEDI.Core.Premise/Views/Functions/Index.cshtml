@@ -1,0 +1,57 @@
+﻿@model IEnumerable<CKBS.Models.Services.Account.Function>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-sm btn-primary">@Localizer["Create"]</a>
+</p>
+
+<table class="table table-sm table-bordered">
+    <thead>
+        <tr>
+            <th>
+                @Localizer["Code"]
+            </th>
+            <th>
+                @Localizer["Name"]
+            </th>
+            <th>
+                @Localizer["Type"]
+            </th>
+            <th class="text-center">@Localizer["Action"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td class="text-center">
+                    <form asp-action="Delete" method="post" asp-route-Id="@item.ID">
+                        <span id="cfdelete_@item.ID" style="display:none;">
+                            <button type="submit" class="btn btn-sm btn-success text-light cursor">Yes</button>
+                            <a class="btn btn-sm btn-danger cursor" onclick="DeleteConfirmation('@item.ID', false)"> No </a>
+                        </span>
+
+                        <span id="deleteuser_@item.ID">
+                            <a class="btn btn-sm btn-success text-light cursor" asp-action="Update" asp-controller="Functions" asp-route-id="@item.ID">Edit</a>
+                            <a class="btn btn-sm btn-danger text-light cursor" onclick="DeleteConfirmation('@item.ID', true)">Delete</a>
+                        </span>
+
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script src="~/AutoMobile/js/delete_confirmation.js"></script>

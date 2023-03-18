@@ -1,0 +1,75 @@
+﻿@model CKBS.Models.Services.Promotions.Promotion
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<style>
+    .control-label {
+        font-weight: bold;
+    }
+
+    input[type=checkbox] {
+        width: 20px;
+        height: 20px;
+    }
+    .form-group{
+        padding:0px;
+        margin:0px
+    }
+    .pull-left{
+        margin-top:10px;
+    }
+</style>
+<hr />
+<div class="card card-body">
+    <form asp-action="Edit">
+        <div class="row">
+            <div class="col-md-6">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ID" />
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Name"] :</label>
+                    <input asp-for="Name" class="input-box-kernel" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["StartDate"] :</label>
+                    <input asp-for="StartDate" class="input-box-kernel" type="date" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+               
+                <div class="form-group">
+                    <label class="control-label">@Localizer["StopDate"] :</label>
+                    <input asp-for="StopDate" class="input-box-kernel" type="date"/>
+                    <span asp-validation-for="StopDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["StartTime"] :</label>
+                    <input asp-for="StartTime" class="input-box-kernel" type="time" />
+                    <span asp-validation-for="StopDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["StopTime"] :</label>
+                    <input asp-for="StopTime" class="input-box-kernel" type="time"/>
+                    <span asp-validation-for="StopDate" class="text-danger"></span>
+                </div>
+                 <div class="form-group">
+                    <label class="control-label">@Localizer["PriceList"] :</label>
+                    <select class="input-box-kernel" asp-for="PriceListID"  asp-items="ViewBag.PrceiList">
+                        <option value="0" selected disabled>--- Select ---</option>
+                    </select>
+                    <span asp-validation-for="PriceListID" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 pull-left">
+                <div class="form-group">
+                    <button class="btn btn-success btn-xs">@Localizer["Save"]</button>
+                    <a asp-action="Index" class="btn btn-xs btn-kernel">@Localizer["Back"]</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>

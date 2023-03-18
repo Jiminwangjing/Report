@@ -1,0 +1,1604 @@
+﻿@model ItemMasterData
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    .StyleImge {
+        height: 120px;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        width: 120px;
+    }
+
+    input[type="checkbox"] {
+        height: 20px;
+        width: 20px;
+        margin: 0 0.4em 0.4em 0;
+        outline: none;
+        box-shadow: 0px 0px 3px rgba(105, 107, 228, 0.3);
+        background: rgba(144, 232, 115, 0.4);
+    }
+
+    .form-check-label {
+        margin-left: 10px;
+        margin-top: 2px;
+    }
+
+    .stylechick {
+        margin-top: 15px;
+    }
+
+    #txtlogo {
+        width: 120px;
+        border-radius: 50px;
+    }
+
+    .stypechickinput {
+        margin-left: 30px;
+    }
+
+    .StyleImge {
+        box-shadow: 0px 0px 4px;
+    }
+
+    .modal-header {
+        cursor: move;
+    }
+
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 50px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            cursor: inherit;
+            display: block;
+        }
+
+    #imagestyle {
+        border-radius: 50px;
+        margin-left: 23px;
+        margin-top: 10px;
+        box-shadow: 0px 0px 4px;
+        color: blue;
+    }
+
+    .fa {
+        margin-right: 4px;
+    }
+
+    #styleheader {
+        color: white;
+        font-size: 15px;
+    }
+
+    b {
+        margin-left: 10px;
+    }
+
+    .modal-header {
+        background-color: blue;
+    }
+
+    .modal-content {
+        margin-top: 20px;
+    }
+
+    .fa-share-square {
+        margin-top: 6px;
+    }
+
+
+    input[type=text], input[type=date], textarea {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 35px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        min-width: 65%;
+        width: 65%;
+    }
+
+    .control-label {
+        min-width: 27%;
+        width: 24%;
+    }
+
+    select {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 35px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        min-width: 65%;
+        width: 65%;
+    }
+
+    input[type=text]:focus, textarea:focus, input[type=date]:focus {
+        box-shadow: 0 0 7px rgba(79, 110, 230,1);
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid rgba(106, 164, 213,1);
+        border-radius: 3px;
+        font-family: Arial;
+        font-size: 13px;
+    }
+
+    select:focus {
+        box-shadow: 0 0 7px rgba(79, 110, 230,1);
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid rgba(106, 164, 213,1);
+        border-radius: 3px;
+        font-family: Arial;
+        font-size: 13px;
+    }
+
+    .text-danger {
+        font-size: 12px;
+        font-family: Arial;
+    }
+
+    .group_Input_select {
+        position: relative;
+    }
+
+    .Btn_link_a {
+        position: absolute;
+        top: 14px;
+        font-size: 10px;
+    }
+
+    .Btn_link {
+        position: absolute;
+        top: 16px;
+        font-size: 13px;
+    }
+
+    select#listGroupUom, select#itemgroup3Name, select#txtcurrency, select#txtselectprice, select#selectItmegroup2, select#txtselectwarehouse, select#txtprinter, select#selectItemGroup1 {
+        width: 60%;
+    }
+
+    label.control-label {
+        font-weight: 500;
+        min-width: 28%;
+        width: 24%;
+    }
+
+    .label_control {
+        position: relative;
+        bottom: 14px;
+        left: 10px;
+    }
+
+    .Btn_link_item3 {
+        position: relative;
+        font-size: 13px;
+    }
+</style>
+<input type="text" id="txtcode" value="@ViewBag.Code" hidden />
+<input type="text" id="txtbar" value="@ViewBag.Barcode" hidden />
+<form asp-action="EditGrid" enctype="multipart/form-data" method="post">
+    <div class="row">
+        <div class="col-sm-6">
+            <input type="hidden" id="txtitemID" asp-for="ID" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="group_Input">
+                <label class="control-label">@Localizer["Code"]</label>
+                <input asp-for="Code" id="itemCode" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+                <div class="text-danger">@ViewBag.CodeError</div>
+                <span class=" text-danger" id="error_code"></span>
+            </div>
+            <div class="group_Input">
+                <label class="control-label">@Localizer["KhmerName"]</label>
+                <input asp-for="KhmerName" />
+                <span asp-validation-for="KhmerName" class="text-danger"></span>
+            </div>
+            <div class="group_Input">
+                <label class="control-label">@Localizer["EnglishName"]</label>
+                <input asp-for="EnglishName" />
+                <span asp-validation-for="EnglishName" class="text-danger"></span>
+            </div>
+            <div class="group_Input">
+                <label class="control-label">@Localizer["Type"]</label>
+                @if (ViewBag.Check == "Yes")
+                {
+                    <select asp-for="Type" class="">
+                        <option value="0" selected disabled>--- Select ---</option>
+                        <option value="@ViewBag.Type">@ViewBag.Type</option>
+                    </select>
+                }
+                else
+                {
+                    <select asp-for="Type" class="">
+                        <option value="0" selected disabled>--- Select ---</option>
+                        <option value="Item">Item</option>
+                        <option value="Service">Service</option>
+                        @*<option value="Labor">Labor</option>*@
+                    </select>
+                }
+
+                <div class="text-danger">@ViewBag.typeError</div>
+            </div>
+            <input type="hidden" asp-for="StockCommit" />
+            <input type="hidden" asp-for="StockIn" />
+            <input type="hidden" asp-for="StockOnHand" />
+            <div class="group_Input_select">
+                <label class="control-label">@Localizer["GroupUoM"]</label>
+                <select asp-for="GroupUomID" asp-items="ViewBag.GroupUomID" id="listGroupUom" class="" onchange="selectCahngeGroupUOM()">
+                    <option value="0" selected disabled>--- Select ---</option>
+                </select>
+                <a class="Btn_link_a" style="background-color:#e6e6e6;" asp-action="Index" asp-controller="GroupUOM"><i class="fa fa-share-square" style="color:blue;"></i></a>
+                <div class="text-danger">@ViewBag.GroupuomError</div>
+                <span asp-validation-for="GroupUomID" class="text-danger"></span>
+            </div>
+            <div class="group_Input_select">
+                <label class="control-label">@Localizer["PriceList"]</label>
+                <select asp-for="PriceListID" class="" asp-items="ViewBag.PriceListID" id="txtselectprice">
+                    <option value="0" selected disabled>--- Select ---</option>
+                </select>
+                <i class="fa fa-plus-circle Btn_link" style="color:blue;" data-toggle="modal" data-target="#ModalPricelist"></i>
+                <div class="text-danger">@ViewBag.Pricelist</div>
+            </div>
+            <div class="group_Input_select">
+                <label class="control-label">@Localizer["Warehose"]</label>
+                <select asp-for="WarehouseID" class="" id="txtselectwarehouse" onchange="changeID()" asp-items="ViewBag.WarehouseID">
+                    <option value="0" selected disabled>--- Select ---</option>
+                </select>
+                <span asp-validation-for="WarehouseID"></span>
+                <i class="fa fa-plus-circle Btn_link" data-toggle="modal" data-target="#Modalwarhouse" style="color:blue;"></i>
+                <span class="text-danger">@ViewBag.Warehouse</span>
+            </div>
+            <div class="group_Input_select">
+                <label class="control-label">@Localizer["PrintTo"] </label>
+                <select asp-for="PrintToID" id="txtprinter" asp-items="ViewBag.PrintToID">
+                    <option value="0" selected disabled>--- Select ---</option>
+                </select>
+                <i class="fa fa-plus-circle Btn_link" data-toggle="modal" data-target="#ModalPrintTo" style="color:blue;"></i>
+                <span asp-validation-for="PrintToID" class="text-danger"></span>
+                <div class="text-danger">@ViewBag.printerError</div>
+            </div>
+            <div class="group_Input">
+                <label class="control-label">@Localizer["Barcode"]</label>
+                <input type="text" asp-for="Barcode" id="txtbarcode" onkeyup="CheckBarCode()" />
+                <span asp-validation-for="Barcode" class="text-danger"></span>
+                <div class="text-danger" id="error_barcode"></div>
+                <div class="text-danger">@ViewBag.barcodeerror</div>
+            </div>
+            <div class="group_Input">
+                <label class="control-label">@Localizer["Process"] </label>
+                @if (ViewBag.Check == "Yes")
+                {
+                    <select asp-for="Process" onchange="SelectChangProccess()" class="" id="txtProccess">
+                        <option value="0" selected disabled>--- Select ---</option>
+                        <option value="@ViewBag.Process">@ViewBag.Process</option>
+                    </select>
+                }
+                else
+                {
+                    <select asp-for="Process" onchange="SelectChangProccess()" class="" id="txtProccess">
+                        <option value="0" selected disabled>--- Select ---</option>
+                        <option value="FIFO">FIFO</option>
+                        <option value="Average">Average</option>
+                        <option value="Standard">Standard</option>
+                    </select>
+                }
+
+                <span asp-validation-for="Process" class="text-danger"></span>
+                <div class="text-danger">@ViewBag.processerror</div>
+            </div>
+            <div class="group_Input">
+                <label class="control-label">@Localizer["Manage Expire"] </label>
+                <select asp-for="ManageExpire" id="txtmanage">
+                    <option value="None">None</option>
+                    <option value="Manage">Manage</option>
+                </select>
+                <span asp-validation-for="ManageExpire" class="text-danger"></span>
+                <div class="text-danger">@ViewBag.ManageExpire</div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6 ">
+                        <div>
+                            <img src="~/Images/items/@Model.Image" id="logo" class="StyleImge" />
+                        </div>
+                        <div class="btn btn-sm btn-file" id="imagestyle">
+                            @Localizer["Browse"] <input type="file" asp-for="Image" name="Image" id="txtlogo" onchange="show(this)" value="" accept=".ico, .png, .jpg, .jpeg, .gif" style="margin-top:10px;">
+                            <input type="text" asp-for="Image" name="Images" hidden />
+                            <span asp-validation-for="Image" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 stylechick">
+                        <div class="stypechickinput">
+                            <div class="input-group">
+                                <input type="checkbox" class="form-check-input" asp-for="Inventory">
+                                <div class="input-group-append">
+                                    <label class="form-check-label" for="cboinventory">@Localizer["Inventory"]</label>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <input type="checkbox" class="form-check-input" asp-for="Sale">
+                                <div class="input-group-append">
+                                    <label class="form-check-label" for="cboinventory">@Localizer["Sale"]</label>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <input type="checkbox" class="form-check-input" asp-for="Purchase">
+                                <div class="input-group-append">
+                                    <label class="form-check-label" for="cboinventory">@Localizer["Purchase"]</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="Itemgroup-tab" data-toggle="tab" href="#ItemGroup" aria-controls="ItemGroup" role="tab" aria-selected="true">@Localizer["ItemGroup"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="uom-tab" data-toggle="tab" href="#UOM" role="tab" aria-controls="UOM" aria-selected="false">@Localizer["UOM"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="general-tab" data-toggle="tab" href="#Orther" role="tab" aria-controls="Orther" aria-selected="false">@Localizer["General"]</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="ItemGroup" role="tabpanel" aria-labelledby="Itemgroup-tab">
+                        <div class="group_Input_select">
+                            <label class="control-label">@Localizer["ItemGroup(1)"]</label>
+                            <select class="category" asp-for="ItemGroup1ID" asp-items="ViewBag.ItemGroup1ID" id="selectItemGroup1" onchange="selectchangitemgroup1()">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                            <i class="fa fa-plus-circle Btn_link" data-toggle="modal" data-target="#ModalItemgorup1" style="color:blue;"></i>
+                            <div class="text-danger">@ViewBag.itemgorup1</div>
+                        </div>
+                        <div class="group_Input_select">
+                            <label class="control-label ">@Localizer["ItemGroup(2)"]</label>
+                            <select class="subCategory" asp-for="ItemGroup2ID" asp-items="ViewBag.ItemGroup2ID" id="selectItmegroup2" onchange="selectChangItemGroup3()">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                            <i class="fa fa-plus-circle Btn_link" data-toggle="modal" data-target="#ModalItemgorup2" onclick="clickbutton()" style="color:blue;"></i>
+
+                        </div>
+                        <div class="group_Input">
+                            <div>
+                                <label class="control-label">@Localizer["ItemGroup(3)"]</label>
+                                <select asp-for=" ItemGroup3ID" asp-items="ViewBag.ItemGroup3ID" id="itemgroup3Name">
+                                    <option value="0" selected disabled>--- Select ---</option>
+                                </select>
+                                <i class="fa fa-plus-circle Btn_link_item3" data-toggle="modal" data-target="#ModalItemgorup3" onclick="clickbutton()" style="color:blue;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="UOM" role="tabpanel" aria-labelledby="uom-tab">
+                        <div class="group_Input">
+                            <label class="control-label">@Localizer["InventoryUoM"]</label>
+                            <select asp-for="InventoryUoMID" id="txtInventoryUOM" asp-items="ViewBag.InventoryUoMID">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                            <span asp-validation-for="InventoryUoMID"></span>
+                        </div>
+                        <div class="group_Input">
+                            <label class="control-label ">@Localizer["SaleUoM"]</label>
+                            <select asp-for="SaleUomID" id="txtSaleUOM" asp-items="ViewBag.SaleUomID">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                            <span asp-validation-for="SaleUomID"></span>
+                        </div>
+                        <div class="group_Input">
+                            <label class="control-label ">@Localizer["PurchaseUoM"]</label>
+                            <select asp-for="PurchaseUomID" id="txtPurchar" asp-items="ViewBag.PurchaseUomID">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                            <span asp-validation-for="PurchaseUomID"></span>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="Orther" role="tabpanel" aria-labelledby="general-tab">
+                        <div class="group_Input">
+                            <label class="control-label ">@Localizer["Cost"]</label>
+                            <input asp-for="Cost" id="txtCost" class="control_disabled" />
+                            &nbsp;<span id="errmsgcost"></span>
+                            <span asp-validation-for="Cost" class="text-danger"></span>
+                        </div>
+                        <div class="group_Input">
+                            <label class="control-label ">@Localizer["UnitPrice"]</label>
+                            <input asp-for="UnitPrice" id="txtUnitPrice" class="control_disabled" />
+                            &nbsp;<span id="errmsgunitprice"></span>
+                            <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="group_Input">
+                <div>
+                    <label class="control-label label_control">@Localizer["Description"]</label>
+                    <textarea asp-for="Description" id="txt_dis"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-group pull-left">
+                    <button class="btn btn-success btn-sm" type="submit"><i class="fa fa-save"></i>@Localizer["Save"]</button>
+                    <a asp-action="Index" class="btn btn-danger btn-sm"><i class="fa fa-reply"></i>@Localizer["Back"]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="modal fade" id="ModalPricelist">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["PriceList"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="group_Input">
+                            <label class="control-label">@Localizer["PriceListName"] </label>
+                            <input type="text" id="txtpricelist" />
+                            <span class="text-danger price_requried"></span>
+                        </div>
+                        <div>
+                            <label class="control-label">@Localizer["Currency"]</label>
+                            <select type="text" id="txtcurrency">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+
+                            @*<i class="fa fa-plus-circle Btn_link_Modal" data-toggle="modal" data-target="#ModalCurrency" style="color:blue;"></i>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-xs btn-primary" onclick="clickinsertpricelist()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-xs btn-danger" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="Modalwarhouse">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["Warehose"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="">
+                            <label class="control-label">@Localizer["Code"] </label>
+                            <input type="text" id="Wtxtcode" onblur="CheckCodeWarehouse()" />
+                            <div class="text-danger" id="error_code">@ViewBag.error</div>
+                            <div class="text-danger" id="error_codewarehouse"></div>
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["warehouseName"] </label>
+                            <input type="text" id="Wtxtname" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Lcation"] </label>
+                            <input type="text" id="Wtxtlocation" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Address"] </label>
+                            <input type="text" id="Wtxtaddress" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm" onclick="AddWarehouse()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalItemgorup1">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["ItemGroup(1)"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="">
+                            <label class="control-label">@Localizer["Name1"] </label>
+                            <input type="text" id="Itemgroup1Name" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Color"] </label>
+                            <select id="txtcolor">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                            @* <i class="fa fa-plus-circle" data-toggle="modal" data-target="#ModalColor" style="color:blue;"></i>*@
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Background"]</label>
+                            <select id="txtbackground">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                            @*<i class="fa fa-plus-circle" data-toggle="modal" data-target="#ModalBackground" style="color:blue;"></i>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" onclick="AddItemGroup1()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalItemgorup2">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["ItemGroup(2)"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="">
+                            <label class="control-label">@Localizer["Name1_1"] </label>
+                            <select id="txtItemgroup1">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Name2"] </label>
+                            <input type="text" id="itemgroup2Name" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Color"] :</label>
+                            <select id="txtcolor2">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Background"] :</label>
+                            <select id="txtbackground2">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" onclick="AddItemGroup2()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalItemgorup3">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["ItemGroup(3)"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="">
+                            <label class="control-label">@Localizer["Name1_1"] </label>
+                            <select id="txtname1" onchange="ChangeItemGroup2()">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Name2_1"] </label>
+                            <select id="txtname2">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Name3"] </label>
+                            <input type="text" id="txtname3" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Color"] </label>
+                            <select class="id=" txtcolor3">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                        </div>
+                        <div class="">
+                            <label class=" control-label">@Localizer["Background"] </label>
+                            <select id="txtbackground3">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" onclick="AddItemGroup3()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalPrintTo">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["Printer"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="">
+                            <label class="control-label">@Localizer["PrinterName"] :</label>
+                            <input type="text" id="txtPrinterName" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm" onclick="InsertPrintName()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalColor">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:white;">
+                <i class="fa fa-plus-circle" id="styleheader" style="color:black;"><b>@Localizer["Color"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="">
+                            <label class="control-label">@Localizer["NameColor"]:</label>
+                            <input type="text" id="colorName" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-xs" onclick="AddColor()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-danger btn-xs" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalBackground">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content ">
+            <div class="modal-header" style="background-color:white;">
+                <i class="fa fa-plus-circle" id="styleheader" style="color:black;"><b>@Localizer["Background"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="">
+                            <label class="control-label">@Localizer["BackName"]</label>
+                            <input type="text" id="backName" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-xs" onclick="AddBack()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-danger btn-xs" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade right" id="ModalCurrency" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-side modal-top-right" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["Currency"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="">
+                            <label class="control-label">@Localizer["CName"]</label>
+                            <input type="text" id="currrencyName" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Description"]</label>
+                            <input type="text" id="txtDescript" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-xs" onclick="AddCurrency()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-danger btn-xs" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<p id="itmeID1" hidden></p>
+<p id="itemID2" hidden></p>
+<p id="itemID3" hidden></p>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+
+    var ID1 = 0;
+    var ID2 = 0;
+
+    $(document).ready(function () {
+        $(".modal-header").on("mousedown", function (mousedownEvt) {
+            var $draggable = $(this);
+            var x = mousedownEvt.pageX - $draggable.offset().left,
+                y = mousedownEvt.pageY - $draggable.offset().top;
+            $("body").on("mousemove.draggable", function (mousemoveEvt) {
+                $draggable.closest(".modal-dialog").offset({
+                    "left": mousemoveEvt.pageX - x,
+                    "top": mousemoveEvt.pageY - y
+                });
+            });
+            $("body").one("mouseup", function () {
+                $("body").off("mousemove.draggable");
+            });
+            $draggable.closest(".modal").one("bs.modal.hide", function () {
+                $("body").off("mousemove.draggable");
+            });
+        });
+
+
+        $.ajax({
+            url: "/Currency/GetCurrency",
+            type: "GET",
+            dataType: "JSON",
+            success: function (respones) {
+                var data = "";
+
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Symbol + '</option>';
+                });
+                $("#txtcurrency").append(data);
+            }
+        });
+        $.ajax({
+            url: "/ItemGroup1/SelecrColor",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = "";
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ColorID + '">' + item.Name + '</option>';
+                });
+                $("#txtcolor").append(data);
+                $("#txtcolor2").append(data);
+                $("#txtcolor3").append(data);
+            }
+        });
+
+        $.ajax({
+            url: "/ItemGroup1/SelectBackground",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = "";
+
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.BackID + '">' + item.Name + '</option>';
+                });
+                $("#txtbackground").append(data);
+                $("#txtbackground2").append(data);
+                $("#txtbackground3").append(data);
+            }
+        });
+        $.ajax({
+            url: "/ItemGroup1/GetItemGroup",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = "";
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ItemG1ID + '">' + item.Name + '</option>';
+                });
+                $("#txtItemgroup1").append(data);
+                $("#txtname1").append(data);
+
+            }
+        });
+        // check inventory transactions
+        var itemid = $("#txtitemID").val();
+        $.ajax({
+            url: "/ItemMasterData/CheckTransactionItem",
+            type: "Get",
+            dataType: "text",
+            data: { ItemID: itemid },
+            success: function (respones) {
+                if (respones == "Y") {
+                    $(".control_disabled").prop("disabled", true);
+                }
+                else {
+                    $(".control_disabled").prop("disabled", false);
+                }
+            }
+
+        })
+    });
+
+    //check number
+
+    function show(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+
+            filerdr.onload = function (e) {
+                $('#logo').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+            $("#LogoCopy").val("");
+        }
+    }
+    //chang proccess
+    function SelectChangProccess() {
+        var type = $("#txtProccess").val();
+        if (type == "FIFO" || type == "Average") {
+            document.getElementById("txtCost").disabled = true;
+            document.getElementById("txtUnitPrice").disabled = true;
+        }
+        else {
+            document.getElementById("txtCost").disabled = false;
+            document.getElementById("txtUnitPrice").disabled = false;
+        }
+    }
+    //insertpircelist
+    function clickinsertpricelist() {
+
+        var name = $("#txtpricelist").val();
+        var cur = $("#txtcurrency").val();
+
+        var count = 0;
+        if (name == 0) {
+            count++;
+            $("#txtpricelist").css("border-color", "red");
+
+        } else {
+            $("#txtpricelist").css("border-color", "lightgrey");
+
+        }
+        if (cur == 0) {
+            count++;
+            $("#txtcurrency").css("border-color", "red");
+        }
+        else {
+            $("#txtcurrency").css("border-color", "lightgrey");
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+        var data = {
+            Name: name,
+            CurrencyID: cur
+        }
+        $.ajax({
+            url: "/PriceList/InsertPricelist",
+            type: "POST",
+            dataType: "JSON",
+            data: { priceList: data },
+            complete: function (respones) {
+                $("#txtpricelist").val("");
+                $("#txtcurrency").val("");
+                $.ajax({
+                    url: "/PriceList/GetselectPricelist",
+                    type: "Get",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var sata = "";
+                        $.each(respones, function (i, item) {
+                            sata +=
+                                '<option value="' + item.ID + '">' + item.Name + '</option>';
+                        });
+                        $("#txtselectprice").html(sata);
+                    }
+                })
+            }
+
+        });
+    }
+    //addwarehouse
+    function AddWarehouse() {
+        var code = $("#Wtxtcode").val();
+        var name = $("#Wtxtname").val();
+        var loca = $("#Wtxtlocation").val();
+        var add = $("#Wtxtaddress").val();
+
+        var count = 0;
+        if (code == 0) {
+            count++;
+            $("#Wtxtcode").css("border-color", "red");
+        }
+        else {
+            $("#Wtxtcode").css("border-color", "lightgrey");
+
+        }
+        if (name == 0) {
+            count++;
+            $("#Wtxtname").css("border-color", "red");
+        }
+        else {
+
+            $("#Wtxtname").css("border-color", "lightgrey");
+        }
+        if (loca == 0) {
+            count++;
+            $("#Wtxtlocation").css("border-color", "red");
+        }
+        else {
+            $("#Wtxtlocation").css("border-color", "lightgrey");
+
+        }
+        if (add == 0) {
+            count++;
+            $("#Wtxtaddress").css("border-color", "red");
+        }
+        else {
+
+            $("#Wtxtaddress").css("border-color", "lightgrey");
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+
+        var data = {
+
+            Code: code,
+            Name: name,
+            Location: loca,
+            Address: add
+        }
+
+        $.ajax({
+            url: "/Warehouse/AddWarehouse",
+            type: "POST",
+            dataType: "JSON",
+            data: { warehouse: data },
+            complete: function (respones) {
+
+                $("#Wtxtcode").val("");
+                $("#Wtxtname").val("");
+                $("#Wtxtlocation").val("");
+                $("#Wtxtaddress").val("");
+
+                $.ajax({
+                    url: "/Warehouse/GetWarehouse",
+                    type: "Get",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var sata = "";
+                        $.each(respones, function (i, item) {
+                            sata +=
+                                '<option value="' + item.ID + '">' + item.Name + '</option>';
+                        });
+                        $("#txtselectwarehouse").html(sata);
+                    }
+
+                });
+            },
+
+        })
+    }
+    //check code warehouse
+    function CheckCodeWarehouse() {
+        var code = $("#Wtxtcode").val();
+        $.ajax({
+            url: "/Warehouse/CheckCodeWarehouse",
+            type: "GET",
+            dataType: "JSON",
+            data: { Code: code },
+            success: function (respones) {
+
+                var isHase = false;
+                $.each(respones, function (i, item) {
+                    isHase = true;
+                })
+                if (isHase == true) {
+                    $('#error_codewarehouse').text("This code already exist !");
+                }
+                else {
+                    $('#error_barcode').text("");
+                }
+
+            }
+        });
+    }
+    //additemgroup(1)
+    function AddItemGroup1() {
+
+        var name = $("#Itemgroup1Name").val();
+        var col = $("#txtcolor").val();
+        var back = $("#txtbackground").val();
+        var count = 0;
+        if (name == 0) {
+            count++;
+            $("#Itemgroup1Name").css("border-color", "red");
+        }
+        else {
+
+            $("#Itemgroup1Name").css("border-color", "lightgrey");
+        }
+
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+        var data = {
+            Name: name,
+            ColorID: col,
+            BackID: back
+        }
+        $.ajax({
+            url: "/ItemGroup1/Additmegroup1",
+            type: "POST",
+            dataType: "JSON",
+            data: { itemGroup1: data },
+            complete: function (respones) {
+                $("#Itemgroup1Name").val("");
+                $("#txtcolor").val("");
+                $("#txtbackground").val("");
+                $("#selectItmegroup2 option").remove();
+                $("#itemgroup3Name option").remove();
+                $("#txtItemgroup1 option").remove();
+                $("#txtname1 option").remove();
+                $("#itmeID1").val("");
+                $("#itemID2").val("");
+                $.ajax({
+                    url: "/ItemGroup1/GetItemGroup",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var sata = "";
+                        $.each(respones, function (i, item) {
+                            sata +=
+                                '<option value="' + item.ItemG1ID + '">' + item.Name + '</option>';
+                        });
+                        $("#selectItemGroup1").html(sata);
+                        $("#txtItemgroup1").html(sata);
+                        $("#txtname1").html(sata);
+                    }
+                });
+
+            }
+        });
+    }
+    //additmegroup2
+    function AddItemGroup2() {
+        var name2 = $("#itemgroup2Name").val();
+        var name1 = $("#txtItemgroup1").val();
+        var col = $("#txtcolor2").val();
+        var back = $("#txtbackground2").val();
+
+        var count = 0;
+        if (name2 == 0) {
+            count++;
+            $("#itemgroup2Name").css("border-color", "red");
+
+        } else {
+            $("#itemgroup2Name").css("border-color", "lightgrey");
+
+        }
+        if (name1 == 0) {
+            count++;
+            $("#txtItemgroup1").css("border-color", "red");
+        } else {
+            $("#txtItemgroup1").css("border-color", "lightgrey");
+
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+
+        var data = {
+            Name: name2,
+            ItemG1ID: name1,
+            ColorID: col,
+            BackID: back
+        }
+        $.ajax({
+            url: "/ItemGroup2/Additmegroup2",
+            type: "POST",
+            dataType: "JSON",
+            data: { itemGroup2: data },
+            complete: function (respones) {
+                $("#itemgroup2Name").val("");
+                $("#txtItemgroup1").val("");
+                $("#txtcolor2").val("");
+                $("#txtbackground2").val("");
+                $("#itemgroup3Name option").remove();
+                var item1id = $("#selectItemGroup1").val();
+                $.ajax({
+                    url: "/ItemGroup2/GetData",
+                    type: "Get",
+                    data: { ID: item1id },
+                    dataType: "Json",
+                    success: function (respones) {
+                        var data = "";
+
+                        $("#txtitem2 option").remove();
+                        $.each(respones, function (i, item) {
+                            data +=
+                                '<option value="' + item.ItemG2ID + '">' + item.Name + '</option>';
+                        });
+                        $("#selectItmegroup2").html(data);
+
+                    }
+                });
+
+            }
+        });
+    }
+    //selectchangitem2
+    function selectchangitemgroup1() {
+        var ID = $("#selectItemGroup1").val();
+        $.ajax({
+            type: "GET",
+            datatype: "Json",
+            url: "/ItemGroup2/GetItemGroup2",
+            data: { Item1ID: ID },
+            success: function (response) {
+                var data = "";
+                $.each(response, function (key, value) {
+                    data += '<option value="' + value.ItemG2ID + '">' + value.Name + '</option>';
+                });
+                $('#selectItmegroup2').html(data);
+                $('#selectItmegroup2').val(0);
+                var item_g2ID = $("#selectItmegroup2").val();
+                $.ajax({
+                    url: "/ItemGroup3/GetitemGroup3",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { Item2ID: item_g2ID, Item1ID: ID },
+                    success: function (respones) {
+                        var sata = "";
+
+                        $.each(respones, function (i, item) {
+                            sata +=
+                                '<option value="' + item.ID + '">' + item.Name + '</option>';
+                        });
+                        $("#itemgroup3Name").html(sata);
+                        $("#itemgroup3Name").val(0);
+                    }
+                });
+
+            }
+        });
+    }
+    //select Chang ItemGroup3
+    function selectChangItemGroup3() {
+        var id2 = $("#selectItmegroup2").val();
+        var id1 = $("#selectItemGroup1").val();
+        $('#itemgroup3Name option').remove();
+        $.ajax({
+            url: "/ItemGroup3/GetitemGroup3",
+            type: "GET",
+            dataType: "JSON",
+            data: { Item2ID: id2, Item1ID: id1 },
+            success: function (respones) {
+                var sata = "";
+
+                $.each(respones, function (i, item) {
+                    sata +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#itemgroup3Name").append(sata);
+                $("#itemgroup3Name").val(0);
+            }
+        })
+    }
+
+    function ChangeItemGroup2() {
+
+        var ID = $("#txtname1").val();
+        $('#txtname2 option').remove();
+        $.ajax({
+            type: "GET",
+            datatype: "Json",
+            url: "/ItemGroup2/GetItemGroup2",
+            data: { Item1ID: ID },
+            success: function (response) {
+                var data = "";
+                $.each(response, function (key, value) {
+                    data += '<option value="' + value.ItemG2ID + '">' + value.Name + '</option>';
+                });
+                $('#txtname2').append(data);
+                $("#txtname2").val(ID2);
+
+            }
+        });
+    }
+    //additemgorup3
+    function AddItemGroup3() {
+        var name1 = $("#txtname1").val();
+        var name2 = $("#txtname2").val();
+        var name3 = $("#txtname3").val();
+        var col = $("#txtcolor3").val();
+        var back = $("#txtbackground3").val();
+
+        var count = 0;
+        if (name1 == 0) {
+            count++;
+            $("#txtname1").css("border-color", "red");
+        }
+        else {
+
+            $("#txtname1").css("border-color", "lightgrey");
+        }
+        if (name2 == 0) {
+            count++;
+            $("#txtname2").css("border-color", "red");
+        }
+        else {
+
+            $("#txtname2").css("border-color", "lightgrey");
+        }
+        if (name3 == 0) {
+            count++;
+            $("#txtname3").css("border-color", "red");
+        }
+        else {
+
+            $("#txtname3").css("border-color", "lightgrey");
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+        var data = {
+            Name: name3,
+            ItemG1ID: name1,
+            ItemG2ID: name2,
+            ColorID: col,
+            BackID: back
+        }
+
+        $.ajax({
+            url: "/ItemGroup3/AddItemGroup3",
+            type: "POST",
+            dataType: "JSON",
+            data: { itemGroup3: data },
+            complete: function (respones) {
+                $("#txtname1").val("");
+                $("#txtname2").val("");
+                $("#txtname3").val("");
+                $("#txtcolor3").val("");
+                $("#txtbackground3").val("");
+
+                var id = $("#selectItmegroup2").val();
+                $("#itemgroup3Name option").remove();
+                $.ajax({
+                    url: "/ItemGroup3/GetitemGroup3",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { ID: id },
+                    success: function (respones) {
+                        var sata = "";
+                        $.each(respones, function (i, item) {
+                            sata +=
+                                '<option value="' + item.ID + '">' + item.Name + '</option>';
+                        });
+                        $("#itemgroup3Name").append(sata);
+                    }
+                })
+            }
+        });
+
+    }
+
+    //insertPrinter Name
+    function InsertPrintName() {
+        var name = $("#txtPrinterName").val();
+
+        var count = 0;
+        if (name == '') {
+            count++;
+            $("#txtPrinterName").css("border-color", "red");
+        }
+        else {
+
+            $("#txtPrinterName").css("border-color", "lightgrey");
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+        $.ajax({
+            url: "/PrinterName/InsertPrinter",
+            type: "POST",
+            dataType: "JSON",
+            data: { Name: name },
+            complete: function (respones) {
+                $("#txtPrinterName").val("");
+                $("#txtprinter option").remove();
+                $.ajax({
+                    url: "/PrinterName/GetPrinterName",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var data = "";
+                        $.each(respones, function (i, item) {
+                            data +=
+                                '<option value="' + item.ID + '">' + item.Name + '</option>';
+                        });
+                        $("#txtprinter").append(data);
+                    }
+                })
+            }
+        });
+    }
+
+    //selectGroup UOM
+    function selectCahngeGroupUOM() {
+        var id = $("#listGroupUom").val();
+        $.ajax({
+            url: "/GroupUOM/listGroupUom",
+            type: "GET",
+            dataType: "JSON",
+            data: { id: id },
+            success: function (respones) {
+                var data = "";
+                var baseuonid;
+                //var res = JSON.stringify(respones); alert(res)
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.AltUOM + '">' + item.UnitofMeasure.AltUomName + '</option>';
+                    baseuonid = item.BaseUOM;
+
+                });
+                $("#txtInventoryUOM").html(data);
+                $("#txtSaleUOM").html(data);
+                $("#txtPurchar").html(data);
+
+                $("#txtInventoryUOM").innerHTML = baseuonid;
+                $("#txtSaleUOM").innerHTML = baseuonid;
+                $("#txtPurchar").innerHTML = baseuonid;
+
+            }
+        })
+    }
+    //Check Code
+    function CheckCode() {
+        var code = $("#itemCode").val();
+        var checkcode = $("#txtcode").val();
+        if (code == checkcode) {
+            $('#error_code').text("");
+        } else {
+            setTimeout(function () {
+                $.ajax({
+                    url: "/ItemMasterData/FindeCode",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { code: code },
+                    success: function (respones) {
+                        var isHase = false;
+                        $.each(respones, function (i, item) {
+                            isHase = true;
+                        })
+                        if (isHase == true) {
+                            $('#error_code').text("This code already exist !");
+                        }
+                        else {
+                            $('#error_code').text("");
+                        }
+                    }
+                })
+
+            }, 600);
+        }
+    }
+    //Add Color
+    function AddColor() {
+        var name = $("#colorName").val();
+        var cout = "";
+        if (name == 0) {
+            cout++;
+            $("#colorName").css("border-color", "red");
+        } else {
+
+            $("#colorName").css("border-color", "lightgrey");
+        }
+        if (cout > 0) {
+            cout = 0;
+            return;
+        }
+        $.ajax({
+            url: "/ItemGroup1/AddColors",
+            type: "POST",
+            dataType: "Json",
+            data: { Name: name },
+            complete: function (respones) {
+                $("#colorName").val("");
+                $("#txtcolor option").remove();
+                $("#txtcolor2 option").remove();
+                $("#txtcolor3 option").remove();
+                $.ajax({
+                    url: "/ItemGroup1/SelecrColor",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (respones) {
+                        var data = "";
+                        $.each(respones, function (i, item) {
+                            data +=
+                                '<option value="' + item.ColorID + '">' + item.Name + '</option>';
+                        });
+                        $("#txtcolor").append(data);
+                        $("#txtcolor2").append(data);
+                        $("#txtcolor3").append(data);
+                    }
+                });
+            }
+        });
+    }
+    //Add Background
+    function AddBack() {
+        var name = $("#backName").val();
+        var cout = "";
+        if (name == 0) {
+            cout++;
+            $("#backName").css("border-color", "red");
+        } else {
+
+            $("#backName").css("border-color", "lightgrey");
+        }
+        if (cout > 0) {
+            cout = 0;
+            return;
+        }
+        $.ajax({
+            url: "/ItemGroup1/AddBackground",
+            type: "POST",
+            dataType: "Json",
+            data: { Name: name },
+            complete: function (respones) {
+                $("#backName").val("");
+                $("#txtbackground option").remove();
+                $("#txtbackground2 option").remove();
+                $("#txtbackground3 option").remove();
+                $.ajax({
+                    url: "/ItemGroup1/SelectBackground",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (respones) {
+                        var data = "";
+
+                        $.each(respones, function (i, item) {
+                            data +=
+                                '<option value="' + item.BackID + '">' + item.Name + '</option>';
+                        });
+                        $("#txtbackground").append(data);
+                        $("#txtbackground2").append(data);
+                        $("#txtbackground3").append(data);
+                    }
+                });
+            }
+        });
+    }
+    //Add curreny
+    function AddCurrency() {
+        var name = $("#currrencyName").val();
+        var des = $("#txtDescript").val();
+        var cout = "";
+        if (name == 0) {
+            cout++;
+            $("#currrencyName").css("border-color", "red");
+        } else {
+
+            $("#currrencyName").css("border-color", "lightgrey");
+        }
+        if (des == 0) {
+            cout++;
+            $("#txtDescript").css("border-color", "red");
+        }
+        else {
+
+            $("#txtDescript").css("border-color", "lightgrey");
+        }
+        if (cout > 0) {
+            cout = 0;
+            return;
+        }
+        $.ajax({
+            url: "/Currency/AddCurrency",
+            type: "POST",
+            dataType: "Json",
+            data: { Symbol: name, Description: des },
+            complete: function (respones) {
+                $("#currrencyName").val("");
+                $("#txtDescript").val("");
+                $("#txtcurrency option").remove();
+                $.ajax({
+                    url: "/Currency/GetCurrency",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var data = "";
+
+                        $.each(respones, function (i, item) {
+                            data +=
+                                '<option value="' + item.ID + '">' + item.Symbol + '</option>';
+                        });
+                        $("#txtcurrency").append(data);
+                    }
+                });
+            }
+        });
+    }
+    //check barcode
+    function CheckBarCode() {
+
+        var bar = $("#txtbarcode").val();
+        var barcode = $("#txtbar").val();
+        if (bar == barcode) {
+            $('#error_barcode').text("");
+        } else {
+            setTimeout(function () {
+                $.ajax({
+                    url: "/ItemMasterData/FindbarCode",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { barcode: bar },
+                    success: function (respones) {
+
+                        var isHase = false;
+                        $.each(respones, function (i, item) {
+                            isHase = true;
+                        })
+                        if (isHase == true) {
+                            $('#error_barcode').text("This barcode already exist !");
+                        }
+                        else {
+                            $('#error_barcode').text("");
+                        }
+
+                    }
+                });
+            }, 600);
+        }
+    }
+</script>
+
+

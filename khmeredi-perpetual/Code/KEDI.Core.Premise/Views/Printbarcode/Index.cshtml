@@ -1,0 +1,194 @@
+﻿@using KEDI.Core.Premise.Models.ServicesClass.PrintBarcode;
+@model IEnumerable<ItemPrintBarcodeView>
+@{
+    Layout = "_Layout_Print";
+}
+<link href="~/AdminLayout/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+    @@media print {
+        .content-toolbar, .widget-sidemenu, .widget-header, .btn {
+            display: none !important;
+        }
+        .flex{
+            page-break-after:always;
+        }
+
+        button {
+            display: none;
+        }
+
+        #head {
+            display: none;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+        }
+       header {
+            position: fixed;
+            top: 0px;
+
+        }
+
+    }
+
+    .barcode-container {
+        height:215px;
+        width:353px;
+        margin-left:10px;
+        margin-top:10px;
+        flex-wrap: wrap;
+        border:dotted;  
+       
+    }
+
+/*    #pag{
+        background:red;
+        height:200px;
+        page-break-after:always;
+
+    }*/
+/*    @@page {
+        size:A4;
+        margin: 51.6mm 10mm 27mm 10mm;*/
+    .barcode-container > * {
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+    }
+
+    .flex {
+        flex-wrap: wrap;
+        display: flex;
+    }
+    
+    .justify-content {
+        justify-content: space-between;
+        align-items: center;
+        align-content: center;      
+    }
+
+    #barcode-flex{
+        float:left;
+    }
+
+    h3 {
+        margin-top:10px;  
+        margin-left:3%;
+        font-size:18px;
+        font-family: "Khmer OS Muol Light", Times, serif;
+        line-height: initial;
+    }
+
+    h5,h4{
+        margin-left:3%;
+        font-size:16px;
+    }
+
+    h2{
+        margin-left:3%;
+        margin-top:4%;
+        font-family:'NiDA Funan';
+    }
+
+    .btn{
+        margin-left:1%
+    }
+ 
+    button{
+        width:80px;
+    }
+
+    #many1{
+        text-align:right;
+        font-size:30px;
+        margin-right:10px;
+    }
+
+    #many2{
+        text-align:right;
+        font-size:30px;
+        margin-right:10px;
+    }
+
+    #many{
+        font-size:30px;
+        text-align:right;
+        margin-right:10px;
+    }
+</style>
+<script src="~/lib/jquery/jquery-barcode.js"></script>
+<script src="~/lib/jquery/jquery-barcode.min.js"></script>
+
+<div class="container">
+    <button onclick="window.print()" class="btn btn-success">Print</button>
+    <div id="bcTarget"></div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        const data = @Json.Serialize(Model);
+        applyTemplate(data,12);
+
+    });
+
+    function applyTemplate(dataset, pageSize, callbak) {
+        if (isValidArray(dataset)) {
+            let totalPages = Math.floor(dataset.length / pageSize); 
+            if (dataset.length % pageSize !== 0) {
+                totalPages++;
+            }
+   
+            var $bcTarget = $("#bcTarget");
+            for (let i = 0; i < totalPages; i++) {
+                var $subTarget = $("<div class='flex'></div>");
+                var _dataset = paginate(dataset, pageSize, i + 1);
+                for (let j = 0; j < _dataset.length; j++) {
+                    $subTarget.append(createTemplate(_dataset[j]));
+                }
+                $bcTarget.append($subTarget);
+            }
+          
+        }
+        
+    }
+    function paginate(values, maxPageCount, pageIndex) {
+        return values.slice((pageIndex - 1) * maxPageCount, pageIndex * maxPageCount);
+    }
+
+    function createTemplate(item) {
+        const dataStringTag = $(`             
+                <div class=" barcode-container">
+                    <h3 clss="name">${item.ItemName}</h3>
+                    <h5>&nbsp;${item.ItemDes}</h5>
+                    <h4>${item.ItemName2}</h4>                       
+                    <div id="many1">${item.ItemUnitprice}</div>
+                    <div id="barcode-flex"><div></div></div>
+                    <div id="many">${item.UnitPrice}</div>
+                    </div>              
+        `);
+
+        var b = dataStringTag.find("#barcode-flex").children("div");
+        if (!isEmpty(item.ItemBarcode)) {
+            b.barcode(item.ItemBarcode, "code128", { fontSize: 14, barWidth: 1, barHeight: 40 });
+        }
+        return dataStringTag;
+    }
+
+    function isValidJson(value) {
+        return !isEmpty(value) && value.constructor === Object && Object.keys(value).length > 0;
+    }
+
+    function isValidArray(values) {
+        return Array.isArray(values) && values.length > 0;
+    }
+
+    function isEmpty(value) {
+        return value == undefined || value == null || value == "";
+    }
+    window.onafterprint = function () {
+        window.close()
+    }
+    window.print();
+</script>

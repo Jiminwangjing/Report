@@ -1,0 +1,202 @@
+﻿<style>
+    .font-size, table tr th {
+        font-size: 12px;
+    }
+
+    .w_100 {
+        width: 100% !important;
+    }
+
+    .w_90 {
+        width: 90% !important;
+    }
+
+    .btn-modefy {
+        margin-left: 4px !important;
+        height: 20px !important;
+        line-height: 1 !important;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .loading {
+        width: 100vw;
+        height: 90%;
+        z-index: 9999999999999999999999999;
+        position: absolute;
+    }
+
+    .img-loading {
+        position: absolute;
+        top: 79%;
+        left: 38%;
+    }
+
+    .loadingitem {
+        position: absolute;
+        top: 46%;
+        left: 46%;
+    }
+    .hover{
+        cursor: pointer;
+    }
+</style>
+<div class="loading" id="loading" hidden>
+    <img class="img-loading" src="~/ajaxloader/loading.gif" />
+</div>
+<div class="card card-body">
+    <div class="row mb-2">
+        <div class="col-md-1">
+            <a class="btn btn-xs btn-kernel" asp-action="KSMSServiceSetUpHistory" asp-controller="KSMSServiceSetUp">@Localizer["History"]</a>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-xs btn-kernel float-left" id="find">@Localizer["Find"]</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="font-size">@Localizer["Setup Code"]</label>
+                </div>
+                <div class="col-md-6">
+                    <input class="custom-control font-size w_100 hover" id="setupcode" autocomplete="off" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="font-size">@Localizer["Item Name"]</label>
+                </div>
+                <div class="col-md-6">
+                    <input class="custom-control font-size w_100 hover" id="itemname" readonly autocomplete="off" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="font-size">@Localizer["Item Code"]</label>
+                </div>
+                <div class="col-md-6">
+                    <input class="custom-control font-size w_100" id="itemcode" readonly autocomplete="off" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="font-size">@Localizer["UoM"]</label>
+                </div>
+                <div class="col-md-6">
+                    <input class="custom-control font-size w_100" id="uom" readonly autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="font-size">@Localizer["User"]</label>
+                </div>
+                <div class="col-md-6">
+                    <input class="custom-control font-size w_100" id="userId" readonly value="@User.FindFirst("FullName").Value" />
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="font-size">@Localizer["Creation Date"]</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="date" class="custom-control font-size w_100" id="date" readonly />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="font-size">@Localizer["Remark"]</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="custom-control font-size w_100" id="remark" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="font-size">@Localizer["Price List"]</label>
+                </div>
+                <div class="col-md-6">
+                    <select asp-items="@ViewBag.PriceList" id="pricelistid" class="form-control font-size">
+                        <option value="0"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="font-size">@Localizer["Price"]</label>
+                </div>
+                <div class="col-md-6">
+                    <input class="custom-control font-size w_100" id="price" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="font-size">@Localizer["Active"]</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="checkbox" id="active" checked class="form-control float-left" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-10"></div>
+        <div class="col-md-2">
+            <button class="btn btn-xs btn-kernel float-right" id="chooseItem" disabled>@Localizer["Choose Item"]</button>
+        </div>
+        
+    </div>
+    <br />
+    <div class="wrap-table detail mt-2">
+        <table id="list-detail">
+            <tr>
+                <th>@Localizer["#"]</th>
+                <th>@Localizer["Item Code"]</th>
+                <th>@Localizer["Item Name"]</th>
+                <th>@Localizer["Quantity"]</th>
+                <th>@Localizer["UoM"]</th>
+                <th>@Localizer["Unit Price"]</th>
+                <th>@Localizer["Action"]</th>
+            </tr>
+        </table>
+    </div>
+    <div class="error-summery"></div>
+    <div class="flex">
+        <button class="btn btn-xs btn-kernel" id="add">@Localizer["Add"]</button>
+        <button class="btn btn-xs btn-kernel ml-2" id="cancel">@Localizer["Cancel"]</button>
+    </div>
+</div>
+@*Customer dialog*@
+<div id="container-list-item" class="wrap-table widget-scrollbar" style="height: 90vh; display: none;">
+    <div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore font-size" id="txtSearch-item" autocomplete="off" type="text" placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table class="list-items" style="height: auto;">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Description"]</th>
+                <th>@Localizer["Uom"]</th>
+                <th>@Localizer["Barcode"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script src="~/Admin/KSMS/ksms-service-setup.js"></script>

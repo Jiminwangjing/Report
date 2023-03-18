@@ -1,0 +1,592 @@
+﻿@using CKBS.Models.Services.Administrator.SettingDashboard;
+@model DashboardModel
+@{
+    var r1 = Model.DashboardSetting.FirstOrDefault(i => i.Code == "R1") ?? new DashboardSetting();
+    var r2 = Model.DashboardSetting.FirstOrDefault(i => i.Code == "R2") ?? new DashboardSetting();
+    var r3 = Model.DashboardSetting.FirstOrDefault(i => i.Code == "R3") ?? new DashboardSetting();
+}
+<style>
+      div h3 {
+        text-align: center;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        color: #006699;
+    }
+
+    .card-body {
+        padding: 0.5rem;
+    }
+
+    #pie, #pie2, #chart, #chart2, #chart3, #gauge {
+        height: 330px;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .gauge-result {
+        position: absolute !important;
+        left: 46%;
+        bottom: 20%;
+    }
+
+    .font-titile {
+        font-size: .9rem !important;
+    }
+
+    .font-count {
+        font-size: .7rem !important;
+    }
+
+    .dx-viewport {
+        display: block;
+        position: relative;
+    }
+
+    .options {
+        padding: 20px;
+        background-color: rgba(191, 191, 191, 0.15);
+        margin-top: 20px;
+    }
+
+    .option {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .caption {
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .x {
+        opacity: 0;
+    }
+
+    .option > span {
+        margin-right: 10px;
+    }
+
+    .option > .dx-widget {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .dx-export-menu {
+        display: none !important;
+    }
+
+    .chart-titile-right {
+        position: absolute !important;
+        right: 40px;
+        top: 40px;
+        font-size: .7rem;
+    }
+
+    #chart-demo {
+        position: relative !important;
+    }
+
+    .chart-titile-count {
+        position: absolute !important;
+        font-size: .7rem;
+        right: 50%;
+        top: 11%;
+    }
+
+    .pie-titile {
+        position: absolute !important;
+        left: 30%;
+        font-size: .9rem;
+        top: 2%;
+        text-align: center;
+    }
+
+    .chart-titile-right-origin {
+        position: absolute !important;
+        right: 20px;
+        top: 40px;
+        font-size: .7rem;
+    }
+
+    .chart-area {
+        width: 100%;
+        height: 100%;
+        
+    }
+
+    .shadow {
+        filter: drop-shadow( 0px 5px 4px rgba(0, 0, 0, .4));
+    }
+
+    tspan {
+        font-size: 25px !important;
+        font-weight: bold;
+        color: #0DA2DD !important;
+        
+       
+    }
+    
+    .total {
+        color: red;
+    }
+    .b-income{
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+    }
+    .bold{
+      font-weight: normal;
+      font-size: 0.8rem;
+    }
+    .fn{
+        font-size: 1rem;
+    }
+    .active {
+  font-weight: 500;
+}
+</style>
+<link href="~/Dashboard/style.css" rel="stylesheet" />
+
+
+
+<ul class="widget-tab" style="height: 82vh; overflow-y: hidden">
+    @if (UserManager.Check("DB001"))
+    {
+        <li class="tab-sheet @ViewBag.GD">
+            <div class="tab-title" style="font-family: Arial;font-weight:bold;margin-right:5px">@Localizer["General Dashboard"]</div>
+            <div class="tab-content widget-scrollbar" style="overflow-y: scroll; overflow-x: hidden">
+                @if (r1.Show)
+                {
+                                       <div class="row" style="padding-bottom:8px;">
+                        <div class="col-md-3 col-sm-3 col-xl-3 col-xs-3" style="width:23.7%; padding-right:3px;">
+                            <div class="card card-body">
+                                <h3 id="chart_account_revenue"></h3>
+                                <center style="font-family:Arial;font-size:13px;color:gray;">@Localizer["SALES TODAY"]</center>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xl-3 col-xs-3" style="width:23.7%; padding-left:3px; padding-right:5px;">
+                            <div class="card card-body">
+                                <h3 id="chart_account_receivable"></h3>
+                                <center style="font-family:Arial;font-size:13px;color:gray;">@Localizer[" PURCHASE TODAY"]</center>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xl-3 col-xs-3" style="width:23.7%; padding-left:5px; padding-right:5px;">
+                            <div class="card card-body">
+                                <h3 id="chart_average_receipt"></h3>
+                                <center style="font-family:Arial;font-size:13px;color:gray;">@Localizer["AVERAGE SALES AMOUNT"]</center>
+                            </div>
+                        </div>
+                        <div class="class=" col-md-3 col-sm-3 col-xl-3 col-xs-3" style="width:23.7%;">
+                            <div class="card card-body">
+                                <div></div>
+                                <h3 id="chart_average_qty"></h3>
+                                <center style="font-family:Arial;font-size:13px;color:gray;">@Localizer["AVERAGE SALES QTY"]</center>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (r2.Show)
+                {
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xl-6 col-xs-6" style="padding-right:4px; padding-bottom:8px;">
+                            <div class="card card-body">
+                                <center style="font-family:Arial;font-size:15px;color:gray;">@Localizer["TOP 10 SALES ITEM"] (@ViewBag.Cur)</center><div id="chart_top_sale"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xl-6 col-xs-6" style="padding-left:4px;">
+                            <div class="card card-body">
+                                <center style="font-family:Arial;font-size:15px; color:gray;">@Localizer["SALE BY PRODUCT GROUP"] (@ViewBag.Cur)</center><div id="chart_by_Groups"></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (r3.Show)
+                {
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xl-6 col-xs-6" style="padding-right:4px;">
+                            <div class="card card-body">
+                                <center style="font-family:Arial;font-size:15px; color:gray">@Localizer["Stock"] (@ViewBag.Cur)</center> <div id="chart_stock"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xl-6 col-xs-6" style="padding-left:4px;">
+                            <div class="card card-body">
+                                <center style="font-family:Arial;font-size:15px;color:gray;">@Localizer["MONTHLY SALES PERFORMANCE"] (@ViewBag.Cur)</center><div id="chart_Sale_Month"></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <script src="~/Dashboard/general-dashboard.js"></script>
+        </li>
+    }
+    @if (UserManager.CheckEdition(SystemEdition.Enterprise))
+    {
+        @if (UserManager.Check("DB002"))
+        {
+            <li class="tab-sheet @ViewBag.CRM">
+                <div class="tab-title" style="margin-right:5px">@Localizer["CRM Dashboard For Manager"]</div>
+                <div class="tab-content widget-scrollbar">
+                    <div class="card card-body">
+                        <div class="row">
+                            <div class="col-lg-9 col-md-9 col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 mt-3">
+                                        <div class="dx-viewport">
+                                            <div class="demo-container">
+                                                <p class="title" style="text-align: left !important; font-family: Arial">@Localizer["OPEN DEAL BY SOURCES"]</p>
+                                                <div id="chart-demo">
+                                                    <div id="piehcartofcus" style="margin-top:-30px !important"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 mt-3">
+                                        <div class="dx-viewport">
+                                            <div class="demo-container">
+                                                <p class="title" style="text-align: left !important; font-family: Arial">@Localizer["WIN DEAL BY STAGES"]</p>
+                                                <div id="chart-demo">
+                                                    <div id="piechartwindealbystate" style="margin-top:-30px !important"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-sm-mb-3" style="margin-top:35px">
+                                        <div class="dx-viewport" text-align:center !important">
+                                            <div class="demo-container ">
+                                                <p class="title" style="text-align: left !important; font-family: Arial">@Localizer["OPEN DEALS BY STAGES"]</p>
+                                                <div id="chart-demo" ​>
+                                                    <div class="charts" ​​​​​​​​>
+                                                        <div id="charts"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6  col-md-6 col-sm-12 col-sm-mb-3 mt-5">
+                                        <div class="dx-viewport" style="margin-top:-10px !important;">
+                                            <div class="demo-container">
+                                                <p class="title" style="text-align: left !important; font-family: Arial">@Localizer["DEALS BY TOP 5 SALES PEOPLE"]</p>
+                                                <div id="chart-demo">
+                                                    <div class="charts">
+                                                        <div id="chart-crm"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 ">
+                                <div class="div" style="background-color: #0072A7; padding: 10px; height: 100% ">
+                                    <div>
+                                        <p id="text" style="color: #FFFFFF; margin-left: 30px !important;  font-size: 18px; font-family: Arial;font-weight:bold ">TOP 5 DEALS</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-9 col-md-12">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-12 col-sm-12 col-sm-mb-3 " style="margin-top:14px">
+                                        <div class="dx-viewport mt-3">
+                                            <div class="demo-container">
+                                                <div class="row ">
+                                                    <div class="col-lg-6">
+                                                        <div class="">
+                                                            <p style="font-size: 18px !important; font-weight: 400; font-family: Arial; margin-top: 8px; text-align: left">OPPORTUNITY TO WIN RATIO</p>
+                                                            <span style="font-weight:bold; text-align:left !important; font-size: 40px !important; color: #0DA2DD;margin-top:50px !important;"><span id="numofOpp"></span> : <span id="numofWin"></span> </span>
+                                                            <p style="font-size: 18px !important;font-family: Arial; font-weight: 400; margin-top: 30px; text-align: left; ">   Opportunities turned into Win </p>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 mt-2">
+                                                        <div class="chart-area"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row ">
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <div class="">
+                                                            <p style="font-size: 18px !important; font-weight: 400; font-family: Arial; text-align: left; margin-right: 80px !important;">Opportunities</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <h3 id="dataTotalOfOpp" style="color: #0DA2DD; margin-top: -10px !important"></h3>
+                                                    </div>
+                                                </div>
+                                                <div class="row  flex-end">
+                                                    <div class="col-md-6">
+                                                        <div class="">
+                                                            <p style="font-size: 18px !important; font-weight: 400; font-family: Arial; text-align: left;">Win</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h3 id="dataTotalOfSummary" style="color: #0DA2DD"></h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12 ">
+                                        <div class="dx-viewport ">
+                                            <div class="demo-container">
+                                                <p style="font-size: 18px !important; font-weight: 400; font-family: Arial; margin-top: 32px; text-align: left">SALE ACTIVITY BY TYPE</p>
+                                                <div id="pie-crm"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-12 col-sm-12 col-sm-mb-3 ">
+                                <div class="dx-viewport ">
+                                    <div class="demo-container">
+                                        <p class="title" style="text-align: left; margin-top: 35px; font-family: Arial;  ">@Localizer["TOP 10 MOST ACTIVE SALES PEOPLE"]</p>
+                                        <div>
+                                            <table id="list-data" style="font-family: Arial">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 200px; font-family: Arial;">@Localizer["Assigned"]</th>
+                                                        <th style="font-family: Arial;">@Localizer["Record Count"]</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div hidden id="model-data">@Json.Serialize(Model)</div>
+                <script src="~/lib/d3jsv3/d3.v3.min.js"></script>
+                <script src="~/Dashboard/data.js" defer></script>
+            </li>
+        }
+        @if (UserManager.Check("DB003"))
+        {
+            <li class="tab-sheet @ViewBag.SD">
+                <div class="tab-title"  style="font-family: Arial;font-weight:bold;margin-right:5px">@Localizer["Service Dashboard"]</div>
+                <div class="tab-content widget-scrollbar" style="overflow-y: scroll; overflow-x: hidden">
+                    <div class="card card-body">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="dx-viewport">
+                                    <div class="demo-container">
+                                        <div id="chart-demo">
+                                            <p class="pie-titile">@Localizer["Open Cases by Priority"]</p>
+                                            <p class="chart-titile-count">@Localizer["Record Count"]</p>
+                                            <p class="chart-titile-right">@Localizer["Priority"]</p>
+                                            <div id="pie"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="dx-viewport">
+                                    <div class="demo-container">
+                                        <div id="chart-demo">
+                                            <p class="pie-titile">@Localizer["New Open Cases This Year by Channel"]</p>
+                                            <p class="chart-titile-count">@Localizer["Record Count"]</p>
+                                            <p class="chart-titile-right-origin">@Localizer["Case Origin"]</p>
+                                            <div id="pie2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 mt-md-2 mt-sm-2">
+                                <div class="dx-viewport">
+                                    <div class="demo-container">
+                                        <div id="chart-demo">
+
+
+                                            <div id="chart" style="position: relative !important; margin-top: -9px;" class="col-md-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-4 col-md-6 mt-md-2 mt-sm-2">
+                                <div class="dx-viewport">
+                                    <div class="demo-container">
+                                        <div id="chart-demo">
+
+                                            <div id="chart3" style="position:relative !important;" class="col-md-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-4 col-md-6 mt-md-2 mt-sm-2">
+                                <div class="dx-viewport">
+                                    <div class="demo-container">
+                                        <div id="chart-demo">
+                                            <div id="chart2" style="position:relative !important;" class="col-md-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 mt-md-2 mt-sm-2">
+                                <div class="dx-viewport">
+                                    <div class="demo-container">
+                                        <div id="chart-demo">
+                                            <p class="pie-titile">@Localizer["Average Time to Close Cases"]</p>
+                                            @* <p class="gauge-result"></p>
+                                            <div id="gauge" style="position:relative !important;" class="col-md-12"></div> *@
+                                            
+                                              <div class="gauge_only" id="gauge">
+                                                        <div class="gauge__body_only" id="gauge-container">
+                                                            <div class="gauge__fill_only"></div>
+                                                            <div class="gauge__cover_only"></div>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </li>
+        }
+        <li class="tab-sheet @ViewBag.SD">
+           <div class="tab-title">@Localizer["Dashboard Income Statement"]</div>
+            <div class="tab-content widget-scrollbar" style="overflow-y: scroll; overflow-x: hidden">  
+                <div class="card card-body">
+                    <div class="row">
+                        <div class="col-md-9">
+                            
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="dx-viewport">
+                                        <div class="demo-container p-4">
+                                            <div class="col-lg-12">
+                                                
+                                                    <div class="gauge" id="grossprofit">
+                                                        <div class="gauge__body">
+                                                            <div class="gauge__fill"></div>
+                                                            <div class="gauge__cover"></div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <div class="text-center mt-5">GROSS PROFIT MARGIN</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="dx-viewport">
+                                        <div class="demo-container p-4">
+                                            <div class="col-lg-12">
+                                                    <div class="gauge"id="opexmargin">
+                                                        <div class="gauge__body">
+                                                            <div class="gauge__fill"></div>
+                                                            <div class="gauge__cover"></div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <div class="text-center mt-5">OPEX RATIO</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="dx-viewport">
+                                        <div class="demo-container p-4">
+                                            <div class="col-lg-12">
+                                                    <div class="gauge"id="operatingprofitmargin">
+                                                        <div class="gauge__body">
+                                                            <div class="gauge__fill"></div>
+                                                            <div class="gauge__cover"></div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <div class="text-center mt-5">OPERATING PROFIT MARGIN</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="dx-viewport">
+                                        <div class="demo-container p-4">
+                                            <div class="col-lg-12">
+                                                    <div class="gauge" id="netprofitmargin">
+                                                        <div class="gauge__body">
+                                                            <div class="gauge__fill"></div>
+                                                            <div class="gauge__cover"></div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <div class="text-center mt-5">NET PROFIT MARGIN</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6" style="position:relative;">
+                                    <div class="dx-viewport">
+                                         <p class="pl-3 pt-3"><span class="ai-font-bold">Revenue & COGS</span> <br><span style="font-size: 0.7rem;">Month-to-Month 1 YSD</span></p>
+                                        <div class="demo-container">
+                                            <div id="chart-service" style="height:300px;"></div>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="dx-viewport">
+                                        <div class="demo-container">
+                                             <p class="pl-3 pt-3"><span class="ai-font-bold">Opex</span> <br><span style="font-size: 0.7rem;">Year-to-Date</span></p>
+                                                <div id="chart-demo-opex"style="height:300px;display:flex;position: relative;" class="p-5"></div> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="dx-viewport">
+                                        <div class="demo-container">
+                                            <p class="pl-3 pt-3"><span class="ai-font-bold">Earning before Interest and Taxes</span> <br><span style="font-size: 0.7rem;">Month-to-Month 1 YTD</span></p>
+                                            <div id="chart-demo-ebti" style="height:300px;"> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="dx-viewport">
+                                        <div class="demo-container">
+                                             <p class="pl-3 pt-3"><span class="ai-font-bold">Opex</span> <br><span style="font-size: 0.7rem;">Month-to-Month 1 YTD</span></p>
+                                            <div id="chart-demo-opexbar" style="height:300px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="dx-viewport" style="padding:10px;">
+                                <p class="b-income">INCOME STATEMENT</p>
+                                <div class="b-income"><p>Revenue </p> <span id="revenue"></span></div>
+                                <div class="b-income"><p>COGS </p> <span id="cogs"></span></div>
+                                <hr />
+                                <div class="b-income"><p>GROSS PROFIT </p> <span id="grossProfit"></span></div>
+                                <div class="b-income"><p>OPEX </p> <span id="opex"></span></div>
+                                <div style="width:100%" class="tab-content widget-scrollbar" id="groupopex"></div>
+                                
+                                <hr />
+                                <div class="b-income"><p>OPERATING PROFIT(EBIT) </p> <span id="operating"></span></div>
+                                <div class="b-income"><p>Interest and Tax </p> <span id="tax"></span></div>
+                                <hr />
+                                <div class="b-income"><p>NET PROFIT </p> <span id="netprofit"></span></div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+             <script src="~/lib/d3jsv3/d3.v3.min.js"></script>
+            <script src="~/Admin/ServiceCall/servicedashbord.js"></script>
+        </li>
+    }
+</ul>

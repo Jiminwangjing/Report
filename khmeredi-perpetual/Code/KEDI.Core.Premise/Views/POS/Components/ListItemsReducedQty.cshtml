@@ -1,0 +1,31 @@
+﻿
+<div id='item-reduced-qty-content' style="display: none;">
+    <div class="group-search-boxes">
+        <div id="text-search" class="search-box show">
+            <div class="input-box">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-items-reduced-qty" type="text" value="" placeholder=@Localizer["Search ..."]>
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+   
+    <fieldset class='shadow wrap-table widget-scrollbar' style="height: 95%;">
+        <legend class="title">@Localizer["List of items deducted quantities"]</legend>
+             <table  id="list-item-reduced-qty">
+                <thead>
+                    <tr>
+                        <th style="width: 0.5%;">@Localizer["Code"]</th>
+                        <th>@Localizer["Name"]</th>
+                        <th style="width: 0.5%;">@Localizer["Price"]</th>
+                        <th style="width: 0.25%">@Localizer["Qty"]</th>
+                        <th style="width: 0.25%">@Localizer["Deducted Qty"]</th>
+                        <th style="width: 0.05%;">@Localizer["UoM"]</th>
+                        <th style="width: 0.05%;">@Localizer["Dis.(%)"]</th>
+                        <th>@Localizer["Amount"]</th>
+                    </tr>
+                </thead>
+            </table>
+    </fieldset>
+</div>

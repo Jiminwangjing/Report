@@ -1,0 +1,216 @@
+﻿@model Pagination<PriceLists>
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .h-25 {
+        height: 25px !important;
+    }
+
+    .stylerow {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .fa {
+        margin-right: 4px;
+    }
+
+    a {
+        color: white;
+        text-decoration: none;
+    }
+
+        a:hover {
+            color: white;
+            text-decoration: none;
+        }
+
+    h5 {
+        margin: 10px 5px;
+    }
+
+    .tbncrate {
+        margin-top: 10px;
+        background-color: #00bfff;
+        color: white;
+        margin-left: 1px;
+    }
+
+    .fa-sort-amount-down {
+        margin-left: 10px;
+        font-size: 10px;
+        color: white;
+    }
+
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+
+    .fa-copy {
+        color: royalblue;
+    }
+
+    b {
+        margin-left: 10px;
+    }
+
+    .btnsearch {
+        color: blue;
+    }
+
+    .stylei {
+        color: white;
+    }
+
+    #stylediv {
+        cursor: pointer;
+        width: 30px;
+        height: 20px;
+    }
+
+    #listdropdoum {
+        margin-top: 2px;
+        margin-right: 10px;
+        width: 250px;
+        height: 40px;
+        text-align: center;
+        padding: 5px;
+        box-shadow: 0px 0px 5px;
+        border-radius: 20px;
+    }
+
+    .content_select {
+        height: 25px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+    }
+
+        .content_select:focus {
+            box-shadow: 0 0 5px rgba(27, 93, 185,0.4);
+            padding: 3px 3px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border: 1px solid rgb(120, 172, 245);
+            border-radius: 3px;
+            font-family: Arial;
+            font-size: 13px;
+        }
+</style>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-6">
+            <a asp-action="Create" class="btn btn-kernel btn-xs" title="Create">@Localizer["Create"]</a>
+        </div>
+        <div class="col-md-6">
+            <div class="item group-search-boxes">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="txtseaerch" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="wrap-table list">
+        <table style="border-right: 1px solid rgb(194, 192, 192)" class="myTable">
+            <tr>
+                <th>@Localizer["No."]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Currency"]</th>
+                <th>@Localizer["Action"]</th>
+            </tr>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        let $listView = ViewTable({
+            keyField: "ID",
+            selector: ".myTable",
+            indexed: true,
+            paging: {
+                enabled: true,
+                pageSize: 25
+            },
+            visibleFields: ["Name", "CurrencyName"],
+            actions: [
+                {
+                    template: `<i class="fa fa-copy fa-fw fa-lg csr-pointer" title="Copy Item"></i>`,
+                    //template: `<button class="btn btn-kernel btn-xs h-25">Copy</button>`,
+                    on: {
+                        "click": function (e) {
+                            location.href = "/PriceList/CopyItem?id=" + e.key;
+                        }
+                    }
+                },
+                {
+                    template: `<i class="fa fa-edit fa-fw fa-lg csr-pointer" title="Edit Price List"></i>`,
+                    //template: `<button class="btn btn-kernel btn-xs h-25">Edit</button>`,
+                    on: {
+                        "click": function (e) {
+                            location.href = "/PriceList/Edit?id=" + e.key;
+                        }
+                    }
+                },
+                {
+                    //template: `<i class="fa fa-adjust fa-fw fa-lg csr-pointer" title="Set Price List"></i>`,
+                    template: `<button class="btn btn-kernel btn-xs h-25">Set Price</button>`,
+                    on: {
+                        "click": function (e) {
+                            location.href = "/PriceList/SetSalePrice?id=" + e.key;
+                        }
+                    }
+                },
+                {
+                    //template: `<i class="fas fa-pen-square fa-fw fa-lg csr-pointer" title="Update Sale Price"></i>`,
+                    template: `<button class="btn btn-kernel btn-xs h-25">Update Price</button>`,
+                    on: {
+                        "click": function (e) {
+                            location.href = "/PriceList/UpdateSalePrice?id=" + e.key;
+                        }
+                    }
+                },
+                {
+                    template: `<i class="fa fa-print fa-fw fa-lg csr-pointer" title="Print"></i>`,
+                    //template: `<button class="btn btn-kernel btn-xs h-25">Print</button>`,
+                    on: {
+                        "click": function (e) {
+                            window.open("/Print/PrintPriceLists?pricelistid=" + e.key + "", "_blank");
+                        }
+                    }
+                }
+            ]
+        });
+
+        $.get("/PriceList/GetPriceLists", function (res) {
+            $listView.clearRows();
+            $listView.bindRows(res);
+            if (res.length > 0) {
+                $("#txtseaerch").on("keyup", function () {
+                    let __value = this.value.toLowerCase().replace(/\s+/, "");
+                    let items = $.grep(res, function (item) {
+                        return item.Name.toLowerCase().replace(/\s+/, "").includes(__value) || item.CurrencyName.toLowerCase().replace(/\s+/, "").includes(__value);
+                    });
+                    $listView.bindRows(items);
+                });
+            }
+        })
+    })
+</script>

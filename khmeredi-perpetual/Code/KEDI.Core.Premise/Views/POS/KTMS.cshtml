@@ -1,0 +1,1146 @@
+﻿@model CKBS.Models.Services.POS.Template.POSModel;
+@{
+
+    Layout = "_POSLayout";
+
+    var panelViewMode = Model.Setting.Setting.PanelViewMode;
+
+    string widthZero = "";
+
+    string viewModeIcon = "fa-cart-arrow-down";
+
+    switch (panelViewMode)
+
+    {
+
+        case PanelViewMode.Single:
+
+            widthZero = "width-zero";
+
+            viewModeIcon = "fa-th-large";
+
+            break;
+
+    }
+}
+<style>
+    .container-use-service {
+        width: 100%;
+        height: 100%;
+    }
+
+    .icon-receipt {
+        color: white;
+        border: 1px solid white;
+        padding: 5px;
+        border-radius: 3px;
+    }
+
+    .icon-receipt:hover {
+        cursor: pointer;
+    }
+
+    .container-use-service h3 {
+        text-align: center;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    form #changeLanguage {
+        color: white;
+        background-color: hsl(159, 93%, 33%) !important;
+    }
+</style>
+<nav class="nav-header flexbox space-between">
+    <div class="item">
+        <partial name="MenuSetting" />
+    </div>
+
+    <div class="item flexbox" title="@Localizer["Administrator"]">
+        @if (!UserManager.IsUserPos(User))
+        {
+            <a href="/home/dashboard" target="_blank"><i class="fas fa-user-shield fn-white fa-fw fa-lg"></i></a>
+        }
+    </div>
+    <partial name="Components/_CardMember" />
+    <div class="item grow"></div>
+    <div class="mr-2">
+        @{
+
+            await Html.RenderPartialAsync("_ChangeLanguage");
+        }
+    </div>
+    <div class="item" title="@Localizer["Switch to full list"]">
+        <i id="panel-view-mode" class="csr-pointer hidden fa-lg fa-fw fas @viewModeIcon"
+            data-view-mode="@((int)Model.Setting.Setting.PanelViewMode)"></i>
+    </div>
+
+    <div class="item" title="@Localizer["Point Redemption"]">
+        <div class="widget-combobox menubox down-left">
+            <div id="loyalty-program" class="combobox-trigger">
+                <i class="fas fa-star-half-alt csr-pointer fa-lg"></i>
+                <i class="badge point-badge hidden"></i>
+            </div>
+            <div class="combobox-content" style="width: 80vw;">
+                <div class="combobox-header">
+                    <h4 class="title">@Localizer["Loyalty Program"]</h4>
+                    <i class="i-close"></i>
+                </div>
+                <div class="combobox-body widget-scrollbar">
+                    <div class="widget-tab" style="height: 75vh;">
+                        <div class="tab-sheet active">
+                            <div id="tab-point-redemption" class="tab-title"><i class="tab-badge point-badge"></i>
+                                @Localizer["Point Redemption"]</div>
+                            <div class="tab-content widget-scrollbar">
+                                <partial name="LoyaltyProgram/PointRedemption" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="item" title="@Localizer["User Info"]">
+        <div class="widget-combobox down-left profile">
+            <div class="combobox-trigger"><i class="fas fa-user-circle fa-lg fa-fw"></i></div>
+            <div class="combobox-content">
+                <div class="combobox-header">
+                    <h4 class="title">@Localizer["User Profile"]</h4>
+                    <i class="i-close"></i>
+                </div>
+                <div class="combobox-body widget-scrollbar">
+                    <div href="#" class="option border-bottom"><i
+                            class="fas fa-user fa-fw"></i>@User.FindFirst("FullName")?.Value</div>
+                    @if (User.Identity.IsAuthenticated)
+
+                    {
+                        <a asp-controller="Account" asp-action="Logout" class="option"><i
+                            class="fas fa-sign-out-alt fa-fw"></i>@Localizer["Log out"]</a>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="panel">
+    <div id="panel-payment" class="full-panel bg-gray">
+        <nav class="nav-toolbar bg-dark-pink">
+            <div class="item csr-pointer">
+                <div id="goto-panel-group-items" class="tag-border"><i
+                        class="fas fa-caret-left fa-lg"></i>&nbsp;@Localizer["Back"]</div>
+            </div>
+            <div class="item">
+                <div class="title"></div>
+            </div>
+            <div class="grow"></div>
+        </nav>
+        <div class="wrap-block col-two measure p1 widget-scrollbar">
+            <div class="left-block">
+                <fieldset class="shadow" style="height: 100%;">
+                    <legend class="title">@Localizer["Quick Number"]</legend>
+                    <div class="gridview number-pad">
+                        <div class="wrap-grid">
+                            <span class="grid" data-value="7">7</span>
+                            <span class="grid" data-value="8">8</span>
+                            <span class="grid" data-value="9">9</span>
+                            <span class="grid" data-value="4">4</span>
+                            <span class="grid" data-value="5">5</span>
+                            <span class="grid" data-value="6">6</span>
+                            <span class="grid" data-value="1">1</span>
+                            <span class="grid" data-value="2">2</span>
+                            <span class="grid" data-value="3">3</span>
+                            <span class="grid" data-value="."><img src="~/pos/icons/dot.png" /></span>
+                            <span class="grid" data-value="0">0</span>
+                            <span class="grid" data-value="-1"><img src="~/pos/icons/backspace.png" /></span>
+                        </div>
+                    </div>
+                    <div class="gridview quick-number number-plus">
+                        <div class="wrap-grid">
+                            <span class="grid bg-green" data-value="10">+10</span>
+                            <span class="grid bg-sky" data-value="50">+50</span>
+                            <span class="grid bg-yellow" data-value="100">+100</span>
+                            <span class="grid bg-orange" data-value="500">+500</span>
+                            <span class="grid bg-red" data-value="1000">+1000</span>
+                        </div>
+                    </div>
+                    <div class="gridview quick-number number-multiply">
+                        <div class="wrap-grid">
+                            <span class="grid bg-green" data-value="2">x2</span>
+                            <span class="grid bg-sky" data-value="5">x5</span>
+                            <span class="grid bg-yellow" data-value="10">x10</span>
+                            <span class="grid bg-orange" data-value="50">x50</span>
+                            <span class="grid bg-red" data-value="100">x100</span>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+            <div class="right-block">
+                <fieldset class="shadow px1">
+                    <legend class="title">@Localizer["Payment detail"]</legend>
+                    <div class="block">
+                        <div class="flex">
+                            <span class="title">@Localizer["Payment Means"]</span>
+                            <div style="width: 351px"></div>
+                            <div class="flexbox">
+
+                                <div id="payment-mean-multiple">
+                                    <div class="widget-combobox down-left" style="width:auto">
+                                        <div class="combobox-trigger " title="Sort by"
+                                            style="float:right; border-bottom:none">
+                                            <img src="~/Images/icon/money logos.gif" style="width:53px;height:31px" />
+                                        </div>
+                                        <div class="combobox-content">
+                                            <div class="combobox-header">
+                                                <h4 class="title">Payment Meants</h4>
+                                                <i class="i-close"></i>
+                                            </div>
+                                            <div class="combobox-body widget-scrollbar">
+                                                <div class="wrap-table">
+                                                    <table id="list-payment-means">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>@Localizer["Name"]</th>
+                                                                <th>@Localizer["Selected"]</th>
+                                                                <th>@Localizer["Received Change"]</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                                @*@foreach (var pm in Model.Setting.PaymentMeans)
+                                                    {
+                                                    <div style="display:flex;justify-content:space-between">
+                                                    <div>
+                                                    <input value="@pm.Value" type="checkbox" class="checkboxpayment"
+                                                    style="width:20px;">
+                                                    <span>@pm.Text</span>
+                                                    </div>
+
+                                                    <div>
+                                                    <input value="@pm.Value" type="radio" id="@pm.Value" class="checkchange"
+                                                    name="radio" style="width:20px;">
+                                                    <span>Change</span>
+                                                    </div>
+                                                    </div>
+                                                    }*@
+                                                <hr />
+
+                                                @for (var i = 1000; i < 1001; i++)
+
+                                                {
+                                                    <div>
+                                                        <input type="checkbox" value="@i" class="card" style="width:20px;">
+                                                        <span>Pay Card</span>
+                                                    </div>
+
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="form-payment">
+                        <div class="stack-inline hidden" id="promocode">
+                            <div class="widget-stackcrumb">
+                                <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Promo Code"]</i></div>
+                            </div>
+                            <input autocomplete="off" class="text" id="promo-code">
+                            <div class="symbol bg-grey" id="apply-promo"></div>
+                        </div>
+                        <div class="stack-inline">
+                            <div class="widget-stackcrumb">
+                                <div class="step">
+                                    <i class="far fa-money-bill-alt "> @Localizer["Freight"]</i>
+                                </div>
+                            </div>
+                            <input id="amount-freight" value="0.000" readonly>
+                            <div class="base-currency symbol bg-grey  bg-orange"></div>
+                        </div>
+                        <div class="stack-inline">
+                            <div class="widget-stackcrumb">
+                                <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Total"]</i></div>
+                            </div>
+                            <input id="pay-total" readonly>
+                            <div class="base-currency symbol bg-grey"></div>
+                        </div>
+                        <div class="stack-inline">
+                            <div class="widget-stackcrumb">
+                                <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Total"]</i></div>
+                            </div>
+                            <input id="pay-total-alt" readonly>
+                            <div class="alt-currency symbol bg-grey"></div>
+                        </div>
+                        <div class="stack-inline" style="display:none">
+                            <div class="widget-stackcrumb" id="other-currencies">
+                                <div class="step">@Localizer["Other"] <i class="far fa-money-bill-alt"></i></div>
+                            </div>
+                            <input autocomplete="off" class="number" id="pay-cash" value="0">
+                            <div class="base-currency symbol bg-grey"></div>
+                        </div>
+
+                        <div class="stack-inline" style="display:none">
+                            <select class="symbol bg-grey" id="other-currency-list"></select>
+                            <input autocomplete="off" class="number" id="pay-other-currency" value="0">
+                            <div class="other-curr-symbol symbol bg-grey"></div>
+                        </div>
+                        @*//=====================add function===============*@
+                        <div class="container_payment_means">
+                        </div>
+
+                        <div class="container_payment_means_card">
+                        </div>
+
+                        <div class="stack-inline other-pay-way" style="display: none;" id="other-payment">
+                            <div class="widget-stackcrumb">
+                                <div class="step">
+                                    <i class="far fa-money-bill-alt"> @Localizer["Pay Card"]</i>
+                                </div>
+                            </div>
+                            <input id="pay-other" value="0.00" readonly>
+                            <div class="base-currency symbol bg-grey"></div>
+                        </div>
+                        @*//=======================end add function=========*@
+                        @* //=================customer tips================ *@
+                        <div id="wrapper-customer-tips" class="stack-inline">
+                            <select class="symbol bg-grey" id="cusdeposit-currency-list"></select>
+                            <input autocomplete="off" class="number" id="cusdeposit-currency" value="0">
+                            <div class=" symbol bg-grey">Tips</div>
+                        </div>
+                        @*//=======================end add function=========*@
+                        @* <div class="stack-inline">
+                            <div class="widget-stackcrumb">
+                            <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Received"]</i></div>
+                            </div>
+                            <input readonly id="pay-received" value="0">
+                            <div class="base-currency symbol bg-grey"></div>
+                            </div> *@
+                        @* <div class="stack-inline">
+                            <div class="widget-stackcrumb">
+                            <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Changed"]</i></div>
+                            </div>
+                            <input readonly id="pay-change" class="error-change" value="0">
+                            <div class="base-currency symbol bg-grey"></div>
+                            </div>
+                            <div class="stack-inline">
+                            <div class="widget-stackcrumb">
+                            <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Changed"]</i></div>
+                            </div>
+                            <input readonly id="pay-change-alt" class="error-change" value="0">
+                            <div class="alt-currency symbol bg-grey"></div>
+                            </div> *@
+
+                        @* Additional Currencies Change*@
+                        <div class="addition-currencies-received"></div>
+                        @* Additional Currencies Change*@
+                        <div class="addition-currencies-change"></div>
+                        <div asp-validation-summary=All></div>
+                        <div id="display-change-rate"></div>
+                        <button class="btn submit" id="pay" type="submit"><i class="fas fa-shopping-cart"></i>
+                            @Localizer["Pay"]</button>
+                    </form>
+
+                </fieldset>
+                <fieldset class="shadow" id="freight-content" style="display: none;">
+                    <legend class="title">@Localizer["Freights"]</legend>
+                    <table id="list-freights">
+                        <tr>
+                            <th>@Localizer["Name"]</th>
+                            <th>@Localizer["Freight Type"]</th>
+                            <th>@Localizer["Amount"]</th>
+                            <th>@Localizer["Active"]</th>
+                        </tr>
+                    </table>
+                    <div class="flexbox">
+                        <div class="flexbox">
+                            @Localizer["Total Amount"]:&nbsp;
+                            <span id="freight-currency"></span>&nbsp;
+                            <span id="total-freights">0.000</span>
+                        </div>
+                        <div id="frieght-error-summary"></div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+    </div>
+    <!--End full-panel-->
+
+    <div id="panel-group-tables" class="full-panel show bg-dark-purple">
+        <nav class="nav-toolbar flexbox space-between" style="height: auto; margin-top: 5px;">
+            <ul id="group-tables" class="item widget-stackcrumb table-group" style="height: auto;">
+                <li id="all-table" class="active" data-group-id="0">@Localizer["All"]</li>
+                @foreach (var gt in Model.ServiceTable.GroupTables)
+
+                {
+                    <li data-group-id="@gt.ID" class="step">@gt.Name</li>
+
+                }
+            </ul>
+
+            <div class="item group-search-boxes">
+                <div id="text-search" class="search-box show">
+                    <div class="input-box">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input id="search-tables" class="ignore" type="text" autocomplete="off"
+                            placeholder="@Localizer["Text search ..."]">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display:none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+
+        </nav>
+        <div id="table-item-gridview" class="gridview item-gridview time-table full-desktop">
+            <!--gridview-->
+           <div class="wrap-grid widget-scrollbar">
+                @foreach (var t in Model.ServiceTable.Tables)
+                {
+                    var color = "";
+                    switch(t.Status){
+                        case 'A':
+                            color = "#CC9";
+                        break;
+                        case 'B':
+                            color = "#EC3E3E";
+                        break;
+                        case 'P':
+                            color = "#50A775";
+                        break;
+                    }
+                    <div class="grid" data-id="@t.ID" data-name="@t.Name" style="background-color: @color;">
+                        <div class="grid-caption">@t.Name</div>
+                        <div class="grid-image">
+                            <img src="/Images/table/@t.Image" />
+                            <div class="time">@t.DurationText</div>
+                        </div>
+                        <div id="user + @t.ID" class="grid-subtitle"></div>
+                    </div>
+                }
+            </div>
+
+            @*<svg class="svg-footer-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path
+                fill="#5B6F9D" fill-opacity="1" d="M0,32L1440,320L1440,320L0,320Z"></path></svg>*@
+            @*<svg class="svg-header-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path
+                fill="#5B6F9D" fill-opacity="1" d="M0,0L1440,320L1440,0L0,0Z"></path></svg>*@
+        </div>
+        <!--end-gridview-->
+
+        <svg class="svg-footer-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+            <path fill="#5B6F9D" fill-opacity="1" d="M0,320L1440,0L1440,320L0,320Z"></path>
+        </svg>
+        <div class="nav-toolbar bottom">
+            <div id="datetime" class="item datetime">@DateTime.Now.ToString("M/d/yyyy h:m:ss tt")</div>
+        </div>
+    </div>
+    <!--End panel-group-tables-->
+
+    <div id="panel-group-items" class="full-panel flexbox">
+        <div class="left-panel flexbox column flex-1">
+            <nav class="nav-toolbar top">
+                <div class="item flexbox">
+                    <div class="goto-panel-group-tables mr-2 icon-tab csr-pointer">
+                        <i class="fas fa-caret-left fa-lg"></i><span>&nbsp;@Localizer["Room"]</span>
+                    </div>
+                    <partial name="LoyaltyProgram" />
+                    <div id="customer-count" class="fas fa-users fa-lg fa-fw csr-pointer icon-tab"
+                        style="margin-left:7px;" title="@Localizer["Customer Count"]"></div>
+                </div>
+                <div class="item">
+                    <label id="order-number" class="tag-border bg-cadeblue mr-2"></label>
+                </div>
+                <div class="item">
+                    <label id="count-row-number" class="tag-border bg-cadeblue mr-2">@Localizer["Count Rows"] : ( <span
+                            id="count-row-number-text"></span> )</label>
+                </div>
+                <!-- <div class="item grow"></div> -->
+
+                <div class="item flexbox">
+                    <div id="left-search-box" class="group-search-boxes" style="display:none; margin-right: 7px;">
+                        <div class="search-box" title="@Localizer["Barcode search"]">
+                            <div class="input-box">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input class="item-search-barcode ignore" placeholder="@Localizer["Read barcode ..."]"
+                                    autocomplete="off" type="text">
+                                <i id="i-close" class="i-close far fa-times-circle close-barcode"></i>
+                            </div>
+                            <div id="btn-search" class="btn-search"><i class="fas fa-barcode"></i></div>
+                        </div>
+                    </div>
+                    <div id="fx-choose-items" title="@Localizer["List of sale items"]"
+                        class="fas fa-list-alt fa-lg fa-fw csr-pointer icon-tab"></div>
+                    <div id="list-order-receipt" title="@Localizer["List of saved orders"]"
+                        class="dropbox down crumb list">
+                        <div class="dropbox-btn">
+                            <i class="icon fas fa-receipt"></i>
+                            <div id="badge-order"></div>
+                        </div>
+                        <div class="wrap-dropbox-content">
+                            <div class="dropbox-navigator">
+                                <div class="i-close far fa-window-close"></div>
+                            </div>
+                            <i id="add-new-order" class="add-option fas fa-plus-circle add-new-order"></i>
+                            <div id="dropbox-order" class="dropbox-content widget-scrollbar scroll-y"
+                                style="max-height: 250px;">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </nav>
+            <div class="flexbox space-between bg-gainsboro pr-2">
+                <div class="flexbox">
+                    <partial name="Customer" />
+                    <span class="customer-name">@Model.Customer.Name</span>
+                </div>
+                <div class="flexbox">
+                    <partial name="Components/_ReportSaleHistory" />
+                    <span> <i class="icon-receipt fas fa-receipt" id="icon-receipt"></i></span>
+                </div>
+                <div class="flexbox">
+                    <span>@Localizer["Tel"]:&nbsp;</span>
+                    <span class="customer-phone">@Model.Customer.Phone</span>
+                </div>
+            </div>
+
+            <div id="wrap-list" class="grid-box widget-scrollbar flex-1">
+                <table id="item-listview">
+                    <thead>
+                        <tr>
+                            <th style="width: 0.5%;">@Localizer["Code"]</th>
+                            <th>@Localizer["Name"]</th>
+                            <th style="width: 0.25%; text-align: center;">@Localizer["Qty"]</th>
+                            <th style="width: 0.05%;">@Localizer["UoM"]</th>
+                            <th style="width: 0.5%;">@Localizer["Price"]</th>
+                            <th style="width: 0.05%;">@Localizer["Disc.(%)"]</th>
+                            <th class="tax-display" style="width: 0.05%;">@Localizer["Tax(%)"]</th>
+                            <th>@Localizer["Amount"]</th>
+                            <th style="width: 0.05%;" id="col-to-append-after"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div class="wrap-table summary widget-scrollbar">
+                <table>
+                    <tr>
+                        <th class="font-16">@Localizer["Subtotal"]</th>
+                        <th class="font-16">@Localizer["Discount"]<span id="summary-discount-rate"
+                                class="fn-black">(0%)</span></th>
+                        <th class="tax-display tax-rate-display-invoice font-16">@Localizer["Tax Rate %"]<span
+                                class="fn-black"></span></th>
+                        <th class="tax-display tax-display-invoice font-16">@Localizer["Tax Value"]<span
+                                class="fn-black"></span></th>
+                        <th class="font-16">@Localizer["Total"]</th>
+                    </tr>
+                    <tr>
+                        <td class="font-16" id="summary-sub-total">0.000</td>
+                        <td class="font-16" id="summary-discount"></td>
+                        <td class="tax-display tax-rate-display-invoice font-16" id="summary-vat-rate">0.000</td>
+                        <td class="tax-display tax-display-invoice font-16" id="summary-vat">0.000</td>
+                        <td class="font-16" id="summary-total">0.000</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="group-buttons" class="group-btns fixed-width">
+                <div class="wrap-btn flex-1 dropbox up crumb list">
+                    <div class="dropbox-btn btn bg-dark-purple"><i class="fas fa-ellipsis-h fa-fw"></i></div>
+                    <label class="label">@Localizer["Functions"]</label>
+                    <div class="wrap-dropbox-content">
+                        <div class="dropbox-content">
+                            <a href="#" id="fx-discount-membercard" class="option"><i class="fa fa-users fa-fw"></i>
+                                @Localizer["Discount Member"]</a>
+                            <a href="#" id="fx-discount-item" class="option"><i class="fas fa-percent fa-fw"></i>
+                                @Localizer["Discount Item"]</a>
+                            <a href="#" id="fx-move-table" class="option"><i class="fas fa-sync-alt fa-fw"></i>
+                                @Localizer["Change Room"]</a>
+                            <a href="#" id="fx-move-receipt" class="option"><i class="fas fa-cut fa-fw"></i>
+                                @Localizer["Move Receipt"]</a>
+                            <a href="#" id="fx-combine-receipt" class="option"><i class="fas fa-object-group fa-fw"></i>
+                                @Localizer["Combine Receipt"]</a>
+                            <a href="#" id="fx-split-receipt" class="option"><i class="fas fa-clone fa-fw"></i>
+                                @Localizer["Split Receipt"]</a>
+                            <a href="#" id="fx-edit-price" class="option"><i class="fas fa-clone fa-edit fa-fw"></i>
+                                @Localizer["Edit Item Price"]</a>
+                            <a href="#" id="fx-void-order" class="option"><i class="fas fa-broom fa-fw"></i>
+                                @Localizer["Void Order"]</a>
+                            <a href="#" id="fx-void-item" class="option"><i class="fas fa-broom fa-fw"></i>
+                                @Localizer["Void Item"]</a>
+                            <a href="#" id="fx-pending-void-item" class="option"><i class="fas fa-broom fa-fw"></i>
+                                @Localizer["Pending Void Item"]</a>
+                            <a href="#" id="fx-cancel-receipts" class="option fx-cancel-receipts"><i
+                                    class="fas fa-trash-restore fa-fw"></i> @Localizer["Cancel Receipt"]</a>
+                            <a href="#" id="fx-return-receipts" class="option fx-return-receipts"><i
+                                    class="fas fa-file-invoice-dollar fa-fw"></i> @Localizer["Return Receipt"]</a>
+                            <a href="#" id="fx-add-new-item" class="option"><i class="fas fa-plus-square fa-fw"></i>
+                                @Localizer["Add New Item"]</a>
+                            <a href="#" id="fx-remark" class="option"><i class="fa fa-comment"></i>
+                                @Localizer["Remark"]</a>
+                        </div>
+                        <div class="dropbox-navigator">
+                            <div class="i-close far fa-window-close"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="fx-discount-total" class="wrap-btn flex-1">
+                    <div class="btn bg-red"><i class="fas fa-percent fa-fw"></i></div>
+                    <label class="label">@Localizer["Discount"]</label>
+                </div>
+                <div id="send" class="wrap-btn flex-1">
+                    <div class="btn bg-sky"><i class="far fa-money-bill-alt fa-fw"></i></div>
+                    <label class="label" id="send-label">@Localizer["Send"]</label>
+                    <label class="label" id="save-label" style="display: none">@Localizer["Save"]</label>
+                </div>
+                <div class="wrap-btn flex-1" id="bill">
+                    <div class="btn bg-light-green"><i class="fas fa-print fa-fw"></i></div>
+                    <label class="label" id="bill-pro">@Localizer["Bill"]</label>
+                </div>
+                <div id="goto-panel-payment" class="wrap-btn flex-1">
+                    <div class="btn bg-dark-pink"><i class="far fa-money-bill-alt fa-fw"></i></div>
+                    <label class="label">@Localizer["Pay"]</label>
+                </div>
+
+            </div>
+            <!-- <div class="collapser v-collapser arrow-left"></div> -->
+        </div>
+        <!--end left-panel-->
+
+        <div class="right-panel @widthZero">
+            <nav id="right-toolbar" class="nav-toolbar top">
+                <div class="item toggle-panel-mobile">
+                    <div class="goto-panel-group-tables icon-tab csr-pointer hover-resize">
+                        <i class="fas fa-caret-left fa-lg"></i><span>&nbsp;@Localizer["Table"]</span>
+                    </div>
+                    @*<div class="back-to-listview tag-border csr-pointer hover-resize">
+                        <i class="fas fa-cart-arrow-down"></i>
+                        </div>*@
+                </div>
+
+
+                <div class="item">
+                    <div class="widget-stackcrumb nav-toolbar desktop group-item-steps p-0">
+                        <div class="all-groups active">@Localizer["All"]</div>
+                    </div>
+                </div>
+                <span class="item grow"></span>
+                <div id="right-search-box" class="item group-search-boxes">
+                    <div class="search-box" title="@Localizer["Barcode search"]">
+                        <div class="input-box">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore item-search-barcode" placeholder="@Localizer["Read barcode ..."]"
+                                autocomplete="off" type="text">
+                            <i id="i-close" class="i-close far fa-times-circle close-barcode"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search"><i class="fas fa-barcode"></i></div>
+                    </div>
+                    <div class="search-box" title="@Localizer["Text search"]">
+                        <div class="input-box">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="item-search" type="text" autocomplete="off"
+                                placeholder="@Localizer["Search name, barcode ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="widget-combobox down-left profile">
+                        <div class="combobox-trigger" title="@Localizer["Sort by"]"><i
+                                class="fas fa-sort csr-pointer icon-tab"></i></div>
+                        <div class="combobox-content">
+                            <div class="combobox-header">
+                                <h4 class="title">@Localizer["Sort by"]</h4>
+                                <i class="i-close"></i>
+                            </div>
+                            <div class="combobox-body widget-scrollbar">
+                                <span>@Localizer["Properties"]:</span>
+                                <div class="flexbox">
+                                    <input name="sort-field" value="Code" type="radio" checked />
+                                    <span>Code</span>
+                                </div>
+                                <div class="flexbox">
+                                    <input name="sort-field" value="KhmerName" type="radio" />
+                                    <span>Name</span>
+                                </div>
+                                <div class="flexbox">
+                                    <input name="sort-field" value="Barcode" type="radio" />
+                                    <span>Barcode</span>
+                                </div>
+
+                                <div class="flexbox">
+                                    <input name="sort-field" value="UoM" type="radio" />
+                                    <span>Unit of Measure (UoM)</span>
+                                </div>
+                                <div class="flexbox">
+                                    <input name="sort-field" value="UnitPrice" type="radio" />
+                                    <span>Unit Price</span>
+                                </div>
+                                <hr />
+                                <div class="flexbox">
+                                    <input id="sort-order-type" type="checkbox" />
+                                    <span>@Localizer["Descending"]</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <nav class="nav-toolbar responsive">
+                <div class="item widget-stackcrumb group-item-steps">
+                    <div class="all-groups active">@Localizer["All"]</div>
+                </div>
+            </nav>
+            <div class="group-item-views">
+                <div id="group-item-gridview" class="gridview item-gridview" style="display:none;">
+                    <!--gridview-->
+                    <div class="wrap-grid widget-scrollbar copper-lite">
+                        @*Grid object here*@
+                        @*@foreach (var group1 in Model.ItemGroup1s)
+                            {
+                            <div class="grid">
+                            <div data-id="@group1.ItemG1ID" data-group="1" data-group1="@group1.ItemG1ID" data-group2="0"
+                            data-group3="0" data-name="@group1.Name" hidden></div>
+                            <div class="grid-caption">@group1.Name </div>
+                            <div class="grid-image">
+                            <img src="~/Images/itemgroup/@group1.Images" />
+                            </div>
+                            </div>
+                            }*@
+
+                    </div>
+
+                </div>
+                <!--end-gridview-->
+                <div id="group-item-listview" class="item-listview widget-scrollbar" style="display:none;">
+                    <div class="group-search-boxes hidden" style="margin-bottom: 5px;">
+                        <div id="text-search" class="search-box show">
+                            <div class="input-box" style="width: 250px;">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input id="search-sale-items" class="ignore" type="text" autocomplete="off"
+                                    placeholder="@Localizer["Search ..."]">
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" style="display: none;" class="btn-search no-space"><i
+                                    class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+                    <table id="list-sale-items">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Code"]</th>
+                                <th>@Localizer["Khmer name"]</th>
+                                <th>@Localizer["Unit price"]</th>
+                                <th>@Localizer["Stock"]</th>
+                                <th>@Localizer["UoM"]</th>
+                                <th id="item-col-append">@Localizer["Choose"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                <div id="image-not-found" class="not-found hide">
+                    <img src="~/pos/images/no-products.png" />
+                </div>
+                <svg class="svg-header-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#7C555C" fill-opacity="1" d="M0,0L120,16C240,32,480,64,720,106.7C960,149,1200,203,
+                                1320,229.3L1440,256L1440,0L1320,0C1200,0,960,0,720,0C480,0,240,0,120,0L0,0Z">
+                    </path>
+                </svg>
+                <svg class="svg-footer-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#7C555C" fill-opacity="1" d="M0,32L120,64C240,96,480,160,720,208C960,256,1200,288,1320,304L1440,320L1440,320L1320,
+                                    320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z">
+                    </path>
+                </svg>
+            </div>
+
+            <nav class="nav-toolbar bottom">
+                <div class="item" id="pagination-list" style="z-index: 1;"></div>
+                <span class="grow"></span>
+                <div class="item">
+                    <div id="datetime" class="datetime">@DateTime.Now.ToString("M/d/yyyy h:m:ss tt")</div>
+                </div>
+            </nav>
+
+        </div>
+        <!--End right-panel-->
+    </div>
+    <!--End panel-group-items-->
+    @*<i id="panel-resizer" class="icon-panel-resizer fas fa-compress hidden"></i>*@
+</div>
+
+<!--Move order receipt-->
+<div id='move-receipt' class='dbl-function' style='display:none;'>
+    <fieldset class="shadow widget-scrollbar" style="height: 100%;">
+        <legend id="title-order-no" class="title"></legend>
+
+        <div class="item group-search-boxes mb-2">
+            <div id="text-search" class="search-box show">
+                <div class="input-box">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-movable-tables" type="text" value=""
+                        placeholder="@Localizer["Search tables ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i>
+                </div>
+            </div>
+        </div>
+        <div id="movable-table-list" class="widget-scrollbar"></div>
+
+        <div id="content-included-orders" hidden>
+            <h4>@Localizer["Choose any orders to move"]</h4>
+            <div class="wrap-table widget-scrollbar">
+                <table id="list-orders-in-table">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["OrderNo"]</th>
+                            <th>@Localizer["DateIn"]</th>
+                            <th>@Localizer["TimeIn"]</th>
+                            <th>@Localizer["DateOut"]</th>
+                            <th>@Localizer["TimeOut"]</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<!--Combine receipt-->
+<div id='combine-receipt' class='dbl-function' style="display: none; width: 700px;">
+    <div class="group-search-boxes">
+        <div id="text-search" class="search-box show">
+            <div class="input-box">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-combine-receipts" type="text" value=""
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" style="display:none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <fieldset class="shadow widget-scrollbar" style="height: 410px;">
+        <legend class='title'>@Localizer["Choose Receipts"]</legend>
+        <div id='combine-receipt-list' class="wrap-table widget-scrollbar">
+
+        </div>
+    </fieldset>
+</div>
+<!--End #combine-receipt-->
+<!-----------------------------Discount Member Card--------------------------->
+<div id="discount-membercard-content" style="display: none; width: 400px; height: 240px">
+    <partial name="Components/_MemberCardDiscount" />
+</div>
+@*--------------------List Item Comment---------------------*@
+<div id="comment-item-content" style="display: none; width: 1000px;">
+    <div class="row" style="height: 100%;">
+        <div class='col-md-6'>
+            <fieldset class="shadow wrap-table widget-scrollbar" style="height: 100%;">
+                <legend class="title">@Localizer["Available Comments"]</legend>
+                <div class="group-search-boxes mb-2">
+                    <div id="text-search" class="search-box show">
+                        <div class="input-box" style="max-width:270px;">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input id="search-item-comment" class="ignore" autocomplete="off" type="text" value=""
+                                placeholder=@Localizer["Search ..."]>
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" style="display: none;" class="btn-search no-space"><i
+                                class="fas fa-search"></i></div>
+                    </div>
+                </div>
+
+                <table id="listview-item-comments">
+                    <tr>
+                        <th>
+                            <i id="add-new-comment" title="@Localizer["Add new comment"]"
+                                class="fas fa-plus-circle fa-lg fn-sky csr-pointer fn-white"
+                                style="line-height: normal;"></i>
+                        </th>
+                        <th>@Localizer["Comment"]</th>
+                        <th></th>
+                    </tr>
+                </table>
+                <div asp-validation-summary="All"></div>
+            </fieldset>
+        </div>
+        <div class='col-md-6'>
+            <fieldset class="shadow wrap-table widget-scrollbar" style="height: 100%;">
+                <legend class="title">@Localizer["Commented"]</legend>
+                <h3 style="margin-bottom: 5px;">@Localizer["Item Name: "] <span id="detail-item-comment"></span></h3>
+                <table id="listview-choosed-item-comments">
+                    <tr>
+                        <th>@Localizer["#"]</th>
+                        <th>@Localizer["Descripton"]</th>
+                        <th>@Localizer["Remove"]</th>
+                    </tr>
+                </table>
+            </fieldset>
+
+        </div>
+
+    </div>
+    <div id="item-comment-edit-content" hidden style="width: 500px; height: 200px;">
+        <div class="stack-block mb-2">
+            <label>@Localizer["Comment Description"]</label>
+            <textarea class="comment-description" style="height: 175px;"></textarea>
+        </div>
+    </div>
+</div>
+
+<!--Split Receipt-->
+<fieldset id="split-receipt-content" class='shadow wrap-table widget-scrollbar'
+    style="display: none; width: 700px; height: 355px;">
+    <legend class="title">@Localizer["List of items"]</legend>
+    <div class="error-message fn-red" style="height: 15px;"></div>
+    <table id="split-receipt-listview">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Original Qty"]</th>
+            <th>@Localizer["Split Qty"]</th>
+            <th>@Localizer["Uom"]</th>
+            <th></th>
+        </tr>
+    </table>
+</fieldset>
+
+<!--Items not enough stock-->
+<div id="item-stock-info" class='wrap-table widget-scrollbar' hidden>
+    <table id="item-stock-info-listview">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["In Stock"]</th>
+            <th>@Localizer["Ordered Qty"]</th>
+            <th>@Localizer["Committed Qty"]</th>
+        </tr>
+    </table>
+</div>
+
+<!--Edit item price-->
+<fieldset id="edit-item-price" class='shadow wrap-table widget-scrollbar' style="display: none; width: 800px;">
+    <legend class="title">@Localizer["List of items"]</legend>
+    <table id="edit-item-price-listview">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Name 2"]</th>
+            <th>@Localizer["Qty"]</th>
+            <th>@Localizer["Uom"]</th>
+            <th>@Localizer["Unit Price"]</th>
+            <th>@Localizer["Discount Rate"]</th>
+            <th class="tax-display">@Localizer["Tax Value"]</th>
+            <th id="edit-price-col-append">@Localizer["Total"]</th>
+        </tr>
+    </table>
+</fieldset>
+
+<!--Discount item-->
+<div id="discount-item" style="display: none;">
+    <fieldset class="shadow wrap-table widget-scrollbar" style="height: 100%;">
+        <legend class="title">@Localizer["List of items"]</legend>
+        <div class="group-search-boxes mb-2">
+            <div class="search-box show">
+                <div class="input-box">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="discount-item-search" type="text" autocomplete="off"
+                        placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <div class="error-message fn-red"></div>
+        <table class="discount-item-listview">
+            <tr>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Qty"]</th>
+                <th>@Localizer["Uom"]</th>
+                <th>@Localizer["UnitPrice"]</th>
+                <th>@Localizer["Discount Rate"]</th>
+                <th>@Localizer["Discount Value"]</th>
+                <th>@Localizer["Remark Discount"]</th>
+                <th class="tax-display">@Localizer["Tax Value"]</th>
+                <th id="col-append-after">@Localizer["Total"]</th>
+            </tr>
+        </table>
+    </fieldset>
+</div>
+
+<!--Item comment-->
+<div id="item-comment" class='wrap-table list widget-scrollbar' style="display: none; height: 355px;">
+    <table id="item-comment-listview">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Uom"]</th>
+            <th>@Localizer["Qty"]</th>
+            <th>@Localizer["Comment"]</th>
+        </tr>
+
+    </table>
+</div>
+
+<!--Edit order number-->
+<fieldset id="edit-orderno-content" class="shadow" style="width: 300px; height: 150px;" hidden>
+    <label>@Localizer["Order No."]: </label>
+    <input class="order-number" type="search">
+    <span class="order-number-erorr fn-red"></span>
+</fieldset>
+
+<!--Discount total-->
+<div id="content-discount-total" hidden>
+    <div class="stack-block">
+        <label>@Localizer["Total Amount"] (<span class="currency-type"></span>)</label>
+        <input class="grandtotal" readonly>
+    </div>
+    <div class="flexbox">
+        <div class="stack-block width-half">
+            <label>@Localizer["Discount"] (<span class="currency-type"></span>)</label>
+            <input class="discount-value" type="search" autofocus>
+        </div>
+        <div class="stack-block width-half">
+            <label>@Localizer["Discount (%)"]</label>
+            <input class="discount-percent" type="search">
+        </div>
+    </div>
+    <div class="flexbox">
+        <div class="stack-block width-half">
+            <label>@Localizer["Remark Discount"]</label>
+            <select id="remarkDiscount" class="form-control"></select>
+        </div>
+    </div>
+    <span class="discount-total-erorr fn-red"></span>
+</div>
+
+<!--Add new item-->
+<div id="add-new-item-content" class='wrap-table widget-scrollbar' style="display: none; height: 355px;">
+    <table id="add-new-item-listview">
+        <tr>
+            <th>
+                <i id="add-new-row"
+                    class="fas fa-plus-circle fa-lg csr-pointer fn-light-gray"></i>&nbsp;<span>@Localizer["Code"]</span>
+            </th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Name 2"]</th>
+            <th>@Localizer["Qty"]</th>
+            <th>@Localizer["Unit Price"]</th>
+            <th>@Localizer["Total"]</th>
+            <th>@Localizer["Print To"]</th>
+        </tr>
+    </table>
+</div>
+
+<div id="void-order-content" style="display: none; height: auto; width: 500px;">
+    <fieldset class="shadow">
+        <legend class="title">@Localizer["Reason"]</legend>
+        <span class="fn-red void-order-error"></span>
+        <textarea class='void-order-reason' style='height: 150px; width: 100%;'></textarea>
+    </fieldset>
+</div>
+<div id="pending-void-item-content-reason" style="display: none; height: auto; width: 500px;">
+    <fieldset class="shadow">
+        <legend class="title">@Localizer["Reason"]</legend>
+        <span class="fn-red pending-void-item-error"></span>
+        <textarea class='pending-void-item-reason' style='height: 150px; width: 100%;'></textarea>
+    </fieldset>
+</div>
+<!--VoidItem-->
+<fieldset id="void-item" class='shadow wrap-table widget-scrollbar' style="display: none; width: 800px; height: 400px;">
+    <legend class="title">@Localizer["List of items"]</legend>
+    <table id="void-item-listview">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Qty"]</th>
+            <th>@Localizer["Uom"]</th>
+            <th>@Localizer["Unit Price"]</th>
+            <th>@Localizer["Discount Rate"]</th>
+            <th>@Localizer["Total"]</th>
+            <th id="void-item-col-append">@Localizer["Void Item"]</th>
+        </tr>
+    </table>
+</fieldset>
+<div id="void-item-content" style="display: none; height: auto; width: 500px;">
+    <fieldset class="shadow">
+        <legend class="title">@Localizer["Reason"]</legend>
+        <span class="fn-red void-item-error"></span>
+        <textarea class='void-item-reason' style='height: 150px; width: 100%;'></textarea>
+    </fieldset>
+</div>
+<!--Pending VoidItem-->
+<fieldset id="pending-void-item-send" class='shadow wrap-table widget-scrollbar'
+    style="display: none; width: 800px; height: 400px;">
+    <legend class="title">@Localizer["List of items"]</legend>
+    <table id="pending-void-item-listview">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Qty"]</th>
+            <th>@Localizer["Uom"]</th>
+            <th>@Localizer["Unit Price"]</th>
+            <th>@Localizer["Discount Rate"]</th>
+            <th>@Localizer["Total"]</th>
+            <th id="pending-void-item-col-append">@Localizer["Void Item"]</th>
+        </tr>
+    </table>
+</fieldset>
+<!--add Remark-->
+<div id="add-new-remark-content" class='wrap-table widget-scrollbar' style="display:none; height: 300px;">
+    <div class='wrap-block col-two'>
+        <table>
+            <tr>
+                <th>
+                    @Localizer["Remark"]
+                </th>
+            </tr>
+        </table>
+        <textarea id="order-remark" style="height:250px; width: 100%;"></textarea>
+    </div>
+</div>
+<div id="dialog-delvery-takaway" style="display:none;width:440px">
+    <div class="stack-block">
+               <span class="text-danger" hidden >Please Input RefNo</span>
+            <div class="right-block">
+                <div class="stack-block" >
+                 
+                   <label >@Localizer["RefNo"]</label>
+                <input   id="delvery-takaway"/>
+            </div>
+            
+        </div>
+@* // pay with other currencies *@
+<div id="pay-other-currencies-content" class="wrap-table size-auto" style="display: none;">
+    <table id="list-pay-other-currencies" class="grid-box" style="width: 500px;">
+        <tr>
+            <th>@Localizer["Currency"]</th>
+            <th>@Localizer["Amount"]</th>
+            <th>@Localizer["Alt Currency"]</th>
+            <th>@Localizer["Alt Anount"]</th>
+        </tr>
+    </table>
+</div>
+<partial name="Components/OtherPayment" />
+<div id="choose-customer-count" style="display: none; width: 100%; height: 200px">
+    <partial name="Components/_CountMember" />
+</div>
+
+<!--Scripts embeded-->
+<div hidden id="print-template-url">@Json.Serialize(Model)</div>
+<script src="~/pos/js/start-ktms.js"></script>

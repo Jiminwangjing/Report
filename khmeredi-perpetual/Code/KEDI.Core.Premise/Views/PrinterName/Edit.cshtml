@@ -1,0 +1,47 @@
+﻿@model PrinterName
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<style>
+    .fa {
+        margin-right: 4px;
+    }
+</style>
+<div class="card card-body">
+    <form asp-action="Edit">
+        <div class="row">
+            <div class="col-md-5">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ID" />
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Name"] :</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-kernel btn-sm">@Localizer["Save"]</button>
+                    <a class="btn btn-kernel btn-sm" asp-action="Index">@Localizer["Back"]</a>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Print OrderCount"] :</label>
+                    <input asp-for="OrderCount" class="form-control number" />
+                    <span asp-validation-for="OrderCount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="control-label" style="display: block;">Spite :</label>
+                    <select asp-for="Split">
+                        <option value="1">Spite None</option>
+                        <option value="2">Spite Qty</option>
+                        <option value="3">Spite Item</option>
+                    </select>
+                </div>
+                @* <input asp-for="Split" type="checkbox" id="active" class="form-control float-left" /> *@
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,120 @@
+.group-search-boxes {
+    position: relative;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+   /* display: flex;
+    justify-content: flex-end;*/
+    height: 30px;
+}
+
+.group-search-boxes ~ *.hide {
+    visibility: collapse;
+}
+
+.group-search-boxes .search-box {
+    position: relative;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align:  center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 30px;
+}
+
+/*.group-search-boxes .search-box.show {
+    position: absolute;
+    top: 0;
+}*/
+
+.group-search-boxes .search-box .input-box {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    background: #FFF;
+    border-radius: 15px;
+    height: 30px;
+    width: 0;
+    visibility: collapse;
+}
+
+.group-search-boxes .search-box .input-box:focus-within {
+    -webkit-box-shadow: 0px 0px 1.5px 1.5px #75BFDA;
+    -moz-box-shadow: 0px 0px 1.5px 1.5px #75BFDA;
+    box-shadow: 0px 0px 1.5px 1.5px #75BFDA;
+}
+
+.group-search-boxes .search-box .input-box input {
+    position: relative;
+    border: none;
+    line-height: normal;
+    outline: none;
+    width: calc(100% - 1rem);
+    height: 100%;
+    padding: 0;
+}
+
+.group-search-boxes .search-box.show .input-box {
+    visibility: visible;
+    width: 300px;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: width .3s;
+    -o-transition: width .3s;
+    transition: width .3s;
+}
+
+.group-search-boxes .search-box .input-box .i-search, 
+.group-search-boxes .search-box .input-box .i-close {
+  color: #999;
+  cursor: pointer;
+  font-size: .9em;
+  line-height: 30px;
+  padding: 0 6px;
+}
+
+.group-search-boxes .search-box .btn-search, 
+.group-search-boxes .search-box button.btn-search, 
+.group-search-boxes .search-box a.btn-search {
+  position: relative;
+  background: #6996C9;
+  color: #FFF;
+  display: inline-block;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  font-family: Arial, sans-serif;
+  text-decoration: none;
+  text-align: center;
+  min-width: 50px;
+  height: 30px;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.group-search-boxes .search-box:not(:last-child) .btn-search {
+    margin-right: 5px;
+}
+
+@media(max-width: 415px){
+    
+    .group-search-boxes .search-box.show .input-box {
+        width: calc(100vw - 100px) !important;
+    }
+}
+
+// <div class="group-search-boxes">
+//     <div id="text-search" class="search-box">
+//         <div class="input-box show">
+//             <i id="i-search" class="i-search fas fa-search"></i>
+//             <input autocomplete="off" class="ignore" type="text" placeholder="Search here ...">
+//             <i id="i-close" class="i-close far fa-times-circle"></i>
+//         </div>
+//         <div class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+//     </div>
+// </div>

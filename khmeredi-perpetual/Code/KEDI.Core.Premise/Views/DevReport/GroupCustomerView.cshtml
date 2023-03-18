@@ -1,0 +1,364 @@
+﻿
+@{
+    ViewData["Title"] = "Group Customer Report";
+}
+<body class="dx-viewport">
+    <div class="card card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <label class="form-label">@Localizer["Date From"]</label>
+                <input type="date" class="form-control" id="datefrom" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">@Localizer["Date To"]</label>
+                <input type="date" class="form-control" id="dateto" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">@Localizer["Time From"]</label>
+                <input type="time" class="form-control" id="timefrom" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">@Localizer["Time To"]</label>
+                <input type="time" class="form-control" id="timeto" />
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <label>@Localizer["Price List"]</label>
+                <select class="form-control" id="plid" asp-items="@ViewBag.PriceLists">
+                    <option value="0"></option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label>@Localizer["Type"]</label>
+                <select class="form-control" id="docType">
+                    <option value="All">@Localizer["All"]</option>
+                    <option value="SP">@Localizer["SP"]</option>
+                    <option value="IN">@Localizer["IN"]</option>
+                </select>
+            </div>
+            <div class="col-md-4 mt-4">
+                <button class="btn btn-xs btn-kernel" id="filter">@Localizer["Filter"]</button>
+            </div>
+        </div>
+        <br />
+        <div id="gridContainer"></div>
+        <div class="options">
+            <div class="option">
+                <div id="autoExpand"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(function () {
+        const date = new Date();
+        $("#datefrom")[0].valueAsDate = date;
+        $("#dateto")[0].valueAsDate = date;
+        filterData();
+        $('#filter').click(function () {
+            filterData(this);
+        });
+        function filterData(button) {
+            let btn_filter = $(button).children("i.fa-search");
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var time_from = $("#timefrom").val();
+            var time_to = $("#timeto").val();
+            var plid = $("#plid").val();
+            var docType = $("#docType").val();
+            $.ajax({
+                url: "/DevReport/GroupCustomerReport",
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    DateFrom: date_from,
+                    DateTo: date_to,
+                    TimeFrom: time_from,
+                    TimeTo: time_to,
+                    plid,
+                    docType
+                },
+                beforeSend: function () {
+                    btn_filter.addClass("fa-spinner fa-spin");
+                },
+                success: function (reponse) {
+                    bindGrid(reponse);
+                    btn_filter.removeClass("fa-spinner fa-spin");
+                }
+            });
+        }
+        function bindGrid(reponse) {
+            var dataGrid = $("#gridContainer").dxDataGrid({
+                dataSource: reponse,
+                allowColumnResizing: true,
+                columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: { columnRenderingMode: "virtual" },
+                paging: {
+                    pageSize: 10
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [10, 25, 50, 100, 150]
+                },
+                remoteOperations: false,
+                searchPanel: {
+                    visible: true,
+                    highlightCaseSensitive: true
+                },
+                groupPanel: {
+                    visible: true,
+
+                },
+                grouping: {
+                    autoExpandAll: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                allowColumnReordering: true,
+                rowAlternationEnabled: true,
+                showBorders: true,
+                export: {
+                    enabled: true
+                },
+
+                columns: [
+                    {
+                        dataField: "GroupName",
+                        groupIndex: 0,
+                        caption: "Group Name"
+                    },
+                    {
+                        dataField: "CustName",
+                        caption: "Customer Name"
+                    },
+                    {
+                        dataField: "DouType",
+                        //groupIndex: 0,
+                        caption: "DouType"
+                    },
+                    {
+                        dataField: "EmpName",
+                        width: 150,
+                        caption: "Emp. Name",
+                    },
+                    {
+                        dataField: "ReceiptNo",
+                        //width: 250,
+                        caption: "Receipt No",
+
+                    },
+                    {
+                        caption: "Posting Date",
+                        dataField: "DateOut",
+                        alignment: "right"
+                    },
+                    {
+                        caption: "Time Out",
+                        dataField: "TimeOut",
+                        alignment: "right"
+                    },
+                    {
+                        caption: "Discount Invoice",
+                        dataField: "DiscountItem",
+                        alignment: "right"
+                    },
+                    {
+                        caption: "Discount Remark",
+                        dataField: "DisRemark",
+                        alignment: "right"
+                    },
+                    {
+                        caption: "Currency",
+                        dataField: "Currency",
+                        alignment: "right"
+                    },
+                    {
+                        caption: "Total",
+                        dataField: "GrandTotal",
+                        alignment: "right",
+                        format: {
+                            type: "fixedPoint",
+                            precision: 2
+                        }
+                    },
+                    {
+                        caption: "Apply Amount",
+                        dataField: "ApplyAmount",
+                        alignment: "right",
+                        format: {
+                            type: "fixedPoint",
+                            precision: 2
+                        }
+                    },
+                    {
+                        caption: "Balance Due",
+                        dataField: "BalanceDue",
+                        alignment: "right",
+                        format: {
+                            type: "fixedPoint",
+                            precision: 2
+                        }
+                    }
+                ],
+
+                summary: {
+                    groupItems: [
+                        {
+                            column: "ReceiptNo",
+                            summaryType: "count",
+                            displayFormat: "{0} receipts",
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "GrandTotalCustomer",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            showInGroupFooter: true,
+                            alignByColumn: true
+                        },
+                        {
+                            showInColumn: "ApplyAmount",
+                            column: "ApplyAmountTotal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            showInGroupFooter: true,
+                            alignByColumn: true
+                        },
+                        {
+                            showInColumn: "BalanceDue",
+                            column: "BalanceDueTotal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            showInGroupFooter: true,
+                            alignByColumn: true
+                        }
+                    ],
+                    totalItems: [
+                        {
+                            showInColumn: "EmpName",
+                            column: "DateFrom",
+                            summaryType: "max",
+                            displayFormat: "Date From : {0}",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "ReceiptNo",
+                            column: "DateTo",
+                            summaryType: "max",
+                            displayFormat: "Date To : {0}",
+                            alignment: "left"
+                        },
+
+                        {
+                            showInColumn: "BalanceDue",
+                            column: "TotalBalanceDueGroup",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "Right"
+                        },
+
+                        {
+                            showInColumn: "Total",
+                            column: "TotalSumGroup",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "Right"
+                        },
+
+                        {
+                            showInColumn: "ApplyAmount",
+                            column: "TotalAppliedAmountGroup",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "Right"
+                        },
+
+
+
+                    ]
+
+                },
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('group-customer-report');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                        topLeftCell: { row: 4, column: 1 }
+                    }).then(function (dataGridRange) {
+                        // header
+                        var headerRow = worksheet.getRow(2);
+                        headerRow.height = 30;
+                        worksheet.mergeCells(2, 1, 2, 7);
+                        headerRow.getCell(1).value = 'Group Customer Report';
+                        headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
+                        headerRow.getCell(1).alignment = { horizontal: 'center' };
+
+                    }).then(function () {
+                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'group-customer-report.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "refresh",
+                                onClick: function () {
+                                    dataGrid.refresh();
+                                    filterData();
+                                }
+                            }
+                        },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "fas fa-file-pdf",
+                                onClick: function () {
+                                    printPdf();
+                                }
+                            },
+                            title: 'Export to PDF'
+                        }
+                    );
+                }
+
+            }).dxDataGrid("instance");
+            $("#autoExpand").dxCheckBox({
+                value: true,
+                text: "Expand All Groups",
+                onValueChanged: function (data) {
+                    dataGrid.option("grouping.autoExpandAll", data.value);
+                }
+            });
+        }
+
+    })
+    function printPdf() {
+        var datefrom = $("#datefrom").val();
+        var dateto = $("#dateto").val();
+        var time_from = $("#timefrom").val();
+        var time_to = $("#timeto").val();
+        var plid = $("#plid").val();
+        var docType = $("#docType").val();
+        window.open(`/DevPrint/PrintGroupCustomer?DateFrom=${datefrom}&DateTo=${dateto}&TimeFrom=${time_from}&TimeTo=${time_to}&plid=${plid}&docType=${docType}`, "_blank");
+    }
+</script>

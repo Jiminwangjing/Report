@@ -1,0 +1,32 @@
+﻿
+<div id='reprint-content' style="display: none;">
+    <div class="item group-search-boxes">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" name="search-receipt-reprint" type="text" value="" placeholder=@Localizer["Search ..."]>
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div class="flexbox my1">
+        <span class="mxr1"><label>@Localizer["From"] </label><input type="date" class="reprint-date-from" /></span>
+        <span><label>@Localizer["To"] </label><input type="date" class="reprint-date-to" /></span>
+    </div>
+    <div id="reprint-receipt" class='wrap-table list' style="min-width: 700px;">
+        <table class="reprint-receipt-listview">
+            <tr>
+                <th>@Localizer["Receipt №"]</th>
+                <th>@Localizer["Cashier"]</th>
+                <th>@Localizer["Date"]</th>
+                <th>@Localizer["Time"]</th>
+                <th>@Localizer["Table"]</th>
+                <th>@Localizer["Amount"]</th>
+                <th>@Localizer["Currency"]</th>
+                <th></th>
+            </tr>
+
+        </table>
+    </div>
+</div>

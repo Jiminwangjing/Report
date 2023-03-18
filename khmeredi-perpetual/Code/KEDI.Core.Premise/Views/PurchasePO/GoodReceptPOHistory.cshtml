@@ -1,0 +1,85 @@
+﻿<script src="~/js/table.js" defer></script>
+<script src="~/js/warehouse.js"></script>
+<link href="~/Admin/Purchase/css/purchasePOHistory.css" rel="stylesheet" />
+<div class="card card-body">
+    <div class="row BTNROW">
+        <div class="col-md-2">
+            <label class="lable_warehouse">@Localizer["Warehouse"]</label>
+            <select class="select_warehouse" id="txtwarehouse">
+                <option value="0" selected disabled>--- select ---</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label_vender">@Localizer["Vendor"]</label>
+            <select class="select_vender" id="txtvendor">
+                <option value="0" selected disabled>--- select ---</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label_Postingdate">@Localizer["DateFrom"]</label>
+            <div>
+                <input type="date" class="input_postingdate" id="txtpostingdate" />
+                @*<i class="fa fa-calendar-alt calender_postting"></i>*@
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label class="label_Documentdate">@Localizer["DateTo"]</label>
+            <div>
+                <input type="date" class="input_documentdate" id="txtDocumentDate" />
+                @*<i class="fa fa-calendar-alt calender_Documete"></i>*@
+            </div>
+        </div>
+        <!--<div class="col-md-2">
+        <div>
+            <input class="input_search" type="text" name="SearchString" value="@ViewData["currentFilter"]" placeholder="@Localizer["Search Invoice"]" id="txtSearch" />-->
+        @*<span class="calender_search"><i class="fa fa-search "></i></span>*@
+        <!--</div>
+    </div>-->
+        <div class="col-md-2 checkAllItem">
+            <label>@Localizer["AllInvoice"]</label>
+            <input type="checkbox" id="checkAllItem" />
+        </div>
+        <div class="row mb-2 btn-fillter">
+            <div class="col-md-10"></div>
+            <div class="col-md-2"><a class="btn btn-xs btn-kernel" id="btn-fillter">Fillter</a></div>
+        </div>
+
+    </div>
+    <div class="wrap-table listPurchase">
+        <table cellspacing="0" id="item-list">
+            <colgroup>
+                <col>
+                <col>
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>@Localizer["No"]</th>
+
+                    <th>@Localizer["Invoice P/D"]</th>
+                    <th>@Localizer["Vendor"]</th>
+                    <th>@Localizer["Creator"]</th>
+                    <th>@Localizer["Balance Due(LC)"]</th>
+                    <th>@Localizer["Exchange Rate"]</th>
+                    <th>@Localizer["Status"]</th>
+                    <th style="text-align:center">@Localizer["Type"]</th>
+                    <th style="text-align:center">@Localizer["Print"]</th>
+                </tr>
+            </thead>
+            <tbody class="list_GoodReceiptPo"></tbody>
+        </table>
+    </div>
+    <div id="pager">
+        <ul id="pagination" class="pagination-sm"></ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-xs btn-kernel" asp-action="PurchasePO" asp-controller="PurchasePO">@Localizer["Back"]</a>
+        </div>
+    </div>
+</div>
+<p hidden id="BranchID">@User.FindFirst("BranchID").Value</p>
+<p id="print-template-url" hidden>@Json.Serialize(Model)</p>
+<p id="print-template-url" hidden>@Json.Serialize(Model)</p>
+<script src="~/js/jquery.twbsPagination.min.js"></script>
+<script src="~/Admin/Purchase/js/puchasePOHistory.js"></script>

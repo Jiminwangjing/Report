@@ -1,0 +1,116 @@
+﻿@model IEnumerable<CKBS.Models.Services.ReportSale.SummarySale>
+@{
+    ViewData["Title"] = "PrintCashout";
+    Layout = "_Layout_print";
+    var num = 0;
+    var datefrom = "";
+    var dateto = "";
+    double grandtotal = 0;
+}
+<style>
+    body {
+        font-family: 'Khmer OS Battambang';
+        font-size: 14px;
+    }
+    .tbfontsize {
+        font-size: 16px;
+    }
+</style>
+<div class="text-center" style="margin-top: 20px; padding:10px;">
+    <h3>របាយការណ៍បិទវេន</h3>
+    <h3>Cash Out Report</h3>
+</div>
+<div class="row" style="margin: 30px -1px 20px -10px">
+    <div class="col-xs-5">
+        <table class="tbfontsize">
+            <tr>
+                <th>Branch</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@Model.First().Branch</td>
+            </tr>
+            <tr>
+                <th>User</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@Model.First().User</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-4"></div>
+    <div class="col-xs-3">
+        @if (!string.IsNullOrWhiteSpace(Model.First().DateFrom))
+        {
+            datefrom = Convert.ToDateTime(Model.First().DateFrom).ToString("dd-MM-yyyy");
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.First().DateTo))
+        {
+            dateto = Convert.ToDateTime(Model.First().DateTo).ToString("dd-MM-yyyy");
+        }
+        <table class="tbfontsize">
+            <tr>
+                <th>Date From</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@datefrom</td>
+            </tr>
+            <tr>
+                <th>Date To</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@dateto</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div style="min-height:300px;border: 1px outset grey">
+    <table class="table">
+        <thead>
+            <tr style="background:#5F758B;color:white;">
+                <th width="30">No.</th>
+                <th>Receipt</th>
+                <th>Date In</th>
+                <th>Date Out</th>
+                <th>Time Out</th>
+                <th>Grand Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                num++;
+                grandtotal += item.GrandTotal;
+                var datein = Convert.ToDateTime(item.DateIn);
+                var dateout = Convert.ToDateTime(item.DateOut);
+            <tr>
+                <td>@num</td>
+                <td>@item.Receipt</td>
+                <td>@datein.ToString("dd-MM-yyyy")</td>
+                <td>@dateout.ToString("dd-MM-yyyy")</td>
+                <td>@item.TimeOut</td>
+                @if (Model.First().LocalCurrency == "KHR" || Model.First().LocalCurrency == "៛")
+                {
+                    <td>@(Model.First().LocalCurrency + " " + string.Format("{0:n0}", item.GrandTotal))</td>
+                }
+                else
+                {
+                    <td>@(Model.First().LocalCurrency + " " + string.Format("{0:n2}", item.GrandTotal))</td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div style="float:right; border:1px outset grey; border-top:0px !important; padding:10px 125px 10px 40px">
+    <table>
+        <tr>
+            <th>Sub Total</th>
+            <td style="padding: 0 20px 0 20px">:</td>
+            @if (Model.First().LocalCurrency == "KHR" || Model.First().LocalCurrency == "៛")
+            {
+                <td>@(Model.First().LocalCurrency + " " + string.Format("{0:n0}", grandtotal))</td>
+            }
+            else
+            {
+                <td>@(Model.First().LocalCurrency + " " + string.Format("{0:n2}", grandtotal))</td>
+            }
+        </tr>
+    </table>
+</div>

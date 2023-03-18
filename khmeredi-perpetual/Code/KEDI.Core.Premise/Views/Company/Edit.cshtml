@@ -1,0 +1,666 @@
+﻿@model Company
+@{
+    ViewData["Title"] = "Create";
+}
+<style>
+
+    .StyleImge {
+        height: 150px;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        width: 150px;
+    }
+
+    .btnstyle {
+        color: blue;
+    }
+
+    #styleheader {
+        color: blue;
+        color: white;
+    }
+
+    b {
+        margin-left: 10px;
+        color: white;
+    }
+
+    .modal-header {
+        background-color: blue;
+    }
+
+    .modal-header {
+        cursor: move;
+    }
+
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 40px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            cursor: inherit;
+            display: block;
+        }
+
+    #imagestyle {
+        border-radius: 50px;
+        margin-left: 45px;
+        margin-top: 10px;
+        box-shadow: 0px 0px 4px;
+        color: blue;
+    }
+
+    #ModalCurrency {
+        margin-top: 100px;
+    }
+
+    .Right_input input[type=text] {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 35px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        min-width: 100%;
+        width: 100%;
+    }
+
+        .Right_input input[type=text]:focus, .style_Currency input[type=text]:focus {
+            box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+            padding: 3px 0px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border: 1px solid rgba(81, 203, 238, 1);
+            border-radius: 2px;
+            font-family: Arial;
+            font-size: 13px;
+        }
+
+    .Right_input select {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 35px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        min-width: 100%;
+    }
+
+        .Right_input select:focus, .style_Currency select:focus {
+            box-shadow: 0 0 7px rgba(79, 110, 230,1);
+            padding: 3px 0px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border: 1px solid rgba(106, 164, 213,1);
+            border-radius: 3px;
+            font-family: Arial;
+            font-size: 13px;
+        }
+
+    .style_Currency input[type=text] {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 35px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        min-width: 70%;
+        width: 70%;
+    }
+
+    .style_Currency select {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 35px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        min-width: 70%;
+    }
+
+    .btn_link {
+        position: absolute;
+        right: -20px;
+        bottom: 12px;
+        font-size: 15px;
+        color: blue;
+    }
+
+    .btn_link_cur {
+        position: absolute;
+        right: 10px;
+        bottom: 12px;
+        font-size: 15px;
+        color: blue;
+    }
+
+    .Select_link {
+        position: relative;
+    }
+
+/*    label.control-label {
+        font-weight: 600;
+    }
+
+    .style_Currency label.control-label {
+        min-width: 25%;
+    }*/
+</style>
+<div class="card card-body">
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6 Right_input">
+            <input type="hidden" asp-for="ID" />
+            <input type="hidden" asp-for="PriceListID" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="">
+                <label class="control-label">@Localizer["Name"]</label>
+                <input asp-for="Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="">
+                <label class="control-label">@Localizer["Location"]</label>
+                <input asp-for="Location" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+            <div class="">
+                <label class="control-label">@Localizer["Address"]</label>
+                <input asp-for="Address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="">
+                <label class="control-label">@Localizer["System Currency"] </label>
+                <div class="Select_link">
+                    <select asp-for="SystemCurrencyID" class="form-control" asp-items="ViewBag.SystemCurrency">                        
+                    </select>
+                    <i hidden class="fa fa-plus-circle btnstyle btn_link" id="txtcolorChang" data-toggle="modal" data-target="#ModalPricelist"></i>
+                </div>
+            </div>
+            <div class="">
+                <label class="control-label">@Localizer["Local Currency"] </label>
+                <div class="Select_link">
+                    <select asp-for="LocalCurrencyID" class="form-control" asp-items="ViewBag.LocalCurrency">                        
+                    </select>
+                    <i hidden class="fa fa-plus-circle btnstyle btn_link" id="txtcolorChang" data-toggle="modal" data-target="#ModalPricelist"></i>
+                </div>
+            </div>
+            <div hidden class="">
+                <label class="control-label">@Localizer["Process"] </label>
+                <select asp-for="Process">
+                    <option selected value="Standard">Standard</option>
+                </select>
+                <span asp-validation-for="Process" class="text-danger"></span>
+                <span class="text-danger">@ViewData["error.Process"]</span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                        <div class="form-group">
+                            <div>
+                                <img src="@Url.Content("~/Images/company/" + @Model.Logo)" id="logo" class="StyleImge" />
+                            </div>
+                            <div class="btn btn-sm btn-file" id="imagestyle">
+                                <input id="img" asp-for="Logo" hidden />
+                                @Localizer["Browse"] <input type="file" asp-for="Logo" id="txtlogo" onchange="show(this)" value="" accept=".ico, .png, .jpg, .jpeg, .gif" style="margin-top:10px;">
+                                <input type="text" asp-for="Logo" name="Logo" hidden />
+                                <span asp-validation-for="Logo" class="text-danger"></span>
+                            </div>
+                        </div>
+                </div>
+                 <div class="col-md-6">
+                        <div class="form-group">
+                            <div>
+                                <img src="@Url.Content("~/Images/company/" + @Model.Logo2)" id="logo2" class="StyleImge" />
+                            </div>
+                            <div class="btn btn-sm btn-file" id="imagestyle">
+                                <input id="img2" asp-for="Logo2" hidden />
+                                @Localizer["Browse"] <input type="file" asp-for="Logo2" id="txtlogo2" onchange="show2(this)" accept=".ico, .png, .jpg, .jpeg, .gif" style="margin-top:10px;">
+                                <input type="text" asp-for="Logo2" name="Logo2" hidden />
+                                <span asp-validation-for="Logo2" class="text-danger"></span>
+                            </div>
+                        </div>
+                </div>
+            </div>
+          
+        </div>
+    </div>
+    <div class="row pull-left">
+        <div class="col-md-12 stylebutton">
+            <button class="btn btn-kernel btn-xs" type="submit">@Localizer["Save"]</button>
+            <button class="btn btn-kernel btn-xs" asp-action="Index"> @Localizer["Back"]</button>
+        </div>
+    </div>
+</form>
+<div class="modal fade" id="ModalPricelist">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["PriceList"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 style_Currency">
+                        <div class="">
+                            <label class="control-label">@Localizer["PriceListName"] :</label>
+                            <input type="text" id="txtpricelist" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Currency"] :</label>
+                            <select type="text" id="txtcurrency">
+                                <option value="0" selected disabled>--- Select ---</option>
+                            </select>
+                            @*<i class="fa fa-plus-circle btn_link_cur" data-toggle="modal" data-target="#ModalCurrency" style="color:blue;"></i>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn.btn-kernel" onclick="clickinsertpricelist()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn.btn-kernel" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalCurrency">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" style="background-color:#cce5ff;">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["Currency"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 style_Currency">
+                        <div class="">
+                            <label class="control-label">@Localizer["CName"]:</label>
+                            <input type="text" id="currrencyName" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Description"]:</label>
+                            <input type="text" id="txtDescript" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn.btn-kernel" onclick="AddCurrency()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn.btn-kernel" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalRecirpt">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["RecriptInformation"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 style_Currency">
+                        <div class="">
+                            <label class="control-label">@Localizer["Title"]</label>
+                            <input type="text" id="txttitle" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Address"]</label>
+                            <input type="text" id="txtaddress" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Tel1"]</label>
+                            <input type="text" id="txttel1" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Tel2"]</label>
+                            <input type="text" id="txttel2" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["KhmerDescription"]</label>
+                            <input type="text" id="txtkhmer" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["EnglishDescription"]</label>
+                            <input type="text" id="txtenglish" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["PowerBy"]</label>
+                            <input type="text" id="txtpowerby" />
+                        </div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Language"]</label>
+                            <select id="txtLanguage">
+                                <option value="0" selected disabled>--- Select ---</option>
+                                <option value="Khmer">Khmer</option>
+                                <option value="English">English</option>
+                                <option value="Chinese">Chinese</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn.btn-kernel" onclick="AddRecript()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn.btn-kernel" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".modal-header").on("mousedown", function (mousedownEvt) {
+            var $draggable = $(this);
+            var x = mousedownEvt.pageX - $draggable.offset().left,
+                y = mousedownEvt.pageY - $draggable.offset().top;
+            $("body").on("mousemove.draggable", function (mousemoveEvt) {
+                $draggable.closest(".modal-dialog").offset({
+                    "left": mousemoveEvt.pageX - x,
+                    "top": mousemoveEvt.pageY - y
+                });
+            });
+            $("body").one("mouseup", function () {
+                $("body").off("mousemove.draggable");
+            });
+            $draggable.closest(".modal").one("bs.modal.hide", function () {
+                $("body").off("mousemove.draggable");
+            });
+        });
+        $.ajax({
+            url: "/Currency/GetCurrency",
+            type: "GET",
+            dataType: "JSON",
+            success: function (respones) {
+                var data = "";
+
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Symbol + '</option>';
+                });
+                $("#txtcurrency").append(data);
+            }
+        });
+    })
+    function show(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+
+            filerdr.onload = function (e) {
+                $('#logo').attr('src', e.target.result);
+                $('#img').val(input.files[0].name)
+            }
+            filerdr.readAsDataURL(input.files[0]);
+           
+        }
+    }
+    function show2(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+
+            filerdr.onload = function (e) {
+                $('#logo2').attr('src', e.target.result);
+                $('#img2').val(input.files[0].name)
+            }
+            filerdr.readAsDataURL(input.files[0]);
+
+        }
+    }
+    //prielist
+    function clickinsertpricelist() {
+
+        var name = $("#txtpricelist").val();
+        var cur = $("#txtcurrency").val();
+
+        var count = 0;
+        if (name == 0) {
+            count++;
+            $("#txtpricelist").css("border-color", "red");
+
+        } else {
+            $("#txtpricelist").css("border-color", "lightgrey");
+            count = 0;
+        }
+        if (cur == 0) {
+            count++;
+            $("#txtcurrency").css("border-color", "red");
+        }
+        else {
+            $("#txtcurrency").css("border-color", "lightgrey");
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+        var data = {
+            Name: name,
+            CurrencyID: cur
+        }
+        $.ajax({
+            url: "/PriceList/InsertPricelist",
+            type: "POST",
+            dataType: "JSON",
+            data: { priceList: data },
+            complete: function (respones) {
+                $("#txtpricelist").val("");
+                $("#txtcurrency").val("");
+                $.ajax({
+                    url: "/PriceList/GetselectPricelist",
+                    type: "Get",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var sata = "";
+                        $.each(respones, function (i, item) {
+                            sata +=
+                                '<option value="' + item.ID + '">' + item.Name + '</option>';
+                        });
+                        $("#txtselectprice").html(sata);
+                    }
+                })
+            }
+
+        });
+    }
+    //add currency
+    function AddCurrency() {
+        var name = $("#currrencyName").val();
+        var des = $("#txtDescript").val();
+        var cout = "";
+        if (name == 0) {
+            cout++;
+            $("#currrencyName").css("border-color", "red");
+        } else {
+            cout = 0;
+            $("#currrencyName").css("border-color", "lightgrey");
+        }
+        if (des == 0) {
+            cout++;
+            $("#txtDescript").css("border-color", "red");
+        }
+        else {
+            cout = 0;
+            $("#txtDescript").css("border-color", "lightgrey");
+        }
+        if (cout > 0) {
+            cout = 0;
+            return;
+        }
+        $.ajax({
+            url: "/Currency/AddCurrency",
+            type: "POST",
+            dataType: "Json",
+            data: { Symbol: name, Description: des },
+            complete: function (respones) {
+                $("#currrencyName").val("");
+                $("#txtDescript").val("");
+                $("#txtcurrency option").remove();
+                $.ajax({
+                    url: "/Currency/GetCurrency",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var data = "";
+
+                        $.each(respones, function (i, item) {
+                            data +=
+                                '<option value="' + item.ID + '">' + item.Symbol + '</option>';
+                        });
+                        $("#txtcurrency").append(data);
+                    }
+                });
+            }
+        });
+    }
+    //addrecitpt
+    function AddRecript() {
+
+        var title = $("#txttitle").val();
+        var add = $("#txtaddress").val();
+        var tel1 = $("#txttel1").val();
+        var tel2 = $("#txttel2").val();
+        var khmer = $("#txtkhmer").val();
+        var english = $("#txtenglish").val();
+        var power = $("#txtpowerby").val();
+        var lang = $("#txtLanguage").val();
+
+        var count = 0;
+        if (title == 0) {
+            count++;
+            $("#txttitle").css("border-color", "red");
+        }
+        else {
+            count = 0;
+            $("#txttitle").css("border-color", "lightgrey");
+        }
+        if (add == 0) {
+            count++;
+            $("#txtaddress").css("border-color", "red");
+        }
+        else {
+            count = 0;
+            $("#txtaddress").css("border-color", "lightgrey");
+        }
+        if (tel1 == 0) {
+            count++;
+            $("#txttel1").css("border-color", "red");
+        }
+        else {
+            count = 0;
+            $("#txttel1").css("border-color", "lightgrey");
+        }
+        if (tel2 == 0) {
+            count++;
+            $("#txttel2").css("border-color", "red");
+        }
+        else {
+            count = 0;
+            $("#txttel2").css("border-color", "lightgrey");
+        }
+        if (khmer == 0) {
+            count++;
+            $("#txtkhmer").css("border-color", "red");
+        }
+        else {
+            count = 0;
+            $("#txtkhmer").css("border-color", "lightgrey");
+        }
+        if (english == 0) {
+            count++;
+            $("#txtenglish").css("border-color", "red");
+        }
+        else {
+            count = 0;
+            $("#txtenglish").css("border-color", "lightgrey");
+        }
+        if (power == 0) {
+            count++;
+            $("#txtpowerby").css("border-color", "red");
+        }
+        else {
+            count = 0;
+            $("#txtpowerby").css("border-color", "lightgrey");
+        }
+        if (lang == 0) {
+            count++;
+            $("#txtLanguage").css("border-color", "red");
+        }
+        else {
+            count = 0;
+            $("#txtLanguage").css("border-color", "lightgrey");
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+        var data = {
+            Title: title,
+            Address: add,
+            Tel1: tel1,
+            Tel2: tel2,
+            KhmerDescription: khmer,
+            EnglishDescription: english,
+            PowerBy: power,
+            Language: lang
+        }
+        $.ajax({
+            url: "/ReceiptInformation/AddRecirptInfoma",
+            type: "POST",
+            dataType: "Json",
+            data: { receipt: data },
+            complete: function (respones) {
+                $("#txttitle").val("");
+                $("#txtaddress").val("");
+                $("#txttel1").val("");
+                $("#txttel2").val("");
+                $("#txtkhmer").val("");
+                $("#txtenglish").val("");
+                $("#txtpowerby").val("");
+                $("#txtLanguage").val("");
+                $("#txtRescirpt option").remove();
+                $.ajax({
+                    url: "/ReceiptInformation/GetRescirtp",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var data = "";
+
+                        $.each(respones, function (i, item) {
+                            data +=
+                                '<option value="' + item.ID + '">' + item.Title + '</option>';
+                        });
+                        $("#txtRescirpt").append(data);
+                    }
+                });
+            }
+        });
+    }
+</script>

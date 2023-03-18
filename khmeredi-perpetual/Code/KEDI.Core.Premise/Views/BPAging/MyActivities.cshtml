@@ -1,0 +1,159 @@
+﻿@model Pagination<Company>
+@{
+    ViewData["Title"] = "MyActivities";
+}
+<div class="card card-body">
+    <input type="text" id="txtid" hidden />
+    <div class="group-search-boxes">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-activity" autocomplete="off" type="text" placeholder="@Localizer[" Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div class="wrap-table myt1">
+        <table id="list-activites">
+            <thead>
+                <tr>
+                    <th>
+                        @Localizer["Number"]
+                    </th>
+                    <th style="text-align:center!important;">
+                        @Localizer["Start Date"]
+                    </th>
+                    <th>
+                        @Localizer["Start Time"]
+                    </th>
+
+                    <th>
+                        @Localizer["Activity"]
+                    </th>
+                    <th>
+                        @Localizer["Handled By"]
+                    </th>
+                    <th>
+                        @Localizer["Recurrence"]
+                    </th>
+
+                    <th>
+                        @Localizer["BP Name"]
+                    </th>
+                    @*<th>
+                            @Localizer["Contact Person"]
+                        </th>*@
+                    <th>
+                        @Localizer["Status"]
+                    </th>
+                    <th>
+                        @Localizer["Remark"]
+                    </th>
+                    <th>
+                        @Localizer["Assigned By"]
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ClickDelete" style="margin-top:50px;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header stylei" style="background-color:blue;">
+                <i class="far fa-question-circle"><b>@Localizer["Company"]</b></i>
+            </div>
+            <div class="modal-body stylei">
+                <h3>@Localizer["question"]</h3>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm stylei" data-dismiss="modal" onclick="ClickYes()"><i class="far fa-calendar-check"></i> @Localizer["Yes"]</button>
+                <button class="btn btn-danger btn-sm stylei" data-dismiss="modal"><i class="fas fa-exclamation-triangle"></i> @Localizer["No"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Click_Check" style="margin-top:50px;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header stylei" style="background-color:blue;">
+                <i class="far fa-question-circle"><b>@Localizer["Company"]</b></i>
+            </div>
+            <div class="modal-body stylei">
+                <h3>@Localizer["question_SetDefault"]</h3>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm stylei" data-dismiss="modal" onclick="ClickCheck()"><i class="far fa-calendar-check"></i> @Localizer["Yes"]</button>
+                <button class="btn btn-danger btn-sm stylei" data-dismiss="modal"><i class="fas fa-exclamation-triangle"></i> @Localizer["No"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#search-activity").on("keyup", function (e) {
+            var value = $(this).val().toLowerCase();
+            $("#list-activites tr:not(:first-child)").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        let $listView = ViewTable({
+            keyField: "ID",
+            selector: "#list-activites",
+            paging: {
+                enabled: false,
+                pageSize: 10
+            },
+            visibleFields: [
+                "Number",
+                "StartTime",
+                "StartTimes",
+                "SetActName",
+                "EmpName",
+                "Recurrences",
+                "BpName",
+                "Status",
+                "Remark",
+                "AssignedBy",
+            ],
+            columns: [
+                {
+                    name: "Number",
+                    on: {
+                        "dblclick": function (e) {
+                            location.href = "/BPAging/Edit?id=" + e.key;
+                        }
+                    }
+                },
+                {
+                    name: "StartTime",
+                    dataType: 'date',
+                    dataFormat: 'DD-MM-YYYY',
+                    //title: {
+                    //    enabled: true,
+                    //    text: "Start Date jhfjasfas shjbasdhfbjasbfsjkfsk"
+                    //},
+                },
+            ]
+        });
+        searchCompanies($listView);
+        $("#search-companies").on("keyup", function () {
+            searchCompanies($listView, this.value);
+        });
+
+        function searchCompanies($listView, keyword = "") {
+            $.get("/BPAging/GetActivity", {
+                keyword: keyword
+            }, function (activity) {
+                $listView.clearRows();
+                $listView.bindRows(activity);
+            });
+
+        }
+    });
+</script>

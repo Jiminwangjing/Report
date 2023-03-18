@@ -1,0 +1,262 @@
+﻿@model  Branch
+
+@{
+    ViewData["Title"] = "Create";
+}
+<style>
+    .fa {
+        margin-right: 4px;
+    }
+
+    .stylebutton {
+        margin-top:10px;
+    }
+    .StyleImge {
+        height: 150px;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        width: 150px;
+    }
+    .form-group{
+        padding:0px;
+        margin:0px;
+    }
+</style>
+
+<form asp-action="Create" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">@Localizer["Name"] :</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="CompanyID" class="control-label">@Localizer["Company"] :</label>
+                <div class="input-group"></div>
+
+                <select asp-for="CompanyID" class="form-control" asp-items="ViewBag.CompanyID">
+                    <option value="0" selected disabled>--- Select ---</option>
+                </select>
+                <span class="text-danger">@ViewData["error.company"]</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Location" class="control-label">@Localizer["Location"] :</label>
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+                <span class="text-danger">@ViewData["error.Location"]</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label">@Localizer["Address"] :</label>
+                <textarea asp-for="Address" class="form-control"></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+           
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+       <div class="col-md-12 ">
+           <button class="btn btn-success btn-xs" type="submit"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+           <a class="btn btn-xs btn-danger" asp-action="Index"><i class="fa fa-reply"></i> @Localizer["Back"]</a>
+       </div>
+    </div>
+    
+</form> 
+
+<div class="modal fade" id="AddCompany" style="margin-top: 10px;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:blue;">
+                <i class="fa fa-plus-circle" style="color:white;"><b style="margin-left:8px;font-family:Arial;font-size:15px;">@Localizer["CreateCompany"]</b></i>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Create" method="post">
+                    <div class="row">
+                        <div class="col-md-12">                           
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label">@Localizer["Name"] :</label>
+                                <input id="Name_Com" class="col-sm-9 form-control" />
+                                <span  class="text-danger"></span>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label">@Localizer["Receipt"] :</label>
+                                <select id="Recei" class="col-sm-9 form-control">
+                                    <option value="0" selected disabled>--- Select ---</option>
+                                </select>
+                                <span class="text-danger"></span>
+                                <span class="text-danger">@ViewData["error.company"]</span>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label">@Localizer["Location"] :</label>
+                                <input id="Loca" class="col-sm-9 form-control" />
+                                <span class="text-danger"></span>
+                            </div>                    
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label">@Localizer["Address"] :</label>
+                                <input id="Addr" class="col-sm-9 form-control" />
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label">@Localizer["Process"] :</label>
+                                <select id="Proc" class="col-sm-9 form-control">
+                                    <option value="0" selected disabled> --- Select ---</option>
+                                    <option value="FIFO">FIFO</option>
+                                    <option value="Average">Average</option>
+                                    <option value="Standard">Standard</option>
+                                </select>
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label">@Localizer["Currency"] :</label>
+                                <select id="Curren" class="col-sm-9 form-control">
+                                    <option value="0" selected disabled>--- Select ---</option>
+                                </select>
+                                <span class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group pull-right">   
+                            <button type="button" class="btn btn-primary btn-sm" onclick="QuickInsertCom()"><i class="fa fa-plus-circle" style="margin-right:3px;"></i>@Localizer["Add"]</button>
+                            <button class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-ban" style="margin-right:4px;"></i>@Localizer["Close"]</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "/Company/GetCompany",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = "";
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Title + '</option>';
+                });
+                $("#Recei").html(data);
+            }
+		});
+		 $.ajax({
+            url: "/Company/GetCompany",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = "";
+                var res = JSON.stringify(respones); alert(res)
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#Curren").html(data);
+            }
+        });
+    });*@
+
+    @*function QuickInsertCom() {
+        var name = $("#Name_Com").val();
+        var receipt = $("Recei").val();
+        var locat = $("#Loca").val();
+        var addre = $("#Addr").val();
+        var proc = $("#Proc").val();
+        var currency = $("#Curren").val();
+        var list = {
+            Name: name,
+            ReceiptID: receipt,
+            Location: locat,
+            Address: addre,
+            Process: proc,
+            SystemCurrencyID: currency
+        }
+
+         var count = 0;
+         if (name == 0) {
+            count++
+            $("#Name_Com").css("border-color", "red");
+         }
+         else
+         {
+             count = 0;
+             $("#Name_Com").css("border-color", "lightgrey");
+         }
+         if (receipt == null) {
+              count++
+              $("#Recei").css("border-color", "red");
+         }
+         else
+         {
+             count = 0;
+             $("#Recei").css("border-color", "lightgrey");
+         }
+         if (addre == 0) {
+            count++
+            $("#Addr").css("border-color", "red");
+         }
+         else
+         {
+             count = 0;
+             $("#Addr").css("border-color", "lightgrey");
+         }
+         if (proc == 0) {
+            count++
+            $("#Proc").css("border-color", "red");
+         }
+         else
+         {
+             count = 0;
+             $("#Proc").css("border-color", "lightgrey");
+         }
+         if (currency == 0) {
+            count++
+            $("#Curren").css("border-color", "red");
+         }
+         else
+         {
+             count = 0;
+             $("#Curren").css("border-color", "lightgrey");
+         }
+         if (locat == 0) {
+            count++
+            $("#Loca").css("border-color", "red");
+         }
+         else
+         {
+            count = 0;
+             $("#Loca").css("border-color", "lightgrey");
+             return;
+         }
+        //$.ajax({
+        //    url: "/ItemGroup2/QuickAdd",
+        //    type: "POST",
+        //    dataType: "JSON",
+        //    data: { itemGroup2: data },
+        //    complete: function (respones) {
+        //        $("#item1id").val("");
+        //         $("#item2Name").val("");
+        //         $("#itemcolor").val("");
+        //        $("#itemback").val("");
+        //        var item1id = $("#txtitem1").val();
+        //        $.ajax({
+        //            url: "/ItemGroup2/GetData",
+        //            type: "Get",
+        //            data: { ID: item1id },
+        //            dataType: "Json",
+        //            success: function (respones) {
+        //                var data = "";
+
+        //                $("#txtitem2 option").remove();
+        //                $.each(respones, function (i, item) {
+        //                    data +=
+        //                        '<option value="' + item.ItemG2ID + '">' + item.Name + '</option>';
+        //                });
+        //                $("#txtitem2").append(data);
+        //            }
+        //        });
+        //    }
+        //});*@

@@ -1,0 +1,2391 @@
+﻿<script src="~/js/table.js" defer></script>
+<script src="~/js/warehouse.js"></script>
+<link href="~/css/Modal.css" rel="stylesheet" />
+<style>
+    fieldset.scheduler-border {
+        border: 2px groove #e6ffe6;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 43px 0 1.5em 0 !important;
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #00cc00;
+    }
+
+    fieldset.scheduler-borders {
+        border: 2px groove #e6ffe6;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 10px 0 1.5em 0 !important;
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #00cc00;
+    }
+
+    legend.scheduler-border {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+    }
+
+    .content_vendor,.content_status, .content_warehouse, .content_exchange, .content_remark, .content_reff_no, .content_user, .content_localcurrency, .content_ap, .content_postingdate, .content_delivery, .content_documentdate {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 60%;
+        height: 30px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+  .content_vendor:focus,.content_status:focus, .content_warehouse:focus, .content_remark:focus, .content_exchange:focus, .content_reff_no:focus, .content_user:focus, .content_localcurrency:focus, .content_ap:focus, .content_postingdate:focus, .content_delivery:focus, .content_documentdate:focus {
+            border: 1px solid rgba(77, 142, 245,1);
+            box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+            padding: 3px 0px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border-radius: 3px;
+            font-family: Arial;
+            font-size: 13px;
+  }
+
+    .label_vender,.label_status,.label_warehouse, .label_exchange, .label_remark, .label_reff_no, .label_user, .label_ap, .label_postingdate, .label_documentdate, .label_delivery, .label_localcurrency {
+        min-width: 30%;
+        width: 30%;
+    }
+
+    .btn_Find {
+        top: 0px;
+    }
+
+    .content_icon {
+        position: relative;
+    }
+
+    .content_documentdate, .content_postingdate, .content_delivery {
+        position: relative;
+    }
+
+    .facalendar {
+        position: absolute;
+        right: 40px;
+        top: 14px;
+        color: #1bb1f2;
+    }
+
+    .content_barcode {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 32px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+    .btn_add {
+        height: 32px;
+        margin-top: 5px;
+        margin-left: 3px;
+    }
+
+    .content_search {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 32px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        width: 100%;
+    }
+
+    .content_search {
+        position: relative;
+    }
+
+    .icon_search {
+        position: absolute;
+        bottom: 11px;
+        right: 20px;
+    }
+
+    .btnsearch {
+        margin-bottom: 7px;
+    }
+
+    .modal-header {
+        background-color: #4d84f6;
+    }
+
+    #ui-datepicker-div {
+        width: 230px;
+    }
+
+    .btn_Cancel, .btn_ADD {
+        margin-top: 20px;
+    }
+
+
+    .content_subtotal:focus, .expiredate:focus, .alertstock:focus, .content_discount_cash:focus, .content_discount_percent:focus, .content_vat:focus, .content_additional_node:focus, .content_downpayment:focus, .content_applied_amount:focus, .content_additional_expense:focus, .content_return_amount:focus, .content_balance_du:focus, .content_copy:focus {
+        border: 1px solid rgba(77, 142, 245,1);
+        box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border-radius: 3px;
+        font-family: Arial;
+        font-size: 13px;
+    }
+
+    .label_additional_expense, .label_additional_node, .label_applied_amount, .label_balance_due, .label_downpayment, .label_return_amount, .label_subtotal, .label_discount, .label_vat, .label_copy {
+        width: 35%;
+        min-width: 35%;
+    }
+
+    .content_subtotal, .content_additional_expense, .content_applied_amount, .content_balance_du, .content_downpayment, .content_select_discount, .content_return_amount {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 48%;
+        height: 25px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+    .content_discount {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 42%;
+        height: 25px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+    .expiredate, .alertstock {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 100%;
+        height: 30px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+    .content_select_discount {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 12%;
+        height: 25px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+    .content_additional_node, .content_copy {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 55%;
+        height: 25px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+    .content_vat {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 52%;
+        height: 25px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+    .content_discount {
+        position: relative;
+    }
+
+    .label_discount {
+        min-width: 35%;
+        width: 35%;
+        font-size: 5px;
+    }
+
+    .fa_retweet {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+    }
+
+    .discount_item {
+        position: relative;
+    }
+
+    .btnchoose {
+        text-align: center;
+        color: green;
+    }
+
+    .divQty {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .InputQty {
+        margin-left: 15px;
+        min-width: 80px;
+        border: 1px solid rgba(213, 211, 211,1);
+        width: 80px;
+        border-radius: 3px;
+    }
+
+    .InputDiscount {
+        margin-left: 15px;
+        min-width: 80px;
+        border: 1px solid rgba(213, 211, 211,1);
+        width: 80px;
+        border-radius: 3px;
+    }
+
+    .divDiscount {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .InputPurchasePrice {
+        margin-left: 15px;
+        min-width: 80px;
+        border: 1px solid rgba(213, 211, 211,1);
+        width: 80px;
+        border-radius: 3px;
+    }
+
+    .divPurchase {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-width: 80px;
+    }
+
+    .Sub_total {
+        margin-left: 10px;
+        min-width: 80px;
+        width: 80px;
+    }
+
+    .divQT_total {
+        min-width: 120px;
+    }
+
+    .select_Uom, .searchAP {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        min-width: 100%;
+        height: 25px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+    .icon_discount_percent, .discount_cash {
+        font-size: 10px;
+    }
+
+    #addfontawesome {
+        margin-left: 10px;
+        font-size: 10px;
+    }
+
+    .style_curr {
+        font-size: 12px;
+    }
+
+    .Error_mesage {
+        margin: 10px;
+        padding-bottom: 5px;
+        padding-top: 0px;
+        min-width: 97%;
+        max-height: 20px;
+        line-height: 20px;
+        border-radius: 2px;
+    }
+
+    .rquried_pric {
+        color: white;
+        font-size: 12px;
+        line-height: 20px;
+    }
+
+    .list {
+        margin-bottom: 15px;
+    }
+
+    .dialog-box .footer {
+        padding: 0;
+    }
+
+    .dialog-box .content {
+        font-size: 20px;
+        text-align: center;
+    }
+    .chooseOrder, .chooseGoodReceiptPo {
+        margin-left: 40px;
+        font-size: 17px;
+    }
+    .chooseQuatation {
+        margin-left: 40px;
+        font-size: 17px;
+    }
+    .content_searchAP {
+        float: right;
+        margin-bottom: 10px;
+        margin-top: 0px;
+    }
+    .searchAP {
+        position: relative;
+    }
+
+    .Apicon {
+        position: absolute;
+        right: 21px;
+        top: 25px;
+    }
+    #table_width{
+        height:350px;
+        overflow-y:auto;
+    }
+    .wrap-table {
+        min-height: 200px;
+    }
+</style>
+<label class="btnfind" hidden>@Localizer["Find"]</label>
+<label class="btnnew" hidden>@Localizer["New"]</label>
+<label class="btnfind_new" hidden></label>
+<div class="row pull-right btn_Find">
+    <div class="col-md-12">
+        <button class="btn btn-xs btn-primary findbtn" onclick="findPurchaseAP()"></button>
+        <a class="btn btn-xs btn-success" asp-controller="PurchaseAP" asp-action="PurchaseAPStory">@Localizer["Goods Receipt History"]</a>
+    </div>
+</div>
+<fieldset class="scheduler-border">
+    <legend class="scheduler-border">@Localizer["Goods Receipt"]</legend>
+    <div class="row">
+        <div class="col-md-4">
+            <label class="label_vender">@Localizer["Vendor"]</label>
+            <select class="content_vendor" id="txtselectvendor">
+                <option value="0" selected disabled>--- select ---</option>
+            </select>
+            <div class="text-danger requried_vander"></div>
+            <span class="rquried_vendor"></span>
+
+            <label class="label_warehouse">@Localizer["Warehouse"]</label>
+            <select class="content_warehouse" id="txtwarehouse">
+                <option value="0" selected disabled>--- select ---</option>
+            </select>
+            <div class="text-danger requried_warehouse"></div>
+            <span class="rquried_warehose"></span>
+            <label class="label_reff_no">@Localizer["Vendor Ref No."]</label>
+            <input class="content_reff_no" type="text" id="txtreff_no" autocomplete="off" />
+            <label class="label_localcurrency">@Localizer["LocalCurrency"]</label>
+            <select class="content_localcurrency" id="txtcurrency" onchange="SelectchangeCurrency()" disabled>
+                <option value="0" selected disabled>--- select ---</option>
+            </select>
+            <label class="label_user">@Localizer["User"]</label>
+            <input class="content_user" type="text" value="@User.FindFirst("FullName").Value" id="txtUser" readonly />
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <label class="label_ap">@Localizer["InvoiceNº"]</label>
+            <input class="content_ap" type="text" id="txtInvoice" autocomplete="off" />
+            <label class="label_status">@Localizer["Status"]</label>
+            <input type="text" class="content_status" id="txtstatus" readonly/>
+            <div class="text-danger requried_number"></div>
+            <div class="content_icon">
+                <label class="label_postingdate">@Localizer["PostingDate"]</label>
+                <input class="content_postingdate" type="date" id="txtPostingdate" autocomplete="off" />
+              
+            </div>
+            <div class="content_icon">
+                <label class="label_delivery">@Localizer["DueDate"]</label>
+                <input type="date" id="txtDuedate" autocomplete="off" class="content_delivery" />
+             
+            </div>
+            <div class="content_icon">
+                <label class="label_documentdate">@Localizer["DocumentDate"]</label>
+                <input class="content_documentdate" type="date" id="txtDocumentDate" autocomplete="off" />
+              
+            </div>
+        </div>
+    </div>
+</fieldset>
+<div class="row">
+    <div class="col-md-12">
+        <div class="input-group">
+            <input type="text" placeholder="@Localizer["Bracode search"]" id="txtbarcode" class="form-control content_barcode"  />
+            <div class="input-group-append">
+                <button class="btn btn-sm btn-primary btn_add" onclick="showItemMasters()" data-toggle="modal" data-target="#ModalAdd">@Localizer["Add"]</button>
+            </div>
+        </div>
+        <div class="rquried_item text-danger"></div>
+        <div class="item_not_difine text-danger"></div>
+    </div>
+</div>
+<fieldset class="scheduler-borders">
+    <legend class="scheduler-border">@Localizer["Goods Receipt Detail"]</legend>
+    <div class="wrap-table list">
+        <table id="list-items">
+            <thead>
+                <tr>
+                  
+                    <th class="boldth">@Localizer["Code"]</th>
+                    <th class="boldth">@Localizer["Name(KH)"]</th>
+                    <th class="boldth">@Localizer["Name(EN)"]</th>
+                    <th class="boldth">@Localizer["Quantity"]</th>
+                    <th class="boldth">@Localizer["PurchasePrice"]</th>
+                    <th class="boldth">@Localizer["Discount"]<i class="fa" id="addfontawesome"></i></th>
+                    <th class="boldth">@Localizer["Total(LC)"]</th>
+                    <th class="boldth text-center">@Localizer["UoM"]</th>
+                    <th class="boldth">@Localizer["Action"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</fieldset>
+<div class="modal fade" role="dialog" id="ModalAdd">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" aria-hidden="true" style="color:white;"><b style="margin-left:5px;">@Localizer["ItemMasterData"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row btnsearch">
+                    <div class="col-md-8"></div>
+                    <div class="col-md-4">
+                        <input type="text" class="content_search" id="txtSearch" placeholder="@Localizer["Search..."]" />
+                        <i class="fa fa-search icon_search" style="color:blue;"></i>
+                    </div>
+                </div>
+                <div class="wrap-table list">
+                    <table id="item-master">
+                        <thead>
+                            <tr>
+
+                                <th class="boldth">@Localizer["Code"]</th>
+                                <th class="boldth">@Localizer["KhmerName"]</th>
+                                <th class="boldth">@Localizer["EnglishName"]</th>
+                                <th class="boldth">@Localizer["In Stock"]</th>
+                                <th class="boldth">@Localizer["Cost"]</th>
+                                <th class="boldth">@Localizer["Currency"]</th>
+                                <th class="boldth">@Localizer["UoM"]</th>
+                                <th class="boldth">@Localizer["Barcode"]</th>
+                                <th class="boldth">@Localizer["Choose"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-danger" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <label class="label_exchange">@Localizer["ExchangeRate"]</label>
+        <input type="text" id="txtExchange" class="content_exchange" readonly />
+        <div>
+            <label class="label_remark">@Localizer["Remark"]</label>
+            <textarea id="txtRemark" class="content_remark"></textarea>
+        </div>
+       
+    </div>
+    <div class="col-md-4">
+        <div>
+            <label class="label_subtotal">@Localizer["SubTotal"]</label>
+            <span class="sub_tota_cur"></span>
+            <input type="text" id="txtsubtotal" readonly class="content_subtotal " />
+        </div>
+        <div>
+            <label class="label_discount">@Localizer["Discount"]</label>
+            <select class="content_select_discount" onchange="ChangeTypeDis()">
+                <option value="Percent">%</option>
+                <option value="Cash">$</option>
+            </select>
+            <input type="text" id="txtdiscount" class="content_discount" autocomplete="off" onkeyup="ChangeDiscounts()" />
+        </div>
+        <div>
+            <label class="label_vat">@Localizer["VAT"]</label>
+            <i class="fa fa-percent style_curr" style="font-size:10px;"></i>
+            <input type="text" id="txtvat" class="content_vat" onkeyup="ChangeVat()" autocomplete="off" />
+        </div>
+       
+        <div>
+            <label class="label_applied_amount">@Localizer["AppliedAmount"]</label>
+            <span class="applied_amount_cur style_curr"></span>
+            <input type="text" id="txtapplied_amount" class="content_applied_amount" readonly onkeyup="ChangeAppliedAmount()" autocomplete="off" />
+        </div>
+        <div>
+            <label class="label_balance_due">@Localizer["BalanceDue"]</label>
+            <span class="balance_due_cur style_curr"></span>
+            <input type="text" id="txtBalancedue" readonly class="content_balance_du" />
+        </div>
+
+    </div>
+    <div class="col-md-4">
+
+        <div>
+            <label class="label_additional_expense">@Localizer["AdditionalExpense"]</label>
+            <span class="Additional_cur_expense style_curr"></span>
+            <input type="text" id="txtadditional_expense" class="content_additional_expense" onkeyup="change_additional_expense()" autocomplete="off" />
+        </div>
+        <div>
+            <label class="label_additional_node">@Localizer["AdditionalNode"]</label>
+            <span class="additional_node_cur style_curr"></span>
+            <input type="text" id="txtadditional_node" class="content_additional_node" onkeyup="change_additional_node()" autocomplete="off" />
+        </div>
+
+        <div>
+            <label class="label_copy">@Localizer["CopyFrom"]</label>
+            <span class="copy_cur style_curr"></span>
+            <select id="txtcopy" class="content_copy">
+                <option value="0"></option>
+                <option value="PO">@Localizer["PurchaseOrder"]</option>
+                <option value="PD">@Localizer["Good Receipt PO"]</option>
+            </select>
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-sm btn-success btn_ADD" onclick="SaveData()">@Localizer["Add"]</button>
+        <button class="btn btn-sm btn-danger btn_Cancel" onclick="cancelpurchase()">@Localizer["Cancel"]</button><br />
+    </div>
+</div>
+<div class="row" style="margin-top:10px;">
+    <div class="col-md-8 Error_mesage">
+        <i class="fa" id="iconError" style="color:white;margin-right:15px;"></i><span style="color:white;">Error :</span> <span class="rquried_pric"> </span>
+    </div>
+</div>
+<div class="modal fade" id="ModalManageExpire">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i style="color:white;"><b>@Localizer["SetExpireDate"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="wrap-table list">
+                    <table id="item-manage">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["KhmerName"]</th>
+                                <th>@Localizer["EnglishName"]</th>
+                                <th>@Localizer["Uom"]</th>
+                                <th>@Localizer["ExpireDate"]</th>
+                               @* <th>@Localizer["AlertStock"]</th>*@
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-danger" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade " id="ModalPurchaseOrder">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-list-alt" style="color:white;"><b style="margin-left:5px;">@Localizer["ListPurchaseOrder"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="content_searchAP">
+                    <input type="text" class="searchOR" autocomplete="off" id="searchAP" placeholder="@Localizer["Search"]" />
+                    <i class="fa fa-search Apicon"></i>
+                </div>
+                <div class="wrap-table list" id="table_width">
+                    <table class="">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["InvoiceNº"]</th>
+                                <th>@Localizer["Vedor"]</th>
+                                <th>@Localizer["Warehouse"]</th>
+                                <th>@Localizer["User"]</th>
+                                <th>@Localizer["BalanceDue(LC)"]</th>
+                                <th>@Localizer["BalanceDue(SYS)"]</th>
+                                <th>@Localizer["ExchangeRete"]</th>
+                                <th>@Localizer["Choose"]</th>
+                            </tr>
+                        </thead>
+                        <tbody id="List_purchaseOrder"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-sm" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade " id="ModalGoodReceiptPO">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-list-alt" style="color:white;"><b style="margin-left:5px;">@Localizer["List Good Recepit PO"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="content_searchAP">
+                    <input type="text" class="searchAP" autocomplete="off" id="searchAP" placeholder="@Localizer["Search..."]" />
+                    <i class="fa fa-search Apicon"></i>
+                </div>
+                <div class="wrap-table list" id="table_width">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>@Localizer["InvoiceNº"]</th>
+                                <th>@Localizer["Vedor"]</th>
+                                <th>@Localizer["Warehouse"]</th>
+                                <th>@Localizer["User"]</th>
+                                <th>@Localizer["BalanceDue(LC)"]</th>
+                                <th>@Localizer["BalanceDue(SYS)"]</th>
+                                <th>@Localizer["ExchangeRete"]</th>
+                                <th>@Localizer["Choose"]</th>
+                            </tr>
+                        </thead>
+                        <tbody id="List_goodrecepitpo"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-sm" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalErrorAP">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-exclamation-circle" style="color:white;"><b>@Localizer["ItemNotComplete "]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="wrap-table list">
+                    <table id="item-manage">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["KhmerName"]</th>
+                                <th>@Localizer["EnglishName"]</th>
+                                <th>@Localizer["PurchasePrice"]</th>
+                                <th>@Localizer["UoM"]</th>
+                                <th>@Localizer["ExpireDate"]</th>
+                                <th>@Localizer["Description"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="list_not_transaction"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-danger" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalFindBarcode">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:5px; color:white;">
+                <i>@Localizer["Choose Uom"]</i>
+            </div>
+            <div class="modal-body">
+                <div class="wrap-table list">
+                    <table id="list_findbarcode">
+                        <tr>
+                            <th class="boldth">@Localizer["Code"]</th>
+                            <th class="boldth">@Localizer["KhmerName"]</th>
+                            <th class="boldth">@Localizer["EnglishName"]</th>
+                            <th class="boldth">@Localizer["UoM"]</th>
+                            <th class="boldth">@Localizer["Choose"]</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button  class="btn btn-sm btn-danger" style="padding:5px;" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="text" id="PurchaseAPID" hidden />
+<div id="txttype" hidden>Add</div>
+<script>
+    var db = new Warehouse();
+    $(document).ready(function () {
+        var d = new Date();
+        document.getElementById("txtPostingdate").valueAsDate = d;
+        $("#addfontawesome").addClass("fa-percent");
+        $(".findbtn").html($(".btnfind").text());
+        $(".btnfind_new").text("find");
+        $("#txtstatus").val("open");
+        var item = {
+            ID:0,
+            subtotal_lc: 0,
+            subtotal_sys: 0,
+            balance_due_lc: 0,
+            balance_due_sys: 0,
+            local_cur:0,
+            sys_cur: 0,
+            discountrate: 0,
+            discountvalue: 0,
+            typedis: "Percent",
+            taxrate: 0,
+            taxvalue: 0,
+            downpayment: 0,
+            applied_amount: 0,
+            additional_expens: 0,
+            return_amount: 0,
+            additional_node:""
+        }
+        db.table("tb_master").insert(item, "ID");
+
+        // search master
+        $("#txtSearch").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#item-master tr:not(:first-child)").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $(".searchOR").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#List_purchaseOrder tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        //Get Invoice
+        $.ajax({
+            url: "/GoodsReceipts/GetInvoicenomber",
+            type: "Get",
+            dataType: "text",
+            success: function (response) {
+                $("#txtInvoice").val(response);
+                $("#txtInvoice").attr("readonly", "readonly");
+            }
+        });
+        //Get Business Partner
+        $.ajax({
+            url: "/GoodsReceipts/GetBusinessPartners",
+            type: "Get",
+            dataType: "Json",
+            success: function (response) {
+                var data = "";
+                $.each(response, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#txtselectvendor").append(data);
+            }
+        });
+        //get currency
+        $.ajax({
+            url: "/GoodsReceipts/GetCurrencyDefualt",
+            type: "GET",
+            dataType: "JSON",
+            success: function (e) {
+                $(".downpayment_cur").text(e[0].PriceList.Currency.Description);
+                $(".applied_amount_cur").text(e[0].PriceList.Currency.Description);
+                $(".Additional_cur_expense").text(e[0].PriceList.Currency.Description);
+                $(".Return_cur").text(e[0].PriceList.Currency.Description);
+                $(".sub_tota_cur").text(e[0].PriceList.Currency.Description);
+                $(".balance_due_cur").text(e[0].PriceList.Currency.Description);
+            }
+        });
+        //GetWarehouse
+        $.ajax({
+            url: "/GoodsReceipts/GetWarehouses",
+            type: "Get",
+            dataType: "Json",
+            data: { ID: @User.FindFirst("BranchID").Value },
+            success: function (response) {
+                var data = "";
+                $.each(response, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#txtwarehouse").append(data).on("change", changeWarehouse);
+            }
+        });
+         //Get Group Defind from GroupUoM
+        $.ajax({
+            url: "/GoodsReceipts/GetGroupDefind",
+            type: "Get",
+            async: false,
+            dataType: "Json",
+            success: function (response) {
+                arr_uom = response;
+
+            }
+        });
+        db.addTable("tb_uom", arr_uom, "ID");
+    });
+    // get currency option
+    function currencyOption(syscurrency) {
+        $("#txtcurrency option").remove();
+        $.ajax({
+            url: "/GoodsReceipts/Getcurrency",
+            type: "Get",
+            async:false,
+            dataType: "Json",
+            success: function (response) {
+                var data = "";
+                $.each(response, function (i, item) {
+
+                    if (item.ID === syscurrency) {
+                        data += '<option selected value="' + item.ID + '">' + item.Description + '&nbsp&nbsp' + '(' + item.Symbol + ')' + '</option>';
+                        $(".downpayment_cur").text(item.Description);
+                        $(".applied_amount_cur").text(item.Description);
+                        $(".Additional_cur_expense").text(item.Description);
+                        $(".Return_cur").text(item.Description);
+                        $(".sub_tota_cur").text(item.Description);
+                        $(".balance_due_cur").text(item.Description);
+
+                    }
+                    else {
+                        data += '<option  value="' + item.ID + '">' + item.Description + '&nbsp&nbsp' + '(' + item.Symbol + ')' +'</option>';
+                    }
+
+                });
+                $("#txtcurrency").append(data).prop("disabled", false);
+            }
+        });
+    }
+
+    //Filter warehouse
+    var item_masters = [];
+    function changeWarehouse(e) {
+        let id = $(this).find("option:selected").val();
+        item_masters = $.ajax({
+            url: "/GoodsReceipts/GetItemByWarehouse_AP",
+            type: "GET",
+            async: false,
+            dataType: "JSON",
+            data: { ID: id }
+        }).responseJSON;
+        if (db.from("tb_choosed") != 0) {
+            db.table("tb_choosed").clear();
+            $("#list-items tr td").remove();
+        }
+        db.insert('tb_item_master', item_masters, "LineID");
+        if (item_masters[0] !== undefined) {
+            currencyOption(item_masters[0].SysCurrencyID);
+        }
+    }
+    //Show item master by warehouse
+    function showItemMasters() {
+        if (db.from("tb_item_master") != 0) {
+            $.bindRows("#item-master", db.from("tb_item_master"), "LineID", {
+                hidden_columns: ["ItemID", "check", "ManageExpire", "OpenQty", "ExpireDate", "AlertStock", "DiscountRate", "DiscountValue", "TypeDis", "PurchaseAPID", "ID", , "LineID", "UomID", "Total_Sys", "Total", "ExchangeRate", "GroupUomID", "Syscurrency", "SysCurrencyID", "LocalCurrencyID", "LocalCurrency"],
+                html: [
+                    {
+                        column: -1,
+                        element: '<div class="btnchoose"><i class="fa fa-arrow-alt-circle-down"></i></div>',
+                        listener: ["click", function (e) {
+                            showItemMaster($(this).parent().parent().data("lineid"));
+                            $(this).parent().parent().remove();
+                        }]
+                    }
+                ]
+            });
+        }
+    }
+    let uom_filtered = [];
+    function showItemMaster(ID) {
+        var choosed_item = db.from("tb_item_master").first(function (json) {
+            return json.LineID == ID;
+        });
+        var control = db.table("tb_choosed").get(choosed_item.LineID);
+       
+        if (control == undefined) {
+            let item = {};
+            item.ID = choosed_item.ID;
+            item.PurchaseAPID = choosed_item.PurchaseDetailAPID;
+            item.ItemID = choosed_item.ItemID;
+            item.LineID = choosed_item.LineID;
+            item.Code = choosed_item.Code;
+            item.KhmerName = choosed_item.KhmerName;
+            item.EnglishName = choosed_item.EnglishName;
+            item.Qty = 1;
+            item.PurchasPrice = 0;
+            item.DiscountRate = choosed_item.DiscountRate;
+            item.DiscountValue = choosed_item.DiscountValue;
+            item.TypeDis = choosed_item.TypeDis;
+            item.ExchangeRate = choosed_item.ExchangeRate;
+            item.Total = 0;
+            item.Total_Sys = 0;
+            item.GroupUomID = choosed_item.GroupUomID;
+            item.SysCurrency = choosed_item.SysCurrency;
+            item.LocalCurrency = choosed_item.LocalCurrency;
+            item.UomName = choosed_item.UomName;
+            item.ManageExpire = choosed_item.ManageExpire;
+            item.ExpireDate = choosed_item.ExpireDate;
+            item.AlertStock = choosed_item.AlertStock;
+            item.LocalCurrencyID = choosed_item.LocalCurrencyID;
+            item.SysCurrencyID = choosed_item.SysCurrencyID;
+            item.UomID = choosed_item.UomID;
+            item.Barcode = choosed_item.Barcode;
+            item.OpenQty = 1;
+
+            db.insert("tb_choosed", item, "LineID");
+            uom_filtered = db.from("tb_uom").where(function (json) {
+                return json.GroupUoMID == item.GroupUomID;
+            });
+            showDataBindTable(item, uom_filtered);
+            
+        } else {
+            db.from("tb_choosed").where(function (json) {
+                if (json.LineID == control.LineID) {
+                    json.Qty += 1;
+                    json.OpenQty += 1;
+                    if (json.TypeDis == "Percent") {
+                        json.Total = ((json.Qty * json.PurchasPrice) * (1 - (json.DiscountRate / 100)));
+                        json.DiscountValue = (json.Qty * json.PurchasPrice) * json.DiscountRate / 100;
+                    }
+                    else {
+                        json.Total = ((json.Qty * json.PurchasPrice) - json.DiscountRate);
+                        json.DiscountValue = json.DiscountRate;
+                    }
+                    json.Total_Sys = json.Total * json.ExchangeRate;
+                }
+                uom_filtered = db.from("tb_uom").where(function (item) {
+                    return item.GroupUoMID === json.GroupUomID;
+                });
+                showDataBindTable(json, uom_filtered);
+            });
+        }
+    }
+    function showDataBindTable(item, uom_filtered) {
+        if (item.Qty > 0) {
+            $.updateRow("#list-items", item, "LineID", {
+                hidden_columns: ["ExchangeRate", "ManageExpire", "LineID", "OpenQty", "APID", "OrderID", "ExpireDate", "AlertStock", "DiscountValue", "Total_Sys", "TypeDis", "LocalCurrency", "PurchaseAPID", "Barcode", "ItemID", "SysCurrency", "GroupUomID", "LocalCurrencyID", "SysCurrencyID", "UomID"],
+                html: [
+                    {
+                        column: "Qty",
+                        insertion: "replace",
+                        element: '<div class="divQty">' + '<input name="quantity" autocomplete="off" class="InputQty" value="' + item.Qty + '" />' + '</div>',
+                        listener: ["keyup", changeQty]
+                    },
+                    {
+                        column: "PurchasPrice",
+                        insertion: "replace",
+                        element: '<div class="divPurchase">' + '<span class="CompanyCurrency">' + item.LocalCurrency + '</span>' + '<input class="InputPurchasePrice"  value="' + item.PurchasPrice + '" />' + '</div>',
+                        listener: ["keyup", changePurchasePrice]
+                    },
+                    {
+                        column: "DiscountRate",
+                        insertion: "replace",
+                        element: '<div class="divDiscount">' + '<input class="InputDiscount" value="' + item.DiscountRate + '" />' + '</div>',
+                        listener: ["keyup", changeDiscount]
+                    },
+                    {
+                        column: "Total",
+                        insertion: "replace",
+                        element: '<div class="divQT_total">' + '<span class="lacal_total">' + item.LocalCurrency + '</span>' + '<span class="Sub_total">' + item.Total + '</span>' + '</div>',
+                        listener: ["keyup", totalEdit]
+                    },
+                    {
+                        column: "Total_Sys",
+                        insertion: "replace",
+                        element: '<div>' + '<span>' + item.SysCurrency + '</span>' + '<span class="Sub_total_sys">' + item.Total_Sys + '</span>' + '</div>',
+                        listener: ["keyup", totalEdit_sys]
+                    },
+                    {
+                        column: "UomName",
+                        insertion: "replace",
+                        element: GetDefindUom(uom_filtered, item.UomID),
+                        listener: ["change", changeUom]
+                    },
+                    {
+                        column: -1,
+                        element: '<i class="fa fa-trash" style="color:red;text:center"></i>',
+                        listener: ["click", removeData]
+                    },
+                ]
+            });
+            $("#txtExchange").val(1 + ' ' + item.LocalCurrency + ' ' + " = " + item.ExchangeRate + ' ' + item.SysCurrency);
+            summaryTotal();
+        }
+    }
+    function summaryTotal() {
+        let sub_total_lc = 0;
+        let sub_total_sys = 0;
+        let exchange_rate = 0;
+        var master = db.from("tb_master");
+        let items = db.from("tb_choosed");
+            for (let item of items){
+                sub_total_lc =(parseFloat(sub_total_lc) +parseFloat(item.Total)).toFixed(2);
+                sub_total_sys = (parseFloat(sub_total_sys) + parseFloat(item.Total_Sys)).toFixed(2);
+
+                master[0].local_cur = item.LocalCurrency;
+                master[0].sys_cur = item.SysCurrency;
+                exchange_rate = item.ExchangeRate;
+            }
+            if (master[0].typedis == "Percent") {
+                master[0].discountvalue = ((parseFloat(sub_total_lc) * parseFloat(master[0].discountrate)) / 100).toFixed(2);
+            }
+            else {
+                master[0].discountvalue = parseFloat(master[0].discountrate);
+            }
+
+            master[0].subtotal_lc = sub_total_lc;
+            master[0].subtotal_sys = sub_total_sys;
+            master[0].balance_due_lc = (parseFloat(sub_total_lc) - parseFloat(master[0].discountvalue)).toFixed(2);
+            master[0].balance_due_sys = (parseFloat(master[0].balance_due_lc) * parseFloat(exchange_rate)).toFixed(2);
+
+            db.insert("tb_master", master, "ID");
+            $(".sub_tota_cur").text(master[0].local_cur);
+            $(".balance_due_cur").text(master[0].local_cur);
+            $("#txtsubtotal").val(master[0].subtotal_lc);
+            $("#txtBalancedue").val(master[0].balance_due_lc);
+            $(".downpayment_cur").text(master[0].local_cur);
+            $(".applied_amount_cur").text(master[0].local_cur);
+            $(".Additional_cur_expense").text(master[0].local_cur);
+        $(".Return_cur").text(master[0].local_cur);
+    }
+    let count = 0;
+    // search barcode
+    $("#txtbarcode").keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            var warehouseID = $("#txtwarehouse").val();
+            var barcode = $("#txtbarcode").val();
+            if (barcode != null) {
+                $.ajax({
+                    url: "/GoodsReceipts/FindBarcode",
+                    type: 'GET',
+                    dataType: "JSON",
+                    data: {
+                        WarehouseID: parseInt(warehouseID),
+                        Barcode: barcode
+                    },
+                    success: function (response) {
+
+                        if (response.length <= 0) {
+                            $("#txtbarcode").val('');
+                        }
+                        else {
+
+                            if (response.length == 1) {
+                                let choosed_item = response[0];
+                                let line_id = parseInt(response[0].LineID);
+                               
+                                let item_choosed = db.table('tb_choosed').get(line_id);
+                              
+                                if (item_choosed == undefined) {
+                                    let item = {};
+                                    item.ID = choosed_item.ID;
+                                    item.PurchaseAPID = choosed_item.PurchaseDetailAPID;
+                                    item.ItemID = choosed_item.ItemID;
+                                    item.LineID = choosed_item.LineID;
+                                    item.Code = choosed_item.Code;
+                                    item.KhmerName = choosed_item.KhmerName;
+                                    item.EnglishName = choosed_item.EnglishName;
+                                    item.Qty = 1;
+                                    item.PurchasPrice = 0;
+                                    item.DiscountRate = choosed_item.DiscountRate;
+                                    item.DiscountValue = choosed_item.DiscountValue;
+                                    item.TypeDis = choosed_item.TypeDis;
+                                    item.ExchangeRate = choosed_item.ExchangeRate;
+                                    item.Total = 0;
+                                    item.Total_Sys = 0;
+                                    item.GroupUomID = choosed_item.GroupUomID;
+                                    item.SysCurrency = choosed_item.SysCurrency;
+                                    item.LocalCurrency = choosed_item.LocalCurrency;
+                                    item.UomName = choosed_item.UomName;
+                                    item.ManageExpire = choosed_item.ManageExpire;
+                                    item.ExpireDate = choosed_item.ExpireDate;
+                                    item.AlertStock = choosed_item.AlertStock;
+                                    item.LocalCurrencyID = choosed_item.LocalCurrencyID;
+                                    item.SysCurrencyID = choosed_item.SysCurrencyID;
+                                    item.UomID = choosed_item.UomID;
+                                    item.Barcode = choosed_item.Barcode;
+                                    item.OpenQty = 1;
+                                    db.insert("tb_choosed", item, "LineID");
+                                }
+                                else {
+                                    db.from("tb_choosed").where(function (json) {
+                                        if (json.LineID == item_choosed.LineID) {
+                                            json.Qty += 1;
+                                            json.OpenQty += 1;
+                                            if (json.TypeDis == "Percent") {
+                                                json.Total = ((json.Qty * json.PurchasPrice) * (1 - (json.DiscountRate / 100)));
+                                                json.DiscountValue = (json.Qty * json.PurchasPrice) * json.DiscountRate / 100;
+                                            }
+                                            else {
+                                                json.Total = ((json.Qty * json.PurchasPrice) - json.DiscountRate);
+                                                json.DiscountValue = json.DiscountRate;
+                                            }
+                                            json.Total_Sys = json.Total * json.ExchangeRate;
+                                        }
+                                        uom_filtered = db.from("tb_uom").where(function (item) {
+                                            return item.GroupUoMID === json.GroupUomID;
+                                        });
+                                        showDataBindTable(json, uom_filtered);
+                                    });
+                                }
+                            } else {
+
+                                $.each(response, function (i, item) {
+                                    db.insert("tb_restored", item, "LineID");
+                                });
+                                $.bindRows("#list_findbarcode", db.from("tb_restored"), "LineID", {
+                                    hidden_columns: ["ItemID", "Qty", "PurchasPrice", "LocalCurrency", "Barcode", "ManageExpire", "OpenQty", "ExpireDate", "AlertStock", "DiscountRate", "DiscountValue", "TypeDis", "PurchaseAPID", "ID", , "LineID", "UomID", "Total_Sys", "Total", "ExchangeRate", "GroupUomID", "SysCurrency", "Syscurrency", "SysCurrencyID", "LocalCurrencyID", "LocalCurrency"],
+                                    html: [
+                                        {
+                                            column: -1,
+                                            element: '<div class="btnchoose"><i class="fa fa-arrow-alt-circle-down"></i></div>',
+                                            listener: ["click", function (e) {
+                                                let line_id = parseInt($(this).parent().parent().data("lineid"));
+                                                showItemBarcode(line_id);
+                                                $(this).parent().parent().remove();
+                                                db.table('tb_restored').delete(line_id);
+                                            }]
+                                        }
+                                    ]
+                                });
+
+                                $("#ModalFindBarcode").modal("show");
+                            }
+                            $("#txtbarcode").val('');
+                        }
+                    },
+                    error: function () {
+
+                    }
+                })
+
+            }
+        }
+    });
+   
+    function showItemBarcode(ID) {
+        var choosed_item = db.from("tb_restored").first(function (json) {
+            return json.LineID == ID;
+        });
+        var control = db.table("tb_choosed").get(choosed_item.LineID);
+        if (control == undefined) {
+            let item = {};
+            item.ID = choosed_item.ID;
+            item.PurchaseAPID = choosed_item.PurchaseDetailAPID;
+            item.ItemID = choosed_item.ItemID;
+            item.LineID = choosed_item.LineID;
+            item.Code = choosed_item.Code;
+            item.KhmerName = choosed_item.KhmerName;
+            item.EnglishName = choosed_item.EnglishName;
+            item.Qty = 1;
+            item.PurchasPrice = 0;
+            item.DiscountRate = choosed_item.DiscountRate;
+            item.DiscountValue = choosed_item.DiscountValue;
+            item.TypeDis = choosed_item.TypeDis;
+            item.ExchangeRate = choosed_item.ExchangeRate;
+            item.Total = 0;
+            item.Total_Sys = 0;
+            item.GroupUomID = choosed_item.GroupUomID;
+            item.SysCurrency = choosed_item.SysCurrency;
+            item.LocalCurrency = choosed_item.LocalCurrency;
+            item.UomName = choosed_item.UomName;
+            item.ManageExpire = choosed_item.ManageExpire;
+            item.ExpireDate = choosed_item.ExpireDate;
+            item.AlertStock = choosed_item.AlertStock;
+            item.LocalCurrencyID = choosed_item.LocalCurrencyID;
+            item.SysCurrencyID = choosed_item.SysCurrencyID;
+            item.UomID = choosed_item.UomID;
+            item.Barcode = choosed_item.Barcode;
+            item.OpenQty = 1;
+
+            db.insert("tb_choosed", item, "LineID");
+            uom_filtered = db.from("tb_uom").where(function (json) {
+                return json.GroupUoMID == item.GroupUomID;
+            });
+            showDataBindTable(item, uom_filtered);
+        } else {
+            db.from("tb_choosed").where(function (json) {
+              
+                if (json.LineID == control.LineID) {
+                    json.Qty += 1;
+                    json.OpenQty += 1;
+                    if (json.TypeDis == "Percent") {
+                        json.Total = ((json.Qty * json.PurchasPrice) * (1 - (json.DiscountRate / 100)));
+                        json.DiscountValue = (json.Qty * json.PurchasPrice) * json.DiscountRate / 100;
+                    }
+                    else {
+                        json.Total = ((json.Qty * json.PurchasPrice) - json.DiscountRate);
+                        json.DiscountValue = json.DiscountRate;
+                    }
+                    json.Total_Sys = json.Total * json.ExchangeRate;
+                }
+                uom_filtered = db.from("tb_uom").where(function (item) {
+                    return item.GroupUoMID === json.GroupUomID;
+                });
+                showDataBindTable(json, uom_filtered);
+            });
+        }
+    }
+    // Get filter uom from group defined Uom
+    function GetDefindUom(json, uomID) {
+        let selected = $("<select class='select_Uom'></select>");
+        for (var data of json) {
+            if (data.UoMID == uomID) {
+                $("<option selected value=" + data.UnitofMeasure.ID + ">" + data.UnitofMeasure.AltUomName + "</option>").appendTo(selected);
+            }
+            else {
+                $("<option  value=" + data.UnitofMeasure.ID + ">" + data.UnitofMeasure.AltUomName + "</option>").appendTo(selected);
+            }
+        }
+        return selected.on('change',update_uom)
+    }
+    function update_uom() {
+        var uomid = parseInt($(this).val());
+        var uomname = $(this).find("option:selected").text();
+        let line_id = parseInt($(this).parent().parent().data("lineid"));
+
+        db.from("tb_choosed").where(function (item) {
+            if (item.LineID === line_id) {
+                item.UomID = uomid;
+                item.UomName = uomname;
+                item.PurchasPrice = 0;
+                item.Total = 0;
+                item.Total_Sys = 0;
+            }
+        })
+        $("#list-items").find("tr:not(:first)").remove();
+        db.from("tb_choosed").each(function (i, item) {
+            uom_filtered = db.from("tb_uom").where(function (json) {
+                return json.GroupUoMID === item.GroupUomID;
+            });
+            showDataBindTable(item, uom_filtered);
+        });
+    }
+    // Edit Qty in PurchaseAP Detail
+    let item_chooseds = {};
+    function changeQty(e) {
+      
+        let ID = 0;
+        if (e.type === "keyup") {
+            ID = parseInt($(this).parent().parent().data("lineid"));
+            item_chooseds = db.table("tb_choosed").find(ID);
+            var qty = $(this).children(".InputQty").val();
+            $(this).children(".InputQty").val(_$_.validNumber(qty));
+            if (qty.length == 0 || qty=='') {
+                qty = 0;
+            }
+            item_chooseds.Qty = parseFloat(qty);
+            item_chooseds.OpenQty = parseFloat(qty);
+            if (item_chooseds.TypeDis == "Percent") {
+                item_chooseds.DiscountValue = ((parseFloat(item_chooseds.Qty) * parseFloat(item_chooseds.PurchasPrice) * parseFloat(item_chooseds.DiscountRate)) / 100).toFixed(2);
+            }
+            else {
+                item_chooseds.DiscountValue = parseFloat(item_chooseds.DiscountRate);
+            }
+            item_chooseds.Total = (parseFloat(item_chooseds.Qty) * parseFloat(item_chooseds.PurchasPrice) - parseFloat(item_chooseds.DiscountValue)).toFixed(2);//Total
+            item_chooseds.Total_Sys = (parseFloat(item_chooseds.Total) * parseFloat(item_chooseds.ExchangeRate)).toFixed(2);
+            db.insert("tb_choosed", item_chooseds, "LineID");
+            $(this).parent().siblings().children().find(".Sub_total").text(item_chooseds.Total);
+            $(this).parent().siblings().children().find(".Sub_total_sys").text(item_chooseds.Total_Sys);
+        }
+        summaryTotal();
+        ChangeVat();
+    }
+    //change Purchaseprice
+
+    function changePurchasePrice(e) {
+        let ID = 0;
+        if (e.type === "keyup") {
+            ID = parseInt($(this).parent().parent().data("lineid"));
+            item_chooseds = db.get("tb_choosed").find(ID);
+
+            var price = $(this).children(".InputPurchasePrice").val();
+            $(this).children(".InputPurchasePrice").val(_$_.validNumber(price));
+            if (price.length == 0 || price=='') {
+                price = 0;
+            }
+            item_chooseds.PurchasPrice = parseFloat(price);
+            if (item_chooseds.TypeDis == "Percent") {
+                item_chooseds.DiscountValue = ((parseFloat(item_chooseds.Qty) * parseFloat(item_chooseds.PurchasPrice) * parseFloat(item_chooseds.DiscountRate)) / 100).toFixed(2);
+            }
+            else {
+                item_chooseds.DiscountValue = parseFloat(item_chooseds.DiscountRate);
+            }
+            item_chooseds.Total = (parseFloat(item_chooseds.Qty) * parseFloat(item_chooseds.PurchasPrice)-parseFloat(item_chooseds.DiscountValue)).toFixed(2);//Total
+            item_chooseds.Total_Sys = (parseFloat(item_chooseds.Total) * parseFloat(item_chooseds.ExchangeRate)).toFixed(2);
+            db.insert("tb_choosed", item_chooseds, "LineID");
+            $(this).parent().siblings().children().find(".Sub_total").text(item_chooseds.Total);
+            $(this).parent().siblings().children().find(".Sub_total_sys").text(item_chooseds.Total_Sys);
+        }
+        summaryTotal();
+        ChangeVat();
+    }
+    //change discount
+    function changeDiscount(e) {
+        let ID = 0;
+        if (e.type === "keyup") {
+            ID = parseInt($(this).parent().parent().data("lineid"));
+            item_chooseds = db.table("tb_choosed").find(ID);
+            var discount = $(this).children(".InputDiscount").val();
+            $(this).children(".InputDiscount").val(_$_.validNumber(discount));
+            if (discount.length == 0 || discount=='') {
+                discount = 0;   
+            }
+            item_chooseds.DiscountRate = parseFloat(discount);
+            if (item_chooseds.TypeDis == "Percent") {
+                if (discount > 100) {
+                    let msg = new DialogBox({
+                            type: "ok",
+                            content: "@Localizer["Value less than or equal to 100 !"]"
+                    });
+                    $(this).children(".InputDiscount").val(0);
+                    item_chooseds.DiscountRate = parseFloat(0);
+                }
+                item_chooseds.DiscountValue = ((parseFloat(item_chooseds.Qty) * parseFloat(item_chooseds.PurchasPrice) * parseFloat(item_chooseds.DiscountRate)) / 100).toFixed(2);
+            }
+            else {
+                var price = $(this).parent().siblings().children().find(".Sub_total").text();
+                if (parseFloat(discount) > parseFloat(price)) {
+                    let msg = new DialogBox({
+                            type: "ok",
+                            content: "@Localizer["Value cannot be greater than unit price !"]"
+                    });
+                    $(this).children(".InputDiscount").val(0);
+                    item_chooseds.DiscountRate =0;
+                }
+                item_chooseds.DiscountValue = parseFloat(item_chooseds.DiscountRate);
+            }
+            item_chooseds.Total = (parseFloat(item_chooseds.Qty) * parseFloat(item_chooseds.PurchasPrice) - parseFloat(item_chooseds.DiscountValue)).toFixed(2);//Total
+            item_chooseds.Total_Sys = (parseFloat(item_chooseds.Total) * parseFloat(item_chooseds.ExchangeRate)).toFixed(2);
+            db.update("tb_choosed", item_chooseds, "LineID");
+            $(this).parent().siblings().children().find(".Sub_total").text(item_chooseds.Total);
+            $(this).parent().siblings().children().find(".Sub_total_sys").text(item_chooseds.Total_Sys);
+        }
+        summaryTotal();
+        ChangeVat();
+    }
+    //Get filter LocalCurrency
+    function SelectchangeCurrency() {
+        $("#list-items").find("tr:not(:first)").remove();
+        var curID = $("#txtcurrency").val();
+        let local_currency = $.ajax({
+            url: "/GoodsReceipts/GetFilterLocaCurrency",
+            type: "Get",
+            dataType: "Json",
+            async: false,
+            data: { CurrencyID: curID },
+        }).responseJSON[0];
+        if (db.from("tb_item_master") !== 0) {
+            db.from("tb_item_master").where(function (json) {
+                json.ExchangeRate = local_currency.Rate;
+                json.LocalCurrency = local_currency.Currency.Description;
+                json.LocalCurrencyID = local_currency.CurrencyID;
+                if (json.TypeDis == "Percent") {
+                    json.DiscountValue = ((parseFloat(json.Qty) * parseFloat(json.PurchasPrice) * parseFloat(json.DiscountRate)) / 100).toFixed(2);
+                    json.Total = (parseFloat(json.Qty) * parseFloat(json.PurchasPrice) - parseFloat(json.DiscountValue)).toFixed(2);//Total
+                    json.Total_Sys = (json.Total * json.ExchangeRate).toFixed(2);
+                }
+                else {
+                    json.DiscountValue = json.DiscountRate;
+                    json.Total = ((json.Qty * json.PurchasPrice) - json.DiscountValue).toFixed(2);//Total
+                    json.Total_Sys = (json.Total * json.ExchangeRate).toFixed(2);
+                }
+            });
+        }
+        if (db.from("tb_choosed") !== 0) {
+            $.each(db.from("tb_choosed"), function(i,json){
+                json.ExchangeRate = local_currency.Rate;
+                json.LocalCurrency = local_currency.Currency.Description;
+                json.LocalCurrencyID = local_currency.CurrencyID;
+                if (json.TypeDis == "Percent") {
+                    json.DiscountValue = ((parseFloat(json.Qty) * parseFloat(json.PurchasPrice) * parseFloat(json.DiscountRate)) / 100).toFixed(2);
+                    json.Total = (parseFloat(json.Qty) * parseFloat(json.PurchasPrice) - parseFloat(json.DiscountValue)).toFixed(2);//Total
+                    json.Total_Sys = (json.Total * json.ExchangeRate).toFixed(2);
+                }
+                else {
+
+                    json.DiscountValue = json.DiscountRate;
+                    json.Total = ((json.Qty * json.PurchasPrice) - json.DiscountValue);//Total
+                    json.Total_Sys = (json.Total * json.ExchangeRate);
+                }
+                uom_filtered = db.from("tb_uom").where(function (item) {
+                    return item.GroupUoMID == json.GroupUomID;
+                });
+                showDataBindTable(json, uom_filtered);
+            });
+        }
+        summaryTotal();
+        ChangeVat();
+    }
+    //Change  Type Discount
+    var i = 1;
+    function ChangeTypeDis() {
+        var type = $(".content_select_discount").val();
+        if (i == 1) {
+            $("#addfontawesome").removeClass('fa-percent');
+            $("#addfontawesome").addClass('fa-money-bill');
+            i++;
+        }
+        else {
+            $("#addfontawesome").removeClass('fa-money-bill');
+            $("#addfontawesome").addClass('fa-percent');
+            i = 1;
+        }
+        db.from("tb_choosed").where(function (json) {
+            json.TypeDis = type;
+        });
+        db.from("tb_master").where(function (json) {
+            json.typedis = type;
+        });
+        let items = db.from("tb_choosed");
+        let table = $("#list-items tr");
+
+        for (let item of items) {
+            if (item.TypeDis == "Percent") {
+                item.DiscountValue = (item.Qty * item.PurchasPrice * item.DiscountRate) / 100;
+            }
+            else {
+                item.DiscountValue = item.DiscountRate;
+            }
+            item.Total = (item.Qty * item.PurchasPrice) - item.DiscountValue;
+            item.Total_Sys = item.Total * item.ExchangeRate;
+
+            db.insert("tb_choosed", item, "LineID");
+        }
+        $.each(table, function (i, tr) {
+            if (i !== 0) {
+                let line_id = $(tr).data("lineid");
+                let item = db.get("tb_choosed").get(line_id);
+                $(tr).children().find(".Sub_total").text(item.Total);
+            }
+        })
+        summaryTotal();
+    }
+    // change discount summary
+    function ChangeDiscounts() {
+        var item = db.from("tb_master");
+        var dis = $("#txtdiscount").val();
+        var type = $(".content_select_discount").val();
+        $("#txtdiscount").val(_$_.validNumber(dis.toString()));
+        if (dis == '') {
+            dis = 0;
+        }
+        if (type == "Percent") {
+            if (parseFloat(dis) > 100) {
+                let msg = new DialogBox({
+                    type: "ok",
+                    content: "@Localizer["Value less than or equal to 100 !"]"
+                });
+                $("#txtdiscount").val(0);
+                dis = 0;
+            } 
+        }
+        else {
+            var subtotal = $("#txtsubtotal").val();
+            if (parseFloat(dis) >parseFloat(subtotal)) {
+                 let msg = new DialogBox({
+                    type: "ok",
+                    content: "@Localizer["Value cannot be greater than payment subtotal !"]"
+                });
+                $("#txtdiscount").val(0);
+                dis = 0;
+            }
+        }
+        item[0].discountrate =parseFloat(dis);
+        db.update("tb_master", item, "ID");
+        summaryTotal();
+
+    }
+    //VAT
+    function ChangeVat() {
+        var vat = $("#txtvat").val();
+        var master = db.from("tb_master");
+        $("#txtvat").val(_$_.validNumber(vat.toString()));
+        if (vat=='') {
+            vat = 0;
+        } else {
+            if (parseFloat(vat)>100) {
+                let msg = new DialogBox({
+                    type: "ok",
+                    content: "@Localizer["Value less than or equal to 100 !"]"
+                });
+                $("#txtvat").val(0);
+                vat = 0;
+            } else {
+                master[0].taxrate = parseFloat(vat);
+                let VAT = ((parseFloat(master[0].taxrate) + 100) / 100).toFixed(2);
+                let Rate = (master[0].taxrate / 100).toFixed(2);
+                master[0].taxvalue = ((parseFloat(master[0].subtotal_lc) / parseFloat(VAT)) * parseFloat(Rate)).toFixed(2);
+            }
+           
+        }
+        db.insert("tb_master", master, "ID");
+
+
+    }
+    // Down Payment
+    function ChangeDownpayment() {
+        var down = $("#txtddownpayment").val();
+        var master = db.from("tb_master");
+        if (down.length == 0) {
+            down = 0;
+        }
+        master[0].downpayment = parseFloat(down);
+        db.insert("tb_master", master, "ID");
+        summaryTotal();
+    }
+    // Applied Amount
+    function ChangeAppliedAmount() {
+        var app = $("#txtapplied_amount").val();
+        var master = db.from("tb_master");
+        $("#txtapplied_amount").val(_$_.validNumber(vat.toString()));
+        if (app=='') {
+            app = 0;
+        }
+        master[0].applied_amount = parseFloat(app);
+        db.insert("tb_master", master, "ID");
+        summaryTotal();
+    }
+    function totalEdit(){}
+    function totalEdit_sys(){}
+    function changeUom() {}
+    //remove purchase AP detail
+    function removeData() {
+        var ID = $(this).parent().parent().data("lineid");
+
+        db.from("tb_choosed").where(function (json) {
+
+            if (json.LineID === ID) {
+                json.Qty = 0;
+                json.OpenQty = 0;
+            }
+            if (json.TypeDis == "Percent") {
+                json.Total = ((json.Qty * json.PurchasPrice) * (1 - (json.DiscountRate / 100)));
+                json.DiscountValue = (json.Qty * json.PurchasPrice) * json.DiscountRate / 100;
+            }
+            else {
+                json.Total = ((json.Qty * json.PurchasPrice) - json.DiscountRate);
+                json.DiscountValue = json.DiscountRate;
+            }
+            json.Total_Sys = json.Total * json.ExchangeRate;
+        });
+        $(this).parent().parent().remove();
+        db.table("tb_item_manage").clear();
+
+        summaryTotal();
+    }
+    //change additional expense
+    function change_additional_expense() {
+        var add = $("#txtadditional_expense").val();
+        var master = db.from("tb_master");
+        $("#txtadditional_expense").val(_$_.validNumber(add.toString()));     
+        if (add == '') {
+            add = 0;
+        }
+        master[0].additional_expens = parseFloat(add);
+        db.insert("tb_master", master, "ID");
+    }
+    //change return amount
+    function change_return_amount() {
+        var ret = $("#txtreturn_amount").val();
+        var master = db.from("tb_master");
+        $("#txtreturn_amount").val(_$_.validNumber(ret.toString()));
+        if (ret == '') {
+            ret = 0;
+        }
+        master[0].return_amount = parseFloat(ret);
+        db.insert("tb_master", master, "ID");
+    }
+    //change additonal node
+    function change_additional_node() {
+        var node = $("#txtadditional_node").val();
+        var master = db.from("tb_master");
+        if (node == '') {
+            node = '';
+        }
+        master[0].additional_node = node;
+        db.insert("tb_master", master, "ID");
+    }
+    function getDefinedUom() {
+
+    }
+     //save data in purchase quotuion
+    function SaveData() {
+        var ID = $("#PurchaseAPID").val();
+        var vador = $("#txtselectvendor").val();
+        var warehouse = $("#txtwarehouse").val();
+        var Reff_no = $("#txtreff_no").val();
+        var number = $("#txtInvoice").val();
+        var postdate = $("#txtPostingdate").val();
+        var documentdate = $("#txtDocumentDate").val();
+        var duedate = $("#txtDuedate").val();
+        var remark = $("#txtRemark").val();
+        var type = $("#txttype").text();
+        if (number == 0 || number == null || number == '') {
+            $(".Error_mesage").css({
+                borderWidth: 1,
+                background: '#ff8080'
+            })
+            $("#iconError").addClass('fa-times');
+            $(".rquried_pric").text("Required invoice number ! Please click cancel or new  to create !");
+            return;
+        }
+
+        if (vador === '' || vador === null || vador === 0) {
+            $(".Error_mesage").css({
+                borderWidth: 1,
+                background: '#ff8080'
+            })
+            $("#iconError").addClass('fa-times');
+            $(".rquried_pric").text("Please select vendor !");
+            return;
+        }
+
+        if (warehouse == 0 || warehouse == '' || warehouse == null) {
+            $(".Error_mesage").css({
+                borderWidth: 1,
+                background: '#ff8080'
+            })
+            $("#iconError").addClass('fa-times');
+            $(".rquried_pric").text("Please select warehouse !");
+            return;
+        }
+
+        if (db.array("tb_choosed") === 0 || db.array("tb_choosed") === undefined  ) {
+            $(".Error_mesage").css({
+                borderWidth: 1,
+                background: '#ff8080'
+            })
+            $("#iconError").addClass('fa-times');
+            $(".rquried_pric").text("Please choose item for purchase !");
+            return;
+        }
+        if (duedate == null || duedate == '' || duedate == 0) {
+            $(".rquried_pric").text("Please select Due Date ! ");
+            $(".Error_mesage").css({
+                borderWidth: 1,
+                background: '#ff4d4d'
+            })
+            $("#iconError").addClass('fa-times');
+            return;
+        }
+        if (documentdate == null || documentdate == '' || documentdate == 0) {
+            $(".rquried_pric").text("Please select Document Date ! ");
+            $(".Error_mesage").css({
+                borderWidth: 1,
+                background: '#ff4d4d'
+            })
+            $("#iconError").addClass('fa-times');
+            return;
+        }
+        var item_master = db.from("tb_choosed").where(w => { return w.Qty > 0 });
+        for (var json of item_master) {
+            if (json.ManageExpire == "Manage" && json.ExpireDate == null) {
+                var item = {};
+                item.LineID = json.LineID;
+                item.KhmerName = json.KhmerName;
+                item.EnglishName = json.EnglishName;
+                item.UomName = json.UomName;
+                item.ExpireDate = json.ExpireDate;
+               
+                //item.AlertStock = json.AlertStock;
+                db.insert("tb_item_manage", item, "LineID");
+            }
+            else if (json.ManageExpire == "Manage" && json.ExpireDate.slice(0, 10) == '2019-09-09') {
+                var item = {};
+                item.LineID = json.LineID;
+                item.KhmerName = json.KhmerName;
+                item.EnglishName = json.EnglishName;
+                item.UomName = json.UomName;
+                item.ExpireDate = json.ExpireDate;
+                
+                //item.AlertStock = json.AlertStock;
+                db.insert("tb_item_manage", item, "LineID");
+            }
+            
+        }
+        if (db.from("tb_item_manage")!= 0) {
+            $('#ModalManageExpire').modal('show');
+            $.bindRows("#item-manage", db.from("tb_item_manage"), "LineID", {
+                hidden_columns: ["LineID"],
+                html: [
+                    {
+                        column: "ExpireDate",
+                        insertion: "replace",
+                        element: '<input class="expiredate" type="date" />',
+                        listener: ["change", changeExpireDate]
+                    }
+                    //{
+                    //    column: "AlertStock",
+                    //    insertion: "replace",
+                    //    element: '<input class="alertstock" type="text" />',
+                    //    listener: ["keyup", changeALertstock]
+                    //}
+                ]
+            });
+        } else {
+             var items = db.from("tb_choosed");
+             var master = db.from("tb_master");
+             var data = {
+             PurchaseAPID:ID,
+             VendorID: vador,
+             BranchID: @User.FindFirst("BranchID").Value,
+             WarehouseID: warehouse,
+             LocalCurrencyID: items[0].LocalCurrencyID,
+             SysCurrencyID: items[0].SysCurrencyID,
+             UserID: @User.FindFirst("UserID").Value,
+             InvoiceNo: number,
+             PostingDate: postdate,
+             DocumentDate:documentdate,
+             DueDate:duedate,
+             Remark: remark,
+             ExchangeRate: items[0].ExchangeRate,
+             Status: "open",
+             Balance_Due_Sys: master[0].balance_due_sys,
+             Balance_Due:master[0].balance_due_lc,
+             Sub_Total:master[0].subtotal_lc,
+             Sub_Total_sys:master[0].subtotal_sys,
+             DiscountRate:master[0].discountrate,
+             DiscountValue:master[0].discountvalue,
+             Reff_No:Reff_no,
+             TypeDis:master[0].typedis,
+             TaxRate:master[0].taxrate,
+             TaxValuse:master[0].taxvalue,
+             Down_Payment:master[0].downpayment,
+             Applied_Amount:master[0].applied_amount,
+             Return_Amount:master[0].return_amount,
+             Additional_Expense:master[0].additional_expens,
+             Additional_Note:master[0].additional_node,
+             Purchase_APDetails: items
+            }
+            if ($("#list-items").find('tr:not(:first-child)').length != 0) {
+                $.ajax({
+                    url: "/GoodsReceipts/SavePurchaseAP",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { purchase: data, Type: type },
+                    success: function (respones) {
+
+                    },
+                    error: function (ex) {
+                        let msg = new DialogBox({
+                            type: "ok",
+                            content: "@Localizer["Purchase successfully"]"
+                        });
+                        msg.confirm(function (e) {
+                            location.reload();
+                        });
+                    }
+                })
+            }
+            else {
+                $(".Error_mesage").css({
+                    borderWidth: 1,
+                    background: '#ff8080'
+                })
+                $("#iconError").addClass('fa-times');
+                $(".rquried_pric").text("Please choose item for purchase !");
+            }
+        }
+    }
+    //change Expire date
+    function changeExpireDate() {
+        var ID = $(this).parent().parent().data("lineid");
+        var expire = $(this).val();
+        db.from("tb_choosed").where(function (json) {
+            if (json.LineID === ID) {
+                json.ExpireDate = expire;
+                db.get("tb_item_manage").delete(ID);
+            }
+        });
+    }
+    //change alert stock
+    function changeALertstock() {
+        var ID = $(this).parent().parent().data("lineid");
+        var stock = $(this).val();
+        db.from("tb_choosed").where(function (json) {
+            if (json.LineID === ID) {
+                json.AlertStock = stock;
+            }
+        });
+    }
+    //find purchase AP
+    function findPurchaseAP() {
+        var btn = $(".btnfind_new").text();
+
+        if (btn == "find") {
+            $(".btnfind_new").text("new");
+            $("#txtInvoice").removeAttr("readonly");
+            $("#txtInvoice").val("");
+            $("#txtInvoice").focus();
+            $(".findbtn").html($(".btnnew").text());
+            $(".btn_ADD").attr("disabled", "disabled");
+        }
+        else {
+            location.reload();
+        }
+    }
+    // find
+    $("#txtInvoice").on('keypress', function (e) {
+        if (e.which == 13) {
+            var ap_no = $("#txtInvoice").val();
+            $.ajax({
+                url: "/GoodsReceipts/FindPurchaseAP",
+                type: "POST",
+                dataType: "JSON",
+                data: { number: ap_no },
+                success: function (e) {
+                    let detailItem = $.ajax({
+                        url: "/GoodsReceipts/GetItemByWarehouse_AP_Detail",
+                        type: "GET",
+                        async: false,
+                        dataType: "JSON",
+                        data: { warehouseid: e.WarehouseID, invoice: e.InvoiceNo }
+                    }).responseJSON;
+                    db.table("tb_choosed").clear();
+                    $.each(detailItem, function (i, detail) {
+                        if (detail.TypeDis == "Percent") {
+                            detail.DiscountValue = ((detail.Qty * detail.PurchasPrice * detail.DiscountRate) / 100).toFixed(2);
+                            $("#addfontawesome").removeClass('fa-money-bill');
+                            $("#addfontawesome").addClass('fa-percent');
+                            $(".content_select_discount").append("<option selected valuse='Percent'>%</option>");
+                        } else {
+                            detail.DiscountValue = detail.DiscountRate;
+                            $("#addfontawesome").removeClass('fa-percent');
+                            $("#addfontawesome").addClass('fa-money-bill');
+                            $(".content_select_discount").append("<option selected valuse='Cash'>$</option>");
+                        }
+                        detail.Total = ((parseFloat(detail.Qty) * parseFloat(detail.PurchasPrice)) - parseFloat(detail.DiscountValue)).toFixed(2);//Total
+                        detail.Total_Sys = (parseFloat(detail.Total) * parseFloat(detail.ExchangeRate)).toFixed(2);
+                        var itemDetail = {};
+                        itemDetail.ID = detail.ID;
+                        itemDetail.PurchaseMemoDetailID = detail.PurchaseMemoDetailID;
+                        itemDetail.ItemID = detail.ItemID;
+                        itemDetail.LineID = detail.LineID;
+                        itemDetail.Code = detail.Code;
+                        itemDetail.KhmerName = detail.KhmerName;
+                        itemDetail.EnglishName = detail.EnglishName;
+                        itemDetail.Qty = detail.Qty;
+                        itemDetail.PurchasPrice = detail.PurchasPrice;
+                        itemDetail.DiscountRate = detail.DiscountRate;
+                        itemDetail.DiscountValue = detail.DiscountValue;
+                        itemDetail.TypeDis = detail.TypeDis;
+                        itemDetail.ExchangeRate = detail.ExchangeRate;
+                        itemDetail.Total = detail.Total;
+                        itemDetail.Total_Sys = detail.Total_Sys;
+                        itemDetail.GroupUomID = detail.GroupUomID;
+                        itemDetail.SysCurrency = detail.SysCurrency;
+                        itemDetail.LocalCurrency = detail.LocalCurrency;
+                        itemDetail.UomName = detail.UomName;
+                        itemDetail.ManageExpire = detail.ManageExpire;
+                        itemDetail.ExpireDate = detail.ExpireDate;
+                        itemDetail.AlertStock = detail.AlertStock;
+                        itemDetail.LocalCurrencyID = detail.LocalCurrencyID;
+                        itemDetail.SysCurrencyID = detail.SysCurrencyID;
+                        itemDetail.UomID = detail.UomID;
+                        itemDetail.Barcode = detail.Barcode;
+                        db.insert("tb_choosed", itemDetail, "LineID");
+                        $("#list-items").find("tr:not(:first)").remove();
+                    });
+                                    
+                    if (e !== 'undefined') {
+                        var master = db.from("tb_master");
+                        master[0].subtotal_lc = parseFloat(e.Sub_Total);
+                        master[0].subtotal_sys = parseFloat(e.Sub_Total_sys);
+                        master[0].balance_due_lc = parseFloat(e.Balance_Due);
+                        master[0].balance_due_sys = parseFloat(e.Balance_Due_Sys);
+                        master[0].discountrate = parseFloat(e.DiscountRate);
+                        master[0].discountvalue = parseFloat(e.DiscountValue);
+                        master[0].typedis = e.TypeDis;
+                        master[0].taxrate = e.TaxRate;
+                        master[0].taxvalue = parseFloat(e.TaxValuse);
+                        master[0].downpayment = parseFloat(e.Down_Payment);
+                        master[0].applied_amount = parseFloat(e.Applied_Amount);
+                        master[0].additional_expens = parseFloat(e.Additional_Expense);
+                        master[0].return_amount = parseFloat(e.Return_Amount);
+                        master[0].additional_node = e.Additional_Note;
+                        db.insert("tb_master", master, "ID");
+                        $("#txtreff_no").val(e.Reff_No);
+                        var post = e.PostingDate;
+                        var post_date = post.slice(0, 10);
+                        var dou = e.DocumentDate;
+                        var dou_date = dou.slice(0, 10);
+                        var due = e.DueDate;
+                        var due_date = due.slice(0, 10);
+                        $("#txtPostingdate").val(post_date);
+                        $("#txtDocumentDate").val(dou_date);
+                        $("#txtDuedate").val(due_date);
+                        $("#txtRemark").val(e.Remark);
+                        $("#txtExchange").val(e.ExchangeRate);
+                        $("#txtsubtotal").val((master[0].subtotal_lc).toFixed(2));
+                        $("#txtdiscount").val(master[0].discountrate);
+                        $("#txtvat").val(master[0].taxrate);
+                        $("#txtddownpayment").val((master[0].downpayment).toFixed(2));
+                        $("#txtapplied_amount").val((master[0].applied_amount).toFixed(2));
+                        $("#txtBalancedue").val((master[0].balance_due_lc).toFixed(2));
+                        $("#txtadditional_expense").val((master[0].additional_expens).toFixed(2));
+                        $("#txtreturn_amount").val((master[0].return_amount).toFixed(2));
+                        $("#txtadditional_node").val(master[0].additional_node);
+                        $("#txtstatus").val(e.Status);
+                        Userfind(e.UserID);
+                        Vendorfind(e.VendorID);
+                        Warehousefind(e.WarehouseID);
+                        currencyOption(e.LocalCurrencyID);
+                        db.from("tb_choosed").each(function (i, item) {
+                            uom_filtered = db.from("tb_uom").where(function (json) {
+                                return json.GroupUoMID === item.GroupUomID;
+                            });
+                            showDataBindTable(item, uom_filtered);
+                        });
+                    } else {
+                        location.reload();
+                    }
+                },
+                error: function (ex) {
+                    let msg = new DialogBox({
+                        type: "ok",
+                        content:"@Localizer["Invoice not found !"]"
+                     });
+                    msg.confirm(function (e) {
+                        location.reload();
+                    });
+                }
+            })
+        }
+    });
+  // Get Vendor after find
+    function Vendorfind(ven) {
+        $.ajax({
+            url: "/GoodsReceipts/GetBusinessPartner_AP",
+            type: "Get",
+            dataType: "Json",
+            success: function (response) {
+                var data = "";
+                $("#txtselectvendor option").remove();
+                $.each(response, function (i, item) {
+                    if (item.ID === ven) {
+                        data += '<option selected value="' + item.ID + '">' + item.Name + '</option>';
+                    }
+                    else {
+                        data += '<option  value="' + item.ID + '">' + item.Name + '</option>';
+                    }
+                });
+                $("#txtselectvendor").append(data);
+            }
+        });
+    }
+    // Get User after find
+    function Userfind(user) {
+        $.ajax({
+            url: "/GoodsReceipts/GetUserAccout_AP",
+            type: "POST",
+            dataType: "JSON",
+            data: { UserID: user },
+            success: function (e) {
+                $.each(e, function (i, item) {
+
+                    $("#txtUser").val(item.Employee.Name);
+                })
+            }
+        })
+    }
+    // Get warehouse after find
+    function Warehousefind(ware) {
+        $.ajax({
+            url: "/GoodsReceipts/GetWarehouse_AP",
+            type: "Get",
+            dataType: "Json",
+            data: { ID: @User.FindFirst("BranchID").Value},
+            success: function (response) {
+                var data = "";
+                $("#txtwarehouse option").remove();
+                $.each(response, function (i, item) {
+                    if (item.ID === ware) {
+                        data += '<option selected value="' + item.ID + '">' + item.Name + '</option>';
+                    } else {
+                        data += '<option value="' + item.ID + '">' + item.Name + '</option>';
+                    }
+                });
+                $("#txtwarehouse").append(data);
+            }
+        });
+    }
+    // compy
+    $("#txtcopy").on("change", function () {
+        var type = $("#txtcopy").val();
+        if (type == "PO") {
+            $.ajax({
+                url: "/GoodsReceipts/GetPurchaseorder",
+                type: "Get",
+                dataType: "Json",
+                data: {BranchID:@User.FindFirst("BranchID").Value},
+                success: function (respones) {
+                    GetDataTablePurchaseOrder(respones);
+                    $("#ModalPurchaseOrder").modal("show");
+                }
+            })
+        }
+        else {
+       
+            $.ajax({
+                url: "/GoodsReceipts/GetGoodReceiptPO",
+                type: "Get",
+                dataType: "Json",
+                data: {BranchID:@User.FindFirst("BranchID").Value},
+                success: function (respones) {
+                    GetDataTableGoodReceiptPO(respones);
+                    $("#ModalGoodReceiptPO").modal("show");
+                }
+            })
+        }
+    })
+    //Get Data table purchar order
+    function GetDataTablePurchaseOrder(respones) {
+        var data = "";
+        if (respones.length == 0) {
+            data +=
+                '<tr>' +
+                '<td colspan="9" class="text-center">@Localizer["No Data"]</td>' +
+                '</tr>';
+        } else {
+            $.each(respones, function (i, item) {
+                data +=
+                    '<tr>' +
+                        '<td hidden>'+item.ID+'</td>' +
+                        '<td>' + item.InvoiceNo+'</td>' +
+                        '<td>' + item.BusinessName + '</td>' +
+                        '<td>' + item.Warehouse+'</td>' +
+                        '<td>' + item.UserName+'</td>' +
+               
+                       '<td>' + item.LocalCurrency + ' ' + item.Balance_due + '</td>' +
+                        '<td>' + item.SystemCurrency + ' ' + item.Balance_due_sys + '</td>' +
+                       '<td>' + item.ExchangeRate + '</td>' +
+                       '<td><i class="fa fa-arrow-alt-circle-right chooseOrder" style="color:green;"></i></td>' +
+                   '</tr>';
+            });
+        }
+        $("#List_purchaseOrder").html(data);
+    }
+    // Get Data table purchase quatation
+    function GetDataTableGoodReceiptPO(respones) {
+         var data = "";
+        if (respones.length == 0) {
+            data +=
+                '<tr>' +
+                '<td colspan="9" class="text-center">@Localizer["No Data"]</td>' +
+                '</tr>';
+        } else {
+           
+            $.each(respones, function (i, item) {
+                data +=
+                    '<tr>' +
+                    '<td hidden>' + item.ID + '</td>' +
+                    '<td>' + item.InvoiceNo + '</td>' +
+                    '<td>' + item.BusinessName + '</td>' +
+                    '<td>' + item.Warehouse + '</td>' +
+                    '<td>' + item.UserName + '</td>' +
+                    '<td>' + item.LocalCurrency + ' ' + item.Balance_due + '</td>' +
+                    '<td>' + item.SystemCurrency + ' ' + item.Balance_due_sys + '</td>' +
+                    '<td>' + item.ExchangeRate + '</td>' +
+                    '<td><i class="fa fa-arrow-alt-circle-right chooseGoodReceiptPo" style="color:green;"></i></td>' +
+                    '</tr>';
+            });
+        }
+        $("#List_goodrecepitpo").html(data);
+    }
+    // choose Purchase  Order
+    $("#List_purchaseOrder").on("click", ".chooseOrder", function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        var Invoice = cut.find('td:eq(1)').text();
+        $('#ModalPurchaseOrder').modal('hide');      
+        $(".btn_ADD").attr("disabled", false);
+        $("#txttype").text("PO");
+        $.ajax({
+            url: "/GoodsReceipts/FindPurhcaseOrder",
+            type: "Get",
+            dataType: "Json",
+            data: { ID: id, Invoice: Invoice },
+            success: function (e) {
+                db.table("tb_choosed").clear();
+                $.each(e, function (i, value) {
+                    $(".content_select_discount").children().remove();
+                    if (value.Type_Dis == "Percent") {
+                        value.Discount_Values = ((value.OpenQty * value.PurchasePrice * value.Discount_Rate) / 100).toFixed(2);
+                        $("#addfontawesome").removeClass('fa-money-bill');
+                        $("#addfontawesome").addClass('fa-percent');
+                        $(".content_select_discount").append("<option selected valuse='Percent'>%</option>");
+                    } else {
+                        value.Discount_Values = value.Discount_Rate;
+                        $("#addfontawesome").removeClass('fa-percent');
+                        $("#addfontawesome").addClass('fa-money-bill');
+                        $(".content_select_discount").append("<option selected valuse='Cash'>$</option>");
+                    }
+                    value.Total = ((parseFloat(value.OpenQty) * parseFloat(value.PurchasePrice)) - parseFloat(value.Discount_Values)).toFixed(2);//Total
+                    value.Total_Sys = (parseFloat(value.Total) * parseFloat(value.ExchangRate)).toFixed(2);
+                    var item = {};
+                    item.ID = value.ID;
+                    item.ItemID = value.ItemID;
+                    item.LineID = value.LineID;
+                    item.Code = value.Code;
+                    item.KhmerName = value.KhmerName;
+                    item.EnglishName = value.EnglishName;
+                    item.Qty = value.OpenQty;
+                    item.PurchasPrice = value.PurchasePrice;
+                    item.DiscountRate = value.Discount_Rate;
+                    item.DiscountValue = value.Discount_Values;
+                    item.TypeDis = value.Type_Dis;
+                    item.ExchangeRate = value.ExchangRate;
+                    item.Total = value.Total;
+                    item.Total_Sys = value.Total_Sys;
+                    item.GroupUomID = value.GroupUomID;
+                    item.SysCurrency = value.SystemCurrency;
+                    item.LocalCurrency = value.LocalCurrency;
+                    item.UomName = value.UomName;
+                    item.ManageExpire = value.ManageExpire;
+                    item.ExpireDate = value.ExpireDate;
+                    item.AlertStock = value.AlertStock;
+                    item.LocalCurrencyID = value.LocalCurrencyID;
+                    item.SysCurrencyID = value.SystemCurrencyID;
+                    item.UomID = value.UomID;
+                    item.Barcode = value.Barcode;
+                    item.OpenQty = value.OpenQty;
+                    item.OrderID = value.OrderID;
+                    db.insert("tb_choosed", item, "LineID");
+                    $("#list-items").find("tr:not(:first)").remove();
+                });
+                var master = db.from("tb_master");
+                master[0].subtotal_lc = parseFloat(e[0].Sub_Total);
+                master[0].subtotal_sys = parseFloat(e[0].Sub_Total_Sys);
+                master[0].balance_due_lc = parseFloat(e[0].Balance_Due);
+                master[0].balance_due_sys = parseFloat(e[0].Balance_Due_Sys);
+                master[0].discountrate = parseFloat(e[0].DiscountRate);
+                master[0].discountvalue = parseFloat(e[0].DiscountValues);
+                master[0].typedis = e[0].TypeDis;
+                master[0].taxrate = e[0].TaxRate;
+                master[0].taxvalue = parseFloat(e[0].TaxValues);
+                master[0].downpayment = parseFloat(e[0].DownPayment);
+                master[0].applied_amount = parseFloat(e[0].AppliedAmount);
+                master[0].additional_expens = parseFloat(e[0].AdditionalExpense);
+                master[0].return_amount = parseFloat(e[0].ReturnAmount);
+                master[0].additional_node = e[0].AdditionalNode;
+                db.insert("tb_master", master, "ID");
+              
+                var post = e[0].PostingDate;
+                var post_date = post.slice(0, 10);
+                var doc = e[0].DocumentDate;
+                var doc_date = doc.slice(0, 10);
+                var due = e[0].DeliveryDate;
+                var due_date = due.slice(0, 10);
+                document.getElementById("txtPostingdate").value = post_date;
+                document.getElementById("txtDocumentDate").value = doc_date;
+                document.getElementById("txtDuedate").value = due_date;
+                $("#txtreff_no").val(e[0].Reff_No);
+                $("#txtRemark").val("~"+"Base on" + '/' + e[0].Invoice);
+                $("#txtExchange").val(e[0].ExchangRate);
+                $("#txtsubtotal").val((master[0].subtotal_lc).toFixed(2));
+                $("#txtdiscount").val(master[0].discountrate);
+                $("#txtvat").val(master[0].taxrate);
+                $("#txtddownpayment").val((master[0].downpayment).toFixed(2));
+                $("#txtapplied_amount").val((master[0].applied_amount).toFixed(2));
+                $("#txtBalancedue").val((master[0].balance_due_lc).toFixed(2));
+                $("#txtadditional_expense").val((master[0].additional_expens).toFixed(2));
+                $("#txtreturn_amount").val((master[0].return_amount).toFixed(2));
+                $("#txtadditional_node").val(master[0].additional_node);
+                Userfind(e[0].UserID);
+                Vendorfind(e[0].VendorID);
+                Warehousefind(e[0].WarehouseID);
+                currencyOption(e[0].LocalCurrencyID);
+                db.from("tb_choosed").each(function (i, item) {
+                    uom_filtered = db.from("tb_uom").where(function (json) {
+                        return json.GroupUoMID === item.GroupUomID;
+                    });
+                    showDataBindTable(item, uom_filtered);
+                });
+                $("txtcopy").prop("disabled", true);
+                $("#txtRemark").prop("readonly", true);
+            }
+        });
+    })
+    // Good Receipt PO
+    $("#List_goodrecepitpo").on("click", ".chooseGoodReceiptPo", function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        var Invoice = cut.find('td:eq(1)').text();
+        $('#ModalGoodReceiptPO').modal('hide');
+        $(".btn_ADD").attr("disabled", false);
+        $("#txttype").text("GRPO");
+        $.ajax({
+            url: "/GoodsReceipts/FindGoodReceiptPO",
+            type: "Get",
+            dataType: "Json",
+            data: { ID: id, Invoice: Invoice },
+            success: function (e) {
+                
+                db.table("tb_choosed").clear();
+                $.each(e, function (i, value) {
+                    $(".content_select_discount").children().remove();
+                    if (value.Type_Dis == "Percent") {
+                        value.Discount_Values = ((value.OpenQty * value.PurchasePrice * value.Discount_Rate) / 100).toFixed(2);
+                        $("#addfontawesome").removeClass('fa-money-bill');
+                        $("#addfontawesome").addClass('fa-percent');
+                        $(".content_select_discount").append("<option selected valuse='Percent'>%</option>");
+                    } else {
+                        value.Discount_Values = value.Discount_Rate;
+                        $("#addfontawesome").removeClass('fa-percent');
+                        $("#addfontawesome").addClass('fa-money-bill');
+                        $(".content_select_discount").append("<option selected valuse='Cash'>$</option>");
+                    }
+                    value.Total = ((parseFloat(value.OpenQty) * parseFloat(value.PurchasePrice)) - parseFloat(value.Discount_Values)).toFixed(2);//Total
+                    value.Total_Sys = (parseFloat(value.Total) * parseFloat(value.ExchangRate)).toFixed(2);
+                    var item = {};
+                    item.ID = value.ID;
+                    item.ItemID = value.ItemID;
+                    item.LineID = value.LineID;
+                    item.Code = value.Code;
+                    item.KhmerName = value.KhmerName;
+                    item.EnglishName = value.EnglishName;
+                    item.Qty = value.OpenQty;
+                    item.PurchasPrice = value.PurchasePrice;
+                    item.DiscountRate = value.Discount_Rate;
+                    item.DiscountValue = value.Discount_Values;
+                    item.TypeDis = value.Type_Dis;
+                    item.ExchangeRate = value.ExchangRate;
+                    item.Total = value.Total;
+                    item.Total_Sys = value.Total_Sys;
+                    item.GroupUomID = value.GroupUomID;
+                    item.SysCurrency = value.SystemCurrency;
+                    item.LocalCurrency = value.LocalCurrency;
+                    item.UomName = value.UomName;
+                    item.ManageExpire = value.ManageExpire;
+                    item.ExpireDate = value.ExpireDate;
+                    item.AlertStock = value.AlertStock;
+                    item.LocalCurrencyID = value.LocalCurrencyID;
+                    item.SysCurrencyID = value.SystemCurrencyID;
+                    item.UomID = value.UomID;
+                    item.Barcode = value.Barcode;
+                    item.OpenQty = value.OpenQty;
+                    item.OrderID = value.OrderID;
+                    db.insert("tb_choosed", item, "LineID");
+                    $("#list-items").find("tr:not(:first)").remove();
+                });
+                var master = db.from("tb_master");
+                master[0].subtotal_lc = parseFloat(e[0].Sub_Total);
+                master[0].subtotal_sys = parseFloat(e[0].Sub_Total_Sys);
+                master[0].balance_due_lc = parseFloat(e[0].Balance_Due);
+                master[0].balance_due_sys = parseFloat(e[0].Balance_Due_Sys);
+                master[0].discountrate = parseFloat(e[0].DiscountRate);
+                master[0].discountvalue = parseFloat(e[0].DiscountValues);
+                master[0].typedis = e[0].TypeDis;
+                master[0].taxrate = e[0].TaxRate;
+                master[0].taxvalue = parseFloat(e[0].TaxValues);
+                master[0].downpayment = parseFloat(e[0].DownPayment);
+                master[0].applied_amount = parseFloat(e[0].AppliedAmount);
+                master[0].additional_expens = parseFloat(e[0].AdditionalExpense);
+                master[0].return_amount = parseFloat(e[0].ReturnAmount);
+                master[0].additional_node = e[0].AdditionalNode;
+                db.insert("tb_master", master, "ID");
+
+                var post = e[0].PostingDate;
+                var post_date = post.slice(0, 10);
+                var doc = e[0].DocumentDate;
+                var doc_date = doc.slice(0, 10);
+                var due = e[0].DeliveryDate;
+                var due_date = due.slice(0, 10);
+                document.getElementById("txtPostingdate").value = post_date;
+                document.getElementById("txtDocumentDate").value = doc_date;
+                document.getElementById("txtDuedate").value = due_date;
+                $("#txtreff_no").val(e[0].Reff_No);
+                $("#txtRemark").val("~" + "Base on" + '/' + e[0].Invoice);
+                $("#txtExchange").val(e[0].ExchangRate);
+                $("#txtsubtotal").val((master[0].subtotal_lc).toFixed(2));
+                $("#txtdiscount").val(master[0].discountrate);
+                $("#txtvat").val(master[0].taxrate);
+                $("#txtddownpayment").val((master[0].downpayment).toFixed(2));
+                $("#txtapplied_amount").val((master[0].applied_amount).toFixed(2));
+                $("#txtBalancedue").val((master[0].balance_due_lc).toFixed(2));
+                $("#txtadditional_expense").val((master[0].additional_expens).toFixed(2));
+                $("#txtreturn_amount").val((master[0].return_amount).toFixed(2));
+                $("#txtadditional_node").val(master[0].additional_node);
+                Userfind(e[0].UserID);
+                Vendorfind(e[0].VendorID);
+                Warehousefind(e[0].WarehouseID);
+                currencyOption(e[0].LocalCurrencyID);
+                db.from("tb_choosed").each(function (i, item) {
+                    uom_filtered = db.from("tb_uom").where(function (json) {
+                        return json.GroupUoMID === item.GroupUomID;
+                    });
+                    showDataBindTable(item, uom_filtered);
+                });
+                $("txtcopy").prop("disabled", true);
+                $("#txtselectvendor").prop("disabled", true);
+                $("#txtwarehouse").prop("disabled", true);
+                $("#txtcurrency").prop("disabled", true);
+                $(".InputPurchasePrice").prop("readonly", true);
+                $(".InputQty").prop("readonly", true);
+                $(".select_Uom").prop("disabled", true);
+                $("#txtRemark").prop("readonly", true);
+                $(".InputDiscount").prop("readonly", true);
+                $("#txtdiscount").prop("readonly", true); 
+                $("#txtvat").prop("readonly", true);
+            }
+        });
+    })
+    //cancel
+    function cancelpurchase() {
+        location.reload();
+    }
+</script>

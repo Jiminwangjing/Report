@@ -1,0 +1,78 @@
+﻿@using KEDI.Core.Premise.Models.Services.CardMembers;
+@model CardMember;
+
+<div class="card card-body">
+    <h5>@Localizer["Renew Expiry Card Member"]</h5>
+    <input id="cardId" asp-for="ID" hidden />
+    <input id="cusId" asp-for="Customer.ID" hidden />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Card Name"]</label>
+                <input type="text" asp-for="Name" class="form-control" readonly id="name" autocomplete="off" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Card Number"]</label>
+                <input type="text" asp-for="Code" class="form-control" readonly id="code" autocomplete="off" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Card Type"]</label>
+                <select class="form-control" asp-for="TypeCardID" disabled id="card-type" asp-items="@ViewBag.CardTypes">
+                    <option value="0" selected disabled>@Localizer["---Select---"]</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Card Holder Name"]</label>
+                <input type="text" asp-for="Customer.Name" class="form-control" readonly autocomplete="off" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Valid Date From"]</label>
+                <input type="date" asp-for="ExpireDateFrom" class="form-control" readonly autocomplete="off" disabled />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Valid Date To"]</label>
+                <input type="date" asp-for="ExpireDateTo" class="form-control" readonly autocomplete="off" disabled />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Extend Valid Period"]</label>
+                <select class="form-control" id="card-extend-expiry-period" asp-items="@Html.GetEnumSelectList<LengthExpireCard>()">
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Extend Valid Date From"]</label>
+                <input type="date" class="form-control" id="exp-extend-date-from" autocomplete="off" disabled />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Extend Valid Date To"]</label>
+                <input type="date" class="form-control" id="exp-extend-date-to" autocomplete="off" disabled />
+            </div>
+        </div>
+    </div>
+    <div class="error"></div>
+    <br />
+    <div class="flex">
+        <button class="btn btn-kernel btn-xs" type="button" id="save">@Localizer["Save"]</button>
+        <a class="btn btn-kernel btn-xs" asp-action="Index" asp-controller="CardMember">@Localizer["Cancel"]</a>
+    </div>
+</div>
+<script src="~/Admin/CardMember/renewexpiredatecard.js"></script>

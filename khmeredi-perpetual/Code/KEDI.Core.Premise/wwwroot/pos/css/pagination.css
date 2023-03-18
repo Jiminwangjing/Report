@@ -1,0 +1,58 @@
+.pagination {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    margin: 5px 0;
+     /* -webkit-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
+         -ms-flex-wrap: wrap;
+            flex-wrap: wrap; */
+}
+
+.pagination .page-item {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    height: 30px;
+    line-height: 30px;
+    min-width: 30px;
+    padding: 0 5px;
+    cursor: pointer;
+    background: #EEE;
+    border: 1px solid #AAA;
+    -webkit-user-select: none; /* Chrome/Safari */        
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+ */
+            user-select: none;
+}
+
+.pagination .page-item .page-link {
+    text-decoration: none;
+}
+
+.pagination .page-item.active,
+.pagination .page-item .page-link.active {
+    background: #77a7c3;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.pagination .page-item.first {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.pagination .page-item.last {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.pagination .page-item:not(:last-child){
+    border-right: none;
+}

@@ -1,0 +1,235 @@
+@using KEDI.Core.Premise.Models.ServicesClass.GeneralSettingAdminView;
+@using KEDI.Core.Premise.Models.Services.GeneralSettingAdmin;
+@using KEDI.Core.Premise.Models.Services.Account;
+@model GeneralSettingAdminViewModel;
+<form action="GeneralSettingAdmin" method="post">
+    <div class="row">
+        <div class="col">
+            <label for="fname">Them name</label><br>
+            <input type="text" class="form-control" id="SkinName">
+        </div>
+        <div class="col">
+            <label for="fname">BackgroundColor name</label><br>
+            <input type="text" class="form-control" id="BackgroundColorName">
+        </div>
+        <div class="col">
+            <label for="fname">AlphabetColor</label><br>
+            <input type="text" class="form-control" id="alphabetcolor">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="fname">HoverColor</label><br>
+            <input type="text" class="form-control" id="HoverColor">
+        </div>
+        <div class="col">
+            <label for="fname">Design name</label><br>
+            <input type="text" class="form-control" id="designName">
+        </div>
+        <div class="col">
+            <label for="fname">BackgroundColor</label><br>
+            <input type="text" class="form-control" id="BackgroundColor">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="fname">FontColor</label><br>
+            <input type="text" class="form-control" id="FontColor">
+        </div>
+        <div class="col">
+            <label for="fname">BackgroundMenu</label><br>
+            <input type="text" class="form-control" id="BackgroundMenu">
+        </div>
+        <div class="col">
+            <label for="fname">BackofSubmenu</label><br>
+            <input type="text" class="form-control" id="BackofSubmenu">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="fname">Hoverbacksubmenu</label><br>
+            <input type="text" class="form-control" id="HoverBackgSubmenu">
+        </div>
+        <div class="col">
+            <label for="fname">BackmenuOneitem</label><br>
+            <input type="text" class="form-control" id="BacksubmenuOnItem">
+        </div>
+        <div class="col">
+            <label for="fname">BackButton</label><br>
+            <input type="text" class="form-control" id="BackgButton">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="fname">Backtableth</label><br>
+            <input type="text" class="form-control" id="Backgtableth">
+        </div>
+        <div class="col">
+            <label for="fname">Backtabletd</label><br>
+            <input type="text" class="form-control" id="Backgtabletd">
+        </div>
+        <div class="col">
+            <label for="fname">BackgroundInput</label><br>
+            <input type="text" class="form-control" id="BackgroundInput">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="fname">BackgroundCard</label><br>
+            <input type="text" class="form-control" id="BackgroundCard">
+        </div>
+        <div class="col">
+            <label for="fname">BackgroundBar</label><br>
+            <input type="text" class="form-control" id="BackgroundBar">
+        </div>
+        <div class="col">
+            <label for="fname">BackgroundBarItem</label><br>
+            <input type="text" class="form-control" id="BackgroundBarItem">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="fname">BackSlideBarTitle</label><br>
+            <input type="text" class="form-control" id="BackgSlideBarTitle">
+        </div>
+        <div class="col">
+            <label for="fname">BackgroundIcon</label><br>
+            <input type="text" class="form-control" id='BackgroundIcon'>
+        </div>
+        <div class="col">
+            <label for="fname">BackbodyCard</label><br>
+            <input type="text" class="form-control" id="BackgbodyCard">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="fname">BackBodyWet</label><br>
+            <input type="text" class="form-control" id="BackgBodyWet">
+        </div>
+        <div class="col">
+            <label for="fname">BackbodyWetCard</label><br>
+            <input type="text" class="form-control" id="BackgBodyWetCard">
+        </div>
+        <div class="col">
+            <label for="fname">checkbox</label><br>
+            <input type="text" class="form-control" id="checkClick">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-kernel" id="update-color" type="button"
+                style="margin-top:10px; right:0">@Localizer["Save"]</button>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        const obj = {
+            ID: 0,
+            SkinName: "",
+            BackgroundColorName: "",
+            alphabetcolor: "",
+            HoverColor: "",
+            designName: "",
+            SkinID: "",
+            Unable: "",
+            UserID: "",
+            BackgroundColor: "",
+            FontColor: "",
+            BackgroundMenu: "",
+            BackofSubmenu: "",
+            HoverBackgSubmenu: "",
+            BacksubmenuOnItem: "",
+            BackgButton: "",
+            Backgtableth: "",
+            Backgtabletd: "",
+            BackgroundInput: "",
+            BackgroundCard: "",
+            BackgroundBar: "",
+            BackgroundBarItem: "",
+            BackgSlideBarTitle: "",
+            BackgroundIcon: "",
+            BackgbodyCard: "",
+            BackgBodyWet: "",
+            BackgBodyWetCard: "",
+            checkClick: ""
+        }
+    })
+
+    $("#update-color").click(function () {
+        saveskinitemdata(this);
+    })
+    function saveskinitemdata(button) {
+        let SkinName = $("#SkinName").val();
+        let BackgroundColorName = $("#BackgroundColorName").val();
+        let alphabetcolor = $("#alphabetcolor").val();
+        let hovercolor = $("#HoverColor").val();
+        let designName = $("#designName").val();
+        let BackgroundColor = $("#BackgroundColor").val();
+        let FontColor = $("#FontColor").val();
+        let BackgroundMenu = $("#BackgroundMenu").val();
+        let BackofSubmenu = $("#BackofSubmenu").val();
+        let HoverBackgSubmenu = $("#HoverBackgSubmenu").val();
+        let BacksubmenuOnItem = $("#BacksubmenuOnItem").val();
+        let BackgButton = $("#BackgButton").val();
+        let Backgtableth = $("#Backgtableth").val();
+        let Backgtabletd = $("#Backgtabletd").val();
+        let BackgroundInput = $("#BackgroundInput").val();
+        let BackgroundCard = $("#BackgroundCard").val();
+        let BackgroundBar = $("#BackgroundBar").val();
+        let BackgroundBarItem = $("#BackgroundBarItem").val();
+        let BackgSlideBarTitle = $("#BackgSlideBarTitle").val();
+        let BackgroundIcon = $("#BackgroundIcon").val();
+        let BackgbodyCard = $("#BackgbodyCard").val();
+        let BackgBodyWet = $("#BackgBodyWet").val();
+        let BackgBodyWetCard = $("#BackgBodyWetCard").val();
+        let checkClick = $("#checkClick").val();
+        $.ajax({
+            url: "/GeneralSettingAdmin/SkinItem",
+            type: "post",
+            dataType: "JSON",
+            data: {
+                SkinName: SkinName,
+                BackgroundColorName: BackgroundColorName,
+                alphabetcolor: alphabetcolor,
+                hovercolor: hovercolor,
+                designName: designName,
+                BackgroundColor: BackgroundColor,
+                FontColor: FontColor,
+                BackgroundMenu: BackgroundMenu,
+                BackofSubmenu: BackofSubmenu,
+                HoverBackgSubmenu: HoverBackgSubmenu,
+                BacksubmenuOnItem: BacksubmenuOnItem,
+                BackgButton: BackgButton,
+                Backgtableth: Backgtableth,
+                Backgtabletd: Backgtabletd,
+                BackgroundInput: BackgroundInput,
+                BackgroundCard: BackgroundCard,
+                BackgroundBar: BackgroundBar,
+                BackgroundBarItem: BackgroundBarItem,
+                BackgSlideBarTitle: BackgSlideBarTitle,
+                BackgroundIcon: BackgroundIcon,
+                BackgbodyCard: BackgbodyCard,
+                BackgBodyWet: BackgBodyWet,
+                BackgBodyWetCard: BackgBodyWetCard,
+                checkClick: checkClick
+            },
+            success: function (respones) {
+                if (respones.IsApproved) {
+                    ViewMessage({
+                        summary: {
+                            selector: ".display-message"
+                        }
+                    }, respones).refresh(1300);
+                } else {
+                    ViewMessage({
+                        summary: {
+                            selector: ".display-message"
+                        }
+                    }, respones);
+                }
+            }
+        })
+    }
+
+</script>

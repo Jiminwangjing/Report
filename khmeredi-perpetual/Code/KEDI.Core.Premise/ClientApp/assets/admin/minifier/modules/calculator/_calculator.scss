@@ -1,0 +1,125 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+input.final-result {
+    outline: none;
+    height: 35px;
+    width: 250px;
+    line-height: 35px;
+    padding: 0 .5rem;
+    font-size: 1em;
+}
+
+.calculator *, .calculator *::before, .calculator *::after {
+    -webkit-user-select: none; /* Chrome/Safari */        
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+ */
+            user-select: none;
+    font-family: 'Red Hat Display', sans-serif;
+}
+
+.calculator {
+    height: auto;
+    position: absolute;
+    -webkit-transform: translateY(25px);
+       -ms-transform: translateY(25px);
+           transform: translateY(25px);
+    visibility: collapse;
+    transition: all .15s ease-in-out;
+    z-index: 1;
+}
+
+.calculator.show {
+    visibility: visible;
+    -webkit-transform: translateY(0);
+        -ms-transform: translateY(0);
+            transform: translateY(0);
+    transition: all .2s ease-in;
+}
+
+.calculator.standard {
+    width: 250px;
+    border: 1px solid #AAA;
+    background: #EEE;
+    margin-top: 2.5px;
+}
+
+.calculator .navigator {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 .3rem;
+}
+
+.calculator .navigator.output {
+    margin: .5px;
+    background: #999;
+    font-size: 1.5em;
+    text-align: right;
+}
+
+.calculator .navigator.reserve {
+    text-align: left;
+}
+
+.calculator .keypad {
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    flex-wrap: wrap;
+    min-height: auto;
+    max-height: 100%;
+}
+
+.calculator .keypad .key {
+    position: relative;
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    -webkit-box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.5);
+    cursor: pointer;
+    font-size: 1.25em;
+}
+
+.calculator .keypad .key img {
+    width: 35%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.calculator.standard .keypad .key {
+    display: block;
+    flex-basis: 25%;
+    border-radius: 1px;
+    background: #AA9;
+    height: 55px;
+    line-height: 50px;
+    border: 1px solid #EEE;
+    text-align: center;
+}
+
+.calculator.standard .keypad .key:hover {
+    background: darken(#AA9, 7%);
+}
+
+.calculator.standard .accept-result {
+    display: block;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.calculator.standard .accept-result:hover {
+    background: darken(#EEE, 10%);
+}
+
+

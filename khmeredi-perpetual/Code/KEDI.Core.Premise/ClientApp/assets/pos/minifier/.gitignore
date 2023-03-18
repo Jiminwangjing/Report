@@ -1,0 +1,6 @@
+.sass-cache
+bin
+build/*.scss
+/projects/wef
+/projects/l192/nbproject/private/
+/nbproject/private/

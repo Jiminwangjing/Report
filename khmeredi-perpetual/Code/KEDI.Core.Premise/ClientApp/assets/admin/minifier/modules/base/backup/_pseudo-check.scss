@@ -1,0 +1,28 @@
+.pseudo-check {
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+    background: #AAA;
+    border: 1px solid #EEE;
+    border-radius: 3px;
+    margin: 0 auto;
+}
+
+.pseudo-check::after {
+    content: "\✔";
+    font-size: 1.22rem;
+    line-height: 0;
+    color: #2D905F;
+}
+
+.pseudo-check.cross::after {
+    content: "\✘";
+    font-size: 1.22rem;
+    line-height: 0;
+    color: #EC5B5B;
+}
+
+.pseudo-check.none::after {
+    content: "";
+    font-size: 1.22rem;
+}

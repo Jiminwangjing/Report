@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "@babel/standalone": "^7.20.14",
+    "fs": "^0.0.1-security",
+    "merge-stream": "^2.0.0",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "babelify": "^10.0.0",
+    "browserify": "^17.0.0",
+    "minify": "^9.2.0",
+    "watchify": "^4.0.0"
+  },
+  "scripts": {
+    "browserify": "browserify -t babelify entry.js -o bundle.js",
+    "watchify": "watchify -t babelify entry.js -o bundle.js",
+    "minify": "minify bundle.js > bundle.min.js"
+  }
+}

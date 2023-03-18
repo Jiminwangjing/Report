@@ -1,0 +1,100 @@
+﻿@model Pagination<ItemGroup3>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<style>
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+
+    #table, tr, th {
+        text-align: center !important;
+    }
+
+    #table, tr, td {
+        text-align: center !important;
+    }
+</style>
+<div class="card card-body">
+<div class="d-flex justify-content-between">
+<a asp-action="Create" class="btn btn-sm btn-kernel" style="margin-top:10px; "> @Localizer["Create"]</a>
+
+<div class="group-search-boxes">
+    <div id="text-search" class="wrap-search-box">
+        <div class="wrap-input show">
+            <i id="i-search" class="i-search fas fa-search"></i>
+            <input class="ignore" id="search-itemGroup3" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+            <i id="i-close" class="i-close far fa-times-circle"></i>
+        </div>
+        <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+    </div>
+</div>
+    </div>
+<br/>
+<div class="wrap-table list">
+    <table id="myTable">
+        <tr>
+            <th>
+                @Localizer["Name"]
+            </th>
+            <th>
+                @Localizer["Item Group (1)"]
+            </th>
+            <th>
+                @Localizer["Item Group (2)"]
+            </th>
+            <th>
+                @Localizer["Photo"]
+            </th>
+            
+        </tr>
+            
+    </table>
+</div>
+    </div>
+<script>
+    $(document).ready(function () {
+        let $listView = ViewTable({
+            keyField: "ID",
+            visibleFields: ["Name", "ItemGroup1", "ItemGroup2", "Photo"],
+            columns: [
+                {         
+                    name:"Name",
+                    on: {
+                        "dblclick": function (e) {
+                            location.href = "/ItemGroup3/Edit?id=" + e.key;
+                        }
+                    }
+                },
+                {
+                    name: "Photo",
+                    template: `<img data-path="/Images/items/Logo.jpg" width=32>`,
+                },
+            ],
+            selector: "#myTable",
+        });
+
+        searchItemGroup3($listView);
+        $("#search-itemGroup3").on("keyup", function () {
+            searchItemGroup3($listView, this.value);
+        });
+
+        function searchItemGroup3($listView, keyword = "") {
+            $.get("/ItemGroup3/GetItemGroups3", {
+                keyword: keyword
+            },
+                function (itemGroup3) {
+                    $listView.clearRows();
+                    $listView.bindRows(itemGroup3);
+                });
+        }
+    });
+</script>
+

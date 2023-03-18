@@ -1,0 +1,133 @@
+﻿@using CKBS.Models.Services.Administrator.SystemInitialization
+@model PostingPeriod
+<link href="~/SystemInitialization/PostingPeriod/css/create.css" rel="stylesheet" />
+<div class="card card-body">
+    <form>
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label class="control-label">@Localizer["PeriodCode"] :</label>
+                    <div class="col-xs-6">
+                        <input type="text" asp-for="PeriodCode" class="input-box-kernel" id="periodCode" placeholder="Year" />
+                        @*<select asp-for="PeriodCode" asp-items="@ViewBag.Months" style="width:49.23%" id="monthCode" disabled></select>*@
+                        <span asp-validation-for="PeriodCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["PeriodName"] :</label>
+                    <input asp-for="PeriodName" class="input-box-kernel" id="periodName" />
+                    <span asp-validation-for="PeriodName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Sub-Peroid"] :</label>
+                    <select asp-for="SubPeriod" class="input-box-kernel" id="subperiod" asp-items="Html.GetEnumSelectList<SubPeriod>()">
+                        <option value="0" selected disabled>@Localizer["--- Select ---"]</option>
+                    </select>
+                    <span asp-validation-for="SubPeriod" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["No.ofPeroid"] :</label>
+                    <input type="text" id="noOfPeriod" asp-for="NoOfPeroid" disabled class="input-box-kernel" />
+                    <span asp-validation-for="NoOfPeroid" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["PeroidIndecator"] :</label>
+                    <div class="form-group-kernel">
+                        <select asp-for="PeroidIndID" class="input-box-kernel" id="periodIndID" asp-items="ViewBag.PeriodIndecator">
+                            <option value="0" selected disabled>@Localizer["--- Select ---"]</option>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-kernel btn-xs" type="button" id="addPeriodIndId"><i class="fas fa-plus-circle stylei"></i></button>
+                        </div>
+                    </div>
+                    <span asp-validation-for="PeroidIndID" class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="row p-0">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["PostingDateFrom"] :</label>
+                            <input type="date" asp-for="PostingDateFrom" id="pdfrom" class="input-box-kernel date" />
+                            <span asp-validation-for="PostingDateFrom" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["To"] :</label>
+                            <input type="date" asp-for="PostingDateTo" id="pdto" class="input-box-kernel date" />
+                            <span asp-validation-for="PostingDateTo" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["DueDateFrom"] :</label>
+                            <input type="date" asp-for="PostingDateFrom" id="ddfrom" class="input-box-kernel date" />
+                            <span asp-validation-for="PostingDateFrom" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["To"] :</label>
+                            <input type="date" asp-for="PostingDateTo" id="ddto" class="input-box-kernel date" />
+                            <span asp-validation-for="PostingDateTo" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["DocumentDateFrom"] :</label>
+                            <input type="date" asp-for="PostingDateFrom" id="docdfrom" class="input-box-kernel date" />
+                            <span asp-validation-for="PostingDateFrom" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["To"] :</label>
+                            <input type="date" asp-for="PostingDateTo" id="docdto" class="input-box-kernel date" />
+                            <span asp-validation-for="PostingDateTo" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["StartofFiscalYear"] :</label>
+                            <input type="date" id="sfy" class="input-box-kernel date" asp-for="StartOfFiscalYear" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["FiscalYear"] :</label>
+                            <input type="text" id="fy" class="input-box-kernel" value="2022" asp-for="StartOfFiscalYear" />
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["PeriodStatus"] :</label>
+                            <input type="text" value="Unlocked" disabled id="periodStatus" class="input-box-kernel" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <br />
+        <div id="error-summary"></div>
+        <div class="row pull-left">
+            <div class="col-md-12 stylebutton">
+                <button class="btn btn-kernel btn-xs" type="button" id="addPostingPeriod">@Localizer["Add"]</button>
+                <a class="btn btn-xs btn-kernel" asp-action="Index"> @Localizer["Back"]</a>
+            </div>
+        </div>
+    </form>
+    <div id="active-gl-content" style="display:none; height: 100px; width: 80%">
+        <form>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Name"] :</label>
+                <input type="text" id="indecatorName" class="form-control m__5" />
+            </div>
+        </form>
+    </div>
+</div>
+<div hidden id="model-data">@Json.Serialize(Model)</div>
+<script src="~/SystemInitialization/PostingPeriod/posting-period-core.js"></script>
+<script src="~/SystemInitialization/PostingPeriod/js/create.js"></script>

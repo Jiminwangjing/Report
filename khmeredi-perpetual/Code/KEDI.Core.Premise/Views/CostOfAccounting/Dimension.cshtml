@@ -1,0 +1,92 @@
+﻿<div class="card card-body">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-5">
+            <div id="container-list-dimensions" class="wrap-table">
+                <table class="dimensions">
+                    <thead>
+                        <tr>
+                            <th class="text-center">@Localizer["#"]</th>
+                            <th class="text-center">@Localizer["Dimensions Name"]</th>
+                            <th class="text-center">@Localizer["Description"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="error-summary"></div>
+            <button class="btn btn-xs btn-kernel" id="update">@Localizer["Update"]</button>
+            <button class="btn btn-xs btn-kernel" id="cancel">@Localizer["Cancel"]</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let data = [];
+    $(document).ready(function () {
+        let $dimension = ViewTable({
+            keyField: "ID",
+            selector: ".dimensions",
+            indexed: true,
+            paging: {
+                enabled: true,
+                pageSize: 10
+            },
+            visibleFields: [
+                "DimensionName",
+                "Description",
+            ],
+            columns: [
+                {
+                    name: "Description",
+                    template: "<input type='text' class='disabled'>",
+                    on: {
+                        "keyup": function (e) {
+                            update(data, e.data.ID, "Description", this.value);
+                        }
+                    }
+                }
+            ]
+        });
+        GetDimensionTemplate(function (dimensions) {
+            data.push(dimensions);
+            $dimension.clearRows();
+            $dimension.bindRows(dimensions);
+        });
+        /// cancel ///
+        $("#cancel").click(function () {
+            location.reload();
+        })
+        /// Update ///
+        $("#update").click(function () {
+            $.post("/CostOfAccounting/UpdateDimensions", { dimensions: JSON.stringify(data[0]) }, function (res) {
+                if (res.IsApproved) {
+                    new ViewMessage({
+                        summary: {
+                            selector: "#error-summary"
+                        }
+                    }, res).refresh(1500);
+                }
+            });
+        })
+        function GetDimensionTemplate(success) {
+            $.get("/CostOfAccounting/GetDimensionsItSelf", success);
+        }
+        function update(data, id, prop, value) {
+            const res = data[0];
+            if (isValidArray(res)) {
+                $.grep(res, function (i, x) {
+                    if (i.ID === id) {
+                        i[prop] = value;
+                    }
+                });
+            } 
+        }
+        //Util functions
+        function isValidArray(values) {
+            return Array.isArray(values) && values.length > 0;
+        }
+        function isValidJson(value) {
+            return value !== undefined && value.constructor === Object && Object.getOwnPropertyNames(value).length > 0;
+        }
+    });
+</script>

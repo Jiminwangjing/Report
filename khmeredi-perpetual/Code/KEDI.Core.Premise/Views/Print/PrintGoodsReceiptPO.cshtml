@@ -1,0 +1,188 @@
+﻿@model IEnumerable<CKBS.Models.Services.Purchase.Print.PrintPurchaseAP>
+@{
+    ViewData["Title"] = "GoodsReceiptPO";
+    Layout = "_Layout_print";
+    var num = 0;
+}
+
+<style>
+    body {
+        font-family: 'Khmer OS Battambang';
+        font-size: 14px;
+    }
+
+    .tbfontsize {
+        font-size: 16px;
+    }
+</style>
+
+<hr style="border: 2px solid #2874A6;">
+<div class="row">
+    <div class="col-xs-4">
+        <img src="~/Images/company/@Model.First().Logo" width="280" height="130" style="padding:0px 0px 0px 10px;" />
+    </div>
+    <div class="col-xs-3" style="padding-left:80px">
+        <table class="tbfontsize">
+            <tr>
+                <td style="padding-bottom:10px">លេខឯកសារ</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:10px">Document Number:</td>
+            </tr>
+            <tr>
+                <th>@Model.First().PreFix-@Model.FirstOrDefault().Invoice</th>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-2" style="padding-left:50px">
+        <table class="tbfontsize">
+            <tr>
+                <td style="padding-bottom:10px">កាលបរិច្ឆេទ</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:10px">Date:</td>
+            </tr>
+            <tr>
+                <th>@Model.FirstOrDefault().PostingDate</th>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-3" style="padding-left:70px">
+        <table class="tbfontsize">
+            <tr>
+                <td style="padding-bottom:10px">លេខសំគាល់អតិថិជន</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:10px">By User:</td>
+            </tr>
+            <tr>
+                <th>@Model.FirstOrDefault().CusCode</th>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="col-xs-5" style="margin-bottom:10px;min-height:240px">
+    <h2 style="color:blue;font-weight:bold">DELIVERY NOTE</h2>
+    <table class="tbfontsize" style="padding-top:20px">
+        <tr>
+            <td style="padding-top:10px;color:#2980B9">@Model.First().Tel1 / @Model.FirstOrDefault().Tel2</td>
+        </tr>
+        <tr>
+            <td style="padding-top:10px;line-height:35px">@Model.FirstOrDefault().Addresskh</td>
+        </tr>
+        <tr>
+            <td style="line-height:25px">@Model.FirstOrDefault().AddressEng</td>
+        </tr>
+    </table>
+</div>
+
+<div class="col-xs-7" style="margin-top:25px">
+    <table class="tbfontsize">
+        <tr>
+            <td>ដឹកជូន / Deliver to :</td>
+            <th style="padding: 0 0 0 5px">@Model.FirstOrDefault().VendorName</th>
+        </tr>
+        @*<tr>
+            <td style="padding-top:20px">ក្រុមហ៊ុន / Company :</td>
+            <th style="padding: 20px 0px 0 5px"></th>
+        </tr>*@
+    </table>
+</div>
+
+<div class="col-xs-7">
+    <table class="tbfontsize">
+        <tr>
+            <td style="padding-top:20px">លេខទូរស័ព្ទ / Tel :</td>
+            <th style="padding:  20px 0 0 5px">@Model.FirstOrDefault().Phone</th>
+        </tr>
+    </table>
+</div>
+
+<div class="col-xs-7">
+    <table class="tbfontsize">
+        <tr>
+            <td style="padding-top:20px">អាស័យដ្ឋាន / Address :</td>
+            <th style="padding:20px 0px 0 5px">@Model.FirstOrDefault().Address</th>
+        </tr>
+    </table>
+</div>
+
+<div class="col-xs-7">
+    <table class="tbfontsize" style="margin-bottom:10px">
+        <tr>
+            <td style="padding-top:20px">លេខយោង / Ref Number :</td>
+            <th style="padding:20px 0px 0 5px">@Model.FirstOrDefault().SQN</th>
+        </tr>
+    </table>
+</div>
+
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr style="background:#2874A6;color:white; text-align:center!important;">
+                <th class="text-center" width="30">No.</th>
+                <th class="text-center" width="150">Description</th>
+                <th class="text-center" width="70">Brand</th>
+                <th class="text-center" width="50">Code</th>
+                <th class="text-center" width="50">Q'nty</th>
+                <th class="text-center" width="50">Unit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                num++;
+                //sub_Total += item.Sub_Total;
+                //Totalamount = item.Sub_Total;
+
+                <tr style="border: 1px dashed #c2c2c2">
+                    <td style="text-align:center">@num</td>
+                    <td>@item.KhmerName</td>
+                    <td style="text-align:center">@item.Brand</td>
+                    <td style="text-align:center">@item.Code</td>
+                    <td style="text-align:center">@item.Qty</td>
+                    <td style="text-align:center">@item.UomName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="row" style="margin-left:1px">
+    <table class="tbfontsize">
+        <tr>
+            <td>Remark : @Model.FirstOrDefault().Remark</td>
+        </tr>
+    </table>
+</div>
+<div class="row" style="margin-top:100px">
+    <div class="col-xs-6">
+        <table class="tbfontsize">
+            <tr>
+                <td>ឯកសារចេញដោយ៖</td>
+            </tr>
+            <tr>
+                <td style="padding-top:60px">ឈ្មោះ៖</td>
+            </tr>
+            <tr>
+                <td style="padding-top:30px">លេខទូរស័ព្ទ៖</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-6" style="padding-left:180px">
+        <table class="tbfontsize">
+            <tr>
+                <td>ទទួលដោយ៖</td>
+            </tr>
+            <tr>
+                <td style="padding:60px 0 0 0px">ឈ្មោះ៖</td>
+            </tr>
+            <tr>
+                <td style="padding:30px 0 0 0px">លេខទូរស័ព្ទ៖</td>
+            </tr>
+            <tr>
+                <td style="padding:30px 0 0 0px">កាលបរិច្ឆេទ៖</td>
+            </tr>
+        </table>
+    </div>
+</div>

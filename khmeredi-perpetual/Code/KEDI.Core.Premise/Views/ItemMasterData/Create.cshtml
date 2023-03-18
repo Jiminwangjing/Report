@@ -1,0 +1,689 @@
+﻿@using CKBS.Models.Services.Financials;
+@model ItemAccountingView
+<link href="~/Admin/ItemMasterData/css/item-master-data.css" rel="stylesheet" />
+<div class="card card-body">
+    <form id="formId" enctype="multipart/form-data">
+        <div hidden id="model-data">@Json.Serialize(Model)</div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="group_Input">
+                    <label class="control-label">@Localizer["Code"]</label>
+                    <input autofocus asp-for="ItemMasterData.Code" id="itemCode" />
+                    <span asp-validation-for="ItemMasterData.Code" class="text-danger"></span>
+                    <div class="text-danger">@ViewBag.CodeError</div>
+                    <span class=" text-danger" id="error_code"></span>
+                </div>
+                <div class="group_Input">
+                    <label class="control-label">@Localizer["Barcode"]</label>
+                    <input autocomplete="off" type="text" asp-for="ItemMasterData.Barcode" id="txtbarcode" />
+                    <span asp-validation-for="ItemMasterData.Barcode" class="text-danger"></span>
+                    <div class="text-danger" id="error_barcode"></div>
+                    <div class="text-danger">@ViewBag.barcodeerror</div>
+                </div>
+                <div class="group_Input">
+                    <label class="control-label">@Localizer["Item Name 1"]</label>
+                    <input asp-for="ItemMasterData.KhmerName" id="khmerName" />
+                    <div class="text-danger" id="error_khmerName"></div>
+                    <span asp-validation-for="ItemMasterData.KhmerName" class="text-danger"></span>
+                </div>
+                <div class="group_Input">
+                    <label class="control-label">@Localizer["Item Name 2"]</label>
+                    <input asp-for="ItemMasterData.EnglishName" id="englishName" />
+                    <div class="text-danger" id="error_englishName"></div>
+                    <span asp-validation-for="ItemMasterData.EnglishName" class="text-danger"></span>
+                </div>
+                <div class="group_Input_select">
+                    <label class="control-label">@Localizer["GroupUoM"]</label>
+                    <select asp-for="ItemMasterData.GroupUomID" asp-items="ViewBag.GroupUomID" id="listGroupUom"
+                        onchange="selectCahngeGroupUOM(this)">
+                        <option value="0" selected disabled>--- Select ---</option>
+                    </select>
+                    <a class="Btn_link_item3" style="background-color:#e6e6e6;" asp-action="Index"
+                        asp-controller="GroupUOM"><i class="fa fa-share-square" style="color:blue;"></i></a>
+                    <div class="text-danger">@ViewBag.GroupuomError</div>
+                    <div class="text-danger" id="error_groupUom"></div>
+                    <span asp-validation-for="ItemMasterData.GroupUomID" class="text-danger"></span>
+                </div>
+                <div class="group_Input_select">
+                    <label class="control-label">@Localizer["ItemGroup(1)"]</label>
+                    <select class="category" asp-for="ItemMasterData.ItemGroup1ID" asp-items="ViewBag.ItemGroup1ID"
+                        id="selectItemGroup1" onchange="selectchangitemgroup1(this)">
+                        @*<option value="0" selected disabled>--- Select ---</option>*@
+                    </select>
+                    <i class="fa fa-plus-circle Btn_link_item3" data-toggle="modal" data-target="#ModalItemgorup1"
+                        style="color:blue;"></i>
+                    <div class="text-danger" id="group1Err"></div>
+                    <div class="text-danger">@ViewBag.itemgorup1</div>
+                </div>
+
+                <div class="group_Input_select">
+                    <label class="control-label ">@Localizer["ItemGroup(2)"]</label>
+                    <select class="subCategory" asp-for="ItemMasterData.ItemGroup2ID" asp-items="ViewBag.ItemGroup2ID"
+                        id="selectItmegroup2" onchange="selectChangItemGroup3(this)">
+                        <option value="0" selected disabled>--- Select ---</option>
+                    </select>
+                    <i class="fa fa-plus-circle Btn_link_item3" data-toggle="modal" data-target="#ModalItemgorup2"
+                        onclick="clickbutton()" style="color:blue;"></i>
+                </div>
+                <div class="group_Input">
+                    <div>
+                        <label class="control-label">@Localizer["ItemGroup(3)"]</label>
+                        <select asp-for="ItemMasterData.ItemGroup3ID" asp-items="ViewBag.ItemGroup3ID"
+                            id="itemgroup3Name">
+                            <option value="0" selected disabled>--- Select ---</option>
+                        </select>
+                        <i class="fa fa-plus-circle Btn_link_item3" data-toggle="modal" data-target="#ModalItemgorup3"
+                            onclick="clickbutton()" style="color:blue;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div>
+                                <img src="~/Images/default/no-image.jpg" id="logo" class="StyleImge" />
+                            </div>
+                            <div class="btn btn-sm btn-file" id="imagestyle">
+                                <input asp-for="ItemMasterData.Image" id="image_name" hidden />
+                                @Localizer["Browse"] <input type="file" asp-for="ItemMasterData.File" name="Image"
+                                    id="txtlogo" onchange="show(this)" value="" accept=".ico, .png, .jpg, .jpeg, .gif"
+                                    style="margin-top:10px;">
+
+                            </div>
+                            <span asp-validation-for="ItemMasterData.Image" class="text-danger"></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb-2">
+                                <input readonly type="checkbox" class="form-check-input"
+                                    asp-for="ItemMasterData.Inventory" id="invcheckbox">
+                                <div class="input-group-append pl-2">
+                                    <label class="form-check-label" for="cboinventory">@Localizer["Inventory"]</label>
+                                </div>
+                            </div>
+                            <div class="input-group mb-2">
+                                <input type="checkbox" class="form-check-input" asp-for="ItemMasterData.Sale"
+                                    id="salecheckbox">
+                                <div class="input-group-append pl-2">
+                                    <label class="form-check-label" for="cboinventory">@Localizer["Sale"]</label>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <input readonly type="checkbox" class="form-check-input"
+                                    asp-for="ItemMasterData.Purchase" id="purcheckbox">
+                                <div class="input-group-append pl-2">
+                                    <label class="form-check-label" for="cboinventory">@Localizer["Purchase"]</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="ItemMasterData.StockCommit" />
+                <input type="hidden" asp-for="ItemMasterData.StockIn" />
+                <input type="hidden" asp-for="ItemMasterData.StockOnHand" />
+
+                <div class="group_Input">
+                    <label class="control-label">@Localizer["Valuation Method"] </label>
+                    <select asp-for="ItemMasterData.Process" onchange="SelectChangProccess(this)" id="txtProccess">
+                        <option value="FIFO">FIFO</option>
+                        <option value="Average">Average</option>
+                        <option value="Standard">Standard</option>
+                        @* <option value="FEFO">FEFO</option> *@
+                        <option value="SEBA" class="seba" hidden>Serial/Batch</option>
+                    </select>
+                    <span asp-validation-for="ItemMasterData.Process" class="text-danger"></span>
+                    <div class="text-danger">@ViewBag.processerror</div>
+                </div>
+                <div class="group_Input">
+                    <label class="control-label">@Localizer["Type"]</label>
+                    <select asp-for="ItemMasterData.Type" id="type">
+                        <option value="Item">Item</option>
+                        <option value="Addon">Add on</option>
+                        <option value="Service">Service</option>
+                    </select>
+                    <div class="text-danger">@ViewBag.typeError</div>
+                </div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-12">
+                <ul class="widget-tab" style="height: 286px;">
+                    <li class="tab-sheet active">
+                        <div class="tab-title">@Localizer["General"]</div>
+                        <div class="tab-content widget-scrollbar">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="group_Input_select">
+                                        <label class="control-label">@Localizer["PriceList"]</label>
+                                        <select asp-for="ItemMasterData.PriceListID" asp-items="ViewBag.PriceListID"
+                                            id="txtselectprice">
+                                        </select>
+                                        <i class="fa fa-plus-circle Btn_link" style="color:blue;" data-toggle="modal"
+                                            data-target="#ModalPricelist"></i>
+                                        <div class="text-danger">@ViewBag.Pricelist</div>
+                                    </div>
+                                    <div class="group_Input_select">
+                                        <label class="control-label">@Localizer["Warehouse"]</label>
+                                        <select asp-for="ItemMasterData.WarehouseID" id="txtselectwarehouse"
+                                            asp-items="ViewBag.WarehouseID">
+                                        </select>
+                                        <span asp-validation-for="ItemMasterData.WarehouseID"></span>
+                                        <i class="fa fa-plus-circle Btn_link" data-toggle="modal"
+                                            data-target="#Modalwarhouse" style="color:blue;"></i>
+                                        <span class="text-danger">@ViewBag.Warehouse</span>
+                                    </div>
+                                    <div class="group_Input_select">
+                                        <label class="control-label">@Localizer["PrintTo"] </label>
+                                        <select asp-for="ItemMasterData.PrintToID" id="txtprinter"
+                                            asp-items="ViewBag.PrintToID">
+                                        </select>
+                                        <i class="fa fa-plus-circle Btn_link" data-toggle="modal"
+                                            data-target="#ModalPrintTo" style="color:blue;"></i>
+                                        <span asp-validation-for="ItemMasterData.PrintToID" class="text-danger"></span>
+                                        <div class="text-danger">@ViewBag.printerError</div>
+                                    </div>
+                                    <div class="group_Input_select">
+                                        <label class="control-label">@Localizer["Scale Item"] </label>
+                                        <input id="scale" asp-for="ItemMasterData.Scale" type="checkbox" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    @*Serial And Batches*@
+                                    <div class="group_Input_select">
+                                        <label class="control-label">@Localizer["Manage Item By"]</label>
+                                        <select asp-for="ItemMasterData.ManItemBy"
+                                            asp-items="@Html.GetEnumSelectList<ManageItemBy>()" id="manItemBy">
+                                        </select>
+                                        <span class="text-danger" id="errmanItemBy"></span>
+                                    </div>
+                                    <div class="group_Input_select">
+                                        <label class="control-label">@Localizer["Management Method"]</label>
+                                        <select asp-for="ItemMasterData.ManItemBy" disabled
+                                            asp-items="@Html.GetEnumSelectList<ManagementMethod>()" id="manMethod">
+                                        </select>
+                                    </div>
+                                    @* <div class="group_Input_select">
+                                        <label class="control-label">@Localizer["Advand Inventory Ajustment"]</label>
+                                        <input type="checkbox" id="adv_inventory_ajustment" class="form-control" />
+                                        </div> *@
+
+                                </div>
+                                <partial name="../Components/ContractTemplate/_Contract.cshtml" />
+                            </div>
+                        </div>
+                    </li>
+                    <li class="tab-sheet">
+                        <div class="tab-title">@Localizer["UOM"]</div>
+                        <div class="tab-content widget-scrollbar">
+                            <div class="group_Input">
+                                <label class="control-label">@Localizer["InventoryUoM"]</label>
+                                <select asp-for="ItemMasterData.InventoryUoMID" id="txtInventoryUOM"
+                                    asp-items="ViewBag.InventoryUoMID">
+                                </select>
+                                <span asp-validation-for="ItemMasterData.InventoryUoMID"></span>
+                            </div>
+                            <div class="group_Input">
+                                <label class="control-label ">@Localizer["SaleUoM"]</label>
+                                <select asp-for="ItemMasterData.SaleUomID" id="txtSaleUOM"
+                                    asp-items="ViewBag.SaleUomID">
+                                </select>
+                                <span asp-validation-for="ItemMasterData.SaleUomID"></span>
+                            </div>
+                            <div class="group_Input">
+                                <label class="control-label ">@Localizer["PurchaseUoM"]</label>
+                                <select asp-for="ItemMasterData.PurchaseUomID" id="txtPurchar"
+                                    asp-items="ViewBag.PurchaseUomID">
+                                </select>
+                                <span asp-validation-for="ItemMasterData.PurchaseUomID"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="tab-sheet">
+                        <div class="tab-title">@Localizer["Standard"]</div>
+                        <div class="tab-content widget-scrollbar">
+                            <div class="group_Input">
+                                <label class="control-label ">@Localizer["Cost"]</label>
+                                <input disabled asp-for="ItemMasterData.Cost" id="txtCost" />
+                                &nbsp;<span id="errmsgcost"></span>
+                                <span asp-validation-for="ItemMasterData.Cost" class="text-danger"></span>
+                            </div>
+                            <div class="group_Input">
+                                <label class="control-label ">@Localizer["UnitPrice"]</label>
+                                <input disabled asp-for="ItemMasterData.UnitPrice" id="txtUnitPrice" />
+                                &nbsp;<span id="errmsgunitprice"></span>
+                                <span asp-validation-for="ItemMasterData.UnitPrice" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="tab-sheet">
+                        <div class="tab-title">@Localizer["Inventory"]</div>
+                        <div class="tab-content widget-scrollbar">
+                            <div class="row" style="width: 100%;">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label class="" for="setGlAcc">@Localizer["Set G/L Accounts By"]</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select class="form-control" style="font-size: 15px;"
+                                                data-glacc="SetGlAccount" id="selSetGlAcc">
+                                                <option value="1" selected>Item Group</option>
+                                                @if (!UserManager.CheckEdition(SystemEdition.Basic))
+                                                {
+                                                    <option value="2">Item Level</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="wrap-table">
+                                        <table class="table-responsive-sm" id="allw-gl">
+                                            <thead style="background: rgb(119, 136, 153);">
+                                                <tr id="thAcc">
+                                                    @*<td class="p-1" style="font-size:15px;">#</td>*@
+                                                    <td>@Localizer["Warehouse Code"]</td>
+                                                    <td>@Localizer["Warehouse Name"]</td>
+                                                    <td>@Localizer["In Stock"]</td>
+                                                    <td>@Localizer["Committed"]</td>
+                                                    <td>@Localizer["Ordered"]</td>
+                                                    <td>@Localizer["Available"]</td>
+                                                    <td>@Localizer["Min.Inventory"]</td>
+                                                    <td>@Localizer["Max.Inventory"]</td>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="tab-sheet">
+                        <div class="tab-title">@Localizer["Properties"]</div>
+                        <div class="tab-content widget-scrollbar">
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <table class="prop-tb">
+                                        <thead>
+                                            <tr>
+                                                <td>@Localizer["No"]</td>
+                                                <td>@Localizer["Property Name"]</td>
+                                                <td>@Localizer["Property Child"]</td>
+                                                <td>@Localizer["Action"]</td>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="tab-sheet">
+                        <div class="tab-title">@Localizer["Purchasing Data"]</div>
+                        <div class="tab-content widget-scrollbar">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>@Localizer["Tax Group : "]</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <select class="input-box-kernel" id="txtTaxGroupPurId">
+                                                <option value="0">@Localizer["-- Select --"]</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mt-5px">
+                                            <div class="input-group">
+                                                <input class="form-control font-size" readonly id="purTgRate">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text sh-posting-period text-center">
+                                                        %
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="tab-sheet">
+                        <div class="tab-title">@Localizer["Sales Data"]</div>
+                        <div class="tab-content widget-scrollbar">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>@Localizer["Tax Group : "]</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <select class="input-box-kernel" readonly id="txtTaxGroupSaleId">
+                                                <option value="0">@Localizer["-- Select --"]</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mt-5px">
+                                            <div class="input-group">
+                                                <input class="form-control font-size" id="saleTgRate">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text sh-posting-period text-center">
+                                                        %
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="tab-sheet">
+                        <div class="tab-title">@Localizer["Planning Data"]</div>
+                        <div class="tab-content widget-scrollbar">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>@Localizer["Minimum Order Qty : "]</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input class="form-control font-size" id="minOrderQty" value="0" type="number" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>@Localizer["Maximum Order Qty : "]</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input class="form-control font-size" id="maxOrderQty" value="0" type="number" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>@Localizer["Limit Item Order : "]</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input class="form-control font-size" id="isLimitOrder" type="checkbox" />
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="tab-sheet">
+                        <div class="tab-title">@Localizer["Description"]</div>
+                        <div class="tab-content widget-scrollbar">
+                            <div class="form-group">
+                                <textarea class="form-control" id="itemDes" style="height:200px !important;"></textarea>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div asp-validation-summary="All"></div>
+        <div class="form-group">
+            <div class="form-group">
+                <div class="form-group pull-right">
+                    <button class="btn btn-kernel btn-xs" type="button" id="btn-add">@Localizer["Add"]</button>
+                    <a asp-action="Index" class="btn btn-kernel btn-xs">@Localizer["Back"]</a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="modal fade" id="ModalPricelist">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["PriceList"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="group_Input">
+                                <label class="control-label">@Localizer["PriceListName"] </label>
+                                <input type="text" id="txtpricelist" />
+                                <span class="text-danger price_requried"></span>
+                            </div>
+                            <div>
+                                <label class="control-label">@Localizer["Currency"]</label>
+                                <select type="text" id="txtcurrency">
+                                    <option value="0" selected disabled>--- Select ---</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs btn-kernel" onclick="clickinsertpricelist()">@Localizer["Add"]</button>
+                    <button class="btn btn-xs btn-kernel" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="Modalwarhouse">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["Warehouse"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="">
+                                <label class="control-label">@Localizer["Code"] </label>
+                                <input type="text" id="Wtxtcode" />
+                                <div class="text-danger" id="error_code">@ViewBag.error</div>
+                                <div class="text-danger" id="error_codewarehouse"></div>
+                            </div>
+                            <div class="">
+                                <label class="control-label">@Localizer["warehouseName"] </label>
+                                <input type="text" id="Wtxtname" />
+                            </div>
+                            <div class="">
+                                <label class="control-label">@Localizer["Lcation"] </label>
+                                <input type="text" id="Wtxtlocation" />
+                            </div>
+                            <div class="">
+                                <label class="control-label">@Localizer["Address"] </label>
+                                <input type="text" id="Wtxtaddress" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-kernel btn-xs" onclick="AddWarehouse()">@Localizer["Add"]</button>
+                    <button class="btn btn-kernel btn-xs" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModalItemgorup1">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["ItemGroup(1)"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="">
+                                <label class="control-label">@Localizer["Name1"] </label>
+                                <input type="text" id="Itemgroup1Name" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs btn-kernel" onclick="AddItemGroup1()">@Localizer["Add"]</button>
+                    <button class="btn btn-xs btn-kernel" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModalItemgorup2">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["ItemGroup(2)"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="">
+                                <label class="control-label">@Localizer["Name1_1"] </label>
+                                <select id="txtItemgroup1">
+                                    <option value="0" selected disabled>--- Select ---</option>
+                                </select>
+                            </div>
+                            <div class="">
+                                <label class="control-label">@Localizer["Name2"] </label>
+                                <input type="text" id="itemgroup2Name" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs btn-kernel" onclick="AddItemGroup2()">@Localizer["Add"]</button>
+                    <button class="btn btn-xs btn-kernel" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModalItemgorup3">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["ItemGroup(3)"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="">
+                                <label class="control-label">@Localizer["Name1_1"] </label>
+                                <select id="txtname1" onchange="ChangeItemGroup2()">
+                                    <option value="0" selected disabled>--- Select ---</option>
+                                </select>
+                            </div>
+                            <div class="">
+                                <label class="control-label">@Localizer["Name2_1"] </label>
+                                <select id="txtname2">
+                                    <option value="0" selected disabled>--- Select ---</option>
+                                </select>
+                            </div>
+                            <div class="">
+                                <label class="control-label">@Localizer["Name3"] </label>
+                                <input type="text" id="txtname3" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs btn-kernel" onclick="AddItemGroup3()">@Localizer["Add"]</button>
+                    <button class="btn btn-xs btn-kernel" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModalPrintTo">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["Printer"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="">
+                                <label class="control-label">@Localizer["PrinterName"] :</label>
+                                <input type="text" id="txtPrinterName" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-kernel btn-xs" onclick="InsertPrintName()"><i
+                            class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                    <button class="btn btn-kernel btn-xs" data-dismiss="modal"><i
+                            class="fa fa-ban"></i>@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade right" id="ModalCurrency" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-side modal-top-right" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["Currency"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="">
+                                <label class="control-label">@Localizer["CName"]</label>
+                                <input type="text" id="currrencyName" />
+                            </div>
+                            <div class="">
+                                <label class="control-label">@Localizer["Description"]</label>
+                                <input type="text" id="txtDescript" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-xs" onclick="AddCurrency()"><i
+                            class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                    <button class="btn btn-danger btn-xs" data-dismiss="modal"><i
+                            class="fa fa-ban"></i>@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="active-gl-content" style="display:none; height: 400px;">
+        <div class="group-search-boxes float-right mb-2">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearch" autocomplete="off" type="text" placeholder="Search ...">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="list-active-gl" class="table-responsive-sm">
+            <thead>
+                <tr>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th class="text-center">@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    @* Create Child Property dialog *@
+    <div id="cc-property-content" style="display:none; height: 400px;">
+        <div class="card card-body">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-10">
+                    <form>
+                        <div class="form-group">
+                            <label>@Localizer["Name"]</label>
+                            <input class="form-control" id="nameCCP" type="text" />
+                            <input class="form-control" hidden id="pId" type="text" />
+                        </div>
+                    </form>
+                    <div class="err-success-summery"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<p id="itmeID1" hidden></p>
+<p id="itemID2" hidden></p>
+<p id="itemID3" hidden></p>
+
+<div class="tgPur" hidden>@Json.Serialize(ViewBag.TagGroupPur)</div>
+<div class="tgSale" hidden>@Json.Serialize(ViewBag.TagGroupSales)</div>
+<script src="~/Admin/ItemMasterData/js/core-item-master.js"></script>
+<script src="~/Admin/ItemMasterData/js/Create/item-master-data.js"></script>

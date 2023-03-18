@@ -1,0 +1,64 @@
+﻿@model IEnumerable<CKBS.Models.Services.BOM.BomReport>
+@{
+    ViewData["Title"] = "Bill of Material Report";
+    Layout = "~/Views/Shared/_Layout_Print.cshtml";
+}
+<div>
+    <div class="row">
+        <div class="col-xs-4">
+            @*<img src="~/Images/company/@Model.First().Header.Logo" width="150" height="130" style="padding:0px 0px 0px 10px;" />*@
+        </div>
+        <div class="col-xs-4" style="margin-top:70px;">
+            <div class="text-center" style="opacity:0;">.</div>
+            <div class="text-center" style="font-size:30px; margin-top:-20px;">របាយការណ៏ផ្សំវត្ថុធាតុដើម</div>
+            <div class="text-center" style="font-size:30px; margin-top:10px;"> Bill of Material Report </div>
+            <div class="row" style="margin-top:70px;"></div>
+        </div>
+    </div>
+    <div class="table">
+        <table class="table">
+            <thead style="background-color:#5F758B;">
+                <tr>
+                    <th></th>
+                    <th class="header" style="color:white; width:150px;">@Localizer["Item Name"]</th>
+                    <th class="header" style="color:white;text-align:center;">@Localizer["Qty"]</th>
+                    <th class="header" style="color:white;text-align:center;">@Localizer["Uom"]</th>
+                    <th class="header" style="color:white;text-align:center;">@Localizer["Cost"]</th>
+                    <th class="header" style="color:white;width:130px;">@Localizer["Amount"]</th> 
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count() == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">@Localizer["NoData"]</td>
+                    </tr>
+                }
+                @foreach (var group in Model)
+                {
+                    <tr style="background-color:lightgray">
+                        <th></th>
+                        <th>@group.KhmerName</th>
+                        <th style="text-align:center">@Localizer["Uom : "]@group.Uom </th>
+                        <th style="text-align:center">@Localizer["PostingDate : "]@group.PostingDate</th>
+                        <th style="text-align:center">@Localizer["TotalCost : "]@group.TotalCost.ToString("0.000") @group.SysCy</th>
+                        <th></th>
+                    </tr>
+                    foreach (var detail in group.BomDetails)
+                    {
+                        <tr style="text-align:center;">
+                            <td></td>
+                            <td text-align:center;>@detail.ItemName</td>
+                            <td text-align:center;>@detail.Qty</td>
+                            <td text-align:center;>@detail.UomD</td>
+                            <td text-align:center;>@detail.Cost.ToString("0.000")</td>
+                            <td text-align:center;>@detail.Amount.ToString("0.000") </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <div>
+        </div>
+    </div>
+</div>

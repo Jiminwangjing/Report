@@ -1,0 +1,239 @@
+﻿@model CKBS.Models.ServicesClass.KAMSService.PrintInvKvms
+@{
+    ViewData["Title"] = "Print Invoice";
+    Layout = "_Layout_Print";
+    int index = 0;
+}
+
+<style>
+    .vmcbold {
+        font-weight: bold;
+    }
+
+    .table thead th {
+        color: white;
+    }
+
+    hr {
+        display: block;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        margin-left: auto;
+        margin-right: auto;
+        border-style: inset;
+        border-width: 1px;
+    }
+
+    label {
+        margin-top: 5px;
+    }
+
+    div.groove {
+        border-style: groove;
+        border-top-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        font-size: medium;
+        padding: 0px 5px 10px 5px;
+    }
+
+    body {
+        font-family: Trebuchet MS, Arial, Helvetica, sans-serif;
+    }
+</style>
+
+<hr />
+<div style="font-size:40px;"><b> @Localizer["Invoice"] </b></div>
+<hr />
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-xs-7">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="row">
+                        <label> @Localizer["Customer Code"]: </label>
+                        <span> @Model.Code </span>
+                    </div>
+                    <div class="row">
+                        <label> @Localizer["Customer Name"]: </label>
+                        <span> @Model.Name </span>
+                    </div>
+                    <div class="row">
+                        <label> @Localizer["Tel"]: </label>
+                        <span> @Model.Phone </span>
+                    </div>
+                    <div class="row">
+                        <label> @Localizer["Address"]: </label>
+                        <span> @Model.Address </span>
+                    </div>
+                    <div class="row">
+                        <label> @Localizer["Email"]: </label>
+                        <span> @Model.Email </span>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <div class="row">
+                        <label> @Localizer["By User"]: </label>
+                        <span> @Model.Username</span>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    @if (Model.Plate == null)
+                    {
+                        <div></div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <label> @Localizer["Plate"]# : </label>
+                            <span> @Model.Plate </span>
+                        </div>
+                        <div class="row">
+                            <label> @Localizer["Frame"]# : </label>
+                            <span> @Model.Frame</span>
+                        </div>
+                        <div class="row">
+                            <label> @Localizer["Engine"]# : </label>
+                            <span> @Model.Engine </span>
+                        </div>
+                        <div class="row">
+                            <label> @Localizer["Car Type"]: </label>
+                            <span> @Model.TypeName </span>
+                        </div>
+                        <div class="row">
+                            <label> @Localizer["Car Brand"]: </label>
+                            <span> @Model.BrandName</span>
+                        </div>
+                        <div class="row">
+                            <label> @Localizer["Car Model"]: </label>
+                            <span> @Model.ModelName </span>
+                        </div>
+                        <div class="row">
+                            <label> @Localizer["Car Year"]: </label>
+                            <span> @Model.Year </span>
+                        </div>
+                        <div class="row">
+                            <label> @Localizer["Car Color"]: </label>
+                            <span> @Model.ColorName </span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-5">
+            <div class="row" style="text-align:right">
+                <label> Nº : </label>
+                <span> @Model.QNo </span>
+            </div>
+            <div class="row">
+                <div class="groove">
+                    <h4 style="font-size:25px;"><b>@Model.ComBName</b></h4>
+                    <br />
+                    @Model.ComBAddress<br />
+                    Tel: @Model.ComBPhone<br />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:35px;">
+        <table class="table table-bordered">
+            <thead style="background-color:#5588c0">
+                <tr>
+                    <th style="text-align:center;">Nº</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Item Name 1"]</th>
+                    <th>@Localizer["Item Name 2"]</th>
+                    <th>@Localizer["Qty"]</th>
+                    <th>@Localizer["UoM"]</th>
+                    <th>@Localizer["Unit Price"]</th>
+                    <th>@Localizer["Discount"]</th>
+                    <th>@Localizer["Total"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.PrintDetailQuotes)
+                {
+                    index++;
+                    <tr>
+                        <td style="text-align:center;">@index</td>
+                        <td>@item.Code</td>
+                        <td>@item.KhmerName</td>
+                        <td>@item.EnglishName</td>
+                        <td>@item.Qty</td>
+                        <td>@item.UoM</td>
+                        <td>@item.UnitPrice</td>
+                        <td>@item.DisRate</td>
+                        <td>@item.Total</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div style="margin-top:50px;">
+            <table class="table table-bordered">
+                <tr> </tr>
+                <tr style="background-color:#5F758B; padding:0px;">
+                    <th style="color:white; font-size:17px;"> *** @Localizer["Summary"] </th>
+                    <th></th>
+                </tr>
+                <tr> </tr>
+                <tr>
+                    <th> @Localizer["Total Items"] : </th>
+                    <th class="text-danger">@Model.Count</th>
+                </tr>
+                <tr>
+                    <th> @Localizer["Sold Amount"] : </th>
+                    <th class="text-danger">@Model.PrintDetailQuotes.First().Currency @Model.Subtotal</th>
+                </tr>
+                <tr>
+                    <th> @Localizer["Discount by Invoice"] : </th>
+                    <th class="text-danger">@Model.DisRate</th>
+                </tr>
+                <tr>
+                    <th> @Localizer["VAT. Included"] : </th>
+                    <th class="text-danger">@Model.PrintDetailQuotes.First().Currency @Model.TaxValue</th>
+                </tr>
+                <tr>
+                    <th> @Localizer["Grand Total"] : </th>
+                    <th class="text-danger">@Model.PrintDetailQuotes.First().Currency @Model.GrandTotal</th>
+                </tr>
+                <tr>
+                    <th> @Localizer["Applied Amount"] : </th>
+                    <th class="text-danger">@Model.PrintDetailQuotes.First().Currency @Model.AppliedAmount</th>
+                </tr>
+                @*<tr>
+                    <th> @Localizer["Balance Due"] : </th>
+                    <th class="text-danger">@Model.PrintDetailQuotes.First().Currency @Model.BalanceDue</th>
+                </tr>*@
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">
+                <label> **@Localizer["Acknowledge"] </label>
+                <hr style="margin-top:-3px; background-color:gray; color:gray; height:1px; width:80%; float:left;" />
+                <div style="margin-top:65px;">
+                    <label> @Localizer["Date"]/........../........../20.......</label>
+                </div>
+                <div style="margin-top:10px;"><b><u> @Localizer["Published by"] </u></b></div>
+            </div>
+            <div class="col-xs-4" style="margin-top:95px;">
+                <div>
+                    <label> @Localizer["Date"]/........../........../20.......</label>
+                </div>
+                <div style="margin-top:10px;"><b><u> @Localizer["Reviewed by"] </u></b></div>
+            </div>
+            <div class="col-xs-4" style="margin-top:95px;">
+                <div>
+                    <label> @Localizer["Date"]/........../........../20.......</label>
+                </div>
+                <div style="margin-top:10px;"><b><u> @Localizer["Approved by"] </u></b></div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+

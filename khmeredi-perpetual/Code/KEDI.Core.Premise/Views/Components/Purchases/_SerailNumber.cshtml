@@ -1,0 +1,278 @@
+﻿<style>
+    .__mt-1 {
+        margin-top: 0.25rem !important;
+    }
+
+    .serail-detail-container {
+        height: 29vh;
+        overflow: auto;
+        width: 100%;
+
+    }
+
+    .flex {
+        display: flex;
+
+    }
+</style>
+@*// Model Serial //*@
+<div id="container-list-serial-s-pur" class="wrap-table widget-scrollbar"
+    style="height: 700px; display: none; overflow: hidden;">
+    <div style="overflow: auto; height: 40%;" class="widget-scrollbar">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="serial-lists-s-pur">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["No"]</th>
+                            <th>@Localizer["Doc. No."]</th>
+                            <th>@Localizer["Item Code"]</th>
+                            <th>@Localizer["Item Name"]</th>
+                            <th>@Localizer["Whse Code"]</th>
+                            <th>@Localizer["Whse Name"]</th>
+                            <th>@Localizer["Total Needed"]</th>
+                            <th>@Localizer["Total Created"]</th>
+                            <th>@Localizer["Open Qty"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div style="overflow:auto; height: 49%;" class="widget-scrollbar">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="serial-detail-lists-s-pur">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["No"]</th>
+                            <th style="min-width: 300px;">@Localizer["Mfr Serial No."]</th>
+                            <th style="min-width: 300px;">@Localizer["Engine NO / SerialNumber"]</th>
+                            <th>@Localizer["Plate Number"]</th>
+                            <th>@Localizer["Lot Number"]</th>
+                            <th>@Localizer["Color"]</th>
+                            <th>@Localizer["Brand"]</th>
+                            <th>@Localizer["Condition"]</th>
+                            <th>@Localizer["Type"]</th>
+                            <th>@Localizer["H.Power"]</th>
+                            <th>@Localizer["Year"]</th>
+                            <th>@Localizer["Expiration Date"]</th>
+                            <th>@Localizer["Mfr Date"]</th>
+                            <th>@Localizer["Admission Date"]</th>
+                            <th>@Localizer["Mfr Warranty Start"]</th>
+                            <th>@Localizer["Mfr Warranty End"]</th>
+                            <th>@Localizer["Location"]</th>
+                            <th>@Localizer["Details"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="serailErrorMessage-s-pur"></div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <input class="btn btn-xs btn-kernel form-control" id="optionCreateSerial-s-pur" disabled
+                    value="@Localizer["Automatic Creation"]" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Create Serial Option*@
+<div id="container-serial-option-s-pur" class="wrap-table widget-scrollbar"
+    style="height: 500px; display: none; overflow: hidden;">
+    <div class="container mt-2">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-3"> <label>@Localizer["Item Code"]</label></div>
+                    <div class="col-md-9"> <input type="text" readonly class="form-control" id="itemNumber-s-pur"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Item Name"]</label></div>
+                    <div class="col-md-9">
+                        <input type="text" readonly class="form-control" id="itemName-s-pur">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Warehouse"]</label></div>
+                    <div class="col-md-9">
+                        <input type="text" readonly class="form-control" id="whsCode-s-pur">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Quantity"]</label> </div>
+                    <div class="col-md-9">
+                        <input type="text" readonly class="form-control" id="qty-s-pur">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Mfr Serial No."]</label></div>
+                    <div class="col-md-9">
+                        <div class="flex">
+                            <input type="text" readonly class="form-control" id="mrf-serial-no-s-pur">
+                            <button class="btn btn-xs btn-kernel ml-2" id="dialog-mfr-serial-no-s-pur"
+                                style="height: 10px;line-height: 1px;">
+                                <i class="fas fa-arrow-circle-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Engine NO / SerialNumber"]</label></div>
+                    <div class="col-md-9">
+                        <div class="flex">
+                            <input type="text" readonly class="form-control" id="serial-number-s-pur">
+                            <button class="btn btn-xs btn-kernel ml-2" id="dialog-serial-number-s-pur"
+                                style="height: 10px;line-height: 1px;">
+                                <i class="fas fa-arrow-circle-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Lot Number"]</label></div>
+                    <div class="col-md-9">
+                        <div class="flex">
+                            <input type="text" readonly class="form-control" id="lot-number-s-pur">
+                            <button class="btn btn-xs btn-kernel ml-2" id="dialog-lot-number-s-pur"
+                                style="height: 10px;line-height: 1px;">
+                                <i class="fas fa-arrow-circle-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["PlateNumber"]</label></div>
+                    <div class="col-md-9"><input type="text" class="form-control" id="platenumber"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Color"]</label></div>
+                    <div class="col-md-9"><input type="text" class="form-control" id="color"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Brand"]</label></div>
+                    <div class="col-md-9"><input type="text" class="form-control" id="brand"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Condition"]</label></div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="condition">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Type"]</label></div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="type">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Power"]</label></div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="power">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label>@Localizer["Year"]</label></div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="year">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4"><label>@Localizer["System No."]</label> </div>
+                    <div class="col-md-8">
+                        <input type="text" readonly class="form-control" id="sysno-s-pur">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"><label>@Localizer["Admission Date"]</label></div>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" id="admiddiondate-s-pur">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"><label>@Localizer["Expiration Date"]</label></div>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" id="expDate-s-pur">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"><label>@Localizer["Expiration Date"]</label></div>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" id="mfrDate">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4"><label>@Localizer["Mfr Warranty Start"]</label></div>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" id="mfrwanStart-s-pur">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"><label>@Localizer["Mfr Warranty End"]</label></div>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" id="mfrwanEnd-s-pur">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"><label>@Localizer["Location"]</label></div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="location-s-pur">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"><label>@Localizer["Details"]</label></div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="details-s-pur">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"><label>@Localizer["Cost"]</label></div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" readonly id="cost-s-pur">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Serial String Creation*@
+<div id="container-string-option-s-pur" class="wrap-table widget-scrollbar"
+    style="height: 430px; display: none; overflow: hidden">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="serial-option-s-pur">
+                <thead>
+                    <tr>
+                        <th>@Localizer["No"]</th>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["Type"]</th>
+                        <th>@Localizer["Operation"]</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <label>@Localizer["Final String"]</label>
+                <input class="form-control" readonly id="finalString-s-pur" />
+            </div>
+        </div>
+    </div>
+    <div class="autoStringCreationMessage-s-pur"></div>
+</div>
+
+
+<script src="~/Admin/Components/SerialsBatches/serialNumber.js"></script>

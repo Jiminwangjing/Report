@@ -1,0 +1,26 @@
+﻿@using CKBS.Models.Services.Administrator.SystemInitialization
+@model PeriodIndicator
+<div class="card card-body">
+    <form asp-action="Add">
+        <div class="row">
+            <div class="col-md-5">
+
+                <div class="form-group">
+                    <label class="control-label">@Localizer["PeriodName"] :</label>
+                    <input asp-for="Name" class="input-box-kernel" id="Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div id="error-summary"></div>
+        <div class="row pull-left">
+            <div class="col-md-12 stylebutton">
+                <button class="btn btn-kernel btn-xs" type="submit" id="addPostingPeriod">@Localizer["Add"]</button>
+                <a class="btn btn-xs btn-kernel" asp-action="Index"> @Localizer["Back"]</a>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,34 @@
+$padding: 1rem;
+
+.p0  { padding: 0!important; }
+.px0 { padding-left: 0!important; padding-right: 0!important; }
+.pxl0 { padding-left: 0!important; }
+.pxr0 { padding-right: 0!important; }
+.py0 { padding-top: 0!important; padding-bottom: 0!important; }
+.pyt0 { padding-top: 0!important; }
+.pyb0 { padding-bottom: 0!important; }
+
+.p1  { padding: $padding!important; }
+.px1 { padding-left: $padding!important; padding-right: $padding!important; }
+.pxl1 { padding-left: $padding!important; }
+.pxr1 { padding-right: $padding!important; }
+.py1 { padding-top: $padding!important; padding-bottom: $padding!important; }
+.pyt1 { padding-top: $padding!important; }
+.pyb1 { padding-bottom: $padding!important; }
+
+.p2  { padding: $padding*2!important; }
+.px2 { padding-left: $padding*2!important; padding-right: $padding*2!important; }
+.pxl2 { padding-left: $padding*2!important; }
+.pxr2 { padding-right: $padding*2!important; }
+.py2 { padding-top: $padding*2!important; padding-bottom: $padding*2!important; }
+.pyt2 { padding-top: $padding*2!important; }
+.pyb2 { padding-bottom: $padding*2!important; }
+
+.p3  { padding: $padding*3!important; }
+.px3 { padding-left: $padding*3!important; padding-right: $padding*3!important; }
+.pxl3 { padding-left: $padding*3!important; }
+.pxr3 { padding-right: $padding*3!important; }
+.py3 { padding-top: $padding*3!important; padding-bottom: $padding*3!important; }
+.pyt3 { padding-top: $padding*3!important; }
+.pyb3 { padding-bottom: $padding*3!important; }
+

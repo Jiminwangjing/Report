@@ -1,0 +1,80 @@
+﻿<style>
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="alert-detail">
+                <tr>
+                    <th>#</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Active"]</th>
+                    <th>@Localizer["Setting"]</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <a asp-action="Index" asp-controller="ControlAlert" style="padding-top: 4px;" class="btn btn-kernel">@Localizer["Back"]</a>
+        </div>
+    </div>
+</div>
+@*details*@
+<div id="container-detail" class="wrap-table" style="height: auto; display: none">
+    <div style="background-color:#bcc; overflow: hidden;">
+        <div class="detail-message"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>@Localizer["Code"]</label>
+                            <input class="input-box-kernel" id="d-code" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>@Localizer["Name"]</label>
+                            <input class="input-box-kernel" id="d-name" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6" id="warehouse">
+                <p>@Localizer["Warehouses"]</p>
+                <div class="maxHeighttb">
+                    <table id="d-wh">
+                        <tr>
+                            <th>@Localizer["#"]</th>
+                            <th>@Localizer["Name"]</th>
+                            <th>@Localizer["Code"]</th>
+                            <th>@Localizer["Location"]</th>
+                            <th>@Localizer["All"] <input type="checkbox" id="checkAllWh" /></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="maxHeighttb">
+                    <p>@Localizer["Users"]</p>
+                    <table id="d-user">
+                        <tr>
+                            <th>@Localizer["#"]</th>
+                            <th>@Localizer["User name"]</th>
+                            <th>@Localizer["TelegramID"]</th>
+                            <th>@Localizer["All"] <input type="checkbox" id="checkAllUser" /></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="data" hidden>@Json.Serialize(Model)</div>
+<script src="~/Admin/ControlAlert/alert-detail.js"></script>

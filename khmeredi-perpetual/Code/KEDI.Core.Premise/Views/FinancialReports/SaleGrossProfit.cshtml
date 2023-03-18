@@ -1,0 +1,101 @@
+﻿<link href="~/Admin/FinancialReports/sale-gross-profit.css" rel="stylesheet" />
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="font-size">@Localizer["Date"]</label>
+                <select class="input-box-kernel font-size" disabled id="date-select">
+                    @* <option value="0">---@Localizer["Select"]---</option> *@
+                    <option value="1">@Localizer["Posting Date"]</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group ">
+                <label class="font-size">@Localizer["From"]</label>
+                <div class="input-group">
+                    <input type="date" class="form-control font-size" id="from-date">
+                    <div class="input-group-append">
+                        <span class="input-group-text from-sh-posting-period cursor">
+                            <i class="fa fa-plus-circle mll_2 cursor"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @*<div class="form-group">
+                    <label class="font-size">@Localizer["From"]</label>
+                    <div class="from-sh-posting-period cursor">
+                        <input type="text" readonly id="from-date" class="input-box-kernel font-size">
+                    </div>
+                </div>*@
+        </div>
+        <div class="col-md-3">
+            <div class="form-group ">
+                <label class="font-size">@Localizer["To"]</label>
+                <div class="input-group">
+                    <input type="date" class="form-control font-size" id="to-date">
+                    <div class="input-group-append">
+                        <span class="input-group-text to-sh-posting-period cursor">
+                            <i class="fa fa-plus-circle mll_2 cursor"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @*<div class="form-group">
+                    <label class="font-size">@Localizer["To"]</label>
+                    <div class="to-sh-posting-period cursor" disabled>
+                        <input type="text" readonly id="to-date" class="input-box-kernel font-size">
+                    </div>
+                </div>*@
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="font-size">@Localizer[""]</label>
+                <div class="mt4">
+                    <button type="button" class="btn btn-kernel font-size" id="btn-ok">@Localizer["Ok"]</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group ">
+                <label class="font-size">@Localizer["Time From"]</label>
+
+                <input type="time" class="form-control font-size" id="from-time" disabled>
+
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group ">
+                <label class="font-size">@Localizer["Time to"]</label>
+                <input type="time" class="form-control font-size" id="to-time" disabled>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group ">
+                <label class="font-size">@Localizer["User Name"]</label>
+                <select type="text" class="input-box-kernel font-size" id="userid" asp-items="@ViewBag.Users">
+                    <option value="0"></option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="wrap-table" style="margin-top:20px;">
+        <table id="list_sale_gross_profit"></table>
+        <div class="options" id="option">
+            <div class="option">
+                <div id="autoExpand"></div>
+            </div>
+        </div>
+
+        <div class="row" id="loading-view" hidden style="overflow: hidden; width: 90%">
+            <div class="col-md-5"></div>
+            <div class="col-md-3">
+                <img src="~/Images/ajaxloader/loading.gif" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="../Components/FinancialReport/_PostingPeriod" />
+<script src="~/Admin/FinancialReports/sale-gross-profit.js"></script>

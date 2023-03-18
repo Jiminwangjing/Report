@@ -1,0 +1,76 @@
+
+@using KEDI.Core.Premise.Models.ClientApi;
+@model DataSyncSetting;
+<form class="card card-body" asp-action="Submit" asp-controller="DataSyncSetting" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <input type="text" hidden asp-for="ID" class="form-control">
+            <div class="form-group">
+                <label class="control-label">@Localizer["Code"] :</label>
+                <input asp-for="TenantCode" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Name"] :</label>
+                <input asp-for="TenantName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["BaseUrl"] :</label>
+                <div class="input-group"></div>
+                <input asp-for="BaseUrl" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Username"] :</label>
+                <div class="input-group"></div>
+                <input asp-for="Username" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Password"] :</label>
+                <div class="input-group"></div>
+                <input asp-for="Password" type="password" class="form-control" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">@Localizer["ApiKey"] :</label>
+                <div class="input-group"></div>
+                <input asp-for="ApiKey" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["SecretKey"] :</label>
+                <div class="input-group"></div>
+                <input asp-for="SecretKey" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["StartTime"] :</label>
+                <div class="input-group"></div>
+                <input asp-for="StartTime" type="time" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["EndTime"] :</label>
+                <div class="input-group"></div>
+                <input asp-for="EndTime" type="time" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["TickInterval"] :</label>
+                <div class="input-group"></div>
+                <input asp-for="TickInterval" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Enabled"] :</label>
+                <div class="input-group"></div>
+                <input asp-for="Enabled" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+        <div class="col-md-12 ">
+            <button class="btn btn-success btn-xs" type="submit"><i
+                    class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+            <a class="btn btn-xs btn-danger" asp-action="Index"><i class="fa fa-reply"></i> @Localizer["Back"]</a>
+        </div>
+    </div>
+
+</form>
+
+
+

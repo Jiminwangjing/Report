@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Http;
+@model CKBS.Models.Services.Account.UserAccount;
+<style>
+    .gorup_profile{
+        min-width:100%;
+        margin:5px;
+        line-height:30px;
+    }
+    .gorup_profile  label{
+        min-width: 30%;
+        font-size: 15px;
+        font-family: Arial;
+        font-weight: bold;
+    }
+    .gorup_profile span {
+        min-width: 70%;
+        font-size: 15px;
+        font-family: Arial;
+    }
+</style>
+@{
+    var _userPhoto = string.IsNullOrWhiteSpace(Model.Employee.Photo) ? 
+    "/Images/User/default_user.png" : "/Images/employee/" + Model.Employee.Photo;
+}
+
+<div class="card card-body">
+    <fieldset class="scheduler-border">
+        <legend class="title">@Localizer["Profile Details"]</legend>
+        <div class="row">
+            <div class="col-md-5"></div>
+            <div class="2">
+                <img src="@_userPhoto" width="160" height="160" style="border-radius:50%;" title="Photo" />
+            </div>
+            <div class="col-md-5"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">      
+                <div class="gorup_profile">
+                    <label >@Localizer["Code"] </label><span >@Model.Employee.Code</span>
+                </div>
+                <div class="gorup_profile">
+                    <label>@Localizer["Employee"] </label><span >@Model.Employee.Name</span>
+                </div>
+        
+                <div class="gorup_profile">
+                    <label>@Localizer["Position"] </label><span>@Model.Employee.Position</span>
+                </div>
+                 <div class="gorup_profile">
+                    <label>@Localizer["Hiredate"] </label><span>@Model.Employee.Hiredate</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="gorup_profile">
+                    <label>@Localizer["Phone"] </label><span>@Model.Employee.Phone</span>
+                </div>
+                <div class="gorup_profile">
+                    <label>@Localizer["Email"] </label><span>@Model.Employee.Email</span>
+                </div>
+                
+                <div class="gorup_profile">
+                    <label>@Localizer["Birthdate"] </label><span>@Model.Employee.Birthdate</span>
+                </div>
+
+                <div class="gorup_profile">
+                    <label>@Localizer["Address"] </label><span>@Model.Employee.Address</span>
+                </div>
+            </div>
+
+            <div class="col-md-2"></div>
+        </div>
+    </fieldset>
+</div>

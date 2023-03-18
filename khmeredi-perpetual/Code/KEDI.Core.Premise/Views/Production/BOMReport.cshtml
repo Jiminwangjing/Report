@@ -1,0 +1,105 @@
+﻿@model IEnumerable<CKBS.Models.Services.BOM.BomReport>
+@{
+    ViewData["Title"] = "Bill of Material";
+}
+
+<button class="btn btn-primary btn-sm right mb-2" id="preview">@Localizer["Preview"]</button>
+<div class="wrap-table">
+    <table>
+        <thead>
+            <tr>
+                <th>@Localizer["ItemName"]</th>
+                <th>@Localizer["Qty"]</th>
+                <th>@Localizer["Uom"]</th>
+                <th>@Localizer["Cost"]</th>
+                <th>@Localizer["Amount"]</th>
+                <th>@Localizer["NegativeStock"]</th>
+            </tr>
+        </thead>
+        <tbody id="Table">
+            @if (Model.Count() == 0)
+            {
+                <tr>
+                    <td colspan="6" class="text-center">@Localizer["NoData"]</td>
+                </tr>
+            }
+            @foreach (var group in Model)
+            {
+                <tr data-id="@group.ID">
+                    <th colspan="2" style="vertical-align:middle;">@group.KhmerName</th>
+                    <th style="text-align:center;vertical-align:middle;">@Localizer["Uom : "]@group.Uom</th>
+                    <th style="text-align:center;vertical-align:middle;">@Localizer["PostingDate : "]@group.PostingDate</th>
+                    <th style="text-align:center;vertical-align:middle;">@Localizer["TotalCost : "]@group.TotalCost.ToString("0.000") @group.SysCy</th>
+                    @if (group.Active == true)
+                    {
+                        <th style="text-align:center;">@Localizer["Active "]<input checked type="checkbox" id="check_M" onclick="check_box_M(this)" /></th>
+                    }
+                    else
+                    {
+                        <th style="text-align:center;">@Localizer["Active "]<input type="checkbox" id="check_M" onclick="check_box_M(this)" /></th>
+                    }
+                </tr>
+                foreach (var detail in group.BomDetails)
+                {
+                    <tr data-id="@detail.ID">
+                        <td style="text-align:center;">@detail.ItemName</td>
+                        <td style="text-align:center;">@detail.Qty</td>
+                        <td style="text-align:center;">@detail.UomD</td>
+                        <td style="text-align:center;">@detail.Cost.ToString("0.000")</td>
+                        <td style="text-align:center;">@detail.Amount.ToString("0.000") </td>
+                        @if (detail.Negativestock == true)
+                        {
+                            <td><input checked type="checkbox" id="check_D" onclick="check_box_D(this)" /></td>
+                        }
+                        else
+                        {
+                            <td><input type="checkbox" id="check_D" onclick="check_box_D(this)" /></td>
+                        }
+
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+ <script>
+     function check_box_M(e) {
+         var key = $(e).parent().parent().data("id");
+         var check = $(e).prop("checked");
+         $.ajax({
+             url: "/Production/CheckItemMaster",
+             type: 'GET',
+             dataType: 'JSON',
+             data: { ID: key, check: check },
+             success: function (res) {
+             if (res.status == "T") {
+             }
+             else{
+               alert("Error");
+                 }
+             }
+         });
+     }
+     function check_box_D(c) {
+         var key = $(c).parent().parent().data("id");
+         var check = $(c).prop("checked");
+         $.ajax({
+         url: "/Production/CheckItem",
+         type: 'GET',
+         dataType: 'JSON',
+         data: { ID: key, check:check },
+         success: function (res) {
+         if (res.status == "T") {
+         }
+         else {
+             alert("Error");
+              }
+         }
+        });
+     }
+     $("#preview").on('click', function () {
+      window.open("/DevPrint/PrintBillofMaterial?");
+     });
+ </script>
+
+

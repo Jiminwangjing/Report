@@ -1,0 +1,157 @@
+﻿
+@model CKBS.Models.ServicesClass.FinancailReportPrint.PrintProfitAddLoss
+@{
+    ViewData["Title"] = "Profit And Loss";
+    Layout = "_Layout_Print";
+}
+<link href="~/Admin/PDF/css/profitandloss.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+<div class="container">
+    <div id="printtopdf" class="ml-20">
+        <div class="row">
+            <div class="col-md-4 mt5 buttonHidden">
+                <button class="btn btn-outline-primary" id="pdf">@Localizer["Generate To PDF"]</button>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-4 col-sm-4">
+                <h3 class="company">@Model.CompanyName</h3>
+            </div>
+            <div class="col-md-4 col-sm-4">
+                <h3 class="company">@Model.UserName</h3>
+            </div>
+            <div class="col-md-4 col-sm-4">
+                <h3 class="company">Profit And Loss</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <hr class="hr" />
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="flex">
+                            <h4>Posting Date : </h4>
+                            <h3>From</h3>
+                            <h3><b>@Model.DateFrom</b></h3>
+                            <h3>To</h3>
+                            <h3><b>@Model.DateTo</b></h3>
+                            <h4>Currency : </h4>
+                            <h3><b>@Model.CurrencyName</b></h3>
+                        </div>
+                    </div>
+                </div>
+                <hr class="hr" />
+            </div>
+        </div>
+        <div class="row m-0 bg-white">
+            <div id="tree-view" class="col-md-8 m-0 col-sm-12">
+                @*<div class="flex">
+                        <h6 class="header font-size">@Localizer["Account Name"]</h6>
+                        <h6 class="header font-size">@Localizer["Balance"]</h6>
+                    </div>
+                    <hr class="mt__2 hr" />
+                    <div id="turnoverdata"></div>
+                    <div id="costOfSalesdata"></div>
+                    <div id="operatingCostsdata"></div>
+                    <div id="nonOperatingIncomeExpendituredata"></div>
+                    <div id="taxationExtraordinaryItemsdata"></div>*@
+                <div id="AnnualReport" hidden>
+                    <div class="flexAn">
+                        <h6 class="header font-size">@Localizer["Account Name"]</h6>
+                        <h6 class="header font-size">@Localizer["Balance"]</h6>
+                    </div>
+                    <hr class="mt__2" />
+                    <div id="turnover-AnnualReport" class="mt3"></div>
+                    <div id="cost-of-sales-AnnualReport" class="mt3"></div>
+                    <div id="operating-costs-AnnualReport" class="mt3"></div>
+                    <div id="non-operating-income-expenditure-AnnualReport" class="mt3"></div>
+                    <div id="taxation-extraordinary-items-AnnualReport" class="mt3"></div>
+                    <div id="active-only" hidden></div>
+                </div>
+                <div id="QuarterlyReport" hidden>
+                    <div class="flexQHeader">
+                        <h6 class="header font-size _1st">@Localizer["1st Quarter"]</h6>
+                        <h6 class="header font-size _2nd">@Localizer["2nd Quarter"]</h6>
+                        <h6 class="header font-size _3rd">@Localizer["3rd Quarter"]</h6>
+                        <h6 class="header font-size _4th">@Localizer["4th Quarter"]</h6>
+                    </div>
+                    <div class="flexName">
+                        <h6 class="header font-size name1">@Localizer["Account Name"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                    </div>
+                    <hr class="mt__2" />
+                    <div id="turnover-QuarterlyReport" class="mt3"></div>
+                    <div id="cost-of-sales-QuarterlyReport" class="mt3"></div>
+                    <div id="operating-costs-QuarterlyReport" class="mt3"></div>
+                    <div id="non-operating-income-expenditure-QuarterlyReport" class="mt3"></div>
+                    <div id="taxation-extraordinary-items-QuarterlyReport" class="mt3"></div>
+                    <div id="active-only" hidden></div>
+                </div>
+                <div id="MonthlyReport" hidden>
+                    <div class="flex">
+                        <h6 class="header font-size _1stM">@Localizer["January"]</h6>
+                        <h6 class="header font-size _4thM">@Localizer["February"]</h6>
+                        <h6 class="header font-size _4thM">@Localizer["March"]</h6>
+                        <h6 class="header font-size _4thM">@Localizer["April"]</h6>
+                        <h6 class="header font-size _4thM">@Localizer["May"]</h6>
+                        <h6 class="header font-size _4thM">@Localizer["June"]</h6>
+                        <h6 class="header font-size _4thM">@Localizer["July"]</h6>
+                        <h6 class="header font-size _4thM">@Localizer["August"]</h6>
+                        <h6 class="header font-size _4thM">@Localizer["September"]</h6>
+                        <h6 class="header font-size _4thM">@Localizer["October"]</h6>
+                        <h6 class="header font-size _4thM">@Localizer["November"]</h6>
+                        <h6 class="header font-size _4thM">@Localizer["December"]</h6>
+                    </div>
+                    <div class="flexName">
+                        <h6 class="header font-size name1">@Localizer["Account Name"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+                        <h6 class="header font-size name2">@Localizer["Period"]</h6>
+
+                    </div>
+                    <hr class="mt__2" />
+                    <div id="turnover-MonthlyReport" class="mt3"></div>
+                    <div id="cost-of-sales-MonthlyReport" class="mt3"></div>
+                    <div id="operating-costs-MonthlyReport" class="mt3"></div>
+                    <div id="non-operating-income-expenditure-MonthlyReport" class="mt3"></div>
+                    <div id="taxation-extraordinary-items-MonthlyReport" class="mt3"></div>
+                    <div id="active-only" hidden></div>
+                </div>
+                <div id="PeriodicReport" hidden>
+                    <div class="flex">
+                        <h6 class="header font-size">@Localizer["Account Name"]</h6>
+                        <h6 class="header font-size">@Localizer["Balance"]</h6>
+                    </div>
+                    <hr class="mt__2" />
+                    <div id="turnover-MonthlyReport" class="mt3"></div>
+                    <div id="cost-of-sales-PeriodicReport" class="mt3"></div>
+                    <div id="operating-costs-PeriodicReport" class="mt3"></div>
+                    <div id="non-operating-income-expenditure-PeriodicReport" class="mt3"></div>
+                    <div id="taxation-extraordinary-items-PeriodicReport" class="mt3"></div>
+                    <div id="active-only" hidden></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div hidden id="datamodel">@Json.Serialize(Model.Model)</div>
+<div hidden id="turnover">@Json.Serialize(Model.Turnover)</div>
+<div hidden id="costOfSales">@Json.Serialize(Model.CostOfSales)</div>
+<div hidden id="operatingCosts">@Json.Serialize(Model.OperatingCosts)</div>
+<div hidden id="nonOperatingIncomeExpenditure">@Json.Serialize(Model.NonOperatingIncomeExpenditure)</div>
+<div hidden id="taxationExtraordinaryItems">@Json.Serialize(Model.TaxationExtraordinaryItems)</div>
+
+<script src="~/Admin/PDF/js/profit-and-loss.js"></script>

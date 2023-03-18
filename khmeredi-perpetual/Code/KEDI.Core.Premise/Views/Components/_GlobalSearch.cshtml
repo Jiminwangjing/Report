@@ -1,0 +1,329 @@
+﻿<link href="~/css/Search/search.css" rel="stylesheet" />
+<style>
+    @@media screen and (max-width: 600px){
+        .itemsearchGloble, .search-menu-box {
+            display: none !important;
+        }
+    }
+</style>
+<select class="itemsearchGloble" id="itemsearch">
+    @*<option>...</option>*@
+    <option value="1">@Localizer["Menu"]</option>
+    <option value="2">@Localizer["Data"]</option>
+</select>
+<div class="search-menu-box">
+    <input type="text" placeholder="Search.." class="form-control" id="search-menu-input" autocomplete="off" />
+    <div id="menu-container" class="menu-container widget-scrollbar">
+
+    </div>
+    <div id="container-search-data" class="container-search-data  widget-scrollbar">
+        <button id="cl">&times;</button>
+        <div class="item-master-data1 widget-scrollbar m-3" id="item-master-data1">
+            <h5 class="h5-title">@Localizer["Item Master Data"]</h5>
+            <table id="SearchlistItem">
+                <tr>
+                    <th>@Localizer["Item Name 1"]</th>
+                    <th>@Localizer["Item Name 2"]</th>
+                    <th>@Localizer["Code"]</th>
+                </tr>
+            </table>
+
+        </div>
+        <div class="receipt widget-scrollbar m-3" id="receipts">
+            <h5 class="h5-title">@Localizer["Receipt"]</h5>
+            <table id="tbreceipt">
+                <tr>
+                    <th>@Localizer["ReceiptNo"]</th>
+                    <th>@Localizer["Order No"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="AccBalnce mt-2 widget-scrollbar m-3" id="AccBalnce">
+            <h5 class="h5-title">@Localizer["Account Balance"]</h5>
+            <table id="tbAccBalance">
+                <tr>
+                    <th>@Localizer["OfsetAccount"]</th>
+                    <th>@Localizer["Detail"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="ItemAcc mt-2 widget-scrollbar m-3" id="ItemAcc">
+            <h5 class="h5-title">@Localizer["Accounting"]</h5>
+            <table id="tbItemAcc">
+                <tr>
+                    <th>@Localizer["ExpenesAcc"]</th>
+                    <th>@Localizer["RevenueAcc"]</th>
+                    <th>@Localizer["InventoryAcc"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Company mt-2 widget-scrollbar m-3" id="Company">
+            <h5 class="h5-title">@Localizer["Brands"]</h5>
+            <table id="tbCompanys">
+                <tr>
+
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Location"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Brand mt-2 widget-scrollbar m-3" id="Brand">
+            <h5 class="h5-title">@Localizer["Company"]</h5>
+            <table id="tbBrand">
+                <tr>
+
+                    <th>@Localizer["Brand Name"]</th>
+                    <th>@Localizer["Location"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Useracc mt-2 widget-scrollbar m-3" id="Useracc">
+            <h5 class="h5-title">@Localizer["UserAccount"]</h5>
+            <table id="tbUseracc">
+                <tr>
+                    <th>@Localizer["User Name"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="PrinterName mt-2 widget-scrollbar m-3" id="PrinterName">
+            <h5 class="h5-title">@Localizer["Printer Name"]</h5>
+            <table id="tbPrinterName">
+                <tr>
+                    <th>@Localizer["User Name"]</th>
+                    <th>@Localizer["OrderCount"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="unitofmeasure mt-2 widget-scrollbar m-3" id="unitofmeasure">
+            <h5 class="h5-title">@Localizer["Unit Of Measure"]</h5>
+            <table id="tbunitofmeasure">
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Code"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="warhouse mt-2 widget-scrollbar m-3" id="warhouse">
+            <h5 class="h5-title">@Localizer["Warhouse"]</h5>
+            <table id="tbwarhouse">
+                <tr>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Location"]</th>
+                    <th>@Localizer["Address"]</th>
+
+                </tr>
+            </table>
+        </div>
+        <div class="guom mt-2 widget-scrollbar m-3" id="guom">
+            <h5 class="h5-title">@Localizer["Group UOM"]</h5>
+            <table id="tbguom">
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Code"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="iemtg1 mt-2 widget-scrollbar m-3" id="iemtg1">
+            <h5 class="h5-title">@Localizer["Item Group 1"]</h5>
+            <table id="tbiemtg1">
+                <tr>
+                    <th>@Localizer["Item Name"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="iemtg2 mt-2 widget-scrollbar m-3" id="iemtg2">
+            <h5 class="h5-title">Item Group 2</h5>
+            <table id="tbiemtg2">
+                <tr>
+                    <th>@Localizer["Item Name"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="iemtg3 mt-2 widget-scrollbar m-3" id="iemtg3">
+            <h5 class="h5-title">Item Group 3</h5>
+            <table id="tbiemtg3">
+                <tr>
+                    <th>@Localizer["Item Name"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Pro mt-2 widget-scrollbar m-3" id="Pro">
+            <h5 class="h5-title">@Localizer["Proerty"]</h5>
+            <table id="tbPro">
+                <tr>
+                    <th>@Localizer["Property Name"]</th>
+                    <th>@Localizer["Property Active"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Table mt-2 widget-scrollbar m-3" id="Table">
+            <h5 class="h5-title">@Localizer["Table"]</h5>
+            <table id="tbTable">
+                <tr>
+                    <th>@Localizer["Table Name"]</th>
+                    <th>@Localizer["Status"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="GTable mt-2 widget-scrollbar m-3" id="GTable">
+            <h5 class="h5-title">@Localizer["Group Table"]</h5>
+            <table id="tbGTable">
+                <tr>
+                    <th>@Localizer["Group Name"]</th>
+                    <th>@Localizer["Type"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Freight mt-2 widget-scrollbar m-3" id="Freight">
+            <h5 class="h5-title">@Localizer["Freight"]</h5>
+            <table id="tbFreight">
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Remark mt-2 widget-scrollbar m-3" id="Remark">
+            <h5 class="h5-title">@Localizer["Remark Discounts"]</h5>
+
+            <table id="tbRemark">
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="per mt-2 widget-scrollbar m-3" id="per">
+            <h5 class="h5-title">@Localizer["PeriodIndicator"]</h5>
+            <table id="tbper">
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Posting mt-2 widget-scrollbar m-3" id="Posting">
+            <h5 class="h5-title">@Localizer["PostingPeriod"]</h5>
+            <table id="tbPosting">
+                <tr>
+                    <th>@Localizer["Period Name"]</th>
+                    <th>@Localizer["Period Code"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="chartacc mt-2 widget-scrollbar m-3" id="chartacc">
+            <h5 class="h5-title">@Localizer["Chart Of Account"]</h5>
+            <table id="tbchartacc">
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Code"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="journal mt-2 widget-scrollbar m-3" id="journal">
+            <h5 class="h5-title">@Localizer["Journal Entry"]</h5>
+            <table id="tbjournal">
+                <tr>
+                    <th>@Localizer["Number"]</th>
+                    <th>@Localizer["TranNo"]</th>
+                    <th>@Localizer["Remarks"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Priclist mt-2 widget-scrollbar m-3" id="Pricelist">
+            <h5 class="h5-title">@Localizer["Price List"]</h5>
+            <table id="tbPricelist">
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Businespartner mt-2 widget-scrollbar m-3" id="Businespartner">
+            <h5 class="h5-title">@Localizer["Busines Partner"]</h5>
+            <table id="tbBusinespartner">
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Type"]</th>
+                    <th>@Localizer["Phone"]</th>
+                    <th>@Localizer["Email"]</th>
+                    <th>@Localizer["Address"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="cardmember mt-2 widget-scrollbar m-3" id="cardmember">
+            <h5 class="h5-title">@Localizer["Card Member"]</h5>
+            <table id="tbcard">
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Descriptions"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Scurrency mt-2 widget-scrollbar m-3" id="Scurrency">
+            <h5 class="h5-title">@Localizer["Currency"]</h5>
+            <table id="tbScurrency">
+                <tr>
+                    <th>@Localizer["Symbol"]</th>
+                    <th>@Localizer["Description"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="Spaymeant mt-2 widget-scrollbar m-3" id="Spaymeant">
+            <h5 class="h5-title">@Localizer["Paymeant"]</h5>
+            <table id="tbSpaymeant">
+                <tr>
+                    <th>@Localizer["Type"]</th>
+                    <th>@Localizer["AccountID"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="SEmployee mt-2 widget-scrollbar m-3" id="SEmployee">
+            <h5 class="h5-title">@Localizer["Employee"]</h5>
+            <table id="tbSEmployee">
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Gender"]</th>
+                    <th>@Localizer["Address"]</th>
+                    <th>@Localizer["Phone"]</th>
+                    <th>@Localizer["Email"]</th>
+                    <th>@Localizer["Position"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="SSetupserivce mt-2 widget-scrollbar m-3" id="SSetupserivce">
+            <h5 class="h5-title">@Localizer["SetUp Service"]</h5>
+            <table id="tbSSetupserivce">
+                <tr>
+                    <th>@Localizer["SetupCode"]</th>
+                    <th>@Localizer["Price"]</th>
+                    <th>@Localizer["Remarks"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="SReceiptinfo mt-2 widget-scrollbar m-3" id="SReceiptinfo">
+            <h5 class="h5-title">@Localizer["Receipt Infromations"]</h5>
+            <table id="tbSReceiptinfo">
+                <tr>
+                    <th>@Localizer["Title"]</th>
+                    <th>@Localizer["Address"]</th>
+                    <th>@Localizer["Tel1"]</th>
+                    <th>@Localizer["Tel2"]</th>
+                    <th>@Localizer["Khmer Description"]</th>
+                    <th>@Localizer["English Description"]</th>
+                </tr>
+            </table>
+        </div>
+        <div class="SFuntion mt-2 widget-scrollbar m-3" id="SFuntion">
+            <h5 class="h5-title">@Localizer["Funtions"]</h5>
+            <table id="tbSFuntion">
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Type"]</th>
+                    <th>@Localizer["Code"]</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="~/Admin/Searchs/js/search.js"></script>

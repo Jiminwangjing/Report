@@ -1,0 +1,29 @@
+ [title-tip]::before {
+    content: attr(title-tip);
+    padding: 5px;
+    color: #333;
+    position: absolute;
+    right: 0;
+    left: auto;
+    top: 10%;
+    z-index: 20;
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-word;
+    font-size: .6em;
+    font-weight: normal;
+    line-height: 1.7;
+    border-radius: 2.5px;
+    text-transform: initial;
+    -moz-border-radius: 2.5px;
+    -webkit-border-radius: 2.5px;
+    -moz-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, .7);
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, .7);
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, .7);
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #eeeeee),color-stop(1, #cccccc));
+    background-image: -webkit-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -ms-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -o-linear-gradient(top, #eeeeee, #cccccc);
+}

@@ -1,0 +1,129 @@
+﻿@using KEDI.Core.Premise.Models.Services.CanRingExchangeAdmin;
+@model ExchangeCanRingMaster;
+@{
+    ViewData["Title"] = "Print Exchange Can Ring";
+    Layout = "_Layout_print";
+}
+<style>
+    .flex {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+    }
+
+    table thead th {
+        color: white;
+    }
+</style>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-xs-4">
+            <img src="~/Images/company/@Model.CampanyLogo" width="150" height="130" style="padding:0px 0px 0px 10px;" />
+        </div>
+        <div class="col-xs-4" style="margin-top:70px;">
+            <div class="text-center" style="opacity:0;">.</div>
+            <div class="text-center" style="font-size:30px; margin-top:-20px;"> របាយការណ៍​ ប្តូរក្រវឹលកំប៉ុង </div>
+            <div class="text-center" style="font-size:30px; margin-top:10px;"> Exchange Can Ring Report </div>
+            <div class="row" style="margin-top:75px;"></div>
+        </div>
+        <div class="col-xs-4"> </div>
+    </div>
+    <div class="table">
+        <table class="table table-bordered table-striped">
+            <thead style="background-color:#5F758B;">
+                <tr>
+                    <th>@Localizer["Doc. Code"]</th>
+                    <th>@Localizer["Invoice"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Item"]</th>
+                    <th>@Localizer["Qty"]</th>
+                    <th>@Localizer["Item Change"]</th>
+                    <th>@Localizer["Qty Change"]</th>
+                    <th>@Localizer["Total"]</th>
+                    @*<th>@Localizer["Total"]</th>*@
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.DocCode</td>
+                    <td>@Model.Number</td>
+                    <td>Posting Date : @Model.CreatedAt.ToString("dd-MM-yyyy")</td>
+                    <td>Vendor : @Model.VendorName</td>
+                    <td>User : @Model.UserName</td>
+                    <td>Warehouse : @Model.WarehouseName</td>
+                    <td>Price List : @Model.PriceList</td>
+                    <td>Payment Means : @Model.PaymentMeans</td>
+                </tr>
+                @foreach (var item in Model.ExchangeCanRingDetails)
+                {
+                    <tr>
+                        <td colspan="2"></td>
+                        <td>@item.Name</td>
+                        <td>@item.ItemName</td>
+                        <td>@item.QtyDis</td>
+                        <td>@item.ItemChangeName</td>
+                        <td>@item.ChangeQtyDis</td>
+                        <td>@item.Total</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <table class="table table-bordered table-striped">
+            <tr> </tr>
+            <tr style="background-color:#5F758B; padding:0px;">
+                <th class="header" style="color:white;"> *** @Localizer["Summary"] </th>
+                <th></th>
+            </tr>
+            <tr> </tr>
+            <tr>
+                <th> @Localizer["Total"] : </th>
+                <th class="text-danger">@Model.TotalDis</th>
+            </tr>
+            <tr>
+                <th> @Localizer["Total SCC"] : </th>
+                <th class="text-danger">@Model.TotalSystemDis</th>
+            </tr>
+            <tr>
+                <th> @Localizer["Total LCC"] : </th>
+                <th class="text-danger">@Model.TotalLocal</th>
+            </tr>
+        </table>
+    </div>
+    <div class="row mt-5">
+        <div class="col-xs-4">
+            <label> **@Localizer["Acknowledge"] </label>
+            <hr style="margin-top:-3px; background-color:gray; color:gray; height:1px; width:80%; float:left;" />
+            <div style="margin-top:65px;">
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;">
+                <b>
+                    <u> @Localizer["Published by"] </u>
+                </b>
+                s
+            </div>
+        </div>
+        <div class="col-xs-4" style="margin-top:95px;">
+            <div>
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;">
+                <b>
+                    <u> @Localizer["Reviewed by"] </u>
+                </b>
+            </div>
+        </div>
+        <div class="col-xs-4" style="margin-top:95px;">
+            <div>
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;">
+                <b>
+                    <u> @Localizer["Approved by"] </u>
+                </b>
+            </div>
+        </div>
+    </div>
+</div>

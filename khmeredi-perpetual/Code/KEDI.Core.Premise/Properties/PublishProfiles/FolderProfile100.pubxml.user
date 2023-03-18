@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\KERNEL PROJECT\BR-VASROS\Default-26-7-2022</_PublishTargetUrl>
+    <History>True|2022-07-26T02:19:17.6078195Z;</History>
+  </PropertyGroup>
+</Project>

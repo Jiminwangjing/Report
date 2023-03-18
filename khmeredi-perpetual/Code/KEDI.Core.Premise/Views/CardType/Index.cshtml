@@ -1,0 +1,116 @@
+﻿@model Pagination<CardType>
+
+    @{
+        ViewData["Title"] = "Index";
+    }
+<style>
+    .tbncrate {
+        margin-top: 10px;
+        background-color: #00bfff;
+        color: white;
+    }
+
+    #table, tr, th {
+        text-align: center !important;
+    }
+
+    #table, tr, td {
+        text-align: center !important;
+    }
+
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+</style>
+
+<div class="card card-body">
+    <div class="group-search-boxes">
+        <a asp-action="Create" class="btn btn-kernel btn-xs tbncrate"> @Localizer["Create"]</a>
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-cardtype" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <br />
+    <input type="text" id="txtid" hidden />
+    <div class="wrap-table list">
+        <table id="cardtype">
+            <tr>
+                <th>
+                    @Localizer["Name"]
+                </th>
+                <th>
+                    @Localizer["Discount"]
+                </th>
+                <th>
+                    @Localizer["DiscountType"]
+                </th>
+                <th>
+                    @Localizer["Action"]
+                </th>
+            </tr>
+        </table>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let $listView = ViewTable({
+            keyField: "ID",
+            visibleFields: ["Name", "Discount","TypeDis"],
+            actions: [
+                {
+                    template: "<i class='fas fa-edit fn-orange fa-lg csr-pointer'></i>",
+                    on: {
+                        "click": function (e) {
+                            location.href = "/CardType/Edit?id=" + e.key;
+                        }
+                    }
+                },
+                {
+                    template: '<a asp-action="Delete"><i class="fa fa-trash"></i></a>',
+                    on: {
+                        "click": function (e) {
+                            let $dialog = new DialogBox({
+                                type: "ok-cancel",
+                                caption: "Delete Item",
+                                content: "Are you sure you want to delete this?"
+                            });
+                            $dialog.confirm(function () {
+                                $.post("/CardType/Delete", { id: e.key },
+                                    function () {
+                                        $(e.row).remove();
+                                        $dialog.shutdown();
+                                    });
+                            });
+                        }
+                    }
+                },
+            ],
+            selector: "#cardtype",
+        });
+
+        searchCardType($listView);
+        $("#search-cardtype").on("keyup", function () {
+            searchCardType($listView, this.value);
+        });
+        function searchCardType($listView, keyword = "") {
+            $.get("/CardType/GetCardType", {
+                keyword: keyword
+            },
+                function (cardtype) {
+                    $listView.clearRows();
+                    $listView.bindRows(cardtype);
+                });
+        }
+    });
+</script>
+

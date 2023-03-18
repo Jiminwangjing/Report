@@ -1,0 +1,88 @@
+@model IEnumerable<KEDI.Core.Premise.Models.Sale.Print.PrintSaleHistory>
+@{
+    ViewData["Title"] = "SummerySheet";
+    Layout = "_Layout_print";
+    var num =0;
+    double sub_Total=0;
+ 
+}
+<Style>
+ body {
+        font-family: 'Khmer OS Battambang';
+        font-size: 16px;
+    }
+.tb-detail ,thead,tbody,th,tr,td{
+    border: 1px solid black;
+    text-align: center;
+    height:50px;
+
+}
+b{
+    
+}
+p{
+    margin-left: 30px;
+}
+
+
+</Style>
+
+<table style="width: 65%; border:hidden;">
+    <tr>
+        <td><img src="~/Images/company/@Model.First().Logo" width="150px" height="150px" style="margin-left: 20px; margin-right:30px"></td>
+        <td style="border:hidden ;margin-left: 30px"> <p><b style="font-size: 32px; ">@Model.FirstOrDefault().Branch</b><br>@Model.FirstOrDefault().Addresskh<br>@Model.FirstOrDefault().Tel1 @Model.FirstOrDefault().Tel2</p> </td>
+    </tr>
+</table><br>
+<table style="width: 100%; border:hidden;">
+    <tr>
+        <td style="text-align: left;"><p>Customer :@Model.FirstOrDefault().CusName<br>@Model.FirstOrDefault().Address <br>Tel: @Model.FirstOrDefault().Phone</br></p></td>
+        <td style="border:hidden;text-align: right">Date:<input readonly id="currdate" style="border: none;text-align:right;width:80px"></input></td>
+    </tr>
+</table>
+    
+  
+<h3 style="text-align: center;">Summary Sheet</h3>
+<table class="tb-detail" border="2" style="width: 100%;">
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Invoice No.</th>
+            <th>Invoice Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+         @foreach (var item in Model){
+            num++;
+            sub_Total+=item.TotalAmount;
+            <tr>
+                <td>@num</td>
+                <td>@item.Invoice</td>
+                <td>@item.PostingDate</td>
+                <td>@item.Remarks</td>
+                <td>@(string.Format("{0:n2}",item.TotalAmount))</td>
+            </tr>
+         }
+        
+        <tr>
+            <td colspan="4" style=" border-bottom: hidden; border-left:hidden; text-align:right; padding:5px;"><b>Total</b></td>
+            <td>@(Model.FirstOrDefault().SysCurrency + " " + string.Format("{0:n2}", sub_Total))</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Note: If the payment is made by check, Please write the name of receiver: @Model.FirstOrDefault().CusName</p><br><br>
+<p>Prepared by</p><br><br><br><br>
+<p>_______________________</p>
+<p style="padding-left: 80px;">Admin</p>
+
+<script>
+    var currentdate = new Date(); 
+    var datetime =  currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() 
+
+$("#currdate").val(datetime);
+</script>
+

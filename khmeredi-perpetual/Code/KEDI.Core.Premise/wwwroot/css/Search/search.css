@@ -1,0 +1,226 @@
+.search-menu-box {
+    width: 250px;
+    height: 30px;
+    margin-top: 4px;
+    border-radius:18px;
+    display:block !important;
+
+}
+#search-menu-input {
+    border-radius: 18px;
+}
+.itemsearchGloble {
+    margin-top: 4px;
+    margin-right: 10px;
+    max-width: 12%;
+    font-size: 14px;
+    margin-left: 3%;
+    border-radius: 18px;
+}
+
+.flex-header {
+    display: flex;
+    align-content: center;
+    width: 600px;
+}
+
+
+.menu-container {
+    background-color: #f6f6f6;
+    min-width: 230px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    z-index: 1;
+    display: none;
+}
+
+.menu-container table {
+    color: black;
+    padding: 6px 10px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+}
+ .menu-container a {
+        color: black;
+        padding: 6px 10px;
+        text-decoration: none;
+        display: block;
+        font-size: 14px;
+   }
+
+ .menu-container a:hover {
+  background-color: #ddd;
+ }
+
+/*.search-menu-box .menu-container.show {
+    display: block !important;
+}
+
+.search-menu-box .container-search-data .item-master-data1{
+    display: block !important;
+}*/
+.show-search{
+    display:block !important;
+}
+
+.container-search-data {
+    border: 1px solid #ddd;
+    z-index: 1;
+    overflow: auto;
+    height: auto;
+    max-height: 500px;
+    max-width: 500px;
+
+}
+.menu-container {
+    width: 300px;
+    max-height: 500px;
+    min-height: 200px;
+    height: auto;
+    display: none;
+    background: #BEEFFE;
+}
+#container-search-data {
+    width: 500px;
+    max-height: 500px;
+    min-height: 200px;
+    height: auto;
+    display: none;
+    background: #BEEFFE;
+}
+.item-master-data1 {
+    display: none;
+    width: 500px;
+
+    
+}
+.receipt {
+    display: none;
+    width: 500px !important;
+}
+.AccBalnce {
+    display: none;
+    width: 500px !important;
+}
+.ItemAcc {
+    display: none;
+    width: 500px !important;
+}
+.Company {
+    display: none;
+    width: 500px !important;
+}
+.Brand {
+    display: none;
+    width: 500px !important;
+}
+.Useracc {
+    display: none;
+    width: 500px !important;
+}
+.PrinterName {
+    display: none;
+    width: 500px !important;
+}
+.iemtg1 {
+    display: none;
+    width: 500px !important;
+}
+.iemtg2 {
+    display: none;
+    width: 500px !important;
+}
+.iemtg3 {
+    display: none;
+    width: 500px !important;
+}
+.Pro {
+    display: none;
+    width: 500px !important;
+}
+.Table {
+    display: none;
+    width: 500px !important;
+}
+.GTable {
+    display: none;
+    width: 500px !important;
+}
+.Freight {
+    display: none;
+    width: 500px !important;
+}
+.Remark {
+    display: none;
+    width: 500px !important;
+}
+.per {
+    display: none;
+    width: 500px !important;
+}
+.Posting {
+    display: none;
+    width: 500px !important;
+}
+.chartacc {
+    display: none;
+    width: 500px !important;
+}
+.journal {
+    display: none;
+    width: 500px !important;
+}
+.Priclist {
+    display: none;
+    width: 500px !important;
+}
+.Businespartner {
+    display: none;
+    width: 500px !important;
+}
+.cardmember {
+    display: none;
+    width: 500px !important;
+}
+.Scurrency {
+    display: none;
+    width: 500px !important;
+}
+.Spaymeant {
+    display: none;
+    width: 500px !important;
+}
+.SEmployee {
+    display: none;
+    width: 500px !important;
+}
+.SSetupserivce {
+    display: none;
+    width: 500px !important;
+}
+.SReceiptinfo {
+    display: none;
+    width: 500px !important;
+}
+.SFuntion {
+    display: none;
+    width: 500px !important;
+}
+.unitofmeasure {
+    display: none;
+    width: 500px !important;
+}
+.guom {
+    display: none;
+    width: 500px !important;
+}
+.warhouse {
+    display: none;
+    width: 500px !important;
+}
+
+.h5-title {
+    color: #000;
+    font-weight: bold;
+}

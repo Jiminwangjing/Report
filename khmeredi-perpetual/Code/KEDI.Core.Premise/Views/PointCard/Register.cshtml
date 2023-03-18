@@ -1,0 +1,505 @@
+﻿<style>
+    fieldset.scheduler-border {
+        border: 2px groove #e6ffe6;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 0 0 1.5em 0 !important;
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #00cc00;
+    }
+
+    legend.scheduler-border {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+    }
+
+    .btnadd {
+        margin-bottom: 5px;
+        background-color: #00bfff;
+        color: white;
+    }
+
+    .modal-header {
+        background-color: blue;
+    }
+
+    .modal-header {
+        cursor: move;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+    .form-label {
+        font-weight: bold;
+        position: absolute;
+        left: 25px;
+        top: 20px;
+        color: #999;
+        background-color: #fff;
+        z-index: 10;
+        transition: transform 150ms ease-out, font-size 150ms ease-out;
+    }
+
+    .focused .form-label {
+        transform: translateY(-125%);
+        font-size: 19px;
+        font-weight: bold;
+    }
+
+    form-input {
+        position: relative;
+        padding: 12px 0px 5px 0;
+        width: 100%;
+        outline: 0;
+        border: 0;
+        box-shadow: 0 1px 0 0 #e5e5e5;
+        transition: box-shadow 150ms ease-out;
+    }
+
+    form-select {
+        position: relative;
+        padding: 12px 0px 5px 0;
+        width: 100%;
+        outline: 0;
+        border: 0;
+        box-shadow: 0 1px 0 0 #e5e5e5;
+        transition: box-shadow 150ms ease-out;
+    }
+
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+</style>
+
+
+<button class="btn btn-xs  btnadd" data-toggle="modal" data-target="#ModalInserCardPoint">@Localizer["Create"]</button>
+<fieldset class="scheduler-border">
+    <legend class="scheduler-border">@Localizer["CardPoint"]</legend>
+    <div class="row">
+        <div class="col-md-8"> </div>
+        <div class="col-md-4 pull-right" style="margin:10px 0px;">
+            <div class="input-group">
+                <input class="search-query form-control" name="item-name" type="text" value="" placeholder="@Localizer["TextSearch"]" id="searchCard">
+                <div class="input-group-append">
+                    <button class="btn btn-sm"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrap-table list">
+        <table>
+            <thead>
+                <tr>
+                    <th>@Localizer["Ref_No"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["PointType"]</th>
+                    <th>@Localizer["Point"]</th>
+                    <th>@Localizer["Remain"]</th>
+                    <th>@Localizer["CreateDate"]</th>
+                    <th>@Localizer["ExpireDate"]</th>
+                    <th>@Localizer["Approve"]</th>
+                    <th>@Localizer["Action"]</th>
+                </tr>
+            </thead>
+            <tbody class="listCardPoint"></tbody>
+        </table>
+    </div>
+   
+</fieldset>
+<div class="modal fade" id="ModalInserCardPoint">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" style="color:white;"><b style="margin-left:4px;">@Localizer["CreateCardPoint"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-wrapper">
+                            <input type="hidden" id="txtid" />
+                            <form action="" class="form">
+                                <div class="form-group">
+                                    <label class="form-label" for="txtPointID">@Localizer["Point"]</label>
+                                    <select class="form-control" id="txtPointID" onchange="cheng()">
+                                        <option value="0" selected disabled>--- Select ---</option>
+                                    </select>
+                                    <div class="text-danger required_PointID"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="txtRef_No">@Localizer["Reference"]</label>
+                                    <input id="txtRef_No" class="form-control" type="text"  />
+                                    <div class="text-danger required_re_no"></div>
+                                    <div class="text-danger" id="error_Ref_no"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="txtName">@Localizer["Name"]</label>
+                                    <input id="txtName" class="form-control" type="text" />
+                                    <div class="text-danger required_name"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="txtDescription">@Localizer["Description"]</label>
+                                    <input id="txtDescription" class="form-control" type="text" />
+                                    <div class="text-danger required_Description"></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success btn_Add" onclick="InsertCardPoint()">@Localizer["Add"]</button>
+                <button class="btn btn-sm btn-danger" data-dismiss="modal" onclick="Clickclose()">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="txtid" />
+<label class="btnSave" hidden>@Localizer["Save"]</label>
+<label class="btnAdd" hidden>@Localizer["Add"]</label>
+<label id="btnRef_No"></label>
+<script type="text/javascript"> 
+   
+    $(document).ready(function () {
+        $(".modal-header").on("mousedown", function (mousedownEvt) {
+            var $draggable = $(this);
+            var x = mousedownEvt.pageX - $draggable.offset().left,
+                y = mousedownEvt.pageY - $draggable.offset().top;
+            $("body").on("mousemove.draggable", function (mousemoveEvt) {
+                $draggable.closest(".modal-dialog").offset({
+                    "left": mousemoveEvt.pageX - x,
+                    "top": mousemoveEvt.pageY - y
+                });
+            });
+            $("body").one("mouseup", function () {
+                $("body").off("mousemove.draggable");
+            });
+            $draggable.closest(".modal").one("bs.modal.hide", function () {
+                $("body").off("mousemove.draggable");
+            });
+        });
+        $("#searchCard").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".listCardPoint tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $('input').focus(function () {
+            $(this).parents('.form-group').addClass('focused');
+        });
+
+        $('input').blur(function () {
+            var inputValue = $(this).val();
+            if (inputValue == "") {
+                $(this).removeClass('filled');
+                $(this).parents('.form-group').removeClass('focused');
+            } else {
+                $(this).addClass('filled');
+            }
+        })
+        $('select').focus(function () {
+            $(this).parents('.form-group').addClass('focused');
+        });
+        $('select').blur(function () {
+            var inputValue = $(this).val();
+            if (inputValue == "") {
+                $(this).removeClass('filled');
+                $(this).parents('.form-group').removeClass('focused');
+            } else {
+                $(this).addClass('filled');
+            }
+        });
+        $.ajax({
+            url: "/Point/GetBasecurrency",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                $.each(respones, function (i, item) {
+                    Currency = item.Description;
+                })
+                $.ajax({
+                    url: "/PointCard/GetPoint",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var data = "";
+                        $.each(respones, function (i, item) {
+                            Point_ID = item.Points;
+                            data = '<option value="' + item.ID + '">' + item.Amount + ' ' + Currency + ' ' + '=' + ' ' + item.Points + ' ' + "Points" + '</option>';
+                            $("#txtPointID").append(data);
+                        })
+                    }
+                })
+                $.ajax({
+                    url: "/PointCard/GetPointCard",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        GetDataTable(respones);
+                    }
+                })
+            }
+        })
+
+    });
+    //GetDataBale
+    function GetDataTable(respones) {
+        var data = "";
+        $.each(respones, function (i, item) {
+            var date_Create = item.DateCreate;
+            var create_date = date_Create.slice(0, 10);
+            var date_ex = item.ExpireDate;
+            var ex_date = date_ex.slice(0, 10);
+            var App = item.Approve;
+            if (App == "No") {
+                data +=
+                    '<tr>' +
+                    '<td hidden>' + item.ID + '</td>' +
+                    '<td hidden>' + item.PointID + '</td>' +
+                    '<td>' + item.Ref_No + '</td>' +
+                    '<td>' + item.Name + '</td>' +
+                    '<td>' + item.Points.Amount + ' ' + Currency + ' = ' + Point_ID + ' ' + "Points" + '</td>' +
+                    '<td>' + item.Point + '</td>' +
+                    '<td>' + item.Remain + '</td>' +
+                    '<td>' + create_date + '</td>' +
+                    '<td>' + ex_date + '</td>' +
+                    '<td  style="color:red;">' + item.Approve + '</td>' +
+                    '<td hidden>' + item.Description + '</td>' +
+                    '<td hidden>' + item.DataApprove + '</td>' +
+                    '<td>' + '<i class="fa fa-edit editCardpoint" title="Edit" data-toggle="modal" data-target="#ModalInserCardPoint"></i>' + '</td>' +
+                    '</tr>';
+            }
+            else {
+
+                data +=
+                    '<tr>' +
+                    '<td hidden>' + item.ID + '</td>' +
+                    '<td hidden>' + item.PointID + '</td>' +
+                    '<td>' + item.Ref_No + '</td>' +
+                    '<td>' + item.Name + '</td>' +
+                    '<td>' + item.Points.Amount + ' ' + Currency + ' = ' + Point_ID + ' ' + "Points" + '</td>' +
+                    '<td>' + item.Point + '</td>' +
+                    '<td>' + item.Remain + '</td>' +
+                    '<td>' + create_date + '</td>' +
+                    '<td>' + ex_date + '</td>' +
+                    '<td style="color:Blue;">' + item.Approve + '</td>' +
+                    '<td hidden>' + item.Description + '</td>' +
+                    '<td hidden>' + item.DataApprove + '</td>' +
+                    '<td>' + '<i class="fa fa-edit editCardpoint" title="Edit" data-toggle="modal" data-target="#ModalInserCardPoint"></i>' + '</td>' +
+                    '</tr>';
+            }
+
+        });
+        $(".listCardPoint").append(data);
+    }
+    // edit
+    $(".listCardPoint").on('click', '.editCardpoint', function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        var Re_NO = cut.find('td:eq(2)').text();
+        var name = cut.find('td:eq(3)').text();
+        var PointID = cut.find('td:eq(1)').text();
+        var des = cut.find('td:eq(10)').text();
+        $(".btn_Add").html($(".btnSave").text());
+        document.getElementById("txtid").value = id;
+        document.getElementById("txtRef_No").value = Re_NO;
+        document.getElementById("txtName").value = name;
+        document.getElementById("txtPointID").value = PointID;
+        document.getElementById("txtDescription").value = des;
+        document.getElementById("btnRef_No").value = Re_NO;
+    });
+    function delay(callback, ms) {
+        var timer = 0;
+        return function () {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                callback.apply(context, args);
+            }, ms || 0);
+        };
+    }
+    $('#txtRef_No').keyup(delay(function (e) {
+        CheckRef_No();
+    }, 800));
+    //check ReF-No
+    function CheckRef_No() {
+        var id = $("#txtid").val();
+        var odlRe_No = $("#btnRef_No").val();
+        var ref_no = $("#txtRef_No").val();
+        if (id == null) {
+            $.ajax({
+                url: "/PointCard/CheckReferentNumber",
+                type: "Post",
+                data: { Check: ref_no },
+                dataType: "JSON",
+                success: function (respones) {
+
+                    var isHase = false;
+                    $.each(respones, function (i, item) {
+                        isHase = true;
+                    })
+                    if (isHase == true) {
+                        $('#error_Ref_no').text("This refernce number  already exist !");
+                        $("#txtRef_No").css("border-color", "red");
+                        $(".btn_Add").attr("disabled", true);
+                    }
+
+                    else {
+                        $("#txtRef_No").css("border-color", "lightgrey");
+                        $('#error_Ref_no').text("");
+                        $(".btn_Add").attr("disabled", false);
+
+                    }
+                }
+            })
+        }
+        else {
+            if (ref_no == odlRe_No) {              
+                $("#txtRef_No").css("border-color", "lightgrey");
+                $('#error_Ref_no').text("");
+                $(".btn_Add").attr("disabled", false);
+            }
+            else {
+                $.ajax({
+                    url: "/PointCard/CheckReferentNumber",
+                    type: "Post",
+                    data: { Check: ref_no },
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var isHase = false;
+                        $.each(respones, function (i, item) {
+                            isHase = true;
+                        })
+                        if (isHase == true) {
+                            $('#error_Ref_no').text("This refernce number  already exist !");
+                            $("#txtRef_No").css("border-color", "red");
+                            $(".btn_Add").attr("disabled", true);
+                        }
+
+                        else {
+                            $("#txtRef_No").css("border-color", "lightgrey");
+                            $('#error_Ref_no').text("");
+                            $(".btn_Add").attr("disabled", false);
+
+                        }
+                    }
+                })
+            }
+        }
+
+    }
+   
+    //
+    function InsertCardPoint() {
+        var id = $("#txtid").val();
+        var pointID = $("#txtPointID").val();
+        var re_no = $("#txtRef_No").val();
+        var name = $("#txtName").val();
+        var descrciption = $("#txtDescription").val();
+        var dt = new Date().toLocaleDateString();
+        $(".btn_Add").html($(".btnAdd").text());
+        var count = 0;
+        if (pointID == '' || pointID == 0) {
+            count++;
+            $("#txtPointID").css("border-color", "red");
+            $(".required_PointID").text("Please select point type !")
+        }
+        else {
+           
+            $("#txtPointID").css("border-color", "lightgrey");
+            $(".required_PointID").text("");
+        }
+        if (re_no == '') {
+            count++;
+            $("#txtRef_No").css("border-color", "red");
+            $(".required_re_no").text("Please input reference number !");
+        }
+        else {
+            
+            $("#txtRef_No").css("border-color", "lightgrey");
+            $(".required_re_no").text("");
+        }
+        if (name == '') {
+            count++;
+            $("#txtName").css("border-color", "red");
+            $(".required_name").text("Please input name !");
+        }
+        else {
+           
+            $("#txtName").css("border-color", "lightgrey");
+            $(".required_name").text("");
+        }
+        if (descrciption == '') {
+            count++;
+            $("#txtDescription").css("border-color", "red");
+            $(".required_Description").text("Please input Description !");
+        } else {
+            
+            $("#txtDescription").css("border-color", "lightgrey");
+            $(".required_Description").text("");
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+
+        var data = {
+            ID: id,
+            PointID: pointID,
+            Ref_No: re_no,
+            Name: name,
+            Remain: 0,
+            Point: 0,
+            Description: descrciption,
+            ExpireDate: dt,
+            Approve: "No",
+            DateCreate: dt,
+            DataApprove: dt
+        }
+        $.ajax({
+            url: "/PointCard/InsertPointCard",
+            type: "POST",
+            dataType: "JSON",
+            data: { pointCard: data },
+            success: function (respones) {
+                $(".listCardPoint").empty();
+                $("#txtPointID").val("");
+                $("#txtRef_No").val("");
+                $("#txtName").val("");
+                $("#txtDescription").val("");
+                $.ajax({
+                    url: "/PointCard/GetPointCard",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        GetDataTable(respones);
+                    }
+                })
+                $("#txtid").val("");
+            }
+        })
+    }
+    function Clickclose() {
+        $("#txtPointID").css("border-color", "lightgrey");
+        $(".required_PointID").text("");
+        $("#txtRef_No").css("border-color", "lightgrey");
+        $(".required_re_no").text("");
+        $("#txtName").css("border-color", "lightgrey");
+        $(".required_name").text("");
+        $("#txtDescription").css("border-color", "lightgrey");
+        $(".required_Description").text("");
+        $("#txtid").val("");
+
+        $("#txtPointID").val("");
+        $("#txtRef_No").val("");
+        $("#txtName").val("");
+        $("#txtDescription").val("");
+
+    }
+</script>

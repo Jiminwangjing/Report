@@ -1,0 +1,165 @@
+﻿@model PaymentMeans
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<style>
+    .fa {
+        margin-right: 4px;
+    }
+
+    .stylebutton {
+        margin-left: 12px;
+    }
+
+    #click_dialog {
+        cursor: pointer;
+    }
+
+    .reload {
+        margin-top: -350px;
+    }
+</style>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div> 
+                <input type="hidden" asp-for="ID" />
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="control-label">@Localizer["Type"]</label>
+                            <input asp-for="Type" class="input-box-kernel" />
+                            <span asp-validation-for="Type" class="text-danger"></span>
+                        </div>
+                          @if(!UserManager.CheckEdition(SystemEdition.Basic))
+                                {
+                                    <div class="col-md-3">
+                                    <label class="control-label">@Localizer["Choose Account"]</label>
+                                    <div id="click_dialog"><input class="input-box-kernel" readonly id="select_account" /></div>
+                                    <input asp-for="AccountID" id="accountID" hidden />
+                                    <span asp-validation-for="AccountID" class="text-danger"></span>
+                                    </div>
+                                }
+                       
+                        <div class="col-md-2">
+                            <label class="control-label">@Localizer["Default"]</label>
+                            <input asp-for="Default" type="checkbox" class="form-control" />
+                            <span asp-validation-for="Default" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                  @if(!UserManager.CheckEdition(SystemEdition.Basic))
+                   {
+                    <span class="text-danger">@ViewBag.Account</span> 
+                 }
+                <div class="row pull-left">
+                    <div class="col-md-12 stylebutton">
+                        <button class="btn btn-kernel btn-xs" type="submit">@Localizer["Save"]</button>
+                        <a class="btn btn-xs btn-kernel" asp-action="Index"> @Localizer["Back"]</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="active-gl-content" class="widget-scrollbar" style="display:none; height: 400px;">
+        <div class="group-search-boxes float-right mb-2">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearch" autocomplete="off" type="text" placeholder="Search ...">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="list-active-gl"  style="height: 400px; overflow: auto;">
+            <thead>
+                <tr>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+        <div class="row mt-4">
+            <div class="col-md-5"></div>
+            <div class="col-md-6">
+                <div class="reload">
+                    <img src="~/Images/ajaxloader/loading.gif" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#click_dialog").click(function () {
+            chooseCode();
+        });
+        const accID = parseInt($("#accountID").val());
+        search("#txtSearch", "#list-active-gl tr:not(:first-child)");
+        $.get("/ItemGroup1/GetGlAccountLastLevel", function (resp) {
+            $.each(resp, function (index, value) {
+                if (value.ID === accID) {
+                    $("#select_account").val(value.Code + " - " + value.Name);
+                };
+            });
+        });
+    });
+    function chooseCode() {
+        let dialog = new DialogBox({
+            button: {
+                ok: {
+                    text: "Close",
+                    callback: function () {
+                        this.meta.shutdown();
+                    }
+                }
+            },
+            content: {
+                selector: "#active-gl-content"
+            }
+        });
+
+        dialog.invoke(function () {
+            $(".reload").show();
+            $.get("/ItemGroup1/GetGlAccountLastLevel", function (resp) {
+                let $listActiveGL = ViewTable({
+                    keyField: "ID",
+                    selector: dialog.content.find("#list-active-gl"),
+                    paging: {
+                        pageSize: 10,
+                        enabled: false
+                    },
+                    visibleFields: ["Code", "Name"],
+                    actions: [
+                        {
+                            template: "<i class='fas fa-arrow-circle-down'></i>",
+                            on: {
+                                "click": function (e) {
+                                    $("#select_account").val(e.data.Code + " - " + e.data.Name);
+                                    $("#accountID").val(e.data.ID);
+                                    dialog.shutdown();
+                                }
+                            }
+                        }
+                    ]
+                });
+                $listActiveGL.clearRows();
+                $listActiveGL.bindRows(resp);
+                $(".reload").hide();
+            });
+        });
+    }
+    //search
+    function search(searchInput, filter) {
+        $(searchInput).on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(filter).filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    }
+</script>

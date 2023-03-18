@@ -1,0 +1,38 @@
+﻿@model CKBS.Models.Services.POS.Template.POSModel;
+
+<div id="fx-choose-customer-ks" class="csr-pointer flexbox icon-tab m-1" title="@Localizer["Choose customer"]">
+    <i class="fas fa-user fa-lg fn-white"></i>
+    @*<span id="chosen-customer" class="item" title="@Localizer["Choose customer"]">@Model.Customer.Name</span>     *@
+
+    <div id="choose-customer-content-ks" style="display: none; height: height: 80vh;">
+        <div class="widget-tab stretch">
+            <div class="tab-sheet active">
+                <div class="tab-title"><i class="fas fa-list-alt"></i> @Localizer["List"]</div>
+                <div class="tab-content widget-scrollbar">
+                    <div class="group-search-boxes mb-2">
+                        <div id="text-search-ks" class="search-box show">
+                            <div class="input-box" style="width: 250px;">
+                                <i id="i-search-ks" class="i-search fas fa-search"></i>
+                                <input class="ignore" id="search-customers-ks" type="text" autocomplete="off" placeholder="@Localizer["Search ..."]">
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+
+                    <table id="listview-customers-ks">
+                        <tr>
+                            <th>@Localizer["№"]</th>
+                            <th>@Localizer["Code"]</th>
+                            <th>@Localizer["Name"]</th>
+                            <th>@Localizer["Type"]</th>
+                            <th>@Localizer["Phone"]</th>
+                            <th>@Localizer["Email"]</th>
+                            <th>@Localizer["Choose"]</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

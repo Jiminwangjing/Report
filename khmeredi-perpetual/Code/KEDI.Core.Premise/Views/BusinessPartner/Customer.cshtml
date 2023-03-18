@@ -1,0 +1,116 @@
+﻿
+@model Pagination<BusinessPartner>
+
+@{
+    ViewData["Title"] = "Vendor";
+}
+
+<style>
+    .tbncrate {
+        margin-top: 10px;
+        background-color: #00bfff;
+        color: white;
+    }
+
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+
+    .fa-copy {
+        color: blue;
+    }
+
+    #table, tr, th {
+        text-align: center !important;
+    }
+
+    #table, tr, td {
+        text-align: center !important;
+    }
+</style>
+<div class="card card-body">
+    <div class="d-flex justify-content-between">
+        <div class="flexbox">
+            <a asp-action="CreateCustomer" class="btn btn-xs btn-kernel
+                tbncrate">
+                @Localizer["Create"]</a>
+            <a asp-action="ExportCustomer" class="btn btn-xs btn-kernel
+                tbncrate">
+                @Localizer["Export"]</a>
+        </div>
+
+
+        <input type="text" id="txtid" hidden />
+        <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-business"
+                        autocomplete="off" type="text"
+                        placeholder="@Localizer["Search ..."]" />
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i
+                        class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <input type="hidden" id="txtid" />
+    <div class="wrap-table">
+        <table class="business" id="list">
+            <tr>
+                <th>@Localizer["#"]</th>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Type"]</th>
+                <th>@Localizer["Group 1"]</th>
+                <th>@Localizer["Phone"]</th>
+                <th>@Localizer["PriceList"]</th>
+            </tr>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        let $listView = ViewTable({
+            keyField: "ID",
+            selector: "#list",
+            indexed: true,
+            paging: {
+                enabled: true,
+                pageSize: 25
+            },
+            visibleFields: ["Code", "Name", "Type", "phone", "PriceList", "Group1"],
+            columns: [
+                {
+                    name: "Code",
+                    on: {
+                        "dblclick": function (e) {
+                            location.href = "/BusinessPartner/UpdateCustomer?id=" + e.key;
+                        }
+                    }
+                }
+            ]
+        });
+        searchBusinessPartner($listView);
+        $("#search-business").on("keyup", function () {
+            searchBusinessPartner($listView, this.value);
+        });
+
+        function searchBusinessPartner($listView, keyword = "") {
+            $.get("/BusinessPartner/GetCustomer", {
+                keyword: keyword
+            },
+                function (businesspartner) {
+                    $listView.clearRows();
+                    $listView.bindRows(businesspartner);
+
+                });
+        }
+    });
+</script>

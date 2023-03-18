@@ -1,0 +1,40 @@
+﻿<div class="kedi-scrollbar">
+    <table id="list-client-api">
+        <thead>
+            <tr>
+                <th>@Localizer["Client Code"]</th>
+                <th>@Localizer["Client Name"]</th>
+                <th>@Localizer["IpAddress"]</th>
+                <th>@Localizer["Created Date"]</th>
+                <th>@Localizer["Creator"]</th>
+                <th>@Localizer["Strict IP Address"]</th>
+                <th>@Localizer["Revoked"]</th>                
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function(){
+       const __table = ViewTable({
+            selector: "#list-client-api",
+            keyField: "clientCode",
+            visibleFields:["clientCode", "clientName", "creatorName", "ipAddress", "createdDate", "revoked", "strictIpAddress"],
+            actions:[
+                {
+                    template: "<i title='Renew API Key' class='fas fa-sync-alt fn-green csr-pointer'></i>",
+                    on:{
+                        "click": function(e){
+                            location.href = "/clientApi/submit?clientCode="+ e.key;
+                        }
+                    }
+                }
+            ]
+       });
+
+       $.get("/ClientApi/getClientApis", function(resp){
+           __table.bindRows(resp);
+       });
+    });
+</script>

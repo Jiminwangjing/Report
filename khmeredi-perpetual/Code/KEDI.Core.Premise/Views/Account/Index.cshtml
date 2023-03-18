@@ -1,0 +1,143 @@
+﻿@model Pagination<UserAccount>
+
+@{
+    ViewData["Title"] = "User Account";
+}
+
+<style>
+    .tbncrate {
+        margin-top: 10px;
+      /*  background-color: #00bfff;*/
+        color: white;
+        margin-left: 1px;
+        
+    }
+    .table, tr, th {
+        text-align: center !important;
+    }
+    .table, tr, td{
+        text-align:center!important;
+    }
+</style>
+<div class="card card-body">
+<div class="d-flex justify-content-between">
+<a asp-action="Register" class="btn btn-xs btn-kernel tbncrate" title="Create"> @Localizer["Create"]</a>
+<div class="group-search-boxes">
+    <div id="text-search" class="wrap-search-box">
+        <div class="wrap-input show">
+            <i id="i-search" class="i-search fas fa-search"></i>
+            <input class="ignore" id="search-username" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+            <i id="i-close" class="i-close far fa-times-circle"></i>
+        </div>
+        <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+    </div>
+</div>
+</div>
+<div class="wrap-table myt1">
+    <table class="list-username">
+        <tr>
+            <th>
+                @Localizer["Username"]
+            </th>
+            <th>
+                @Localizer["Employee"]
+            </th>
+            <th>
+                @Localizer["Company"]
+            </th>
+            <th>
+                @Localizer["Branch"]
+            </th>
+            <th>
+                @Localizer["Action"]
+            </th>
+        </tr>
+    </table>
+</div>
+    </div>
+<script>
+    $(document).ready(function () {     
+        let $listView = ViewTable({
+            keyField: "ID",
+            selector: ".list-username",
+            paging: {
+                enabled: false,
+                pageSize: 10
+            },
+            visibleFields: [
+                "Username",
+                "Employee",
+                "Company",
+                "Branch",
+            ],
+            columns: [
+                {
+                    name: "Username",
+                    on: {
+                        "dblclick": function (e) {
+                            location.href = "/Account/Edit?id=" + e.key;
+                        }
+                    }
+                },
+                {
+                    name: "Employee.Name"
+                },
+                {
+                    name: "Company.Location"          
+                },
+                {
+                    name: "Branch.Name"               
+                }
+            ],
+            actions: [
+                {
+                    template: '<i class="fas fa-qrcode csr-pointer"></i>',
+                    on:{
+                        "click": function(e){
+                            window.open("/Account/GetAccessTokenQR?username="+ e.data.Username, "_blank");
+                        }
+                    }
+                },
+                {
+                    template:'<a href="#"><i class="fa fa-cogs fn-dark-gray"></i></a>',
+                    on: {
+                        "click": function (e) {
+                            location.href = "/POS/GeneralSetting?userId=" + e.key + "&redirectUrl=/Account/Index";
+                        }
+                    }
+                },
+                {
+                    template: '<a asp-action="UserPrivileges"><i class="fas fa-user-shield"></i></a>',
+                    on: {
+                        "click": function (e) {
+                            location.href = "/Account/UserPrivileges?userId=" + e.key;
+                        }
+                    }
+                },
+                 {
+                    template: '<a asp-action="GetBrand"><i class="fas fa-stream"></i></a>',
+                    on: {
+                        "click": function (e) {
+                            location.href = "/Account/GetBrand?userId=" + e.key;
+
+                        }
+                    }
+                },
+            ],
+        });
+        UserAccount($listView);
+        $("#search-username").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            UserAccount($listView, value);
+        });
+
+        function UserAccount($listView, keyword = "") {
+            $.get("/Account/GetUserAccounts", {
+                keyword: keyword
+            }, function (UserAccounts) {            
+                $listView.clearRows();
+                $listView.bindRows(UserAccounts);
+            });
+        }
+    });
+</script>

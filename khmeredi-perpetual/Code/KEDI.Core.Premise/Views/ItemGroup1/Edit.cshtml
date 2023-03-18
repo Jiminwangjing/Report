@@ -1,0 +1,173 @@
+﻿@using CKBS.Models.Services.Financials;
+@model ItemAccountingView
+<link href="~/js/ItemGroup1/Edit/item-group1.css" rel="stylesheet" />
+<div class="card card-body">
+    <ul class="widget-tab" style="height: 80vh;">
+    <li class="tab-sheet active">
+        <div class="tab-title">@Localizer["General"]</div>
+        <div class="tab-content">
+            <form id="formId" enctype="multipart/form-data" style="overflow:hidden">
+                <div id="item-group-data" style="display:none">@Json.Serialize(Model)</div>
+                <div class="row Right_input_item1">
+                    <div class="col-md-7">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="">
+                            <label class="control-label">@Localizer["Name"] </label>
+                            <input asp-for="ItemGroup1.Name" id="name" />
+                            <span asp-validation-for="ItemGroup1.Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-check text-center">
+                            <input type="checkbox" asp-for="ItemGroup1.Visible" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label pl-2" for="exampleCheck1">@Localizer["Visible"]</label>
+                        </div>
+                    </div>
+                    <div class="col-md-5" style="margin-top:10px;">
+                        <div class="form-group">
+                            <div>
+                                <img src="~/Images/items/@Model.ItemGroup1.Images" id="logo" class="StyleImge" />
+                                <input id="img" asp-for="ItemGroup1.Images" hidden />
+                            </div>
+                            <label for="txtlogo" class="btn btn-sm btn-file" id="imagestyle" style="width: 70px;">
+                                @Localizer["Browse"]
+                                <input type="file" style=" position: absolute" asp-for="ItemGroup1.Images" value="Browse" name="Image" id="txtlogo" onchange="show(this)" accept=".ico, .png, .jpg, .jpeg, .gif">
+                                <span asp-validation-for="ItemGroup1.Images" class="text-danger"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                  <div id="nameg1"><span class="text-danger">@Localizer["Please input name !"]</span></div>
+                      @if(!UserManager.CheckEdition(SystemEdition.Basic))
+                    {
+                    
+                        <div id="expenseAccount">
+                            <span class="text-danger">
+                                @Localizer["Please choose Expense Account !"]
+                            </span>
+                        </div>
+                        <div id="revenue">
+                            <span class="text-danger">
+                                @Localizer["Please choose Revenue Account !"]
+                            </span>
+                        </div>
+                        <div id="inventory">
+                            <span class="text-danger">
+                                @Localizer["Please choose Inventory Account !"]
+                            </span>
+                        </div>
+                        <div id="cogs">
+                            <span class="text-danger">
+                                @Localizer["Please choose COGS Account !"]
+                            </span>
+                        </div>
+                        <div id="allocation">
+                            <span class="text-danger">
+                                @Localizer["Please choose Allocation Account !"]
+                            </span>
+                        </div>
+                     }
+                
+                <div class="row" style="margin-left:5px; margin-top:10px;">
+                    <div class="form-group pull-left">
+                        <button type="button" id="btn-update" class="btn btn-kernel btn-xs">@Localizer["Update"]</button>
+                        <a asp-action="Index" class="btn btn-kernel btn-xs"> @Localizer["Back"]</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </li>
+           @if(!UserManager.CheckEdition(SystemEdition.Basic))
+                {
+                        <li class="tab-sheet">
+                        <div class="tab-title">@Localizer["Accounting"]</div>
+                        <div class="tab-content">
+                            <div id="formAccounting">
+                                <div class="table-responsive-sm" id="wrap-table">
+                                    <table class="table" id="allw-gl">
+                                        <thead style="background: rgb(119, 136, 153);">
+                                            <tr>
+                                                <th class="p-0"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                                <th class="text-center p-0">@Localizer["Account Code"]</th>
+                                                <th class="text-center p-0">@Localizer["Account Name"]</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody-item"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+
+</ul>
+
+<div id="active-gl-content" style="display:none; height: 90vh;">
+    <div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="txtSearch" autocomplete="off" type="text" placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="list-active-gl" class="table-responsive-sm">
+        <thead>
+            <tr>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class="modal fade" id="ModalColor">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["Color"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label">@Localizer["NameColor"]</label>
+                            <input type="text" class="col-sm-9 form-control" id="colorName" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-xs" onclick="AddColor()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-danger btn-xs" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalBackground">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["Background"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-sm-3 control-label">@Localizer["BackName"]:</label>
+                            <input type="text" class="col-sm-9 form-control" id="backName" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-xs" onclick="AddBack()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-danger btn-xs" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+<script src="~/Admin/ItemMasterData/js/core-item-master.js"></script>
+
+<script src="~/js/ItemGroup1/Edit/item-group1.js"></script>

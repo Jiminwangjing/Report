@@ -1,0 +1,81 @@
+﻿<style>
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+
+<div class="card card-body">
+    <div class="row">
+        <ul class="widget-tab" style="height: 70vh; width: 79vw">
+            <li class="tab-sheet active" id="item">
+                <div class="tab-title">@Localizer["Buy X Amount Get X Discount"]</div>
+                <div class="tab-content widget-scrollbar">
+                    <table class="item-detail">
+                        <thead>
+                            <tr>
+                                <th class="text-center"><i id="add-new-item" class="fas fa-plus-square cursor"></i></th>
+                                <th class="text-center">@Localizer["Name"]</th>
+                                <th class="text-center">@Localizer["Code"]</th>
+                                <th class="text-center">@Localizer["Price List"]</th>
+                                <th class="text-center">@Localizer["Start Date"]</th>
+                                <th class="text-center">@Localizer["Stop Date"]</th>
+                                <th class="text-center">@Localizer["Amount"]</th>
+                                <th class="text-center">@Localizer["Type Discount"]</th>
+                                <th class="text-center">@Localizer["Value"]</th>
+                                <th class="text-center">@Localizer["Active"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <input hidden id="item-id" />
+    <div id="error-summary"></div>
+    <div id="error-default"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-kernel btn-xs" id="Update">@Localizer["Update"]</button>
+            <button class="btn btn-kernel btn-xs" onclick="location.reload()">
+                @Localizer["Cancel"]
+            </button>
+        </div>
+    </div>
+</div>
+<div class="itemdetail_container widget-scrollbar" style="display: none; height: 400px">
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+            <div class="group-search-boxes mb-2">
+                <div class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="search-item-masters" autocomplete="off" type="text"
+                            placeholder="Search ...">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table id="list-itemdetail">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Barcode"]</th>
+            <th>@Localizer["UoM"]</th>
+            <th>@Localizer["KhmerName"]</th>
+            <th>@Localizer["EnglishName"]</th>
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+    <div class="row" id="loading">
+        <div class="col-md-5"></div>
+        <div class="col-md-4">
+            <div class="loading">
+                <img class="img-loading" src="~/ajaxloader/loading.gif" />
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Admin/BuyXGetX/buxgetxdis.js"></script>

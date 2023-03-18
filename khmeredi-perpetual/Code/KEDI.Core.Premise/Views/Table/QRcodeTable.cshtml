@@ -1,0 +1,101 @@
+﻿<style>
+    @@media print {
+        .print, .content-toolbar, .widget-sidemenu, .widget-header {
+            display: none !important;
+        }
+
+        .ck-widget-container, .content-section {
+            background: white !important;
+        }
+
+        .ck-widget-container .widget-body .widget-content .content-section > * {
+            background: white !important;
+        }
+
+        .img {
+            width: 500px !important;
+            height: 500px !important;
+            margin-left: -100px !important;
+        }
+        .edi {
+            display: block !important;
+        }
+
+        #print {
+            background: hsl(178, 54%, 78%) !important;
+        }
+
+        #image {
+            margin-top: 200px !important;
+        }
+
+        .footer {
+            display: block;
+        }
+    }
+
+    .img {
+        width: 300px;
+        height: 300px;
+    }
+
+    .edi {
+        display: none;
+        margin-top: 25px !important;
+        margin-left: 35px !important;
+        font-size: 20px;
+    }
+
+    #print {
+        background: hsl(178, 54%, 78%);
+    }
+
+    .qrtablediv {
+        padding: 12px 43px;
+        margin-left: 45px;
+        margin-bottom: 12px;
+        background: hsl(0, 0%, 94%);
+        border-radius: 9px;
+    }
+</style>
+<div class="card card-body" id="print" style="height: 80vh">
+    <div class="row">
+        <div class="col-md-4">
+            <button class="btn btn-kernel print" onclick="window.print()">@Localizer["Print"]</button>
+        </div>
+        <div class="col-md-8" id="image">
+            <div class="row">
+                <div class="qrtablediv">
+                    <h3 class="tableName">@ViewBag.TableName</h3>
+                </div>
+
+            </div>
+            <img hidden id="qrcode" class="img rounded" />
+            <p hidden class="textQr">No QRCode Generated!</p>
+            <h2 class="edi">POWERED BY: KHMER EDI</h2>
+        </div>
+    </div>
+    <!--<div class="row footer mt-5">-->
+    @*<div class="col-md-2"></div>*@
+    <!--<div class="col-md-8">
+            <div class="text-center">
+                <img src="~/Images/company/Kernel.jpg" class="rounded" alt="..." width="100">
+            </div>
+        </div>
+    </div>-->
+</div>
+<script>
+    $(document).ready(function () {
+        const data = "@ViewBag.TableID.ToString()";
+        const qRcode = { EncryptedTableID: data};
+        console.log(data);
+        $.post("/api/v1/QRCodeAPI/GenerateQRCode", { qRcode }, function (res) {
+            if (!res.Error) {
+                $("#qrcode").prop("hidden", false);
+                $("#qrcode").prop("src", res);
+            } else {
+                $(".textQr").prop("hidden", false);
+            }
+        });
+    });
+</script>

@@ -1,0 +1,435 @@
+﻿@{
+    ViewData["Title"] = "SaleByCustomerView";
+}
+
+<head>
+    <link href="~/Admin/DevReport/css/DevReport.css" rel="stylesheet" />
+</head>
+<body class="dx-viewport">
+    <div class="card card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <label class="lable_datefrom">@Localizer["Date From"]</label>
+                <input type="date" class="input_datefrom" id="datefrom" />
+            </div>
+            <div class="col-md-2">
+                <label class="lable_dateto">@Localizer["Date To"]</label>
+                <input type="date" class="input_dateto" id="dateto" />
+            </div>
+            <div class="col-md-2">
+                <label class="lable_branch">@Localizer["By Branch"]</label>
+                <select type="text" class="input_branch" id="bybranch">
+                    <option value="0"></option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="lable_branch">@Localizer["By Customer"]</label>
+                <select type="text" class="input_branch" id="bycus">
+                    <option value="0"></option>
+                </select>
+            </div>
+            <div class="col-md-4 ">
+                <button class="btn btn-xs btn-kernel" id="filter">@Localizer["Filter"]</button>
+                @*<button class="btn btn-xs btn-primary" id="preview">@Localizer["Preview"]</button>*@
+            </div>
+
+        </div>
+        <div id="gridContainer"></div>
+        <div class="options">
+            <div class="option">
+                <div id="autoExpand"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(function () {
+
+        const date = new Date();
+        $("#datefrom")[0].valueAsDate = date;
+        $("#dateto")[0].valueAsDate = date;
+
+        filterData();
+        //Get Branch
+        $.ajax({
+            url: "/DevReport/GetBranch",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bybranch").append(data);
+            }
+        });
+        //Get Customer
+        $.ajax({
+            url: "/DevReport/GetCustomer",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bycus").append(data);
+            }
+        });
+        $('#filter').click(function () {
+            filterData(this);
+        });
+        function filterData(button) {
+            let btn_filter = $(button).children("i.fa-search");
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var branch_id = $("#bybranch").val();
+            var cus_id = $("#bycus").val();
+            $.ajax({
+                url: "/DevReport/SaleByCustomerReport",
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    DateFrom: date_from,
+                    DateTo: date_to,
+                    BranchID: branch_id,
+                    CusID: cus_id
+                },
+                beforeSend: function () {
+                    btn_filter.addClass("fa-spinner fa-spin");
+                },
+                success: function (reponse) {
+                    bindGrid(reponse);
+                    btn_filter.removeClass("fa-spinner fa-spin");
+                }
+            });
+        }
+        function bindGrid(reponse) {
+            var dataGrid = $("#gridContainer").dxDataGrid({
+                dataSource: reponse,
+                allowColumnReordering: true,
+                allowGrouping: true,
+                showBorders: true,
+                hoverStateEnabled: true,
+                allowColumnResizing: true,
+                columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: {
+                    columnRenderingMode: "virtual"
+                },
+                grouping: {
+                    autoExpandAll: false,
+                },
+                searchPanel: {
+                    visible: true
+                },
+                filterRow: {
+                    visible: false,
+                    applyFilter: "auto"
+                },
+                //editing: {
+                //    mode: "row",
+                //    allowUpdating: true
+                //},
+                //onEditingStart: function (e) {
+                //    alert('edit')
+                //},
+                //onRowInserted: function (e) {
+                //    e.component.navigateToRow(e.key);
+                //},
+
+                paging: {
+                    pageSize: 10
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20, 50, 100],
+                    showInfo: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                groupPanel: {
+                    visible: false
+                },
+                columns: [
+                    {
+                        caption: "Customer",
+                        dataField: "MCustomer",
+                        groupIndex: 0
+                    },
+                    {
+                        caption: "Receipt No",
+                        dataField: "MReceiptNo",
+                        groupIndex: 1
+                    },
+                    {
+                        dataField: "ItemCode",
+                        caption: "Item Code",
+                    },
+                    {
+                        dataField: "KhmerName",
+                        caption: "Item Name",
+                        width: 250,
+                    },
+                    {
+                        caption: "Qty",
+                        dataField: "Qty",
+                        alignment: "left",
+                    },
+                    {
+                        caption: "Uom",
+                        dataField: "Uom",
+                        alignment: "left",
+                    },
+                    {
+                        caption: "Unit Price",
+                        dataField: "UnitPrice",
+                    },
+                    {
+                        dataField: "DisItem",
+                        caption: "Dis. Item",
+                        width: 140
+                    },
+                    {
+                        dataField: "Total",
+                        alignment: "right"
+
+                    }
+                ],
+                summary: {
+                    groupItems:
+                        [
+                            //{
+
+                            //column: "ItemCode",
+                            //summaryType: "count",
+                            //displayFormat: "{0} orders",
+                            //},
+                            {
+                                showInColumn: "Total",
+                                column: "MSubTotal",
+                                summaryType: "max",
+                                displayFormat: "Sub-Total :{0}",
+                                showInGroupFooter: false,
+                                alignByColumn: true
+                            }
+                        ],
+                    totalItems:
+                        [
+                            {
+                                showInColumn: "ItemCode",
+                                column: "DateFrom",
+                                summaryType: "max",
+                                displayFormat: "Date From : {0}",
+                                alignment: "left"
+                            },
+                            {
+                                showInColumn: "KhmerName",
+                                column: "DateTo",
+                                summaryType: "max",
+                                displayFormat: "Date To : {0}",
+                                alignment: "left"
+                            },
+                            {
+                                showInColumn: "Qty",
+                                column: "SCount",
+                                summaryType: "max",
+                                displayFormat: "Count : {0} receipts",
+                                alignment: "left"
+                            },
+                            //{
+                            //    showInColumn: "DisItem",
+                            //    column: "SSoldAmount",
+                            //    summaryType: "max",
+                            //    displayFormat: "Sold Amount :",
+                            //    alignment: "left"
+                            //},
+                            {
+                                showInColumn: "DisItem",
+                                column: "SDiscountItem",
+                                summaryType: "max",
+                                displayFormat: "Discount Item   :",
+                                alignment: "left"
+                            },
+                            {
+                                showInColumn: "DisItem",
+                                column: "SDiscountTotal",
+                                summaryType: "max",
+                                displayFormat: "Discount Total  :",
+                                alignment: "left"
+                            },
+                            {
+                                showInColumn: "DisItem",
+                                column: "SVat",
+                                summaryType: "max",
+                                displayFormat: "Vat. Included   :",
+                                alignment: "left"
+                            },
+                            {
+                                showInColumn: "DisItem",
+                                column: "SGrandTotalSys",
+                                summaryType: "max",
+                                displayFormat: "Grand Total SSC :",
+                                alignment: "left"
+                            },
+                            {
+                                showInColumn: "DisItem",
+                                column: "SGrandTotal",
+                                summaryType: "max",
+                                displayFormat: "Grand Total LCC :",
+                                alignment: "left"
+                            },
+                            //value
+                            {
+                                showInColumn: "Total",
+                                column: "SSoldAmount",
+                                summaryType: "max",
+                                displayFormat: "{0}",
+                                alignment: "right"
+                            },
+                            {
+                                showInColumn: "Total",
+                                column: "SDiscountItem",
+                                summaryType: "max",
+                                displayFormat: "{0}",
+                                alignment: "right"
+                            },
+                            {
+                                showInColumn: "Total",
+                                column: "SDiscountTotal",
+                                summaryType: "max",
+                                displayFormat: "{0}",
+                                alignment: "right"
+                            },
+                            {
+                                showInColumn: "Total",
+                                column: "SVat",
+                                summaryType: "max",
+                                displayFormat: "{0}",
+                                alignment: "right"
+                            },
+                            {
+                                showInColumn: "Total",
+                                column: "SGrandTotalSys",
+                                summaryType: "max",
+                                displayFormat: "{0}",
+                                alignment: "right"
+                            },
+                            {
+                                showInColumn: "Total",
+                                column: "SGrandTotal",
+                                summaryType: "max",
+                                displayFormat: "{0}",
+                                alignment: "right"
+                            }
+
+                        ]
+
+                },
+                export: {
+                    enabled: true
+                },
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('sale-by-customer-report');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                        topLeftCell: { row: 4, column: 1 }
+                    }).then(function (dataGridRange) {
+                        // header
+                        var headerRow = worksheet.getRow(2);
+                        headerRow.height = 30;
+                        worksheet.mergeCells(2, 1, 2, 6);
+                        headerRow.getCell(1).value = 'Sale By Customer Report';
+                        headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
+                        headerRow.getCell(1).alignment = { horizontal: 'center' };
+
+                        // footer
+                        //var footerRowIndex = dataGridRange.to.row + 2;
+                        //var footerRow = worksheet.getRow(footerRowIndex);
+                        //worksheet.mergeCells(footerRowIndex, 1, footerRowIndex, 8);
+                        //footerRow.getCell(1).value = 'www.wikipedia.org';
+                        //footerRow.getCell(1).font = { color: { argb: 'BFBFBF' }, italic: true };
+                        //footerRow.getCell(1).alignment = { horizontal: 'right' };
+
+                    }).then(function () {
+                        // https://github.com/exceljs/exceljs#writing-xlsx
+                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'sale-by-customer-report.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "refresh",
+                                onClick: function () {
+                                    dataGrid.refresh();
+                                    filterData();
+                                }
+                            }
+                        },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "fas fa-file-pdf",
+                                onClick: function () {
+                                    printPdf();
+                                }
+                            }
+                        }
+                    );
+                }
+
+            }).dxDataGrid("instance");
+            $("#autoExpand").dxCheckBox({
+                value: false,
+                text: "Expand All Groups",
+                onValueChanged: function (data) {
+                    dataGrid.option("grouping.autoExpandAll", data.value);
+                }
+            });
+
+            //function getGroupCount(groupField) {
+            //    return DevExpress.data.query(reponse)
+            //        .groupBy(groupField)
+            //        .toArray().length;
+            //}
+        }
+        function printPdf() {
+            var datefrom = $("#datefrom").val();
+            var dateto = $("#dateto").val();
+            var branch = $("#bybranch").val();
+            var cus = $("#bycus").val();
+            if (datefrom == "" || dateto == "") {
+                $("#datefrom").css("border-color", "red");
+                $("#dateto").css("border-color", "red");
+                return;
+            } else {
+                $("#datefrom").css("border-color", "#DDDDDD");
+                $("#dateto").css("border-color", "#DDDDDD");
+                window.open("/DevPrint/PrintSaleByCustomer?DateFrom=" + datefrom + "&DateTo=" + dateto + "&BranchID=" + branch + "&CusID=" + cus + "", "_blank");
+            }
+        }
+    })
+
+
+</script>
+

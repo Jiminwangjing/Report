@@ -1,0 +1,70 @@
+.wrap-scale {
+    position: absolute;
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, .5);
+    text-align: center;
+    color: #FFF;
+    align-items: center;
+    justify-content: center;
+    padding: .15rem;
+    font-family: 'Courier New', Courier, monospace;
+    z-index: inherit;
+}
+
+.wrap-scale.active {
+    border: 1px solid #FFF;
+}
+
+.wrap-scale * {
+    -webkit-user-select: none; /* Chrome/Safari */        
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+ */
+            user-select: none;
+}
+
+.wrap-scale .scale-down,
+.wrap-scale .scale-up {
+    visibility: visible;
+    transition: all .3s ease;
+}
+
+.wrap-scale.show {
+    -webkit-transform: scaleY(1); 
+        -ms-transform: scaleY(1); 
+            transform: scaleY(1); 
+}
+
+.wrap-scale .scale-down {
+    position: absolute;
+    color: #F5050F;
+    background: rgba(255, 255, 255, .8);
+    right: 100%;
+    border: 1px solid rgba(0, 0, 0, .5);
+    cursor: pointer;
+    width: 60%;
+    font-style: normal;
+    border-top-left-radius: 75%;
+    border-bottom-left-radius: 75%;
+    visibility: collapse;
+    transition: all ease .3s;
+}
+
+.wrap-scale .scale-up{
+    position: absolute;
+    color: #070EF5;
+    left: 100%;
+    border: 1px solid rgba(0, 0, 0, .5);
+    background: rgba(255, 255, 255, .8);
+    cursor: pointer;
+    width: 60%;
+    font-style: normal;
+    border-top-right-radius: 75%;
+    border-bottom-right-radius: 75%;
+    transition: all ease .3s;
+    visibility: collapse;
+}

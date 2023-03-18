@@ -1,0 +1,69 @@
+@using KEDI.Core.Premise.Models.ClientApi;
+@model List<DataSyncSetting>;
+
+<div class="card card-body">    
+<div class="d-flex justify-content-between">
+<a asp-action="Submit" class="btn btn-xs btn-kernel tbncrate" title="Create"> @Localizer["Create"]</a>
+<div class="group-search-boxes">
+    <div id="text-search" class="wrap-search-box">
+        <div class="wrap-input show">
+            <i id="i-search" class="i-search fas fa-search"></i>
+            <input class="ignore" id="search" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+            <i id="i-close" class="i-close far fa-times-circle"></i>
+        </div>
+        <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+    </div>
+</div>
+</div><br>
+<table id ="myTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Username</th>
+            @* <th>Password</th> *@
+            <th>BaseUrl</th>
+            <th>SecretKey</th>
+            <th>StartTime</th>
+            <th>EndTime</th>
+            <th>TickInterval</th>
+            <th>Enabled</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ID</td>
+                <td>@item.TenantCode</td>
+                <td>@item.TenantName</td>
+                <td>@item.Username</td>
+                @* <td>@item.Password</td> *@
+                <td>@item.BaseUrl</td>
+                <td>@item.SecretKey</td>
+                <td>@item.StartTime</td>
+                <td>@item.EndTime</td>
+                <td>@item.TickInterval</td>
+                <td><input type="checkbox" checked="@item.Enabled" disabled></td>
+                <td>
+                    <a href="/DataSyncSetting/Submit?id=@item.ID"><i class="fas fa-edit hover"></i></a>
+                    <a href="/DataSyncSetting/Revoked?id=@item.ID"><i class="fas fa-trash font-size hover"></i></a>
+                </td>
+            </tr>
+        }    
+    </tbody>
+</table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#search").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    })
+</script>

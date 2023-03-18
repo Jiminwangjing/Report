@@ -1,0 +1,114 @@
+﻿@*@model IEnumerable<ItemMasterData>*@
+@using KEDI.Core.Premise.Models.ServicesClass.PrintBarcode;
+@model PrinterNameModel
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-2">
+            <div>@Localizer["Price List"]</div>
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" id="plId" asp-items="@ViewBag.PriceLists"></select>
+        </div>
+        <div class="col-md-2">
+            <select id="setting">
+                <option value="1">Size:20 X 25</option>
+                <option value="2">Size:25 X 35</option>
+                <option value="3">Size:30 X 40</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-xs btn-kernel" id="choose-items">@Localizer["Choose Item"]</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="item-lists" style="display: none">
+    <form id="barcode-templates" asp-controller="Printbarcode" asp-action="BarLabel" target="_blank"
+        class="wrap-table" method="post" style="height: 420px;">
+        <button class="btn btn-kernel float-right m-2" type="submit">@Localizer["Apply"]</button>
+        <table class="item-table">
+            <thead>
+                <tr>
+                    <th>@Localizer["#"]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Barcode"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["UnitPrice"]</th>
+                    <th>@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+               
+    </form>
+   
+</div>
+
+<script>
+    $(document).ready(function () {
+        let itemTable = ViewTable({});
+        $("#choose-items").click(function () {
+            const itemDialog = new DialogBox({
+                content: {
+                    selector: ".item-lists"
+                },
+                caption: "Item Master Data",
+                type: "ok", 
+                button:{
+                    text: "Close"
+                }
+            });
+
+            itemDialog.invoke(function () {
+                itemTable = ViewTable({
+                    keyField: "ItemID",
+                    selector: ".item-table",
+                    model:{
+                        ItemPrintBarcodes:[]
+                    },
+                    dataSynced: true,
+                    indexed: true,
+                    paging: {
+                        pageSize: 20,
+                        enabled: true
+                    },
+                    visibleFields: ["ItemCode", "ItemBarcode", "ItemName", "UnitPrice", "IsSelected"],
+                    columns: [
+                        {
+                            name: "IsSelected",
+                            template: `<input type="checkbox" />`,
+                            on: {
+                                "click": function (e) {
+                                    //const isChecked = $(this).prop("checked") ? true : false
+                                    //e.data.IsSelected = isChecked
+                                }
+                            }
+                        }
+                    ]
+                });
+                const setting = $("#setting").val();
+                const plId = $("#plId").val()
+                $.get(
+                    "/Printbarcode/GetItemMasterData",
+                    { plId,setting },
+                    function (res) {
+                        itemTable.bindRows(res);
+                    });
+            });
+
+            itemDialog.confirm(function () {
+               itemDialog.shutdown();
+            });
+           
+        })
+
+    });
+    function loadScreen(enabled = true) {
+        if (enabled) {
+            $(".widget-loadscreen").show();
+        } else {
+            $(".widget-loadscreen").hide();
+        }
+    }
+  
+</script>

@@ -1,0 +1,377 @@
+﻿@{
+    ViewData["Title"] = "Goods Receipt Stock View";   
+}
+
+<head>
+    <link href="~/Admin/DevReport/css/DevReport.css" rel="stylesheet" />
+</head>
+<body class="dx-viewport">
+    <div class="card card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="lable_datefrom">@Localizer["Date From"]</label>
+                    <input type="date" class="input_datefrom" id="datefrom" />
+                </div>
+                <div class="col-md-2">
+                    <label class="lable_dateto">@Localizer["Date To"]</label>
+                    <input type="date" class="input_dateto" id="dateto" />
+                </div>
+                <div class="col-md-2">
+                    <label class="lable_branch">@Localizer["By Branch"]</label>
+                    <select type="text" class="input_branch" id="bybranch">
+                        <option value="0"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="lable_branch">@Localizer["Warehouse"] </label>
+                    <select type="text" class="input_branch" id="bywarehouse">
+                        <option value="0"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="lable_user">@Localizer["User Name"] </label>
+                    <select type="text" class="input_user" id="byuser">
+                        <option value="0"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-xs btn-kernel" id="filter">@Localizer["Filter"]</button>
+                </div>
+            </div>
+        <div id="gridContainer"></div>
+        <div class="options">
+            <div class="option">
+                <div id="autoExpand"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(function () {
+        filterData();
+        //Get branch
+        $.ajax({
+            url: "/DevReport/GetBranch",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bybranch").append(data);
+            }
+        });
+        $("#bybranch").on('change', function () {
+            var branchid = $(this).val();
+            // Get Employee
+            $.ajax({
+                url: "/DevReport/GetEmployee",
+                type: "Get",
+                dataType: "Json",
+                data: { BranchID: branchid },
+                success: function (respones) {
+                    var data = '';
+                    $("#byuser option:not(:first-child)").remove();
+                    $.each(respones, function (i, item) {
+                        data +=
+                            '<option value="' + item.ID + '">' + item.Employee.Name + '</option>';
+                    });
+                    $("#byuser").append(data);
+                }
+            });
+            //Get Warehouse
+            $.ajax({
+                url: "/DevReport/GetWarehouse",
+                type: "Get",
+                dataType: "Json",
+                data: { BranchID: branchid },
+                success: function (respones) {
+                    var data = '';
+                    $("#bywarehouse option:not(:first-child)").remove();
+                    $.each(respones, function (i, item) {
+                        data +=
+                            '<option value="' + item.ID + '">' + item.Name + '</option>';
+                    });
+                    $("#bywarehouse").append(data);
+                }
+            });
+        });
+        $('#filter').click(function () {
+            filterData(this);
+        });
+        function filterData(button) {
+            let btn_filter = $(button).children("i.fa-search");
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var branch_id = $("#bybranch").val();
+            var user_id = $("#byuser").val();
+            var warehouse_id = $("#bywarehouse").val();
+            $.ajax({
+                url: "/DevReport/GoodsReceiptStockReport",
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    DateFrom: date_from,
+                    DateTo: date_to,
+                    BranchID: branch_id,
+                    UserID: user_id,
+                    WHID: warehouse_id
+                },
+                beforeSend: function () {
+                    btn_filter.addClass("fa-spinner fa-spin");
+                },
+                success: function (reponse) {
+                    bindGrid(reponse);
+                    btn_filter.removeClass("fa-spinner fa-spin");
+                }
+            });
+        }
+        function bindGrid(reponse) {
+            var dataGrid = $("#gridContainer").dxDataGrid({
+                dataSource: reponse,
+                allowColumnReordering: true,
+                showBorders: true,
+                allowColumnResizing: true,
+                hoverStateEnabled: true,
+                allowColumnResizing: true,
+                columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: {
+                    columnRenderingMode: "virtual"
+                },
+                grouping: {
+                    autoExpandAll: false,
+                },
+                searchPanel: {
+                    visible: true
+                },
+                filterRow: {
+                    visible: false,
+                    applyFilter: "auto"
+                },
+                //editing: {
+                //    mode: "row",
+                //    allowUpdating: true
+                //},
+                //onEditingStart: function (e) {
+                //    alert('edit')
+                //},
+                //onRowInserted: function (e) {
+                //    e.component.navigateToRow(e.key);
+                //},
+
+                paging: {
+                    pageSize: 10
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20, 50, 100],
+                    showInfo: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                groupPanel: {
+                    visible: false
+                },
+
+                columns: [
+                    {
+                        dataField: "NumberNo",
+                        caption: "Trans. Num",
+                        groupIndex: 0
+                    },
+                    {
+                        dataField: "Barcode",
+                        width:230,
+                        caption: "Barcode"
+                    },
+                    {
+                        dataField: "Code",
+                        width: 220,
+                        caption: "Code",
+                    },
+                    {
+                        dataField: "KhmerName",
+                        width: 240,
+                        caption: "Item Name",
+                    },
+                    {
+                        dataField: "Qty",
+                        caption: "Qty"
+                    },
+                    {
+                        dataField: "Cost",
+                        width:130,
+                        caption: "Cost"
+                    },
+                    {
+                        dataField: "Uom",
+                        caption: "Uom"
+                    },
+                    {
+                        dataField: "ExpireDate",
+                        caption: "Expire Date"
+                    }
+                ],
+                summary: {
+                    groupItems: [
+                    //{
+                    //    column: "NumberNo",
+                    //    summaryType: "count",
+                    //    displayFormat: "{0} items",
+                    //},
+                    {
+                        showInColumn: "Code",
+                        column: "PostingDate",
+                        summaryType: "max",
+                        displayFormat: "Posting Date: {0}",
+                        showInGroupFooter: false,
+                        alignByColumn: true
+                    },
+                    {
+                        showInColumn: "KhmerName",
+                        column: "DocDate",
+                        summaryType: "max",
+                        displayFormat: "Document Date: {0}",
+                        showInGroupFooter: false,
+                        alignByColumn: true
+                    },
+                    {
+                        showInColumn: "ExpireDate",
+                        column: "Subtotal",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: false,
+                        alignByColumn: true
+                    }
+                    ],
+                    totalItems: [
+                        {
+                            showInColumn: "Cost",
+                            column: "GrandTotal",
+                            summaryType: "sum",
+                            displayFormat: "GrandTotal :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Uom",
+                            column: "Currency",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+
+                        //Value
+                        {
+                            showInColumn: "ExpireDate",
+                            column: "GrandTotal",
+                            summaryType: "sum",
+                            displayFormat: "{0}",
+                            alignment: "left"
+                        }
+                    ]
+                },
+                export: {
+                    enabled: true
+                },
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('goods-receipt-stock-report');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                        topLeftCell: { row: 4, column: 1 }
+                    }).then(function (dataGridRange) {
+                        // header
+                        var headerRow = worksheet.getRow(2);
+                        headerRow.height = 30;
+                        worksheet.mergeCells(2, 1, 2, 8);
+                        headerRow.getCell(1).value = 'Goods Receipt Stock Report';
+                        headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
+                        headerRow.getCell(1).alignment = { horizontal: 'center' };
+
+                        // footer
+                        //var footerRowIndex = dataGridRange.to.row + 2;
+                        //var footerRow = worksheet.getRow(footerRowIndex);
+                        //worksheet.mergeCells(footerRowIndex, 1, footerRowIndex, 8);
+                        //footerRow.getCell(1).value = 'www.wikipedia.org';
+                        //footerRow.getCell(1).font = { color: { argb: 'BFBFBF' }, italic: true };
+                        //footerRow.getCell(1).alignment = { horizontal: 'right' };
+
+                    }).then(function () {
+                        // https://github.com/exceljs/exceljs#writing-xlsx
+                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'goods-receipt-stock-report.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "refresh",
+                                onClick: function () {
+                                    dataGrid.refresh();
+                                    filterData();
+                                }
+                            }
+                        },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "fas fa-file-pdf",
+                                onClick: function () {
+                                    var datefrom = $("#datefrom").val();
+                                    var dateto = $("#dateto").val();
+                                    var branch = $("#bybranch").val();
+                                    var user = $("#byuser").val();
+                                    var warehouse = $("#bywarehouse").val();
+                                    if (datefrom == "" || dateto == "") {
+                                        $("#datefrom").css("border-color", "red");
+                                        $("#dateto").css("border-color", "red");
+                                        return;
+                                    } else {
+                                        $("#datefrom").css("border-color", "#DDDDDD");
+                                        $("#dateto").css("border-color", "#DDDDDD");
+                                        window.open("/DevPrint/PrintGoodsReceiptStock?DateFrom=" + datefrom + "&DateTo=" + dateto + "&BranchID=" + branch + "&UserID=" + user + "&WHID=" + warehouse + "", "_blank");
+                                    }
+                                }
+                            },
+                            title: 'Export to PDF'
+                        }
+                    );
+                }
+
+            }).dxDataGrid("instance");
+            $("#autoExpand").dxCheckBox({
+                value: false,
+                text: "Expand All Groups",
+                onValueChanged: function (data) {
+                    dataGrid.option("grouping.autoExpandAll", data.value);
+                }
+            });
+
+            //function getGroupCount(groupField) {
+            //    return DevExpress.data.query(reponse)
+            //        .groupBy(groupField)
+            //        .toArray().length;
+            //}
+        }
+
+    })
+</script>

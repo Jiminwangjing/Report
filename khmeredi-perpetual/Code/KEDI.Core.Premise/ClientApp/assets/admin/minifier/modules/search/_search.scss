@@ -1,0 +1,127 @@
+.group-search-boxes {
+  display: -webkit-box; 
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex; 
+  display: flex;
+  justify-content: flex-end;
+}
+
+.group-search-boxes ~ *.hide {
+    visibility: collapse;
+}
+
+.group-search-boxes .wrap-search-box {
+    position: relative;
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;  
+    display: flex;
+    align-items: center;
+}
+
+.group-search-boxes .wrap-search-box .wrap-input {
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    background: #FFF;
+    border-radius: 15px;
+    height: 30px;
+    width: 0;
+    visibility: collapse;
+}
+
+.group-search-boxes .wrap-search-box .wrap-input:focus-within {
+    -webkit-box-shadow: 0px 0px 2.5px 0.5px #007BFF;
+    -moz-box-shadow: 0px 0px 2.5px 0.5px #007BFF;
+    box-shadow: 0px 0px 2.5px 0.5px #007BFF;
+}
+
+.group-search-boxes .wrap-search-box .wrap-input input {
+  position: relative;
+  border: none;
+  line-height: normal;
+  outline: none;
+  width: calc(100% - 1rem);
+  height: 100%;
+  padding: 0;
+}
+
+.group-search-boxes .wrap-search-box .wrap-input .i-search, 
+.group-search-boxes .wrap-search-box .wrap-input .i-close {
+  color: #999;
+  cursor: pointer;
+  font-size: .9em;
+  line-height: 30px;
+  padding: 0 6px;
+}
+
+.group-search-boxes .wrap-search-box .btn-search, 
+.group-search-boxes .wrap-search-box button.btn-search, 
+.group-search-boxes .wrap-search-box a.btn-search {
+  position: relative;
+  background: #6996C9;
+  color: #FFF;
+  display: inline-block;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  font-family: Arial, sans-serif;
+  text-decoration: none;
+  text-align: center;
+  min-width: 50px;
+  height: 30px;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.group-search-boxes .wrap-search-box:not(:last-child) .btn-search{
+    margin-right: .3rem;
+}
+
+.group-search-boxes .wrap-search-box .wrap-input.show {
+    position: relative;
+    right: 0;
+    visibility: visible;
+    width: 350px;
+    transition: width .3s;
+    margin: 0;
+    padding: 0;
+}
+
+.group-search-boxes .wrap-search-box .wrap-input.hide {
+    visibility: collapse;
+    width: 0;
+    transition: width .3s;
+}
+
+@media(max-width: 1025px){
+    .group-search-boxes .wrap-search-box .wrap-input.show {
+        width: 300px;
+    }
+}
+
+@media(max-width: 415px){
+    .group-search-boxes .wrap-search-box .wrap-input.show {
+        width: 97vw;
+    }
+}
+
+@media(max-width: 320px){
+    .group-search-boxes .wrap-search-box .wrap-input.show {
+        max-width: 96vw;
+    }
+}
+
+// <div class="group-search-boxes">
+//     <div id="text-search" class="wrap-search-box">
+//         <div class="wrap-input show">
+//             <i id="i-search" class="i-search fas fa-search"></i>
+//             <input autocomplete="off" class="ignore" type="text" placeholder="Search here ...">
+//             <i id="i-close" class="i-close far fa-times-circle"></i>
+//         </div>
+//         <div class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+//     </div>
+// </div>

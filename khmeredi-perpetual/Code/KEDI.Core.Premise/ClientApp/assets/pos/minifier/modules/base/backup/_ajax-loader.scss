@@ -1,0 +1,28 @@
+
+.ajax-loader {
+    position: fixed;
+    top: 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    transition: all .25s;
+    background: rgba(0,0,0,0.3);
+    z-index: 999;
+    justify-content: center;
+    align-items: center;
+}
+
+.ajax-loader.hide {
+    visibility: collapse;
+}
+
+.ajax-loader .content img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+}

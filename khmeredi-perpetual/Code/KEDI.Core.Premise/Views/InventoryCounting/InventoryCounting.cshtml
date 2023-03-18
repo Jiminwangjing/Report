@@ -1,0 +1,185 @@
+<style>
+   
+    .flex {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .flex2 {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .label {
+        width: 105px;
+
+    }
+
+    input,
+    select {
+        width: 100%;
+    }
+
+
+    .control {
+        width: 400px;
+    }
+</style>
+<div hidden id="data-invioce">@Json.Serialize(Model)</div>
+<div class="card card-body">
+    <div style="display: flex; justify-content: flex-end;"> <button class="btn btn-xs btn-kernel"
+            id="find">@Localizer["Find"]</button></div>
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <div class="flex">
+                <div style="width: 235px;"><label>@Localizer["Count Date"]</label></div>
+                <div class="control"><input class="" type="date" id="txtdate" autocomplete="off" /></div>
+                <div class="label"><label>@Localizer["Time"]</label></div>
+                <div class="control"><input class="" type="time" id="txttime" autocomplete="off" /></div>
+            </div>
+            <div class="flex">
+                <div class="label"><label>@Localizer["RefNº"]</label></div>
+                <div class="control"><input class="" type="text" id="txtref_no" autocomplete="off" /></div>
+
+            </div>
+            <div class="flex">
+                <div class="label"><label>@Localizer["Branch"]</label></div>
+                <div class="control"> <select id="txtBranch"></select></div>
+            </div>
+
+
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-6">
+            <div class="flex2">
+                <div class="label"><label>@Localizer["Number"]</label></div>
+                <div style="width: 100px;"> <select id="seriesID" style="width: 100px;"></select></div>
+                <div class="control" style="width: 152px;"> <input type="text" id="next_number" autocomplete="off"
+                        readonly /></div>
+            </div>
+            <div class="flex2">
+                <div class="label"><label>@Localizer["Status"]</label></div>
+                <div class="control" style="width: 252px;"> <input type="text" value="Open" id="txtstaus"
+                        autocomplete="off" readonly /></div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <ul class="widget-tab" style="height: 35vh;overflow:hidden;">
+                <li class="tab-sheet active">
+                    <div class="tab-title" style="width: 72px;"><u>G</u>eneral</div>
+                    <div class="tab-content widget-scrollbar">
+                    <div class="wrap-table widget-scrollbar">
+                        <table id="list-items">
+                            <thead>
+                                <tr>
+                                    <th class="boldth">
+                                        <i id="addrow" class="fas fa-plus-circle fn-black"></i>&nbsp;@Localizer["No."]
+                                    </th>
+                                    <th class="boldth">@Localizer["Barcode"]</th>
+                                    <th class="boldth">@Localizer["Item No."]</th>
+                                    <th class="boldth">@Localizer["Item Description"]</th>
+                                    <th class="boldth">@Localizer["Warehouses"]</th>
+                                    <th class="boldth">@Localizer["In-Whse Qty on Count Date "]</th>
+                                    <th class="boldth">@Localizer["Counted"]</th>
+                                    <th class="boldth">@Localizer["UoM Count Qty"]</th>
+                                    <th class="boldth">@Localizer["Counted Qty"]</th>
+                                    <th class="boldth">@Localizer["Variance"]</th>
+                                    <th class="boldth">@Localizer["UoM Code"]</th>
+                                    <th class="boldth">@Localizer["Counted By"]</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+ 
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <label class="lable_remark">@Localizer["Remark"]</label>
+            <textarea class="content_remark" id="txtremark"></textarea>
+        </div>
+    </div>
+    @* Dialog Itemmaster Data *@
+    <div id="content-item" style="height: 98vh;" hidden>
+        <div class="group-search-boxes float-right mb-2">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="searchitem" autocomplete="off" type="text" placeholder="Search ...">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="tb_itemMasterdata" class="table-responsive-sm table-responsive widget-scrollbar"
+            style="height: auto;">
+            <thead>
+                <tr>
+                    <th>@Localizer["No"]</th>
+                    <th>@Localizer["Item No"]</th>
+                    <th>@Localizer["Item Description"]</th>
+                    <th>@Localizer["Barcode"]</th>
+                    <th>@Localizer["InStock"]</th>
+                    <th>@Localizer["Batch"]</th>
+                    <th>@Localizer["Serial"]</th>
+                    <th>@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+
+    </div>
+    @* Dialog Employee *@
+    @* Dialog Itemmaster Data *@
+    <div id="content-em" style="height: 98vh;" hidden>
+        <div class="group-search-boxes float-right mb-2">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="searchem" autocomplete="off" type="text" placeholder="Search ...">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="tb_employee" class="table-responsive-sm table-responsive widget-scrollbar" style="height: auto;">
+            <thead>
+                <tr>
+                    <th>@Localizer["No"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Gender"]</th>
+                    <th>@Localizer["Address"]</th>
+                    <th>@Localizer["Phone"]</th>
+                    <th>@Localizer["Email"]</th>
+                    <th>@Localizer["Position"]</th>
+                    <th>@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-xs btn-kernel" id="btn_save">@Localizer["Save"]</button>
+        </div>
+    </div>
+    <div id="error-summary"></div>
+    <input hidden id="id" value="0" />
+    <input hidden id="DocumentID" value="0" />
+    <input hidden id="SeriesID" value="0" />
+    <input hidden id="SeriesDetailID" value="0" />
+    <input type="text" id="number" value="0" hidden />
+    <input type="text" id="JEID" value="0" hidden />
+    <input type="text" id="JENumber" value="0" hidden />
+</div>
+<script src="~/Admin/InventoryCounting/js/Inventory-Counting.js"></script>

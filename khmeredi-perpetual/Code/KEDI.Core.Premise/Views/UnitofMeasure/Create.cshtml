@@ -1,0 +1,45 @@
+﻿@model UnitofMeasure
+
+@{
+    ViewData["Title"] = "Create";
+}
+<style>
+    .fa{
+        margin-right:4px;
+    }
+    .pull-left {
+       
+        margin-top:10px;
+    }
+    .form-group{
+        margin:0px;
+        padding:0px;
+    }
+</style>
+<div class="card card-body">
+<div class="row">
+    <div class="col-md-10">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label  class="control-label">@Localizer["Code"] :</label>
+                <input asp-for="Code" class="input-box-kernel" placeholder="Code"/>
+                <span asp-validation-for="Code" class="text-danger"></span>
+                <div class="text-danger">@ViewBag.Error</div>
+                
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Name"] :</label>
+                <input asp-for="Name" class="input-box-kernel" placeholder="Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            
+            <div class="pull-left">
+                <button class="btn btn-xs btn-kernel">@Localizer["Add"]</button>
+                <a asp-action="Index" class="btn btn-xs btn-kernel">@Localizer["Back"]</a>
+            </div>
+           
+        </form>
+    </div>
+</div>
+    </div>

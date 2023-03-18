@@ -1,0 +1,222 @@
+﻿<div class="card card-body">
+    <div class="row">
+        <div class="col-md-3">
+            <label>@Localizer["Date From"]</label>
+            <input id="date-from" type="datetime-local" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <label>@Localizer["Date To"]</label>
+            <input id="date-to" type="datetime-local" class="form-control">
+        </div>
+    </div>
+    <div id="container-report-sales" class="mt-2"></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        let dateFrom = $("#date-from"),
+            dateTo = $("#date-to");
+        dateFrom.val(datetimeLocal());
+        dateTo.val(datetimeLocal());
+
+        bindReportSales();
+        dateFrom.on("change", function () {
+            bindReportSales();
+        });
+
+        dateTo.on("change", function () {
+            bindReportSales();
+        });
+
+        function bindReportSales() {
+            $.post("/chipMong/GetReportSales", {
+                dateFrom: dateFrom.val(),
+                dateTo: dateTo.val()
+            }, function (sales) {
+                createDataGrid(sales);
+            });
+        }
+
+
+        function datetimeLocal(datetime) {
+            let dt = new Date();
+            if (datetime) {
+                dt = new Date(datetime);
+            }
+
+            dt.setMinutes(dt.getMinutes() - dt.getTimezoneOffset());
+            return dt.toISOString().slice(0, 16);
+        }
+
+        function createDataGrid(sales = []) {
+            var dataGrid = $("#container-report-sales").dxDataGrid({
+                dataSource: sales,
+                allowColumnReordering: true,
+                showBorders: true,
+                hoverStateEnabled: true,
+                allowColumnResizing: true,
+                columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: {
+                    columnRenderingMode: "virtual"
+                },
+                grouping: {
+                    autoExpandAll: false,
+                },
+                searchPanel: {
+                    visible: true
+                },
+                filterRow: {
+                    visible: false,
+                    applyFilter: "auto"
+                },
+
+                paging: {
+                    pageSize: 20
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [20, 50, 100, 150],
+                    showInfo: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                groupPanel: {
+                    visible: false
+                },
+
+                columns: [
+                    {
+                        caption: "Mall Name",
+                        dataField: "mallName"
+                    },
+                     {
+                        caption: "Tenant Name",
+                        dataField: "tenantName"
+                    },
+                    {
+                        caption: "Invoice Date",
+                        dataField: "date"
+                    },
+                
+                    {
+                        caption: "Gross Sale",
+                        dataField: "grossSale"
+                    },                   
+                    {
+                        caption: "Net Sale",
+                        dataField: "netSale",
+                    },     
+                     {
+                        caption: "Tax Amount",
+                        dataField: "taxAmount"
+                    },
+              
+                    {
+                        caption: "Cash Amount (USD)",
+                        dataField: "cashAmountUsd",
+                    },
+                     {
+                        caption: "Cash Amount (KHR)",
+                        dataField: "cashAmountRiel",
+                    },
+                    {
+                        caption: "Other Amount",
+                        dataField: "otherAmount"
+                    },
+                    {
+                        caption: "Creditcard Amount",
+                        dataField: "creditCardAmount"
+                    },
+                    {
+                        caption: "Total Creditcard Transactions",
+                        dataField: "totalCreditCardTransaction"
+                    },
+                    {
+                        caption: "Total Transactions",
+                        dataField: "totalTransaction",
+                    },
+                    {
+                        caption: "Deposit Amount (USD)",
+                        dataField: "depositAmountUsd",
+                    },
+                    {
+                        caption: "Deposit Amount (KHR)",
+                        dataField: "depositAmountRiel",
+                    },
+                    {
+                        caption: "Exchange Rate",
+                        dataField: "exchangeRate",
+                    },                  
+                    {
+                        caption: "Pos Id",
+                        dataField: "posId"
+                    }
+                ],
+
+                summary: {
+                    totalItems: []
+                },
+                export: {
+                    enabled: true
+                },
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('summary-sale-report');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                        topLeftCell: { row: 4, column: 1 }
+                    }).then(function (dataGridRange) {
+                        // header
+                        var headerRow = worksheet.getRow(2);
+                        headerRow.height = 30;
+                        worksheet.mergeCells(2, 1, 2, 7);
+                        headerRow.getCell(1).value = 'Summary Sale Report';
+                        headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
+                        headerRow.getCell(1).alignment = { horizontal: 'center' };
+                        // footer
+                        //var footerRowIndex = dataGridRange.to.row + 2;
+                        //var footerRow = worksheet.getRow(footerRowIndex);
+                        //worksheet.mergeCells(footerRowIndex, 1, footerRowIndex, 8);
+                        //footerRow.getCell(1).value = 'www.wikipedia.org';
+                        //footerRow.getCell(1).font = { color: { argb: 'BFBFBF' }, italic: true };
+                        //footerRow.getCell(1).alignment = { horizontal: 'right' };
+
+                    }).then(function () {
+                        // https://github.com/exceljs/exceljs#writing-xlsx
+                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'summary-sale-report.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "refresh",
+                                onClick: function () {
+                                    dataGrid.refresh();
+                                    filterData();
+                                }
+                            }
+                        }
+                    );
+                }
+
+            }).dxDataGrid("instance");
+        }
+    });
+</script>

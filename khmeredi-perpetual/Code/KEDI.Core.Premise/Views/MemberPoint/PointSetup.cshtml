@@ -1,0 +1,563 @@
+﻿@model KEDI.Core.Premise.Models.Services.LoyaltyProgram.MemberPoints.PointSetup;
+<div class="widget-tab" style="height: 600px;">
+    <div class="tab-sheet @ViewBag.PointCard">
+        <div class="tab-title">@Localizer["Point Card"]</div>
+        <div class="tab-content">
+            <form id="form-pointcard" asp-action="SavePointCards" asp-controller="MemberPoint">
+                <div class="wrap-table widget-scrollbar" style="min-height: 150px;">
+                    <table id="create-pointcards">
+                        <thead>
+                            <tr>
+                                <th style="width: 0.01%">
+                                    <i id="add-pointcard" class="fas fa-plus-circle fn-black csr-pointer"></i>
+                                    &nbsp;@Localizer["Code"]
+                                </th>
+                                <th>@Localizer["Title"]</th>
+                                <th style="width: 0.25%">@Localizer["Point Qty"]</th>
+                                <th style="width: 0.25%">@Localizer["Amount"]</th>
+                                <th>@Localizer["PriceList"]</th>
+                                <th>@Localizer["Date From"]</th>
+                                <th>@Localizer["Date To"]</th>
+                                <th>@Localizer["RefNo"]</th>
+                                <th style="text-align: center;">@Localizer["Active"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <button id="submit-pointcards" class="btn btn-kernel mt-2" type="button">@Localizer["Save"]</button>
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </form>
+
+            <fieldset class="border wrap-table mt-2 widget-scrollbar" style="min-height: 150px;">
+                <legend class='title'>@Localizer["List of point cards"]</legend>
+                <div class="row mb-2">
+                    <div class="col-md-9"></div>
+                    <div class="col-md-3">
+                        <input id="search-point-cards" placeholder="@Localizer["Search ..."]" type="search" />
+                    </div>
+                </div>
+                <table id="list-pointcards">
+                    <thead>
+                        <tr>
+                            <th style="width: 0.01%">@Localizer["Code"]</th>
+                            <th>@Localizer["Title"]</th>
+                            <th style="width: 0.25%">@Localizer["Point Qty"]</th>
+                            <th style="width: 0.25%">@Localizer["Amount"]</th>
+                            <th>@Localizer["PriceList"]</th>
+                            <th>@Localizer["Date From"]</th>
+                            <th>@Localizer["Date To"]</th>
+                            <th>@Localizer["RefNo"]</th>
+                            <th style="text-align: center;">@Localizer["Active"]</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </fieldset>
+
+        </div><!--Tab sheet content-->
+    </div>
+
+    <div class="tab-sheet @ViewBag.PointRedempt">
+        <div id="tab-point-redemption" class="tab-title">@Localizer["Point Redemption"]</div>
+        <div class="tab-content widget-scrollbar">
+            <button id="btn-new-point-redempt" class="btn btn-kernel mb-2">@Localizer["Create"]</button>
+            <form id="form-redemption" asp-action="SubmitPointRedemption" asp-controller="MemberPoint">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input asp-for="Redemption.ID" type="hidden" />
+                        <label>@Localizer["Code"]</label>
+                        <input asp-for="Redemption.Code" class="form-control" />
+
+                        <label>@Localizer["Title"]</label>
+                        <input asp-for="Redemption.Title" class="form-control" autofocus />
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label>@Localizer["Point Qty"]</label>
+                        <input asp-for="Redemption.PointQty" class="form-control" />
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label>@Localizer["Date From"]</label>
+                        <input asp-for="Redemption.DateFrom" class="form-control" />
+
+                        <label>@Localizer["Date To"]</label>
+                        <input asp-for="Redemption.DateTo" class="form-control" />
+
+                    </div>
+                    <div class="col-sm-3">
+                        <label>@Localizer["Active"]</label>
+                        <input asp-for="Redemption.Active" type="checkbox" class="form-control" />
+                    </div>
+                </div>
+                <div class="wrap-table mt-2">
+                    <table id="point-items">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <i id="choose-item-masters" class="fas fa-plus-circle fn-black csr-pointer"></i>
+                                    @Localizer["Code"]
+                                </th>
+                                <th>@Localizer["Item Name"]</th>
+                                <th>@Localizer["Item Qty"]</th>
+                                <th>@Localizer["Item UoM"]</th>
+                                <th>@Localizer["Remove"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                <button id="submit-point-redemption" class="btn btn-kernel mt-2"
+                    type="button">@Localizer["Save"]</button>
+            </form>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <hr />
+
+            <fieldset class="border">
+                <legend class='title'>@Localizer["List of point redemptions"]</legend>
+                <div class="row">
+                    <div class="col-md-9"></div>
+                    <div class="col-md-3">
+                        <input id="search-point-redemptions" placeholder="@Localizer["Search ..."]" type="search" />
+                    </div>
+                </div>
+                <div class="wrap-table mt-2">
+                    <table id="list-point-redemptions">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Code"]</th>
+                                <th>@Localizer["Title"]</th>
+                                <th>@Localizer["Point Qty"]</th>
+                                <th>@Localizer["Date From"]</th>
+                                <th>@Localizer["Date To"]</th>
+                                @*<th>@Localizer["Pricelist"]</th>*@
+                                <th style="text-align: center;">@Localizer["Active"]</th>
+                                <th>@Localizer["Details"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </fieldset>
+            <div id="item-master-content" class="wrap-table mt-2 widget-scrollbar" style="display: none;">
+                <div class="row">
+                    <div class="col-md-8"></div>
+                    <div class="col-md-4">
+                        <div class="group-search-boxes mb-2">
+                            <div class="wrap-search-box">
+                                <div class="wrap-input show">
+                                    <i id="i-search" class="i-search fas fa-search"></i>
+                                    <input class="ignore" id="search-item-masters" autocomplete="off" type="text"
+                                        placeholder="Search ...">
+                                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                                </div>
+                                <div id="btn-search" class="btn-search" style="display: none;"><i
+                                        class="fas fa-search"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="list-item-masters">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["No."]</th>
+                            <th>@Localizer["Code"]</th>
+                            <th>@Localizer["Item Name"]</th>
+                            <th>@Localizer["Item Name 2"]</th>
+                            <th>@Localizer["Barcode"]</th>
+                            <th>@Localizer["Choose"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        var __pcCreateConfig = {
+            model: {
+                PointCards: []
+            },
+            keyField: "LineID",
+            paging: {
+                enabled: false
+            },
+            dataSynced: true,
+            selector: "#create-pointcards",
+            visibleFields: ["Code", "RefNo", "Title", "Amount", "PointQty", "PriceLists", "DateFrom", "DateTo", "Active"],
+            columns: [
+                {
+                    name: "Code",
+                    template: "<input>"
+                },
+                {
+                    name: "RefNo",
+                    template: "<input>"
+                },
+                {
+                    name: "Title",
+                    template: "<input>"
+                },
+                {
+                    name: "Amount",
+                    template: "<input type='number'>"
+                },
+                {
+                    name: "PointQty",
+                    template: "<input type='number'>"
+                },
+                {
+                    name: "PriceListID",
+                    template: "<input disabled />"
+                },
+                {
+                    name: "PriceLists",
+                    nameField: "PriceListID",
+                    template: "<select>"
+                },
+                {
+                    name: "DateFrom",
+                    template: "<input type='date'>"
+                },
+                {
+                    name: "DateTo",
+                    template: "<input type='date'>"
+                },
+                {
+                    name: "Active",
+                    template: "<input type='checkbox'>",
+                    on: {
+                        "change": function (e) {
+                            changeActivePointCard(e.key);
+                        }
+                    }
+                }
+            ]
+        };
+        var __pcListConfig = {
+            selector: "#list-pointcards",
+            paging: {
+                enabled: true
+            },
+            keyField: "LineID",
+            model: undefined,
+            visibleFields: ["Code", "RefNo", "Title", "Amount", "PointQty", "PriceLists", "DateFrom", "DateTo", "Active"],
+            columns: [
+                {
+                    name: "PointQty",
+                    template: "<input disabled>"
+                },
+                {
+                    name: "PriceLists",
+                    nameField: "PriceListID",
+                    template: "<select disabled>"
+                },
+                {
+                    name: "DateFrom",
+                    dataType: "date",
+                    dataFormat: "MM-DD-YYYY"
+                },
+                {
+                    name: "DateTo",
+                    dataType: "date",
+                    dataFormat: "MM-DD-YYYY"
+                },
+                {
+                    name: "Active",
+                    template: "<input type='checkbox' disabled>"
+                }
+            ],
+            actions: [{
+                template: "<i class='fas fa-edit fa-lg csr-pointer fn-orange'></i>",
+                on: {
+                    "click": function (e) {
+
+                        editPointCard(e.data);
+                    }
+                }
+            }]
+        };
+
+        var $createPointCards = ViewTable(__pcCreateConfig);
+        var $listPointCards = ViewTable(__pcListConfig);
+        function changeActivePointCard(lineId) {
+            var dataset = $createPointCards.yield();
+            for (let i = 0; i < dataset.length; i++) {
+                if (dataset[i].LineID != lineId) {
+                    dataset[i].Active = false;
+                    $createPointCards.updateColumn(dataset[i].LineID, "Active", false);
+                }
+            }
+        }
+
+        function editPointCard(pointcard) {
+            $createPointCards.clearRows();
+            $createPointCards.addRow(pointcard);
+        }
+
+        $.post("/MemberPoint/GetPointCards", function (pointcards) {
+            $listPointCards.bindRows(pointcards);
+            $("#search-point-cards").on("keyup", function () {
+                var searcheds = searchPointCards(pointcards, this.value);
+                $listPointCards.clearRows();
+                $listPointCards.bindRows(searcheds);
+            });
+
+        });
+
+        $("#add-pointcard").on("click", function () {
+            $.post("/MemberPoint/FindPointCard", function (pointcard) {
+                $createPointCards.addRow(pointcard);
+            });
+        });
+
+        $("#submit-pointcards").click(function () {
+            $.post("/MemberPoint/SavePointCards", $("#form-pointcard").serialize(), function (message) {
+                if (message.IsApproved) {
+                    $createPointCards.clearRows();
+                    $listPointCards.bindRows(message.Items["PointCards"]);
+                }
+                ViewMessage({}, message);
+            });
+        });
+
+        function searchPointCards(items, keyword) {
+            let __value = keyword.toLowerCase().replace(/\s+/, "");
+            let rex = new RegExp(__value, "gi");
+            var searcheds = $.grep(items, function (item) {
+                return item.Code.toLowerCase().replace(/\s+/, "").match(rex) || item.Title.toLowerCase().replace(/\s+/, "").match(rex) ||
+                    item.DateFrom.toLowerCase().replace(/\s+/, "").match(rex) ||
+                    item.DateTo.toLowerCase().replace(/\s+/, "").match(rex)
+            });
+            return searcheds;
+        }
+
+        //Point redemption
+        var __pointItemConfig = {
+            model: {
+                Redemption: {
+                    PointItems: []
+                }
+            },
+            keyField: "LineID",
+            paging: {
+                enabled: false
+            },
+            selector: "#point-items",
+            visibleFields: ["ItemCode", "ItemName", "Qty", "ItemUoms"],
+            columns: [
+                {
+                    name: "Qty",
+                    template: "<input>"
+                },
+                {
+                    name: "UomID",
+                    template: "<input disabled />"
+                },
+                {
+                    name: "ItemUoms",
+                    nameField: "UomID",
+                    template: "<select>"
+                }
+            ],
+            actions: [
+                {
+                    template: "<i class='fas fa-trash-alt fn-red'></i>",
+                    on: {
+                        "click": function (e) {
+                            if (e.data.ID > 0) {
+                                $.post("/MemberPoint/RemoveRedemptionPointDetail", { id: e.data.ID }, function (res) {
+                                    if (res.Error) {
+                                        new DialogBox({
+                                            content: res.Message,
+                                            icon: "warning"
+                                        });
+                                    } else {
+                                        $listPointItems.removeRow(e.key);
+                                    }
+                                })
+                            } else { $listPointItems.removeRow(e.key); }
+                        }
+                    }
+                }
+            ]
+        };
+        var $listPointItems = ViewTable(__pointItemConfig);
+        $("#choose-item-masters").on("click", function () {
+            var $dlgItemMaster = new DialogBox({
+                content: {
+                    selector: "#item-master-content"
+                },
+                button: {
+                    ok: {
+                        text: "Close"
+                    }
+                }
+            });
+
+            $dlgItemMaster.invoke(function () {
+                var $listItemMasters = ViewTable({
+                    keyField: "ID",
+                    indexed: true,
+                    paging: {
+                        pageSize: 10
+                    },
+                    selector: "#list-item-masters",
+                    visibleFields: ["Code", "KhmerName", "EnglishName", "Barcode"],
+                    actions: [
+                        {
+                            template: "<i class='fas fa-arrow-circle-down fa-lg csr-pointer'></i>",
+                            on: {
+                                "click": function (e) {
+                                    chooseItem(e.key, $listPointItems);
+                                }
+                            }
+                        }
+                    ]
+                });
+
+                $.post("/MemberPoint/GetItemMasters", function (itemMasters) {
+                    $listItemMasters.bindRows(itemMasters);
+                    $("#search-item-masters").on("keyup", function (e) {
+                        let __value = this.value.toLowerCase().replace(/\s+/, "");
+                        let rex = new RegExp(__value, "gi");
+                        let items = $.grep(itemMasters, function (item) {
+                            const barcode = item.Barcode ?? "";
+                            const name2 = item.EnglishName ?? "";
+                            return item.Code.toLowerCase().replace(/\s+/, "").match(rex) || item.KhmerName.toLowerCase().replace(/\s+/, "").match(rex) ||
+                                name2.toLowerCase().replace(/\s+/, "").match(rex) ||
+                                barcode.toLowerCase().replace(/\s+/, "").match(rex)
+                        });
+                        $listItemMasters.bindRows(items);
+                    });
+                });
+
+                function chooseItem(itemId, $listView) {
+                    $.post("/MemberPoint/FindPointItem", {
+                        itemId: itemId
+                    }, function (pointItem) {
+                        $listView.updateRow(pointItem);
+                    });
+                }
+
+                $dlgItemMaster.confirm(function () {
+                    $dlgItemMaster.shutdown();
+                });
+            });
+        });
+
+        var $listPointRedempts = ViewTable({
+            keyField: "ID",
+            selector: "#list-point-redemptions",
+            visibleFields: ["Code", "Title", "PointQty", "DateFrom", "DateTo", "PriceLists", "Active"],
+            columns: [
+                {
+                    name: "DateFrom",
+                    dataType: "date",
+                    dataFormat: "MM/DD/YYYY"
+                },
+                {
+                    name: "DateTo",
+                    dataType: "date",
+                    dataFormat: "MM/DD/YYYY"
+                },
+                {
+                    name: "PriceLists",
+                    template: "<select disabled>"
+                },
+                {
+                    name: "Active",
+                    template: "<input type='checkbox' disabled>"
+                }
+            ],
+            actions: [
+                {
+                    template: "<i class='fas fa-edit fa-lg csr-pointer fn-orange'></i>",
+                    on: {
+                        "click": function (e) {
+                            setPointRedemption(e.key);
+                        }
+                    }
+                }
+            ]
+        });
+
+        function setPointRedemption(pointRedemptId) {
+            $.post("/MemberPoint/FindPointRedempt", {
+                pointRedemptId: pointRedemptId
+            }, function (data) {
+                $("#choose-item-masters").hide();
+                $("input[name='Redemption.ID']").val(data.ID);
+                $("input[name='Redemption.Code']").val(data.Code);
+                $("input[name='Redemption.PointQty']").val(data.PointQty);
+                $("input[name='Redemption.Title']").val(data.Title);
+                $("input[name='Redemption.DateFrom']").val(data.DateFrom.split("T")[0]);
+                $("input[name='Redemption.DateTo']").val(data.DateTo.split("T")[0]);
+                $("select[name='Redemption.PriceListID']").val(data.PriceListID);
+                $("input[name='Redemption.Active']").prop("checked", data.Active);
+
+                $listPointItems.configure(__pointItemConfig);
+                $listPointItems.bindRows(data.PointItems);
+            });
+        }
+
+        function resetPointRedemption() {
+            $("#choose-item-masters").show();
+            $("input[name='Redemption.ID']").prop("disabled", false).val(0);
+            $("input[name='Redemption.Code']").prop("disabled", false).val("");
+            $("input[name='Redemption.PointQty']").prop("disabled", false).val(0);
+            $("input[name='Redemption.Title']").prop("disabled", false).val("");
+            $("input[name='Redemption.DateFrom']").prop("disabled", false).val("");
+            $("input[name='Redemption.DateTo']").prop("disabled", false).val("");
+            $("select[name='Redemption.PriceListID']").prop("disabled", false);
+            $listPointItems.configure(__pointItemConfig);
+            $listPointItems.clearRows();
+        }
+
+        $("#btn-new-point-redempt").on("click", function () {
+            resetPointRedemption();
+        });
+
+        $("#tab-point-redemption").on("click", function () {
+            $.post("/MemberPoint/GetPointRedemptions",
+                function (pointRedempts) {
+                    $listPointRedempts.bindRows(pointRedempts);
+                    searchPointRedemptions($listPointRedempts, pointRedempts);
+                });
+        });
+
+        $("#submit-point-redemption").on("click", function () {
+            var $submitDlg = new DialogBox({
+                content: "Confirm submit point redemption?"
+            });
+
+            $submitDlg.confirm(function () {
+                $.post("/MemberPoint/SubmitPointRedemption",
+                    $("#form-redemption").serialize(),
+                    function (message) {
+                        if (message.IsApproved)
+                            $listPointRedempts.bindRows(message.Items["PointRedemptions"]);
+                        searchPointRedemptions($listPointRedempts, message.Items["PointRedemptions"]);
+                        resetPointRedemption();
+
+                        ViewMessage({}, message);
+                    });
+            });
+
+        });
+
+        function searchPointRedemptions($listView, items) {
+            $("#search-point-redemptions").on("keyup", function () {
+                let input = this.value.replace(/\s/g, '');
+                let regex = new RegExp(input, "i");
+                var searcheds = $.grep(items, function (item) {
+                    return regex.test(item.Code) || regex.test(item.Title) || regex.test(item.DateFrom) || regex.test(item.DateTo);
+                });
+                $listView.clearRows();
+                $listView.bindRows(searcheds);
+            });
+        }
+    });
+
+</script>

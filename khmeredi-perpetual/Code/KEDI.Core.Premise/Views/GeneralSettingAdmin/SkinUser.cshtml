@@ -1,0 +1,228 @@
+@using KEDI.Core.Premise.Models.ServicesClass.GeneralSettingAdminView;
+@using KEDI.Core.Premise.Models.Services.GeneralSettingAdmin;
+@using KEDI.Core.Premise.Models.Services.Account;
+@model GeneralSettingAdminViewModel;
+<div class="tab-content widget-scrollbar" style="overflow-x: hidden;">
+    <div class="tab-content widget-scrollbar" style="height: 50vh; width: 70vw">
+        <div class="row">
+            <form id="updatecolor" method="post" asp-action="GetChecked" asp-controller="GeneralSettingAdmin">
+                <table id="color-list" style="margin-left:70px;">
+                    <thead>
+                        <tr>
+                            <th class="text-center">@Localizer["NO."]</th>
+                            <th class="text-center">@Localizer["Them Name"]</th>
+                            <th class="text-center">@Localizer["BackgroundColor"]</th>
+                            <th class="text-center">@Localizer["AlphabetColor"]</th>
+                            <th class="text-center">@Localizer["HoverColor"]</th>
+                            <th class="text-center">@Localizer["Them Designer Name"]</th>
+                            <th class="text-center">@Localizer["Checked"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.ColorSetting.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.ColorSetting[i].ID<input asp-for="ColorSetting[i].ID" />
+                                </td>
+                                <td>@Model.ColorSetting[i].SkinName<input asp-for="ColorSetting[i].SkinName" /></td>
+                                <td>@Model.ColorSetting[i].BackgroundColorName<input
+                                    asp-for="ColorSetting[i].BackgroundColorName" /></td>
+                                <td>@Model.ColorSetting[i].AlphabetColor<input asp-for="ColorSetting[i].AlphabetColor" />
+                                </td>
+                                <td>@Model.ColorSetting[i].HoverColor<input asp-for="ColorSetting[i].HoverColor" /></td>
+                                <td>@Model.ColorSetting[i].designName<input asp-for="ColorSetting[i].designName" /></td>
+                                <td class="text-center">
+                                    <input class="check-is-user" type="checkbox" style="margin: 2.5px 0;"
+                                    asp-for="ColorSetting[i].Unable" />
+                                </td>
+                            </tr>
+                        }
+                        <div id="0" hidden></div>
+                    </tbody>
+                </table>
+                <div>
+                    <button class="btn btn-kernel" style="margin-left:70px; margin-top:15px"
+                        type="submit">@Localizer["Save"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $.ajax({
+        url: "/GeneralSettingAdmin/GetSS",
+        type: "get",
+        datatype: "JSON",
+        success: function (respones) {
+            // $(".content-section widget-scrollbar").css({ backgroundColor: respones.BackgBodyCard })
+            $(".ck-widget-container .widget-header").css({ backgroundColor: respones.BackgroundColor })
+            $(".ck-widget-container .widget-body .widget-content .content-toolbar").css({ backgroundColor: respones.BackgroundColor });
+            $(".ck-widget-container .widget-body .widget-sidemenu").css({ backgroundColor: respones.BackgroundColor });
+            $(".ck-widget-container .widget-body .widget-sidemenu .sidemenu-group.group-root").css({ backgroundColor: respones.BackgroundColor });
+            $(".ck-widget-container .widget-body .widget-sidemenu .sidemenu-group .sidemenu-item .item-title, .ck-widget-container .widget-body .widget-sidemenu .sidemenu-group .sidemenu-item .item-title.title-icon-open").css({ backgroundColor: respones.BackgroundColor })
+            $(".itemsearchGloble").css({ backgroundColor: respones.BackgroundColor, color: respones.FontColor });
+            $(".ChangeColorLanguage").css({ backgroundColor: respones.BackgroundColor, color: respones.FontColor })
+            //$(".item-title").css({ color: respones.FontColor });
+            $(".widget-stackcrumb>*").css({ backgroundColor: respones.BackgroundBarItem })
+            //$(".widget-stackcrumb>*").css({ color: respones.FontColor })
+            //$(".widget-stackcrumb>*::after").css({ "border-left-color": respones.BackgroundBarItem })
+            //BackgroundMenu
+            $(".item-title").css({ backgroundColor: respones.BackgroundMenu });
+            // BackOfSubmenu
+            $(" .sidemenu-group").css({ backgroundColor: respones.BackOfSubmenu });
+            $(".sidemenu-group, .sidemenu-item:hover").css({ backgroundColor: respones.BackOfSubmenu });
+            //HoverBackgroundSubmenu
+            $(".item-title").hover(function () {
+                $(this).css({ backgroundColor: respones.HoverBackgSubmenu });
+            }, function () {
+                $(this).css({ backgroundColor: respones.BackgroundMenu });
+            });
+            $(".item-label").hover(function () {
+                $(this).css({ backgroundColor: respones.HoverBackgSubmenu });
+            }, function () {
+                $(this).css({ backgroundColor: respones.BackOfSubmenu });
+            });
+            //BacksubmenuOnItem
+            $(".ck-widget-container .widget-body .widget-sidemenu .sidemenu-group .sidemenu-item .item-label.highlight").css({ backgroundColor: respones.BacksubmenuOnItem });
+            $(".ck - widget - container.widget - body.widget - sidemenu.sidemenu - group.sidemenu - item.item - label.highlight").css({ backgroundColor: respones.BacksubmenuOnItem })
+            //FontColor
+            $(".ck-widget-container .widget-body .widget-sidemenu .sidemenu-group .sidemenu-item .item-title>*, .ck-widget-container .widget-body .widget-sidemenu .sidemenu-group .sidemenu-item .item-label>*").css({ color: respones.FontColor });
+            $(".combobox-trigger").css({ color: respones.FontColor });
+            $(".ck-widget-container .widget-combobox .combobox-trigger").css({ color: respones.FontColor });
+            $(".ck-widget-container .widget-sidemenu-trigger").css({ color: respones.FontColor });
+            $(".ck-widget-container .widget-body .widget-sidemenu .sidebar-title").css({ color: respones.FontColor });
+            // $("input, select, textarea, .form-control").css({ color: respones.FontColor });
+            //$(".ck-widget-container .widget-body .widget-content .content-section").css({ color: respones.FontColor });
+
+            //Button    
+            $(".btn-kernel").css({ backgroundColor: respones.BackgButton });
+
+            $(".btn btn-xs btn-kernel").css({ backgroundColor: respones.BackgButton });
+            $(".btn btn-xs btn-success").css({ backgroundColor: respones.BackgButton });
+            $(".btn .btn - xs .btn - kernel").css({ backgroundColor: respones.BackgButton });
+            $(".btn.btn-kernel").css({ color: respones.FontColor })
+            $(".btn.btn-kernel").css({ backgroundColor: respones.BackgButton })
+
+            $(".btn btn - xs btn - kernel m - 1").css({ color: respones.FontColor });
+            //table th
+            $("table, tr, th").css({ backgroundColor: respones.Backgtableth });
+            //table td
+            $("table, tr, td").css({ backgroundColor: respones.Backgtabletd });
+            $("table tr td").css({ backgroundColor: respones.Backgtabletd })
+            $(".form-group .form-label").css({ backgroundColor: respones.Backgtabletd })
+            //input
+            $("input").css({ backgroundColor: respones.backgroundInput })
+            //backgroundCard
+            $(".widget-tab>.tab-sheet>.tab-content").css({ backgroundColor: respones.BackgroundCard });
+
+            //backgroundBar
+            $("#themes").click(function () {
+
+                $("#themes").css({ backgroundColor: respones.BackgroundBar })
+                $("#displaysthem").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#displaycolor").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#CardMember").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#templatess").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#templatess").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#fonttheme").css({ backgroundColor: respones.BackgroundBarItem })
+            })
+            $("#displaysthem").click(function () {
+                $("#displaysthem").css({ backgroundColor: respones.BackgroundBar })
+                $("#themes").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#displaycolor").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#CardMember").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#templatess").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#fonttheme").css({ backgroundColor: respones.BackgroundBarItem })
+
+            })
+            $("#displaycolor").click(function () {
+                $("#displaycolor").css({ backgroundColor: respones.BackgroundBar })
+                $("#displaysthem").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#themes").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#CardMember").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#templatess").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#fonttheme").css({ backgroundColor: respones.BackgroundBarItem })
+
+            })
+            $("#CardMember").click(function () {
+                $("#CardMember").css({ backgroundColor: respones.BackgroundBar })
+                $("#themes").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#displaycolor").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#displaysthem").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#templatess").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#fonttheme").css({ backgroundColor: respones.BackgroundBarItem })
+
+            })
+            $("#templatess").click(function () {
+                $("#templatess").css({ backgroundColor: respones.BackgroundBar })
+                $("#themes").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#displaycolor").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#displaysthem").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#CardMember").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#fonttheme").css({ backgroundColor: respones.BackgroundBarItem })
+
+            })
+            $("#fonttheme").click(function () {
+                $("#fonttheme").css({ backgroundColor: respones.BackgroundBar })
+                $("#themes").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#displaycolor").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#displaysthem").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#CardMember").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#templatess").css({ backgroundColor: respones.BackgroundBarItem })
+
+            })
+
+            $("#GeneralDashboard").click(function () {
+                $("#GeneralDashboard").css({ backgroundColor: respones.BackgroundBar })
+                $("#CRMDashboard").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#ServiceDashboard").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#DashboardIncome").css({ backgroundColor: respones.BackgroundBarItem })
+            })
+            $("#CRMDashboard").click(function () {
+                $("#CRMDashboard").css({ backgroundColor: respones.BackgroundBar })
+                $("#GeneralDashboard").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#ServiceDashboard").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#DashboardIncome").css({ backgroundColor: respones.BackgroundBarItem })
+            })
+            $("#ServiceDashboard").click(function () {
+                $("#ServiceDashboard").css({ backgroundColor: respones.BackgroundBar })
+                $("#CRMDashboard").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#GeneralDashboard").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#DashboardIncome").css({ backgroundColor: respones.BackgroundBarItem })
+            })
+            $("#DashboardIncome").click(function () {
+                $("#DashboardIncome").css({ backgroundColor: respones.BackgroundBar })
+                $("#CRMDashboard").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#ServiceDashboard").css({ backgroundColor: respones.BackgroundBarItem })
+                $("#GeneralDashboard").css({ backgroundColor: respones.BackgroundBarItem })
+            })
+            // $(".widget-tab>.tab-sheet>.tab-title").css({ color: respones.FontColor })
+            //slideBar - title
+
+            // if ($(".active").length > 0) {
+            $(".widget-tab>.tab-sheet.active>.tab-title").css({ backgroundColor: respones.BackgroundBar });
+
+            $("input.form-control, select.form-control, select.form-control:not([size]):not([multiple])").css({ backgroundColor: respones.BackgSlideBarTitle });
+            //icon
+            $(".ck-notification.orange .n-icon path").css({ fill: respones.BackgroundIcon });
+            $(".ck-notification .n-icon path").css({ fill: respones.BackgroundIcon });
+            $(".tab-title").on('click', 'li', function () {
+                $(".tab-title").css({ backgroundColor: respones.BackgroundBar });
+                $(this).addClass('active');
+            })
+            //bodywet
+            $(".ck-widget-container .widget-body .widget-content .content-section").css({ backgroundColor: respones.BackgBodyWet })
+            //card
+            $(".card").css({ backgroundColor: respones.BackgBodyWetCard });
+            $(".ck-widget-container .widget-body .widget-content .content-section>*").css({ backgroundColor: respones.BackgBodyCard })
+            //
+        }
+    });
+
+
+    ///untech ////////////////////
+    $(document).on('click', 'input[type="checkbox"]', function () {
+        $('input[type="checkbox"]').not(this).prop('checked', false);
+        checkb();
+    });
+</script>

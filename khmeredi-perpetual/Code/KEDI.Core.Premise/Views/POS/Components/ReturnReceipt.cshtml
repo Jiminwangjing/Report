@@ -1,0 +1,82 @@
+﻿<!--Return receipt-->
+<style>
+    .datadetail {
+        border-bottom: 1px solid gray;
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 5px;
+    }
+
+    .multipay {
+        width: 20px !important;
+        height: 20px !important;
+    }
+</style>
+<div id="return-receipt-content" style="display: none;">
+    <div class='wrap-block col-three'>
+        <div class='left-block m0'>
+            <div class="stack-block">
+                <label>@Localizer["From Date"] </label>
+                <input type="date" class="return-date-from" />
+            </div>
+            <div class="stack-block">
+                <label>@Localizer["To Date"] </label>
+                <input type="date" class="return-date-to" />
+            </div>
+            <div class="group-search-boxes">
+                <div id="text-search" class="search-box show">
+                    <div class="input-box" style="width: 260px;">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input id="search-return-receipts" class="ignore" autocomplete="off" type="text" value="" placeholder=@Localizer["Search ..."]>
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+            <div class='wrap-table widget-scrollbar' style="height: 300px; margin-top: 10px;">
+                <table class="listview-return-receipts">
+                    <tr>
+                        <th style="width: 250px;">@Localizer["Receipt No."]</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class='right-block fuse m0'>
+            <fieldset class="shadow">
+                <legend class="title">@Localizer["List of items"]</legend>
+
+                <div style="display:flex;justify-content:space-between">
+                    <div class="group-search-boxes">
+                        <div id="text-search" class="search-box show">
+                            <div class="input-box" style="width: 260px;">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input id="search-receipt-items" class="ignore" autocomplete="off" type="text" value="" placeholder=@Localizer["Search ..."]>
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+                    <div class="group-multipay" style="width:200px;">
+                        <select id="list-multipay" style="width:100%"> </select>
+                    </div>
+                </div>
+                <div class='wrap-table widget-scrollbar mt-2' style="height: 370px;">
+                    <table class="item-return-choosed-listview">
+                        <tr>
+                            <th>@Localizer["Code"]</th>
+                            <th>@Localizer["Item Name"]</th>
+                            <th>@Localizer["UoM"]</th>
+                            <th>@Localizer["Original Qty"]</th>
+                            <th>@Localizer["Return Qty"]</th>
+                            <th>@Localizer["Amount"]</th>
+
+                        </tr>
+                    </table>
+                </div>
+                <div class="error-message fn-red"></div>
+
+            </fieldset>
+        </div>
+
+    </div>
+</div>

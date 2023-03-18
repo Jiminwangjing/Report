@@ -1,0 +1,255 @@
+﻿@model IEnumerable<ItemGroup1>
+@{ 
+    Layout = null;
+    int @BranchID = Convert.ToInt32(@User.FindFirst("BranchID").Value);
+    int @UserID = Convert.ToInt32(@User.FindFirst("UserID").Value);
+
+}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Raleway|Red+Hat+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
+
+    <link href="~/pos/css/core.css" rel="stylesheet" />
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/pos/js/core.js"></script>
+    <script src="~/pos/js/plugin/number.js"></script>
+    <script src="~/pos/js/plugin/table.js"></script>
+    <script src="~/pos/scripts/krms/numeral.min.js"></script>
+    <script src="~/lib/aspnet-signalr/signalr.min.js"></script>
+    <script src="~/pos/signalr/secondscreen.js" async></script>
+    <style>
+      
+        .panel {
+            top: calc(2*40px);
+            height: calc(100vh - 2*40px);
+        }
+
+        .panel .left-panel .wrap-table.summary {
+            position: absolute;
+            bottom: 40px;
+        }
+        .nav-header{
+            height:80px !important;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-header">
+    </nav>
+
+    <div class="panel">
+
+        <div id="panel-group-items" class="full-panel show">
+            <div class="left-panel">
+
+                <nav class="nav-toolbar top">
+                    <div class="item goto-panel-group-tables csr-pointer">
+                        <i class="fas fa-chevron-left"></i>&nbsp;Table
+                    </div>
+                    <div class="item"><label id="Table">T-001</label></div>
+                    <!-- <div class="item grow"></div> -->
+                </nav>
+
+                <div id="wrap-list" class="wrap-table list">
+                    <table id="item-listview">
+                        <tr>
+                            <th hidden>ID</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Amount</th>
+                        </tr>
+
+                    </table>
+                </div>
+
+                <div class="wrap-table summary">
+                    <table>
+                        <tr>
+                            <th>Sub-Total</th>
+                            <th>Discount</th>
+                            <th>VAT</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <td id="summary-sub-total">0.00</td>
+                            <td id="summary-bonus">- %</td>
+                            <td id="summary-vat">0.00</td>
+                            <td id="summary-total">0.00</td>
+                        </tr>
+                    </table>
+                </div>
+
+              
+                <!-- <div class="collapser v-collapser arrow-left"></div> -->
+            </div><!--end left-panel-->
+
+            <div class="right-panel">
+               
+                <nav class="nav-toolbar responsive">
+                    <div class="item breadcrumb clear-initial-trail group-steps">
+                        <div class="all-step"><div class="step">All</div></div>
+
+                    </div>
+                </nav>
+                <div id="group-item-gridview" class="gridview item-gridview">
+                    <!--gridview-->
+                    <div class="wrap-grid">
+                        @*Grid object here*@
+                    </div>
+                </div><!--end-gridview-->
+
+                <nav class="nav-toolbar bottom">
+                    <span class="grow"></span>
+                    <div class="item">
+                        <div id="datetime" class="datetime"></div>
+                    </div>
+                </nav>
+            </div><!--End right-panel-->
+        </div><!--End panel-group-items-->
+
+
+    </div>
+    <script type="text/javascript">
+        //Globle Varaible 
+        var db = new Warehouse();
+        let Order = {}; // object map with class
+        let date = new Date();
+        //End
+        //Get all setting 
+        let setting = $.ajax({
+            url: "/POS/GetSetting",
+            async: false,
+            type: "GET",
+            dataType: "JSON",
+            data: { branchid: parseInt(@BranchID) }
+        }).responseJSON[0]
+        //Get Local Currency
+        let local_currency = {};
+        local_currency.id;
+        local_currency.symbol;
+        local_currency.ratein;
+        local_currency.rateout;
+        $.ajax({
+            url: "/POS/GetLocalCurrecny",
+            async: false,
+            type: "GET",
+            dataType: "JSON",
+            data: { currencyid: setting.LocalCurrencyID },
+            success: function (response) {
+                $(".local-symbol").text(response.Currency.Description);
+                local_currency.id = response.Currency.ID;
+                local_currency.symbol = response.Currency.Description;
+                local_currency.ratein = response.Rate;
+                local_currency.rateout = response.Rate; // will change after add in class admin
+            }
+        });
+        //Get all item master data
+        let item_masters = $.ajax({
+            url: "/POS/GetItemMasterData",
+            async: false,
+            type: "GET",
+            dataType: "JSON",
+            data: { PriceListID: setting.PriceListID },
+        }).responseJSON;
+        db.addTable("tb_item_master", item_masters, "ID");
+       
+        let $grid = $("#group-item-gridview .wrap-grid .grid");
+        //Add event listener to grid on first DOM loading.
+        function singleItem($wrap_grid, item_filtered) {
+         
+            $wrap_grid.children().remove();
+
+            $.each(item_filtered, function (i, item) {
+           
+                if (item.Image === null || item.Image === '') {
+                    item.Image = 'no-image.jpg';
+                }
+                let dis = "%";
+                if (item.TypeDis != "Percent")
+                    dis = "";
+               
+                let $grid = $("<div class='grid'></div>")
+                    .append('<div data-bonus="' + item.DiscountRate + '" data-id="' + item.ID + '" hidden></div>')
+                    .append('<div class="grid-caption" title=' + item.KhmerName + ' >' + item.KhmerName + ' </div > ');
+                let $grid_image = $("<div class='grid-image'></div>");
+                let $wrap_scale = $('<div class="wrap-scale">'
+                    + '<i class="scale-down">-</i>'
+                    + '<label data-scale="' + item.Qty + '" class="scale">' + item.Qty + '</label>'
+                    + '<i class="scale-up">+</i>'
+                    + '</div>');
+                if (item.Qty != 0) {
+                    $wrap_scale.addClass("show");
+                } else {
+                    $wrap_scale.removeClass("show");
+                }
+                $wrap_scale.appendTo($grid_image)
+                if (item.DiscountRate > 0) {
+                    $('<div class="discount">' + item.DiscountRate + ' ' + dis + ' </div>').appendTo($grid_image);
+                }
+
+                $grid_image.append('<img src="/Images/' + item.Image + '"/>',
+                    '<div class="price">' + item.Price + '</div>'
+                ).appendTo($grid);
+                $('<div class="grid-caption" title=' + item.EnglishName + ' >' + item.EnglishName + '</div>').appendTo($grid);
+                $wrap_grid.append($grid);
+            //
+
+            //$.each(item_filtered, function (i, item) {
+            //    if (item.Image === null || item.Image === '') {
+            //        item.Image = 'no-image.jpg';
+            //    }
+            //    let dis = "%";
+            //    if (item.TypeDis != "Percent")
+            //        dis = '';
+            //    let $grid = $("<div class='grid'></div>")
+                 
+            //        .append('<div class="grid-caption" title=' + item.KhmerName + ' >' + item.KhmerName + ' </div > ');
+            //    let $grid_image = $("<div class='grid-image'></div>");
+            //    let $wrap_scale = $('<div class="wrap-scale">'
+            //        + '<i class="scale-down">-</i>'
+            //        + '<label data-scale="' + item.Qty + '" class="scale">' + item.Qty + '</label>'
+            //        + '<i class="scale-up">+</i>'
+            //        + '</div>');
+            //    if (item.Qty > 0) {
+            //        $wrap_scale.addClass("show");
+            //    } else {
+            //        $wrap_scale.removeClass("show");
+            //    }
+            //    if (item.DiscountRate > 0) {
+            //        $('<div class="bonus">' + item.DiscountRate + ' ' + dis + ' </div>').appendTo($grid_image);
+            //    }
+            //    $wrap_scale.appendTo($grid_image)
+               
+            //    $grid_image.append('<img src="/Images/' + item.Image + '"/>',
+            //        '<div class="price">' + item.Price.toFixed(2) + '</div>'
+            //    ).appendTo($grid);
+            //    $('<div class="grid-caption" title=' + item.EnglishName + ' >' + item.EnglishName +'</div>').appendTo($grid);
+            //    $wrap_grid.append($grid);
+            });
+
+        }
+        getCurrentDate();
+        //Show datetime
+        function getCurrentDate() {
+            setInterval(function () {
+
+                $(".datetime").html(padLeft(new Date().getDate(), 2) + "-" + padLeft((new Date().getMonth() + 1), 2) + "-" + new Date().getFullYear() + " " + new Date().toLocaleTimeString());
+
+            }, 1000);
+        }
+        //Pad left number
+        function padLeft(data, size, paddingChar) {
+            return (new Array(size + 1).join(paddingChar || '0') + String(data)).slice(-size);
+        }
+      
+    </script>
+
+</body>
+</html>

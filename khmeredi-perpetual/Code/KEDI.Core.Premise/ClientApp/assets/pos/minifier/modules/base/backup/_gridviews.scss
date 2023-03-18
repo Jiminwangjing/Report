@@ -1,0 +1,401 @@
+.gridview {
+    position: relative;
+    height: auto;
+}
+
+.gridview.item-gridview {
+    height: calc(100% - 2 * 40px);
+}
+
+.gridview .wrap-grid {
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    flex-wrap: wrap;
+    min-height: auto;
+    max-height: 100%;  
+}
+
+.gridview.item-gridview .wrap-grid {
+    overflow-y: auto;
+}
+
+.gridview .wrap-grid .grid {
+    position: relative;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    margin: 5px;
+    padding: 5px 0;
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 0px 2.5px 1px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 0px 2.5px 1px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 2.5px 1px rgba(0,0,0,0.5);
+}
+
+.gridview .wrap-grid .grid.active,
+.gridview .wrap-grid .grid:hover {
+    -webkit-box-shadow: 0px 0px 5px 2.5px #E00CE0;
+    -moz-box-shadow: 0px 0px 5px 2.5px #E00CE0;
+    box-shadow: 0px 0px 5px 2.5px #E00CE0;
+    border-radius: 4px;
+}
+
+.gridview.item-gridview .wrap-grid .grid {
+    flex-basis: calc(25% - 10px);
+    background: #CC9;
+    height: calc(5 * 40.25px);
+}
+
+.gridview.item-gridview .wrap-grid .grid.status-a {
+    background-color: #CC9;
+}
+
+.gridview.item-gridview .wrap-grid .grid.status-b {
+    background-color: #E03454;
+}
+
+.gridview .wrap-grid .grid.status-p {
+    background-color: #50A775;
+}
+
+.gridview.number-pad .wrap-grid .grid {
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    flex-basis: calc(33.333% - 10px);
+    height: calc(2 * 40.25px);
+    cursor: pointer;
+    font-size: 2em;
+    -webkit-box-shadow: 0px 0px 2.5px 0px rgba(0,0,0,0.25);
+    -moz-box-shadow: 0px 0px 2.5px 0px rgba(0,0,0,0.25);
+    box-shadow: 0px 0px 2.5px 0px rgba(0,0,0,0.25);
+}
+
+.gridview.number-pad .wrap-grid .grid:hover {
+    background: darken(#FFF, 15%);
+}
+
+.gridview.number-pad .wrap-grid .grid img {
+    height: 30px;
+    width: 30px;
+    object-fit: cover;
+}
+
+.gridview.quick-number .wrap-grid .grid {
+    border-radius: 50%;
+    flex-basis: calc(20% - 10px);
+    height: calc(1.5 * 40px);
+    font-size: 1.5em;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.gridview .wrap-grid .grid .grid-caption,
+.gridview .wrap-grid .grid .grid-title {
+    padding: 0 .5rem;
+    line-height: 30px;
+    text-align: center;
+    font-size: .9em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.gridview .wrap-grid .grid .grid-subtitle {
+    position: absolute;
+    padding: .3rem;
+    bottom: 0;
+    font-size: .7em;
+    align-self: flex-start;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.gridview .wrap-grid .grid .grid-image {
+    position: relative;
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - 60px);
+    width: 100%;
+    border-top: .5px solid rgba(0,0,0,0.1);
+    border-bottom: .5px solid rgba(0,0,0,.1);
+}
+
+.gridview .wrap-grid .grid .grid-image::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: .5;
+    background-repeat: no-repeat;
+    background-position: center;
+    -ms-background-size: contain;
+    -o-background-size: contain;
+    -moz-background-size: contain;
+    -webkit-background-size: contain;
+    background-size: cover;
+    background-image: url('/pos/images/no-image.jpg');
+}
+
+.gridview .wrap-grid .grid .grid-image .time {
+    position: absolute;
+    display: block;
+    z-index: 4;
+    left: 0;
+    bottom: 0;
+    padding: 0 5px;
+    background: rgba(0, 0, 0, .25);
+    max-width: 100%;
+    height: 25px;
+    line-height: 25px;
+    color: #FFF;
+}
+
+.gridview .wrap-grid .grid .grid-image .wrap-scale {
+    position: absolute;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    border-radius: 50%;
+    background: #2D905F;
+    border: 1px solid rgba(255, 255, 255, .5);
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    color: #EEE;
+    align-items: center;
+    justify-content: center;
+    padding: .15rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.4em;
+    font-weight: bolder;
+    -webkit-transform: scaleY(0);
+    -ms-transform: scaleY(0);
+    transform: scaleY(0);
+    -webkit-transition: all .3s ease;
+    -o-transition: all .3s ease;
+    transition: all .3s ease;
+    z-index: 4;
+}
+
+.gridview .wrap-grid .grid .grid-image .wrap-scale .scale {
+    height: 100%;
+    width: 100%;
+    line-height: 45px;
+}
+
+.gridview .wrap-grid .grid .grid-image .wrap-scale.active {
+    border: 1.5px solid #FFF;
+}
+
+.gridview .wrap-grid .grid .grid-image .wrap-scale.show {
+    transform: scaleY(1);
+}
+
+.gridview .wrap-grid .grid:hover .grid-image .wrap-scale .scale-down,
+.gridview .wrap-grid .grid:hover .grid-image .wrap-scale .scale-up {
+    visibility: visible;
+    transform: translateX(0);
+    -webkit-transition: all .3s ease;
+    -o-transition: all .3s ease;
+    transition: all .3s ease;
+}
+
+.gridview .wrap-grid .grid .grid-image .wrap-scale .scale-down {
+    position: absolute;
+    color: #F5050F;
+    background: rgba(255, 255, 255, .8);
+    right: 100%;
+    border: 1px solid rgba(0, 0, 0, .5);
+    cursor: pointer;
+    width: 60%;
+    font-style: normal;
+    border-top-left-radius: 75%;
+    border-bottom-left-radius: 75%;
+    visibility: collapse;
+    -webkit-transform: translateX(22.5px);
+    -ms-transform: translateX(22.5px);
+    transform: translateX(22.5px);
+    -webkit-transition: all .3s ease;
+    -o-transition: all .3s ease;
+    transition: all .3s ease;
+}
+
+
+.gridview .wrap-grid .grid .grid-image .wrap-scale .scale-up {
+    position: absolute;
+    color: #070EF5;
+    left: 100%;
+    border: 1px solid rgba(0, 0, 0, .5);
+    background: rgba(255, 255, 255, .8);
+    cursor: pointer;
+    width: 60%;
+    font-style: normal;
+    border-top-right-radius: 75%;
+    border-bottom-right-radius: 75%;
+    visibility: collapse;
+    -webkit-transform: translateX(-22.5px); /* Ch <36, Saf 5.1+, iOS < 9.2, An =<4.4.4 */
+    -ms-transform: translateX(-22.5px); /* IE 9 */
+    transform: translateX(-22.5px); /* IE 10, Fx 16+, Op 12.1+ */
+    -webkit-transition: all .3s ease;
+    -o-transition: all .3s ease;
+    transition: all .3s ease;
+}
+
+.gridview .wrap-grid .grid .grid-image img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    z-index: 1;
+}
+
+.gridview .wrap-grid .grid .grid-image .discount {
+    position: absolute;
+    left: 8.5px;
+    top: 8.5px;
+    height: 40px;
+    width: 40px;
+    background: #F5050F;
+    text-align: center;
+    color: #EEE;
+    line-height: 40px;
+    transform: rotate(-45deg);
+    z-index: 3;
+}
+
+.gridview .wrap-grid .grid .grid-image .discount::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 40px;
+    width: 40px;
+    background: #F5050F;
+    transform: rotate(45deg);
+    content: "";
+    z-index: -1;
+}
+
+.gridview .wrap-grid .grid .grid-image .price {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #5AA;
+    height: 25px;
+    min-width: 30px;
+    max-width: 100%;
+    text-align: center;
+    color: #333;
+    padding: 0 .3rem;
+    line-height: 25px;
+    z-index: 3;
+    -webkit-transition: all .3s ease;
+    -o-transition: all .3s ease;
+    transition: all .3s ease;
+}
+
+:fullscreen .gridview .wrap-grid .grid, 
+:-moz-full-screen .gridview .wrap-grid .grid,
+:-webkit-full-screen .gridview .wrap-grid .grid {
+    height: 23.3%;
+} 
+
+@media (min-width: 999px){
+    .gridview.item-gridview.full-desktop .wrap-grid .grid {
+        flex-basis: calc(14.28% - 10px);
+    }
+}
+
+/* Portrait ipad pro*/
+@media only screen 
+    and (min-width: 1024px) 
+    and (max-width: 1366px) 
+    and (-webkit-min-device-pixel-ratio: 2) 
+    and (orientation: portrait) {
+    .gridview.item-gridview .wrap-grid .grid {
+        flex-basis: calc(33.333% - 10px);
+        height: calc(5 * 39.5px);
+    }
+}
+
+/* Landscape ipad pro*/
+@media only screen 
+    and (min-width: 1024px) 
+    and (max-height: 1366px) 
+    and (-webkit-min-device-pixel-ratio: 2) 
+    and (orientation: landscape){
+    .gridview.item-gridview .wrap-grid .grid {
+        flex-basis: calc(25% - 10px);
+        height: calc(4 * 42.5px);
+    }
+
+    .gridview.item-gridview .wrap-grid .grid .grid-caption {
+        max-width: 157px;
+    }
+} 
+
+@media only screen
+    and (min-width: 768px) 
+    and (max-width: 1024px) 
+    and (-webkit-min-device-pixel-ratio: 1) 
+    and (orientation: landscape){
+        .gridview.item-gridview .wrap-grid .grid {
+            height: calc(4 * 38px);
+        }
+
+        .gridview.item-gridview .wrap-grid .grid .grid-caption {
+            max-width: 127px;
+        }
+
+}
+
+@media only screen 
+    and (min-width: 768px) 
+    and (max-width: 1024px) 
+    and (-webkit-min-device-pixel-ratio: 1) 
+    and (orientation: portrait){
+        .gridview.item-gridview .wrap-grid .grid {
+            flex-basis: calc(25% - 10px);
+            height: calc(4 * 42.5px);
+        }
+
+        .gridview.item-gridview .wrap-grid .grid .grid-caption {
+            max-width: 125px;
+        }
+}
+
+@media only screen 
+    and (max-width: 415px){
+    .gridview.item-gridview {
+        height: calc(100% - 3 * 40px);
+    }
+
+    .gridview.item-gridview .wrap-grid .grid {
+        flex-basis: calc(50% - 10px);
+        height: calc(5 * 36.333px);
+    }
+}
+

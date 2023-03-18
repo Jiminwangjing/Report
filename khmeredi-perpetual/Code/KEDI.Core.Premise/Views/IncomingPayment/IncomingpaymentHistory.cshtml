@@ -1,0 +1,55 @@
+﻿<link href="~/Admin/Purchase/css/purchase-credit-memo-history.css" rel="stylesheet" />
+<style>
+    .btn.btn-xs {
+        height: 23px !important;
+        line-height: 23px !important;
+        font-size: .7em !important;
+    }
+
+    .mt-4 {
+        margin-top: 1.8rem !important;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+<div class="card card-body">
+    <div class="row BTNROW">
+        <div class="col-md-2">
+            <label class="lable_warehouse">@Localizer["Status"]</label>
+            <select class="select_warehouse" id="status">
+                <option value="all">@Localizer["Äll"]</option>
+                <option value="open">@Localizer["Open"]</option>
+                <option value="cancel">@Localizer["Cancel"]</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label_Postingdate">@Localizer["Date From"]</label>
+            <div>
+                <input type="date" class="input_postingdate" id="txtdatefrom" />
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label class="lable_requried">@Localizer["Date To"]</label>
+            <div>
+                <input type="date" class="input_requrieddate" id="txtdateto" />
+            </div>
+        </div>
+        <div class="col-md-4 mt-4">
+            <button class="btn btn-kernel btn-xs btnFilter">@Localizer["Filter"]</button>
+            <button class="btn btn-kernel btn-xs">@Localizer["Clear"]</button>
+        </div>
+    </div>
+    <div class="wrap-table listPurchase">
+        <table id="list_incomingPayment"></table>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-xs btn-kernel" asp-action="Incomingpayment" asp-controller="Incomingpayment">@Localizer["Back"]</a>
+        </div>
+    </div>
+</div>
+<p hidden id="BranchID">@User.FindFirst("BranchID").Value</p>
+<div hidden id="data-PSJE">@Json.Serialize(Model)</div>
+<script src="~/Admin/Bank/js/incoming-payment-history.js"></script>

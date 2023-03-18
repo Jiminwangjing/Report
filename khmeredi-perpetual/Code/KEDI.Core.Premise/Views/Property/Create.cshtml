@@ -1,0 +1,28 @@
+﻿@using CKBS.Models.Services.Inventory.Property
+@model Property
+<link href="~/SystemInitialization/PostingPeriod/css/create.css" rel="stylesheet" />
+<div class="card card-body">
+    <form asp-action="Create" asp-controller="Property" method="post">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Name"] :</label>
+                    <input asp-for="Name" class="input-box-kernel" id="periodCode" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>  
+            </div>
+            <div class="col-md-6">                     
+            </div>
+        </div>
+        <br />
+        @*<div id="error-summary"></div>*@
+        <div class="row pull-left">
+            <div class="col-md-12 stylebutton">
+                <button class="btn btn-kernel btn-xs" type="submit">@Localizer["Add"]</button>
+                <a class="btn btn-xs btn-kernel" asp-action="Index"> @Localizer["Back"]</a>
+            </div>
+        </div>
+    </form>       
+</div>
+
+

@@ -1,0 +1,365 @@
+﻿
+@{
+    ViewData["Title"] = "CustomerStatementView";
+}
+<head>
+    <link href="~/Admin/DevReport/css/DevReport.css" rel="stylesheet" />
+</head>
+<body class="dx-viewport">
+    <form id="form-print-curstomer-statement" class="card card-body"
+        method="post" action="/DevPrint/PrintCustomerStatement" target="_blank">
+        <div class="row">
+            <div class="col-md-2">
+                <label class="lable_datefrom">@Localizer["Date From"]</label>
+                <input name="DateFrom" type="date" class="input_datefrom"
+                    id="datefrom" />
+            </div>
+            <div class="col-md-2">
+                <label class="lable_dateto">@Localizer["Date To"]</label>
+                <input name="DateTo" type="date" class="input_dateto"
+                    id="dateto" />
+            </div>
+            <div class="col-md-2">
+                <label class="lable_cus">@Localizer["Customer From"]</label>
+                <select name="CustomerFrom" type="text" class="input_dateto"
+                    id="bycus">
+                    <option value="0">All Customer</option>
+                </select>
+            </div>
+            @* <div class="col-md-2">
+            <label class="lable_cus">@Localizer["Customer To"]</label>
+            <select name="CustomerTo" type="text" class="input_dateto"
+            id="custo">
+            <option value="0"></option>
+            </select>
+            </div> *@
+            <div class="col-md-2">
+                <label class="lable_cus">@Localizer["Employee"]</label>
+                <select name="EmployeeID" type="text" class="input_dateto"
+                    id="employee">
+                    <option value="0">All Saller</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-xs btn-kernel" type="button" id="filter">@Localizer["Filter"]</button>
+            </div>
+        </div>
+        <div id="gridContainer"></div>
+        <div class="options">
+            <div class="option">
+                <div id="autoExpand"></div>
+            </div>
+        </div>
+    </form>
+</body>
+
+<script>
+    $(function () {
+        var arrCustomerStatemt=[];
+        filterData();
+
+        // Get Employee
+        $.get("/SaleReport/GetSaleEmployee",function(res){
+            var data = '';
+                   // $("#employee option:not(:first-child)").remove();
+                    $.each(res, function (i, item) {
+                        data +=
+                            '<option value="' + item.ID + '">' + item.Name + '</option>';
+                    });
+                    $("#employee").append(data);
+        });
+
+        //Get Customer
+        $.ajax({
+            url: "/SaleReport/GetCustomer",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bycus").append(data);
+                $("#custo").append(data);
+            }
+        });
+        $('#filter').click(function () {
+            filterData(this);
+        });
+        function filterData(button) {
+            let btn_filter = $(button).children("i.fa-search");
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var cus_id = $("#bycus").val();
+           // var custo_id = $("#custo").val();
+            var emID = $("#employee").val();
+            $.ajax({
+                url: "/SaleReport/GetCustomerStatement",
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    DateFrom: date_from,
+                    DateTo: date_to,
+                    CusID: cus_id,
+                    emID:emID
+
+                },
+                beforeSend: function () {
+                    btn_filter.addClass("fa-spinner fa-spin");
+                },
+                success: function (reponse) {
+                    bindGrid(reponse);
+                    reponse.forEach(i=>{arrCustomerStatemt.push(i);});
+                    btn_filter.removeClass("fa-spinner fa-spin");
+                }
+            });
+        }
+        function bindGrid(reponse) 
+        {
+            var dataGrid = $("#gridContainer").dxDataGrid({
+                dataSource: reponse,
+                allowColumnReordering: true,
+                showBorders: true,
+                allowColumnResizing: true,
+                hoverStateEnabled: true,
+                allowColumnResizing: true,
+                columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: {
+                    columnRenderingMode: "virtual"
+                },
+                grouping: {
+                    autoExpandAll: false,
+                },
+                searchPanel: {
+                    visible: true
+                },
+                filterRow: {
+                    visible: false,
+                    applyFilter: "auto"
+                },
+
+                paging: {
+                    pageSize: 10
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20, 50, 100],
+                    showInfo: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                groupPanel: {
+                    visible: false
+                },
+                columns: [
+                    {
+                        dataField: "CusName",
+                        caption: "Customer",
+                        alignment: "left",
+                        groupIndex: 0
+                    }, 
+                    {
+                        dataField: "MasDocumentNo",
+                        caption: "DocumentNo"
+                    },
+                    {
+                        dataField: "MasDate",
+                        caption: "Date",
+
+                    },
+                      {
+                        dataField: "RequiredDate",
+                        caption: "Required Date",
+
+                    },
+                     {
+                        dataField: "Employee",
+                        caption: "Employee",
+
+                    },
+                     {
+                        dataField: "OperatedBy",
+                        caption: "Operated By",
+
+                    },
+                    {
+                        dataField: "OverdueDays",
+                        caption: "OverDue Days"
+                    },
+                    {
+                        dataField: "MasTotal",
+                        caption: "Total"
+                    },
+                    {
+                        dataField: "ApplyAmount",
+                        caption: "Amount Paid"
+                    },
+                    {
+                        dataField: "MasBalanceDue",
+                        caption: "Balance Due",
+                        alignment: "left"
+                    },
+                ],
+                summary: {
+                    totalItems: [
+                        {
+                            showInColumn: "MasTotal",
+                            column: "SumBalanceDueSSC",
+                            summaryType: "max",
+                            displayFormat: "Balance Due SSC :",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "MasTotal",
+                            column: "SumBalanceDueLC",
+                            summaryType: "max",
+                            displayFormat: "Balance Due LC :",
+                            alignment: "right"
+                        },
+                        //Value                       
+                        {
+                            showInColumn: "MasBalanceDue",
+                            column: "SumBalanceDueSSC",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "MasBalanceDue",
+                            column: "SumBalanceDueLC",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                    ]
+                },
+
+                export: {
+                    enabled: true
+                },
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('Customer-Statement');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                        topLeftCell: { row: 4, column: 1 }
+                    }).then(function (dataGridRange) {
+                        // header
+                        var headerRow = worksheet.getRow(2);
+                        headerRow.height = 30;
+                        worksheet.mergeCells(2, 1, 2, 4);
+                        headerRow.getCell(1).value = 'Customer Statement';
+                        headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
+                        headerRow.getCell(1).alignment = { horizontal: 'center' };
+
+                    }).then(function () {
+                        // https://github.com/exceljs/exceljs#writing-xlsx
+                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Customer-Statement-Report.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "refresh",
+                                onClick: function () {
+                                    dataGrid.refresh();
+                                    filterData();
+                                }
+                            }
+                        },
+                        //// PDF
+                         {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "fas fa-file-pdf",
+                                onClick: function () {
+                                    printPdf();
+                                }
+                            },
+                            title: 'Export to PDF'
+                        },
+
+                         {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "fas fa-file",
+                                onClick: function () {
+                                    printPdf2();
+                                }
+                            },
+                            title: 'Export to PDF'
+                        },
+                    );
+                }
+
+            }).dxDataGrid("instance");
+
+            $("#autoExpand").dxCheckBox({
+                value: false,
+                text: "Expand All Groups",
+                onValueChanged: function (data) {
+                    dataGrid.option("grouping.autoExpandAll", data.value);
+                }
+            });
+        }
+
+
+
+
+
+        function printPdf() {
+            let _form = $("#form-print-curstomer-statement");
+    @* window.document._form[0].target = '_blank';  *@
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var cus_id = $("#bycus").val();
+            var custo_id = $("#custo").val();
+            var emID = $("#employee").val();
+    @* let objfilter={
+                    DateFrom: date_from,
+                    DateTo: date_to,
+                    CusID: cus_id,
+                    custoID: custo_id,
+                    emID:emID
+            }
+
+            $.post("/DevPrint/PrintCustomerStatement", _form.serialize(), function(){
+                //location.reload();
+                //window.open(`/DevPrint/PrintCustomerStatement`, "_blank"); 
+            }); *@
+
+
+            window.open(`/DevPrint/PrintCustomerStatement?DateFrom=${date_from}&DateTo=${date_to}&CusID=${cus_id}&emID=${emID}`, "_blank"); 
+    }//DateFrom=${datefrom}&DateTo=${dateto}&BranchID=${branch}&UserID=${user}&plid=${plid}`, "_blank");
+       function printPdf2() {
+            let _form = $("#form-print-curstomer-statement");
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var cus_id = $("#bycus").val();
+            var custo_id = $("#custo").val();
+            var emID = $("#employee").val()
+            window.open(`/DevPrint/PrintCustomerStatmentDetail?DateFrom=${date_from}&DateTo=${date_to}&CusID=${cus_id}&emID=${emID}`, "_blank"); 
+    }
+    });
+</script>

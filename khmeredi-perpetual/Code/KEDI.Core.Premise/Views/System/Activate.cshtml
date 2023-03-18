@@ -1,0 +1,126 @@
+﻿
+@model KEDI.Core.System.Models.SystemLicense
+@{
+    Layout = "_LoginLayout";
+}
+
+<fieldset class="user-login">
+    <legend class="title">@Localizer["Activation"]</legend>
+    <form enctype="multipart/form-data">
+        <div id="deadlock-box" class="deadlock-box">
+            <div id="H" class="angle-up"></div>
+            <div id="E" class="angle-down"></div>
+            <div id="V" class="angle-left"></div>
+            <div id="D" class="angle-right"></div>
+            <img id="core-loader" class="core-loader" src="~/AdminLayout/images/deadlock/radarloop.gif" />
+        </div>
+        
+        <div id="entry-key" class="stack-inline box-group">
+            <i class="fas fa-lock"></i>
+            <span>0</span>
+            <span>0</span>
+            <span>0</span>
+            <span>0</span>
+        </div>
+
+        <div class="stack-inline box-group">
+            <i class="fas fa-hdd" title="@Localizer["Left click to copy"]" onclick="copyUUID();" style="cursor: pointer;"></i>
+            <input asp-for="DeviceKey" autofocus value="@UserManager.FindDeviceKey()" autocomplete="off" readonly />
+        </div>
+        
+        <div class="box-group">
+            <input id="choose-licence" type="file" style="width: 100%;" accept="@UserManager.GetLicenseExt()" />
+        </div>
+        <div asp-validation-summary="All"></div>
+        <div class="box-group">
+            <button type="button" class="stretch-fill" title="Activate">
+                <i class="fas fa-sign-in-alt"></i><span id="label-activating">&nbsp;@Localizer["Activate"]</span>
+            </button>
+        </div>
+        
+    </form>
+</fieldset>
+<script>
+    var chooseLicense = document.getElementById("choose-licence");  
+    chooseLicense.addEventListener("change", importLicense);
+    function importLicense() {      
+        $("#label-activating").html('&nbsp;<img  src="/AdminLayout/images/trail.gif"/>');     
+        const http = new XMLHttpRequest();
+        var form = new FormData(document.querySelector("form"));
+        form.append('file', this.files[0]);
+        let url = "/System/ImportLicense";
+        var lockIcon = $("#entry-key").children(":first-child");
+        http.open('POST', url, true);
+
+        http.onreadystatechange = function () {           
+            //Call a function when the state changes.
+            
+            if (http.readyState == 4 && http.status == 200) {      
+                let message = JSON.parse(http.response);   
+                let license = message.Items["License"];
+                document.getElementById("core-loader").className += " scanning";            
+                if(message.IsRejected){
+                    setUnlockPuzzle(license.EntryKey, 0, "back", function () {
+                        document.getElementById("core-loader").setAttribute("src", "/AdminLayout/images/deadlock/hacker.gif");
+                        lockIcon.removeClass("fa-unlock").addClass("fa-lock");
+                        ViewMessage({}, message);
+                    });
+                    
+                } else {
+                    document.getElementById("DeviceKey").value = license.DeviceKey;                      
+                    setUnlockPuzzle(license.EntryKey, 0, "back", function (delay) {
+                        setUnlockPuzzle(license.EntryKey, 0, "reverse");       
+                        setTimeout(function () {    
+                            document.getElementById("deadlock-box").className += " circle";
+                            document.getElementById("core-loader").className += " unlock";
+                            document.getElementById("core-loader").setAttribute("src", "/AdminLayout/images/deadlock/unlocker.gif");
+                            lockIcon.addClass("fa-unlock").removeClass("fa-lock");
+                            ViewMessage({}, message);
+                            setTimeout(function(){
+                                location.href = "/account/redirectUser";
+                            }, delay);
+                        }, delay);                      
+                    });                
+                }    
+                
+            }      
+        }
+        http.send(form);    
+    }
+
+    function setUnlockPuzzle(EntryKey, delay = 0, className, fallback) {  
+        var keys = isEmpty(EntryKey)? "" : Array.from(EntryKey);      
+        var logics = ["#H", "#V","#E", "#D"];
+
+        var logicParts = $("#entry-key").children(":not(:first-child)");       
+        for (let i = 0; i < logics.length; i++) {  
+            setTimeout(function () {         
+                document.querySelector(logics[i]).className += " " + className;                 
+                logicParts[i].textContent = keys[i];              
+            }, delay);      
+            delay += 250;    
+        }  
+        if (fallback) {
+            setTimeout(function () {
+                fallback(delay, keys);
+            }, delay)
+        }    
+    }
+
+    function copyUUID() {
+      /* Get the text field */
+      var copyText = document.getElementById("DeviceKey");
+
+      /* Select the text field */
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+       /* Copy the text inside the text field */
+      navigator.clipboard.writeText(copyText.value);
+    }
+
+    function isEmpty(value) {
+        return value == undefined || value == null || value == "";
+    }
+  
+</script>

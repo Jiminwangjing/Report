@@ -1,0 +1,170 @@
+@using KEDI.Core.Premise.Models.Services.CustomerConsignments;
+<style>
+    .hover {
+        cursor: pointer;
+    }
+
+    .text-danger {
+        color: red;
+    }
+
+    .text-info {
+        color: green;
+    }
+    .wrap-block.col-three > .center-block {
+        width: 33.333%;
+        padding-left: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    #receipt-detail{
+        text-align: center;
+    }
+    #error, #errorNo, #errorDetail{
+        font-size: 15px;
+    }
+    table tr th,
+        table tr td input,
+        table tr td,
+        table tr th:nth-child(2),
+        table tr:not(:first-child) td:nth-child(2) {
+        text-align: center;
+    }
+
+    .text-success{
+        color: green;
+        font-size: 15px;
+    }
+
+    table tr.active td {
+        background-color: transparent;
+    }
+</style>
+
+<div class="widget-combobox menubox  down-right">
+    <div id="customer-consignment" class="combobox-trigger">
+        <i class="fas fa-wine-bottle fn-white fa-fw fa-lg csr-pointer icon-tab" style="margin-left: 7px;"></i>
+    </div>
+
+    <div class="combobox-content" style="width: 80vw;">
+        <div class="combobox-header">
+            <i class="fas fa-wine-bottle" style="font-size: 26px;padding-left: 13px;"></i>
+            <h4 class="title">@Localizer["Customer Consignment"]</h4>
+            <i class="i-close"></i>
+        </div>
+
+        <div class="combobox-body widget-scrollbar">
+            <div class="widget-tab" style="height: 75vh;">
+                <div class="tab-sheet active" id="tab-ccm">
+                    <div id="tab-buyxgetx" class="tab-title">@Localizer["Create"]</div>
+
+                    <div class="tab-content widget-scrollbar">
+                        <div class="wrap-block col-three">
+                            <div class="left-block" style="font-size:13px">
+                                <div class="stack-block">
+                                    <label>@Localizer["Customer Name"]</label>
+                                    <input class="customer-name" readonly/>
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["WareHouse"]</label>
+                                    <input class="warehouse" readonly/>
+                                </div>
+                            </div>
+
+                            <div class="center-block" style="font-size:13px">
+                                <div class="stack-block">
+                                    <label>@Localizer["Extend Period"]</label>
+                                    <select class="form-control date-expiry-period" asp-items="@Html.GetEnumSelectList<LengthExpire>()"></select>
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Series No"]</label>
+                                    <select class="form-control" id="series-no"></select>
+                                </div>
+                            </div>
+
+                            <div class="right-block" style="font-size:13px">
+                                <div class="stack-block">
+                                    <label>@Localizer["Valid Date To"]</label>
+                                    <input class="card-exp-date-to" readonly type="date" id="dateto"/>
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Receipt No"]</label>
+                                    <input class="receipt-no" id="find_number"/>
+                                </div>
+                            </div>
+
+                            <div class="wrap-table detail mt-2 widget-scrollbar bTable">
+                                <table id="receipt-detail">
+                                    <tr>
+                                        <th>@Localizer["#"]</th>
+                                        <th>@Localizer["Code"]</th>
+                                        <th>@Localizer["Name"]</th>
+                                        <th>@Localizer["Uom"]</th>
+                                        <th>@Localizer["Qty"]</th>
+                                        <th>@Localizer["Action"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <button id="save-cus-csm" class="btn" type="button"><i class="fas fa-save"></i> @Localizer["Save"]</button>
+                            <button id="clear-data" class="btn ml-2" type="button"><i class="fas fa-eraser"></i> @Localizer["Clear"]</button>
+                        </div>
+                        <div class="text-danger" id="error"></div>
+                        <div class="text-danger" id="errorNo"></div>
+                        <div class="text-success" id="successC"></div>
+                    </div>
+                </div>
+
+                <div class="tab-sheet" id="create-type-card">
+                    <div id="tab-itemdetail" class="tab-title">@Localizer["Customer Item"]</div>
+
+                    <div class="tab-content widget-scrollbar">
+                        <div class="wrap-block col-three">
+                            <div class="left-block" style="font-size:13px">
+                                <div class="stack-block">
+                                    <label>@Localizer["Customer Name"]</label>
+                                    <select class="form-control" id="find-cus"></select>
+                                </div>
+                            </div>
+
+                            <div class="center-block" style="font-size:13px">
+                                <div class="stack-block">
+                                    <label>@Localizer["WareHouse"]</label>
+                                    <select class="form-control" id="find-wh"></select>
+                                </div>
+                            </div>
+
+                             <div class="right-block" style="font-size:13px">
+                                <div class="stack-block">
+                                    <label>@Localizer["Number"]</label>
+                                    <input class="number-no" id="next_number" readonly/>
+                                </div>
+                                 <div class="stack-block" style="text-align: right;margin-top:0px">
+                                    <button id="filter-item" class="btn" type="button"><i class="fas fa-filter"></i> @Localizer["Filter"]</button>
+                                </div>
+                             </div>
+
+                            <div class="wrap-table detail mt-2 widget-scrollbar bTable">
+                                <table id="item-detail">
+                                    <tr>
+                                        <th>@Localizer["#"]</th>
+                                        <th>@Localizer["Code"]</th>
+                                        <th>@Localizer["Name"]</th>
+                                        <th>@Localizer["Expire Date"]</th>
+                                        <th>@Localizer["Uom"]</th>
+                                        <th>@Localizer["Qty"]</th>
+                                        <th>@Localizer["Action"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <button id="withdraw-item" class="btn" type="button"><i class="fas fa-save"></i> @Localizer["Withdraw"]</button>
+                            <button id="return-item" class="btn" type="button" style="margin-left: 10px;"><i class="fas fa-undo-alt"></i> @Localizer["Return Item"]</button>
+                        </div>
+                        <div class="text-danger" id="errorDetail"></div>
+                        <div class="text-success" id="successD"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/pos/js/customer-consignment.js"></script>
+    

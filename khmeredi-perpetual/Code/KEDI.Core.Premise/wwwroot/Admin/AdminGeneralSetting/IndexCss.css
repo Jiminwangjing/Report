@@ -1,0 +1,38 @@
+.ck-widget-container .widget-body .widget-sidemenu .sidemenu-group .sidemenu-item {
+
+    font-weight: bolder !important;
+    margin-top: -0.60mm;
+}
+
+.ck-widget-container .widget-body .widget-sidemenu .sidemenu-group {
+    margin-top: 5px;
+}
+
+.group-search-boxes .wrap-search-box .wrap-input {
+    border: 2px solid rgb(181 169 169);
+}
+
+/* .group-search-boxes .wrap-search-box .wrap-input.show {
+    margin-top: -5px;
+} */
+
+/* .font-size {
+
+    font-weight: 600;
+} */
+
+.ck-widget-container .widget-combobox .combobox-trigger {
+    height: 31px;
+}
+
+table tr td {
+    font-weight: initial;
+}
+
+.input_datefrom,
+.input_dateto,
+.input_user,
+.input_branch,
+.input_warehouse {
+    margin-top: 0px 0px 0px;
+}

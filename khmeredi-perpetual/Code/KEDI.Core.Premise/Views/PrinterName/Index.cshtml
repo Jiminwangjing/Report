@@ -1,0 +1,158 @@
+﻿@model Pagination<PrinterName>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .stylerow {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .fa {
+        margin-right: 4px;
+    }
+
+    .tbncrate {
+        margin-top: 10px;
+        color: white;
+        margin-left: 1px;
+    }
+
+    .fa-sort-amount-down {
+        margin-left: 10px;
+        font-size: 10px;
+        color: blue;
+    }
+
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+
+    b {
+        margin-left: 10px;
+    }
+
+    .btnsearch {
+        color: blue;
+    }
+
+    .stylei {
+        color: white;
+    }
+
+    .content_select {
+        height: 25px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+    }
+
+    .content_select:focus {
+        box-shadow: 0 0 5px rgba(27, 93, 185, 0.4);
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid rgb(120, 172, 245);
+        border-radius: 3px;
+        font-family: Arial;
+        font-size: 13px;
+    }
+</style>
+<style>
+    #table,
+    tr,
+    th {
+        text-align: center !important;
+    }
+
+    #table,
+    tr,
+    td {
+        text-align: center !important;
+    }
+</style>
+<div class="card card-body">
+    <div class="d-flex justify-content-between">
+        <a class="btn btn-xs btn-kernel" asp-action="Create">@Localizer["Create"]</a>
+
+        <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-printerName" autocomplete="off" type="text"
+                        placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+    <input type="text" id="txtid" hidden />
+    <div class="wrap-table myt1">
+        <table id="list-printer">
+            <thead>
+                <tr>
+                    <th>
+                        @Localizer["Name"]
+                    </th>
+                    <th>
+                        @Localizer["OrderCount"]
+                    </th>
+                    @* <th>
+                        @Localizer["Split"]
+                        </th> *@
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        let $listView = ViewTable({
+            keyField: "ID",
+            selector: "#list-printer",
+            paging: {
+                enabled: false,
+                pageSize: 10
+            },
+            visibleFields: [
+                "Name", "OrderCount",
+            ],
+            columns: [
+                {
+                    name: "Name",
+                    on: {
+                        "dblclick": function (e) {
+                            location.href = "/PrinterName/Edit?id=" + e.key;
+                        }
+                    },
+                }
+            ]
+        });
+        printerName($listView);
+        $("#search-printerName").on("keyup", function () {
+            printerName($listView, this.value);
+        });
+
+        function printerName($listView, keyword = "") {
+            $.get("/PrinterName/GetPrinterName", {
+                keyword: keyword
+            }, function (printerName) {
+                $listView.clearRows();
+                $listView.bindRows(printerName);
+            });
+        }
+    });
+</script>

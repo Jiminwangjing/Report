@@ -1,0 +1,1632 @@
+﻿
+
+<script src="~/js/table.js" defer></script>
+<script src="~/js/warehouse.js"></script>
+<style>
+    fieldset.scheduler-border {
+        border: 2px groove #e6ffe6;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 43px 0 1.5em 0 !important;
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #00cc00;
+    }
+
+    fieldset.scheduler-borders {
+        border: 2px groove #e6ffe6;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 10px 0 1.5em 0 !important;
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #00cc00;
+    }
+
+    legend.scheduler-border {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+    }
+
+    .content_branch, .content_status, .content_warehouse, .content_exchange, .content_remark, .content_reff_no, .content_user, .content_localcurrency, .content_ap, .content_postingdate, .content_delivery, .content_documentdate {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 60%;
+        height: 30px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+        .content_branch:focus, .content_status:focus, .content_warehouse:focus, .content_remark:focus, .content_exchange:focus, .content_reff_no:focus, .content_user:focus, .content_localcurrency:focus, .content_ap:focus, .content_postingdate:focus, .content_delivery:focus, .content_documentdate:focus {
+            border: 1px solid rgba(77, 142, 245,1);
+            box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+            padding: 3px 0px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border-radius: 3px;
+            font-family: Arial;
+            font-size: 13px;
+        }
+
+    .label_branch, .label_status, .label_warehouse, .label_exchange, .label_remark, .label_reff_no, .label_user, .label_ap, .label_postingdate, .label_documentdate, .label_delivery, .label_localcurrency {
+        min-width: 30%;
+        width: 30%;
+    }
+
+    .btn_Find {
+        top: 0px;
+    }
+
+    .content_icon {
+        position: relative;
+    }
+
+    .content_documentdate, .content_postingdate, .content_delivery {
+        position: relative;
+    }
+
+    .facalendar {
+        position: absolute;
+        right: 40px;
+        top: 14px;
+        color: #1bb1f2;
+    }
+
+    .content_barcode {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 32px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+    .btn_add {
+        height: 32px;
+        margin-top: 5px;
+        margin-left: 3px;
+    }
+
+    .content_search {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 32px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        width: 100%;
+    }
+
+    .content_search {
+        position: relative;
+    }
+
+    .icon_search {
+        position: absolute;
+        bottom: 11px;
+        right: 20px;
+    }
+
+    .btnsearch {
+        margin-bottom: 7px;
+    }
+
+    .modal-header {
+        background-color: #4d84f6;
+    }
+
+    #ui-datepicker-div {
+        width: 230px;
+    }
+
+    .btn_Cancel, .btn_ADD {
+        margin-top: 20px;
+    }
+
+
+    .content_subtotal:focus, .expiredate:focus, .alertstock:focus, .content_discount_cash:focus, .content_discount_percent:focus, .content_vat:focus, .content_additional_node:focus, .content_downpayment:focus, .content_applied_amount:focus, .content_additional_expense:focus, .content_return_amount:focus, .content_balance_du:focus, .content_copy:focus {
+        border: 1px solid rgba(77, 142, 245,1);
+        box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border-radius: 3px;
+        font-family: Arial;
+        font-size: 13px;
+    }
+
+    
+
+    .content_balance_du {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 48%;
+        height: 25px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }  
+    .content_additional_node, .content_copy {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 55%;
+        height: 25px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+    .fa_retweet {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+    }
+
+    .discount_item {
+        position: relative;
+    }
+
+    .btnchoose {
+        text-align: center;
+        color: green;
+        font-size:20px;
+        cursor:pointer;
+    }
+
+    .divQty {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .InputQty {
+        margin-left: 15px;
+        min-width: 80px;
+        border: 1px solid rgba(213, 211, 211,1);
+        width: 80px;
+        border-radius: 3px;
+        height: 30px;
+    }
+    .InputRemark {
+        min-width: 150px;
+        border: 1px solid rgba(213, 211, 211,1);
+        width: 150px;
+        border-radius: 3px;
+        height: 30px;
+    }
+    .InputPurchasePrice {
+        margin-left: 15px;
+        min-width: 80px;
+        border: 1px solid rgba(213, 211, 211,1);
+        width: 80px;
+        border-radius: 3px;
+        height: 30px;
+    }
+
+    .divPurchase {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-width: 80px;
+    }
+
+    .Sub_total {
+        margin-left: 10px;
+        min-width: 80px;
+        width: 80px;
+    }
+
+    .divQT_total {
+        min-width: 120px;
+    }
+
+    .select_Uom, .selectvendor {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 3px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        min-width: 100%;
+        height: 30px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+
+    .icon_discount_percent, .discount_cash {
+        font-size: 10px;
+    }
+
+    #addfontawesome {
+        margin-left: 10px;
+        font-size: 10px;
+    }
+
+    .style_curr {
+        font-size: 12px;
+    }
+
+    .Error_mesage {
+        margin: 10px;
+        padding-bottom: 5px;
+        padding-top: 0px;
+        max-height: 20px;
+        line-height: 20px;
+        border-radius: 2px;
+    }
+
+    .rquried_pric {
+        color: white;
+        font-size: 12px;
+        line-height: 20px;
+    }
+
+    .wrap-table .list {
+        margin-bottom: 15px;
+    }
+
+    .wrap-table {
+        min-height: 150px;
+    }
+
+    .dialog-box .footer {
+        padding: 0;
+    }
+
+    .dialog-box .content {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    input[type="date"], input[type="text"] {
+        height: 30px;
+    }
+
+    .linkvendor {
+        margin-right: 10px;
+        cursor: pointer;
+        font-size: 12px;
+        color:green;
+      
+      
+    }
+    .choosed_vendor {
+        font-size: 18px;
+        text-align: center;
+        color: green;
+    }
+</style>
+<label class="btnfind" hidden>@Localizer["Find"]</label>
+<label class="btnnew" hidden>@Localizer["New"]</label>
+<label class="btnfind_new" hidden></label>
+<label class="btnAdd" hidden>@Localizer["Add"]</label>
+<label class="btnsave" hidden>@Localizer["Update"]</label>
+
+<div class="row pull-right btn_Find">
+    <div class="col-md-12">
+        <button class="btn btn-xs btn-primary findbtn" onclick="findPurchaseAP()">@Localizer["Find"]</button>
+        <a class="btn btn-xs btn-success" asp-controller="PurchaseQuotation" asp-action="PurchaseStory">@Localizer["History"]</a>
+    </div>
+</div>
+<link href="~/css/Modal.css" rel="stylesheet" />
+<fieldset class="scheduler-border">
+    <legend class="scheduler-border">@Localizer["Purchase Request"]</legend>
+    <div class="row">
+        <div class="col-md-4">
+            <label class="label_user">@Localizer["Creator"]</label>
+            <select class="content_user" id="txtselectuser">
+                <option value="0" selected disabled>--- select ---</option>
+            </select>
+            <div class="text-danger requried_user"></div>
+            <label class="label_branch">@Localizer["Branch"]</label>
+            <select class="content_branch" id="txtselectbranch">
+                <option value="0" selected disabled>--- select ---</option>
+            </select>
+            <div class="text-danger requried_brnach"></div>
+
+            <label class="label_warehouse">@Localizer["Warehouse"]</label>
+            <select class="content_warehouse" id="txtwarehouse">
+                <option value="0" selected disabled>--- select ---</option>
+            </select>
+            <label class="label_status">@Localizer["Status"]</label>
+            <input type="text" class="content_status" id="txtstatus" readonly />
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <label class="label_ap">@Localizer["PR No."]</label>
+            <input class="content_ap" type="text" id="txtInvoice" autocomplete="off" />
+            <div class="text-danger requried_number"></div>
+            <div class="content_icon">
+                <label class="label_postingdate">@Localizer["Posting Date"]</label>
+                <input class="content_postingdate" type="date" id="txtPostingdate" autocomplete="off" />
+            </div>
+            <div class="content_icon">
+                <label class="label_documentdate">@Localizer["Valid Until"]</label>
+                <input class="content_documentdate" type="date" id="txtvaliduntil" autocomplete="off" />
+            </div>
+            <div class="content_icon">
+                <label class="label_documentdate">@Localizer["Document Date"]</label>
+                <input class="content_documentdate" type="date" id="txtDocumentDate" autocomplete="off" />
+            </div>
+            <div class="content_icon">
+                <label class="label_delivery">@Localizer["Required Date"]</label>
+                <input type="date" id="txtrequiredate" autocomplete="off" class="content_delivery" />
+            </div>
+
+        </div>
+    </div>
+</fieldset>
+<div class="row">
+    <div class="col-md-12">
+        <div class="input-group">
+            <input type="text" placeholder="@Localizer["Bracode search..."]" id="txtbarcode" class="form-control content_barcode" />
+            <div class="input-group-append">
+                <button class="btn btn-sm btn-primary btn_add" onclick="showItemMasters()" data-toggle="modal" data-target="#ModalAdd">@Localizer["Add"]</button>
+            </div>
+        </div>
+        <div class="rquried_item text-danger"></div>
+        <div class="item_not_difine text-danger"></div>
+    </div>
+</div>
+<fieldset class="scheduler-borders">
+    <legend class="scheduler-border">@Localizer["Purchase Request Detail"]</legend>
+    <div class="wrap-table list">
+        <table id="list-items">
+            <thead>
+                <tr>
+                    <th class="boldth">@Localizer["Item No"]</th>
+                    <th class="boldth" style="min-width:180px;">@Localizer["Descriptions"]</th>
+                    <th class="boldth" style="min-width:150px;">@Localizer["Vendor"]</th>
+                    <th class="boldth">@Localizer["Request Date"]</th>
+                    <th class="boldth">@Localizer["Qty"]</th>
+                    <th class="boldth text-center">@Localizer["UoM"]</th>
+                    <th class="boldth">@Localizer["Unit Cost"]</th>                   
+                    <th class="boldth">@Localizer["Amount"]</th>
+                    <th class="boldth">@Localizer["Remark"]</th>
+                    <th class="boldth">@Localizer["Action"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</fieldset>
+<div class="modal fade" role="dialog" id="ModalAdd">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" aria-hidden="true" style="color:white;"><b style="margin-left:5px;">@Localizer["Item Master Data"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row btnsearch">
+                    <div class="col-md-8"></div>
+                    <div class="col-md-4">
+                        <input type="text" class="content_search" id="txtSearch" placeholder="@Localizer["Search"]" />
+                        <i class="fa fa-search icon_search" style="color:blue;"></i>
+                    </div>
+                </div>
+                <div class="wrap-table list" style="height:400px;">
+                    <table id="item-master">
+                        <thead>
+                            <tr>
+                                <th class="boldth">@Localizer["item No"]</th>
+                                <th class="boldth" style="min-width:180px;">@Localizer["Descriptions"]</th>
+                                @*<th class="boldth">@Localizer["English Name"]</th>*@
+                                <th class="boldth">@Localizer["InStock"]</th>
+                                <th class="boldth">@Localizer["Cost"]</th>
+                                <th class="boldth">@Localizer["Currency"]</th>
+                                <th class="boldth">@Localizer["UoM"]</th>
+                                <th class="boldth">@Localizer["Barcode"]</th>
+                                <th class="boldth">@Localizer["Choose"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-danger" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div>
+            <label class="label_remark">@Localizer["Remark"]</label>
+            <textarea id="txtRemark" class="content_remark" style="min-height:50px;"></textarea>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div>
+            <label class="label_balance_due">@Localizer["Total Due"]</label>
+            <span class="total_due style_curr"></span>
+            <input type="text" id="txtBalancedue" readonly class="content_balance_du" />
+        </div>
+    </div>
+</div>
+<div class="row ">
+    <div class="col-md-12">
+        <button class="btn btn-sm btn-success btn_ADD" onclick="SaveData()">@Localizer["Add"]</button>
+        <button class="btn btn-sm btn-danger btn_Cancel" onclick="cancelpurchase()">@Localizer["Cancel"]</button><br />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 Error_mesage">
+        <i class="fa" id="iconError" style="color:white;margin-right:15px;"></i><span style="color:white;">Error :</span> <span class="rquried_pric"> </span>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalFindBarcode">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:5px; color:white;">
+                <i>@Localizer["Choose Uom"]</i>
+            </div>
+            <div class="modal-body">
+                <div class="wrap-table list">
+                    <table id="list_findbarcode">
+                        <tr>
+                            <th class="boldth">@Localizer["Code"]</th>
+                            <th class="boldth">@Localizer["Khmer Name"]</th>
+                            <th class="boldth">@Localizer["Englis hName"]</th>
+                            <th class="boldth">@Localizer["UoM"]</th>
+                            <th class="boldth">@Localizer["Choose"]</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-danger" style="padding:5px;" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalVendor">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:5px; color:white;">
+                <span>@Localizer["List Business Partner"]</span>
+            </div>
+            <div class="modal-body">
+                <div class="wrap-table list">
+                    <table id="list_vendor">
+                        <tr>
+                            <th class="boldth">@Localizer["Code"]</th>
+                            <th class="boldth">@Localizer["Name"]</th>
+                            <th class="boldth">@Localizer["Choose"]</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-md btn-danger" style="padding:5px;" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="text" id="PurchaseRequestID" hidden />
+@*<script src="~/js/moment.min.js"></script>*@
+<script>
+    var db = new Warehouse();
+    $(document).ready(function () {
+        var now = new Date();
+        document.getElementById("txtPostingdate").valueAsDate = now;
+        document.getElementById("txtDocumentDate").valueAsDate = now;
+        document.getElementById("txtvaliduntil").valueAsDate = now;
+
+        $("#addfontawesome").addClass("fa-percent");
+        $(".btnfind_new").text("find");
+        $("#txtstatus").val("open");
+        var item = {
+            ID:0,  
+            total_due: 0
+        }
+        db.table("tb_master").insert(item, "ID");
+        // search master
+        $("#txtSearch").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#item-master tr:not(:first-child)").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        //Get Invoice
+        $.ajax({
+            url: "/PurchaseRequest/GetInvoicenomber",
+            type: "Get",
+            dataType: "text",
+            success: function (response) {
+                $("#txtInvoice").val(response);
+                $("#txtInvoice").attr("readonly", "readonly");
+            }
+        });
+        //Get User
+        $.ajax({
+            url:"/PurchaseRequest/GetEmployee",
+            type: "Get",
+            dataType: "Json",
+            success: function (response) {
+                var data = "";
+                $.each(response, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#txtselectuser").append(data);
+            }
+        });
+        //Get Branch
+        $.ajax({
+            url: "/PurchaseRequest/GetBranch",
+            type: "Get",
+            dataType: "Json",
+            success: function (response) {
+                var data = "";
+                $.each(response, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#txtselectbranch").append(data);
+            }
+        });
+        //get currency
+        $.ajax({
+            url: "/PurchaseRequest/GetCurrencyDefualt",
+            type: "GET",
+            dataType: "JSON",
+            success: function (e) {
+                $(".sub_total").text(e[0].PriceList.Currency.Description);
+                $(".total_due").text(e[0].PriceList.Currency.Description);
+            }
+        });
+        //GetWarehouse
+        $.ajax({
+            url: "/PurchaseRequest/GetWarehouses",
+            type: "Get",
+            dataType: "Json",
+            data: { ID: @User.FindFirst("BranchID").Value },
+            success: function (response) {
+                var data = "";
+                $.each(response, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#txtwarehouse").append(data).on("change", changeWarehouse);
+            }
+        });
+        //Get Group Defind from GroupUoM
+        $.ajax({
+            url: "/PurchaseRequest/GetGroupDefind",
+            type: "Get",
+            async: false,
+            dataType: "Json",
+            success: function (response) {
+                arr_uom = response;
+            }
+        });
+        db.addTable("tb_uom", arr_uom, "ID");
+
+    });
+    //Filter warehouse
+    var item_masters = {};
+    function changeWarehouse(e) {
+        let id = $(this).find("option:selected").val();
+        item_masters = $.ajax({
+            url: "/PurchaseRequest/GetItemByWarehouse_Request",
+            type: "GET",
+            async: false,
+            dataType: "JSON",
+            data: { ID: id }
+        }).responseJSON;
+
+        db.insert("tb_item_master", item_masters, "LineID");
+        if (db.from("tb_choosed") != 0) {
+            db.table("tb_choosed").clear();
+            $("#list-items tr td").remove();
+        }
+    }
+    //Show item master by warehouse
+    function showItemMasters() {
+        $.bindRows("#item-master", db.from("tb_item_master"), "LineID", {
+            hidden_columns: ["ItemID", "OpenQty","EnglishName", "VendorID","Remark", "RequiredDate","VendorName", "RequestDetailID", "ID", , "LineID", "UomID", "Total", "ExchangeRate", "GroupUomID", "Syscurrency", "SysCurrencyID"],
+            html: [
+                {
+                    column: -1,
+                    element: '<div class="btnchoose"><i class="fa fa-arrow-alt-circle-down"></i></div>',
+                    listener: ["click", function (e) {
+                        showItemMaster($(this).parent().parent().data("lineid"),this);
+                    }]
+                }
+            ]
+        });
+    }
+    let uom_filtered = [];
+    function showItemMaster(ID, row) {
+        $(row).parent().parent().remove();
+        var choosed_item = db.from("tb_item_master").first(function (json) {
+            return json.LineID == ID;
+        });
+        var required = $("#txtrequiredate").val();
+        
+        var control = db.table('tb_choosed').get(choosed_item.LineID);
+        if (control == undefined) {
+            let item = {};
+            item.ID = choosed_item.ID;
+            item.PurchaseRequestID = choosed_item.RequestDetailID;
+            item.ItemID = choosed_item.ItemID;
+            item.LineID = choosed_item.LineID;
+            item.Code = choosed_item.Code;
+            item.KhmerName = choosed_item.KhmerName;
+            item.VendorID = 0;
+            item.RequiredDate = required;
+            item.Qty = 1;
+            item.UomName = choosed_item.UomName;
+            item.OpenQty = 1;
+            item.UnitPrice = 0;
+            item.Total = 0;
+            item.Remark = "";
+            item.ExchangRate = choosed_item.ExchangeRate;
+            item.UomID = choosed_item.UomID;
+            item.GroupUomID = choosed_item.GroupUomID;
+            item.SysCurrency = choosed_item.SysCurrency;          
+            item.SystemCurrencyID = choosed_item.SysCurrencyID;
+            item.Barcode = choosed_item.Barcode;
+            item.VendorName = '';
+
+            db.insert("tb_choosed", item, "LineID");
+            uom_filtered = db.from("tb_uom").where(function (json) {
+                return json.GroupUoMID == item.GroupUomID;
+            });
+            showDataBindTable(item, uom_filtered);
+
+        } else {
+            var T = false;
+            db.from("tb_choosed").where(function (json) {
+                $.each($("#list-items").children("tr"), function (i, tr) {
+                    $(tr).data("lineid")
+                    if (($(tr).data("lineid") === json.LineID) && (json.OpenQty != json.Qty)) {
+                        T = true;
+                    }
+                });
+                if (T == true) {
+                    T = false;
+                    return;
+                }
+                if (json.LineID == control.LineID) {
+                    json.Qty += 1;
+                    json.OpenQty += 1;
+                    json.Total = (json.Qty * json.UnitPrice);
+                }
+            });
+            db.from("tb_choosed").each(function (i, item) {
+                uom_filtered = db.from("tb_uom").where(function (json) {
+                    return json.GroupUoMID === item.GroupUomID;
+                });
+                showDataBindTable(item, uom_filtered);
+                $.each($("#list-items").children("tr"), function (i, tr) {
+                    $(tr).data("lineid")
+                    if (($(tr).data("lineid") === item.LineID) && (item.OpenQty != item.Qty)) {
+                        $(tr).find("*").css({
+                            "background-color": "#E0E0E0",
+                            "pointer-events": "none",
+                            "curser": "not-allowed"
+                        });
+                    }
+                })
+            });
+        }
+    }
+    function showDataBindTable(item, uom_filtered) {
+
+        if (item.Qty > 0) {
+            $.updateRow("#list-items", item, "LineID", {
+                hidden_columns: ["ExchangRate", "LineID", "OpenQty","VendorName", "RequestDetailID", "Barcode", "ItemID", "SysCurrency", "GroupUomID", "SystemCurrencyID", "UomID"],
+                html: [
+                    {
+                        column: "Qty",
+                        insertion: "replace",
+                        element: '<div class="divQty">' + '<input name="quantity" autocomplete="off" class="InputQty" value="' + item.Qty + '" />' + '</div>',
+                        listener: ["keyup", changeQty]
+                    },
+                    {
+                        column: "UomName",
+                        insertion: "replace",
+                        element: GetDefindUom(uom_filtered, item.UomID),
+                        listener: ["change", changeUom]
+                    },
+                    {
+                        column: "VendorID",
+                        insertion: "replace",
+                        element: '<div class="divvendor">' +'<i class="fa fa-plus-circle  linkvendor" data-toggle="modal" data-target="#ModalVendor"></i>'+'<label>'+item.VendorName+'</label>'+ '</div>',
+                        listener: ["click", choosedVendor]
+                    },
+                    {
+                        column: "RequiredDate",
+                        insertion: "replace",
+                        element: '<div class="divRequestdate">' + '<input type="Date" value="' + item.RequiredDate+'" id="selectRequestDate" />' + '</div>',
+                        listener: ["change", changeRequiredDate]
+                    },
+                    {
+                        column: "UnitPrice",
+                        insertion: "replace",
+                        element: '<div class="divPurchase">' + '<span class="CompanyCurrency">' + item.SysCurrency + '</span>' + '<input autocomplete="off" class="InputPurchasePrice"  value="' + item.UnitPrice + '" />' + '</div>',
+                        listener: ["keyup", changePurchasePrice]
+                    },
+                    {
+                        column: "Total",
+                        insertion: "replace",
+                        element: '<div class="divQT_total">' + '<span class="lacal_total">' + item.SysCurrency + '</span>' + '<span class="Sub_total">' + item.Total + '</span>' + '</div>',
+                        listener: ["keyup", totalEdit]
+                    },
+                    {
+                        column: "Remark",
+                        insertion: "replace",
+                        element: '<div>' + '<input  autocomplete="off" class="InputRemark" value="' + item.Remark + '" />' + '</div>',
+                        listener: ["keyup", changeRemark]
+                    },
+                    {
+                        column: -1,
+                        element: '<i class="fa fa-trash item_delete" style="color:red; text:center"></i>',
+                        listener: ["click", removeData]
+                    },
+                ]
+            });
+            summaryTotal();
+        }
+    }
+    // Change Remark
+    function changeRemark() {
+        var lineid = parseInt($(this).parent().parent().data("lineid"));
+        var remark = $(this).children(".InputRemark").val();
+        db.from("tb_choosed").where(function (json) {
+            if (json.LineID == lineid) {
+                json.Remark = remark;
+            }
+        });
+    }
+    // Get vendor
+    function choosedVendor() {
+        var lineid = parseInt($(this).parent().parent().data("lineid"));
+        $.ajax({
+            url: "/PurchaseRequest/GetVendor",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                if (respones.length == 0) {
+                    data += '<tr>' +
+                        '<td class="text-center" colspan="3">@Localizer["No Data"]</td>' +
+                        '</tr>';
+                }
+                $("#list_vendor tr:not(:first)").remove();
+                $.each(respones, function (i, item) {
+                    data += '<tr>' +
+                        '<td hidden>'+item.ID+'</td>' +
+                        '<td>' + item.Code + '</td>' +
+                        '<td>' + item.Name + '</td>' +
+                        '<td hidden>' + lineid + '</td>' +
+                        '<td class="text-center">' +'<i class="fa fa-arrow-alt-circle-down  choosed_vendor"></i>'+'</td>' +
+                        '</tr>';
+                });
+                $("#list_vendor").append(data);
+            }
+        });
+    }
+    $("#txtrequiredate").on("change", function () {
+        var check = db.from("tb_choosed");
+        if (check != 0) {
+            var date = $(this).val();
+        let msg = new DialogBox({
+                    type: "ok-cancel",
+                    content: "@Localizer["Do you want to update existing table rows with the new required date ? "]"
+       });
+       msg.confirm(function (e) {
+           db.from("tb_choosed").where(function (json) {
+               json.RequiredDate = date;
+           });
+
+           db.from("tb_choosed").each(function (i, item) {
+               uom_filtered = db.from("tb_uom").where(function (json) {
+                   return json.GroupUoMID === item.GroupUomID;
+               });
+               showDataBindTable(item, uom_filtered);
+               $.each($("#list-items").children("tr"), function (i, tr) {
+                   $(tr).data("lineid")
+                   if (($(tr).data("lineid") === item.LineID) && (item.OpenQty != item.Qty)) {
+                       $(tr).find("*").css({
+                           "background-color": "#E0E0E0",
+                           "pointer-events": "none",
+                           "curser": "not-allowed"
+                       });
+                   }
+               });
+           });
+           this.meta.shutdown();
+        });
+        }
+        
+    });
+ 
+    //chagne required date
+    function changeRequiredDate() {
+        var lineid = parseInt($(this).parent().parent().data("lineid"));
+        var date = $(this).find("#selectRequestDate").val();
+        db.from("tb_choosed").where(function (json) {
+            if (json.LineID == lineid) {
+                json.RquiredDate = date;
+            }
+        });
+        db.from("tb_choosed").each(function (i, item) {
+            uom_filtered = db.from("tb_uom").where(function (json) {
+                return json.GroupUoMID === item.GroupUomID;
+            });
+            showDataBindTable(item, uom_filtered);
+            $.each($("#list-items").children("tr"), function (i, tr) {
+                $(tr).data("lineid")
+                if (($(tr).data("lineid") === item.LineID) && (item.OpenQty != item.Qty)) {
+                    $(tr).find("*").css({
+                        "background-color": "#E0E0E0",
+                        "pointer-events": "none",
+                        "curser": "not-allowed"
+                    });
+                }
+            });
+        });
+    }
+    $("#list_vendor").on("click", ".choosed_vendor", function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        var name = cut.find('td:eq(2)').text();
+        var lineid = cut.find('td:eq(3)').text();
+        db.from("tb_choosed").where(function (json) {
+            if (parseInt(lineid) == json.LineID) {
+                json.VendorID =parseInt(id);
+                json.VendorName = name;
+            }
+        });
+        db.from("tb_choosed").each(function (i, item) {
+            uom_filtered = db.from("tb_uom").where(function (json) {
+                return json.GroupUoMID === item.GroupUomID;
+            });
+            showDataBindTable(item, uom_filtered);
+            $.each($("#list-items").children("tr"), function (i, tr) {
+                $(tr).data("lineid")
+                if (($(tr).data("lineid") === item.LineID) && (item.OpenQty != item.Qty)) {
+                    $(tr).find("*").css({
+                        "background-color": "#E0E0E0",
+                        "pointer-events": "none",
+                        "curser": "not-allowed"
+                    });
+                }
+            })
+        });
+        $("#ModalVendor").modal("hide");
+    });
+    function summaryTotal() {
+        let sub_total_sys = 0;
+        var master = db.from("tb_master");
+        let items = db.from("tb_choosed");
+
+        for (let item of items) {
+            sub_total_sys = (parseFloat(sub_total_sys) + parseFloat(item.Total)).toFixed(2);
+        }
+        master[0].total_due = (parseFloat(sub_total_sys)).toFixed(2);
+
+        db.insert("tb_master", master, "ID");
+        $("#txtBalancedue").val(master[0].total_due);
+    }
+    let count = 0;
+    // search barcode
+    $("#txtbarcode").keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            var warehouseID = $("#txtwarehouse").val();
+            var barcode = $("#txtbarcode").val();
+            if (barcode != null) {
+                $.ajax({
+                    url: "/PurchaseRequest/FindBarcode",
+                    type: 'GET',
+                    dataType: "JSON",
+                    data: {
+                        WarehouseID: parseInt(warehouseID),
+                        Barcode: barcode
+                    },
+                    success: function (response) {
+
+                        if (response.length <= 0) {
+                            $("#txtbarcode").val('');
+                        }
+                        else {
+
+                            if (response.length == 1) {
+
+                                let choosed_item = response[0];
+                                let line_id = parseInt(response[0].LineID);
+                                let item_choosed = db.table('tb_choosed').get(line_id);
+                                var required = $("#txtrequiredate").val();
+                                if (item_choosed == undefined) {
+                                    let item = {};
+                                    item.ID = choosed_item.ID;
+                                    item.PurchaseRequestID = choosed_item.RequestDetailID;
+                                    item.ItemID = choosed_item.ItemID;
+                                    item.LineID = choosed_item.LineID;
+                                    item.Code = choosed_item.Code;
+                                    item.KhmerName = choosed_item.KhmerName;
+                                    item.VendorID = 0;
+                                    item.RequiredDate = required;
+                                    item.Qty = 1;
+                                    item.UomName = choosed_item.UomName;
+                                    item.OpenQty = 1;
+                                    item.UnitPrice = 0;
+                                    item.Total = 0;
+                                    item.Remark = "";
+                                    item.ExchangRate = choosed_item.ExchangeRate;
+                                    item.UomID = choosed_item.UomID;
+                                    item.GroupUomID = choosed_item.GroupUomID;
+                                    item.SysCurrency = choosed_item.SysCurrency;
+                                    item.SystemCurrencyID = choosed_item.SysCurrencyID;
+                                    item.Barcode = choosed_item.Barcode;
+                                    item.VendorName = '';
+
+                                    db.insert("tb_choosed", item, "LineID");
+
+                                    db.from("tb_choosed").each(function (i, item) {
+                                        uom_filtered = db.from("tb_uom").where(function (json) {
+                                            return json.GroupUoMID === item.GroupUomID;
+                                        });
+                                        showDataBindTable(item, uom_filtered);
+                                        $.each($("#list-items").children("tr"), function (i, tr) {
+                                            $(tr).data("lineid")
+                                            if (($(tr).data("lineid") === item.LineID) && (item.OpenQty != item.Qty)) {
+                                                $(tr).find("*").css({
+                                                    "background-color": "#E0E0E0",
+                                                    "pointer-events": "none",
+                                                    "curser": "not-allowed"
+                                                });
+                                            }
+                                        })
+                                    });
+                                }
+                                else {
+
+                                   var T = false;
+                                    db.from("tb_choosed").where(function (json) {
+                                        $.each($("#list-items").children("tr"), function (i, tr) {
+                                            $(tr).data("lineid")
+                                            if (($(tr).data("lineid") === json.LineID) && (json.OpenQty != json.Qty)) {
+                                                T = true;
+                                            }
+                                        });
+                                        if (T == true) {
+                                            T = false;
+                                            return;
+                                        }
+                                        if (json.LineID == item_choosed.LineID) {
+
+                                            json.Qty++;
+                                            json.OpenQty++;
+                                            json.Total = (json.Qty * json.UnitPrice);
+                                        }
+                                    });
+
+                                    db.from("tb_choosed").each(function (i, item) {
+                                        uom_filtered = db.from("tb_uom").where(function (json) {
+                                            return json.GroupUoMID === item.GroupUomID;
+                                        });
+                                        showDataBindTable(item, uom_filtered);
+                                        $.each($("#list-items").children("tr"), function (i, tr) {
+                                            $(tr).data("lineid")
+                                            if (($(tr).data("lineid") === item.LineID) && (item.OpenQty != item.Qty)) {
+                                                $(tr).find("*").css({
+                                                    "background-color": "#E0E0E0",
+                                                    "pointer-events": "none",
+                                                    "curser": "not-allowed"
+                                                });
+                                            }
+                                        })
+                                    });
+                                }
+                            } else {
+                                $.each(response, function (i, item) {
+                                    db.insert("tb_restored", item, "LineID");
+                                });
+                                
+                                $.bindRows("#list_findbarcode", db.from("tb_restored"), "LineID", {
+                                    hidden_columns: ["ItemID", "VendorID","Remark", "Qty", "RequiredDate", "RequestDetailID", "VendorName", "UnitPrice", "Barcode", "OpenQty", "ID", , "LineID", "UomID", "Total", "ExchangeRate", "GroupUomID", "SysCurrency", "SysCurrencyID"],
+                                    html: [
+                                        {
+                                            column: -1,
+                                            element: '<div class="btnchoose"><i class="fa fa-arrow-alt-circle-down"></i></div>',
+                                            listener: ["click", function (e) {
+                                                let line_id = parseInt($(this).parent().parent().data("lineid"));
+                                                showItemBarcode(line_id);
+                                                $(this).parent().parent().remove();
+                                                db.table('tb_restored').delete(line_id);
+                                            }]
+                                        }
+                                    ]
+                                });
+                                $("#ModalFindBarcode").modal("show");
+                            }
+                            $("#txtbarcode").val('');
+                        }
+                    },
+                    error: function () {
+
+                    }
+                })
+
+            }
+        }
+    });
+
+    function showItemBarcode(ID) {
+        var choosed_item = db.from("tb_restored").first(function (json) {
+            return json.LineID == ID;
+        });
+        var control = db.table("tb_choosed").get(choosed_item.LineID);
+        var required = $("#txtrequiredate").val();
+        if (control == undefined) {
+            let item = {};
+            item.ID = choosed_item.ID;
+            item.PurchaseRequestID = choosed_item.RequestDetailID;
+            item.ItemID = choosed_item.ItemID;
+            item.LineID = choosed_item.LineID;
+            item.Code = choosed_item.Code;
+            item.KhmerName = choosed_item.KhmerName;
+            item.VendorID = 0;
+            item.RequiredDate = required;
+            item.Qty = 1;
+            item.UomName = choosed_item.UomName;
+            item.OpenQty = 1;
+            item.UnitPrice = 0;
+            item.Total = 0;
+            item.Remark = "";
+            item.ExchangRate = choosed_item.ExchangeRate;
+            item.UomID = choosed_item.UomID;
+            item.GroupUomID = choosed_item.GroupUomID;
+            item.SysCurrency = choosed_item.SysCurrency;
+            item.SystemCurrencyID = choosed_item.SysCurrencyID;
+            item.Barcode = choosed_item.Barcode;
+            item.VendorName = '';
+            db.insert("tb_choosed", item, "LineID");
+
+            uom_filtered = db.from("tb_uom").where(function (json) {
+                return json.GroupUoMID == item.GroupUomID;
+            });
+            showDataBindTable(item, uom_filtered);
+        } else {
+            var T = false;
+            db.from("tb_choosed").where(function (json) {
+                $.each($("#list-items").children("tr"), function (i, tr) {
+                    $(tr).data("lineid")
+                    if (($(tr).data("lineid") === json.LineID) && (json.OpenQty != json.Qty)) {
+                        T = true;
+                    }
+                });
+                if (T == true) {
+                    T = false;
+                    return;
+                }
+                if (json.LineID == control.LineID) {
+                    json.Qty += 1;
+                    json.OpenQty += 1;
+                    json.Total = (json.Qty * json.UnitPrice);
+                }
+            });
+            db.from("tb_choosed").each(function (i, item) {
+
+                uom_filtered = db.from("tb_uom").where(function (json) {
+                    return json.GroupUoMID === item.GroupUomID;
+                });
+
+                showDataBindTable(item, uom_filtered);
+                $.each($("#list-items").children("tr"), function (i, tr) {
+                    $(tr).data("lineid")
+                    if (($(tr).data("lineid") === item.LineID) && (item.OpenQty != item.Qty)) {
+                        $(tr).find("*").css({
+                            "background-color": "#E0E0E0",
+                            "pointer-events": "none",
+                            "curser": "not-allowed"
+                        });
+                    }
+                })
+            });
+        }
+    }
+    // Get filter uom from group defined Uom
+    function GetDefindUom(json, uomID) {
+        let selected = $("<select class='select_Uom'></select>");
+        for (var data of json) {
+            if (data.UoMID == uomID) {
+                $("<option selected value=" + data.UnitofMeasure.ID + ">" + data.UnitofMeasure.AltUomName + "</option>").appendTo(selected);
+            }
+            else {
+                $("<option  value=" + data.UnitofMeasure.ID + ">" + data.UnitofMeasure.AltUomName + "</option>").appendTo(selected);
+            }
+        }
+        return selected.on('change',update_uom)
+    }
+    function update_uom() {
+        var uomid = parseInt($(this).val());
+        let line_id = parseInt($(this).parent().parent().data("lineid"));
+        db.from("tb_choosed").where(function (item) {
+            if (item.LineID === line_id) {
+                item.UomID = uomid;
+                item.UnitPrice = 0;
+                item.Total = 0;
+            }
+        })
+        $("#list-items").find("tr:not(:first)").remove();
+        db.from("tb_choosed").each(function (i, item) {
+            uom_filtered = db.from("tb_uom").where(function (json) {
+                return json.GroupUoMID === item.GroupUomID;
+            });
+            showDataBindTable(item, uom_filtered);
+            $.each($("#list-items").children("tr"), function (i, tr) {
+                $(tr).data("lineid")
+                if (($(tr).data("lineid") === item.LineID) && (item.OpenQty != item.Qty)) {
+                    $(tr).find("*").css({
+                        "background-color": "#E0E0E0",
+                        "pointer-events": "none",
+                        "curser": "not-allowed"
+                    });
+                }
+            })
+        });
+    }
+    // Edit Qty in PurchaseAP Detail
+    let item_chooseds = {};
+    function changeQty(e) {
+        let ID = 0;
+        if (e.type === "keyup") {
+            ID = parseInt($(this).parent().parent().data("lineid"));
+            item_chooseds = db.table("tb_choosed").find(ID);
+            var qty = $(this).children(".InputQty").val();
+            $(this).children(".InputQty").val(_$_.validNumber(qty.toString()));
+            if (qty == '') {
+                qty = 0;
+            }
+            item_chooseds.Qty = parseFloat(qty);
+            item_chooseds.OpenQty = parseFloat(qty);
+
+            item_chooseds.Total =parseFloat(item_chooseds.Qty) * parseFloat(item_chooseds.UnitPrice);
+            db.insert("tb_choosed", item_chooseds, "LineID");
+            $(this).parent().siblings().children().find(".Sub_total").text(item_chooseds.Total);
+        }
+        summaryTotal();
+    }
+    //change Purchaseprice
+    function changePurchasePrice(e) {
+        let ID = 0;
+        if (e.type === "keyup") {
+            ID = parseInt($(this).parent().parent().data("lineid"));
+            item_chooseds = db.get("tb_choosed").find(ID);
+            var price = $(this).children(".InputPurchasePrice").val();
+            $(this).children(".InputPurchasePrice").val(_$_.validNumber(price.toString()));
+            if (price == '') {
+                price = 0;
+            }
+            item_chooseds.UnitPrice = parseFloat(price);
+            item_chooseds.Total =parseFloat(item_chooseds.Qty) * parseFloat(item_chooseds.UnitPrice);
+            db.insert("tb_choosed", item_chooseds, "LineID");
+            $(this).parent().siblings().children().find(".Sub_total").text(item_chooseds.Total);
+        }
+        summaryTotal();
+    }
+    function totalEdit(){}
+    function changeUom(){}
+    //remove purchase AP detail
+    function removeData() {
+        var ID = parseInt($(this).parent().parent().data("lineid"));
+
+        db.from("tb_choosed").where(function (json) {
+
+            if (json.LineID === ID) {
+                json.Qty = 0;
+                json.OpenQty = 0;
+            }
+            if (json.TypeDis == "Percent") {
+                json.Total = ((json.Qty * json.UnitPrice) * (1 - (json.DiscountRate / 100)));
+                json.DiscountValue = (json.Qty * json.UnitPrice) * json.DiscountRate / 100;
+            }
+            else {
+                json.Total = ((json.Qty * json.UnitPrice) - json.DiscountRate);
+                json.DiscountValue = json.DiscountRate;
+            }
+        });
+        $(this).parent().parent().remove();
+        summaryTotal();
+    }
+    function getDefinedUom() {
+
+    }
+    //save data in purchase quotuion
+    function SaveData() {
+        var ID = $("#PurchaseRequestID").val();
+        var user = $("#txtselectuser").val();
+        var warehouse = $("#txtwarehouse").val();
+        var number = $("#txtInvoice").val();
+        var branch = $("#txtselectbranch").val();
+        var postdate = $("#txtPostingdate").val();
+        var documentdate = $("#txtDocumentDate").val();
+        var delivery = $("#txtrequiredate").val();
+        var remark = $("#txtRemark").val();
+        var valid = $("#txtvaliduntil").val();
+      
+            if (number == 0 || number == null || number == '') {
+                $(".Error_mesage").css({
+                    borderWidth: 1,
+                    background: '#ff8080'
+                })
+                $("#iconError").addClass('fa-times');
+                $(".rquried_pric").text("Required invoice number ! Please click cancel or new  to create !");
+                return;
+            }
+
+            if (user === '' || user === null || user === 0) {
+                $(".Error_mesage").css({
+                    borderWidth: 1,
+                    background: '#ff8080'
+                })
+                $("#iconError").addClass('fa-times');
+                $(".rquried_pric").text("Please select user !");
+                return;
+            }
+
+            if (warehouse == 0 || warehouse == '' || warehouse == null) {
+                $(".Error_mesage").css({
+                    borderWidth: 1,
+                    background: '#ff8080'
+                })
+                $("#iconError").addClass('fa-times');
+                $(".rquried_pric").text("Please select warehouse !");
+                return;
+        }
+          if (branch == 0 || branch == '' || branch == null) {
+            $(".Error_mesage").css({
+                borderWidth: 1,
+                background: '#ff8080'
+            })
+            $("#iconError").addClass('fa-times');
+            $(".rquried_pric").text("Please select branch !");
+            return;
+           }
+            if (db.array("tb_choosed") === 0 || db.array("tb_choosed") === undefined) {
+                $(".Error_mesage").css({
+                    borderWidth: 1,
+                    background: '#ff8080'
+                })
+                $("#iconError").addClass('fa-times');
+                $(".rquried_pric").text("Please choose item for purchase !");
+                return;
+            }
+            if (delivery == null || delivery == 0 || delivery == '') {
+                $(".rquried_pric").text("Please select Required  date !");
+                $(".Error_mesage").css({
+                    borderWidth: 1,
+                    background: '#ff4d4d'
+                })
+                $("#iconError").addClass('fa-times');
+                return;
+            }
+
+             var items = db.from("tb_choosed");
+             var master = db.from("tb_master");
+                var data = {
+                    PurchaseRequestID: ID,
+                    UserID: user,
+                    BranchID: branch,
+                    WarehoueseID: warehouse,
+                    SystemCurrencyID: items[0].SystemCurrencyID,
+                    InvoiceNo: number,
+                    PostingDate: postdate,
+                    DocumentDate: documentdate,
+                    RequiredDate: delivery,
+                    ValidUntil: valid,
+                    Remark: remark,
+                    ExchangeRate: items[0].ExchangRate,
+                    Status: "open",
+                    Sub_Total: master[0].subtotal,
+                    Balance_Due: master[0].total_due,
+                    PurchaseRequestDetails: items
+                }
+                $.ajax({
+                        url: "/PurchaseRequest/SavePurchseRequest",
+                        type: "POST",
+                        dataType: "JSON",
+                        data: { purchase: data },
+                        success: function (e) {
+
+                        },
+                        error: function (ex) {
+                            let msg = new DialogBox({
+                                type: "ok",
+                                content: "@Localizer["Purchase Request successfully !"]"
+                            });
+                            msg.confirm(function (e) {
+                                location.reload();
+                            });
+                        }
+                    });
+    }
+    //find purchase
+    function findPurchaseAP() {
+        var btn = $(".btnfind_new").text();
+        if (btn == "find") {
+            $(".btnfind_new").text("new");
+            $("#txtInvoice").removeAttr("readonly");
+            $("#txtInvoice").val("");
+            $("#txtInvoice").focus();
+            $(".findbtn").html($(".btnnew").text());
+            $(".btn_ADD").html($(".btnsave").text());
+        }
+        else {
+            location.reload();
+        }
+    }
+    // find
+    $("#txtInvoice").on('keypress', function (e) {
+        if (e.which == 13) {
+            var ap_no = $("#txtInvoice").val();
+            $.ajax({
+                url: "/PurchaseRequest/FindPurchaseRequest",
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                data: { number: ap_no },
+                success: function (e) {
+                    var item_masters = $.ajax({
+                        url: "/PurchaseRequest/GetItemByWarehouse_Request",
+                        type: "GET",
+                        async: false,
+                        dataType: "JSON",
+                        data: { ID: e.WarehoueseID }
+                    }).responseJSON;
+                    db.insert("tb_item_master", item_masters, "LineID");
+
+                    let detailItem = $.ajax({
+                        url: "/PurchaseRequest/GetItemByWarehouseRequest_Detail",
+                        type: "GET",
+                        async: false,
+                        dataType: "JSON",
+                        data: { warehouseid: e.WarehoueseID, invoice: e.InvoiceNo }
+                    }).responseJSON;
+                    
+                    if (detailItem == undefined) {
+                        alert("Invoice was cancel...!");
+                        return;
+                    }
+                    var master = db.from("tb_master");
+                    master[0].total_due = parseFloat(e.Balance_Due);
+                    db.insert("tb_master", master, "ID");
+
+                    $("#txtreff_no").val(e.Reff_No);
+                    var post = e.PostingDate;
+                    var post_date = post.slice(0, 10);
+                    var dou = e.DocumentDate;
+                    var dou_date = dou.slice(0, 10);
+                    var deli = e.RequiredDate;
+                    var deli_date = deli.slice(0, 10);
+                    var valid = e.ValidUntil;
+                    var valid_date = valid.slice(0, 10);
+
+                    $("#PurchaseRequestID").val(e.PurchaseRequestID);
+                    $("#txtstatus").val(e.Status);
+                    $("#txtPostingdate").val(post_date);
+                    $("#txtDocumentDate").val(dou_date);
+                    $("#txtrequiredate").val(deli_date);
+                    $("#txtvaliduntil").val(valid_date);
+                    $("#txtRemark").val(e.Remark);
+                    $("#txtBalancedue").val((master[0].total_due).toFixed(2));
+                    Userfind(e.UserID);
+                    Warehousefind(e.WarehoueseID);
+                    BranchFind(e.BranchID);
+
+                    db.table("tb_choosed").clear();
+                    if (e.Status == "close") {
+                        $(".btn_ADD").prop("disabled", true);
+                        $.each(detailItem, function (i, detail) {
+                            detail.Total = parseFloat(detail.Qty) * parseFloat(detail.UnitPrice);
+                            var item = {};
+                            item.ID = detail.ID;
+                            item.RequiredDetailID = detail.RequestDetailID;
+                            item.ItemID = detail.ItemID;
+                            item.LineID = detail.LineID;
+                            item.Code = detail.Code;
+                            item.KhmerName = detail.KhmerName;
+                            item.VendorID = detail.VendorID;
+                            item.RequiredDate = detail.RequiredDate;
+                            item.Qty = detail.Qty;
+                            item.UomName = detail.UomName;
+                            item.OpenQty = detail.OpenQty;
+                            item.UnitPrice = detail.UnitPrice;
+                            item.Total = detail.Total;
+                            item.Remark =detail.Remark;
+                            item.ExchangRate = detail.ExchangeRate;
+                            item.UomID = detail.UomID;
+                            item.GroupUomID = detail.GroupUomID;
+                            item.SysCurrency = detail.SysCurrency;
+                            item.SystemCurrencyID = detail.SysCurrencyID;
+                            item.Barcode = detail.Barcode;
+                            item.VendorName = detail.VendorName;
+
+                            db.insert("tb_choosed", item, "LineID");
+                            db.table("tb_item_master").clear();
+                            $("#list-items").find("tr:not(:first)").remove();
+                        });
+                        // master
+                        if (db.from("tb_choosed") != 0) {
+                            db.from("tb_choosed").each(function (i, item) {
+                                uom_filtered = db.from("tb_uom").where(function (json) {
+                                    return json.GroupUoMID === item.GroupUomID;
+                                });
+                                showDataBindTable(item, uom_filtered);
+                            });
+                        }
+                        $(".InputQty").prop("readonly", true);
+                        $("#txtcopy option:not(:first)").remove();
+                        $("#txtwarehouse").prop("disabled", true);
+                        $("#txtselectvendor").prop("disabled", true);
+                        $("#txtcurrency").prop("disabled", true);
+                        $(".InputPurchasePrice").prop("readonly", true);
+                        $(".select_Uom").prop("disabled", true);
+                        $(".InputDiscount").prop("readonly", true);
+                        $(".content_select_discount").prop("disabled", true);
+                        $("#txtdiscount").prop("readonly", true);
+                        $("#txtddownpayment").prop("readonly", true);
+                        $("#txtvat").prop("readonly", true);
+                        $(".item_delete").css({
+                            "pointer-events": "none",
+                            "curser": "not-allowed"
+                        });
+                    } else {
+                        $(".btn_ADD").prop("disabled", false);
+                        $.each(detailItem, function (i, detail) {
+                            detail.Total = parseFloat(detail.Qty) * parseFloat(detail.UnitPrice);
+                            var item = {};
+                            item.ID = detail.ID;
+                            item.RequiredDetailID = detail.RequestDetailID;
+                            item.ItemID = detail.ItemID;
+                            item.LineID = detail.LineID;
+                            item.Code = detail.Code;
+                            item.KhmerName = detail.KhmerName;
+                            item.VendorID = detail.VendorID;
+                            item.RequiredDate = detail.RequiredDate;
+                            item.Qty = detail.Qty;
+                            item.UomName = detail.UomName;
+                            item.OpenQty = detail.OpenQty;
+                            item.UnitPrice = detail.UnitPrice;
+                            item.Total = detail.Total;
+                            item.Remark = detail.Remark;
+                            item.ExchangRate = detail.ExchangeRate;
+                            item.UomID = detail.UomID;
+                            item.GroupUomID = detail.GroupUomID;
+                            item.SysCurrency = detail.SysCurrency;
+                            item.SystemCurrencyID = detail.SysCurrencyID;
+                            item.Barcode = detail.Barcode;
+                            item.VendorName = detail.VendorName;
+
+                            db.insert("tb_choosed", item, "LineID");
+                            $("#list-items").find("tr:not(:first)").remove();
+
+                        });
+
+                        if (db.from("tb_choosed") != 0) {
+                            db.from("tb_choosed").each(function (i, item) {
+                                uom_filtered = db.from("tb_uom").where(function (json) {
+                                    return json.GroupUoMID === item.GroupUomID;
+                                });
+
+                                showDataBindTable(item, uom_filtered);
+                                $.each($("#list-items").children("tr"), function (i, tr) {
+                                    $(tr).data("lineid")
+                                    if (($(tr).data("lineid") === item.LineID) && (item.OpenQty != item.Qty)) {
+                                        $(tr).find("*").css({
+                                            "background-color": "#E0E0E0",
+                                            "pointer-events": "none",
+                                            "curser": "not-allowed"
+                                        });
+                                    }
+                                })
+                            });
+                        }
+                    }
+                },
+                error: function (ex) {
+                    let msg = new DialogBox({
+                        type: "ok",
+                        content: "@Localizer["Invoice not found !"]"
+                    });
+                    msg.confirm(function (e) {
+                        location.reload();
+                    });
+                }
+            });
+        }
+    });
+    // BranchFind
+    function BranchFind(branchid) {
+        $.ajax({
+            url: "/PurchaseRequest/GetBranch",
+            type: "Get",
+            dataType: "JSON",
+            success: function (e) {
+                var data = '';
+                $("#txtselectbranch option").remove();
+                $.each(e, function (i, item) {
+                    if (item.ID === branchid) {
+                        data += '<option selected value="' + item.ID + '">' + item.Name + '</option>';
+                    } else {
+                        data += '<option value="' + item.ID + '">' + item.Name + '</option>';
+                    }
+                })
+                $("#txtselectbranch").append(data);
+            }
+        })
+    }
+    // Get User after find
+    function Userfind(userid) {
+        $.ajax({
+            url: "/PurchaseRequest/GetEmployee",
+            type: "Get",
+            dataType: "JSON",
+            success: function (e) {
+                var data = '';
+                $("#txtselectuser option").remove();
+                $.each(e, function (i, item) {
+                    if (item.ID === userid) {
+                        data += '<option selected value="' + item.ID + '">' + item.Name + '</option>';
+                    } else {
+                        data += '<option value="' + item.ID + '">' + item.Name + '</option>';
+                    }
+                })
+                $("#txtselectuser").append(data);
+            }
+        })
+    }
+    // Get warehouse after find
+    function Warehousefind(ware) {
+        $.ajax({
+            url: "/PurchaseRequest/GetWarehouses",
+            type: "Get",
+            dataType: "Json",
+            data: { ID: @User.FindFirst("BranchID").Value},
+            success: function (response) {
+                var data = "";
+                $("#txtwarehouse option").remove();
+                $.each(response, function (i, item) {
+                    if (item.ID === ware) {
+                        data += '<option selected value="' + item.ID + '">' + item.Name + '</option>';
+                    } else {
+                        data += '<option value="' + item.ID + '">' + item.Name + '</option>';
+                    }
+                });
+                $("#txtwarehouse").append(data);
+            }
+        });
+    }
+    //cancel
+    function cancelpurchase() {
+        location.reload();
+    }
+</script>

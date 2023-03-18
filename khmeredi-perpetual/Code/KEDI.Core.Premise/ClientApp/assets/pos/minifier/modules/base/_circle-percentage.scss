@@ -1,0 +1,233 @@
+﻿// Compass utilities
+/*@import "compass";*/
+/*@import url('https://fonts.googleapis.com/css?family=Titillium+Web:200,200i,300,300i,400,400i,600,600i,700,700i,900');*/
+
+body {
+    font-family: "Titillium Web", sans-serif;
+    margin: 0 auto;
+}
+
+// VARS
+$circle-width: 0.09em;
+$circle-width-hover: 0.07em;
+
+// colors default
+$primary-color: #000000; // czarny
+$secondary-color: #dfe8ed; //szary bcg
+$bg-color: #ffffff; //srodkowy bezowy
+
+// colors customized
+$primary-color-blue: #30bae7;
+$primary-color-green: #15c7a8;
+$primary-color-red: #F5050F;
+$primary-color-orange: #eb7d4b;
+$primary-color-pink: #d74680;
+$primary-color-span: #3c4761;
+
+// CIRCLE
+// classes 2 extend
+.rect-auto {
+    clip: rect(auto, auto, auto, auto);
+}
+
+.pie {
+    position: absolute;
+    border: $circle-width solid $primary-color;
+    width: 1 - (2 * $circle-width);
+    height: 1 - (2 * $circle-width);
+    clip: rect(0em, 0.5em, 1em, 0em);
+    border-radius: 50%;
+    transform: rotate(0deg);
+}
+
+.pie-fill {
+    transform: rotate(180deg);
+}
+
+// main
+.pc-circle {
+
+    *, *:before, *:after {
+        box-sizing: content-box !important;
+    }
+
+    position: relative;
+    font-size: 120px;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    float: left;
+    margin: 10px;
+    background-color: $secondary-color;
+
+    center circle to its parent &.center {
+        float: none;
+        margin: 0 auto;
+    }
+
+    &.small {
+        font-size: 80px;
+    }
+    // centered value inside circle
+    > span {
+        position: absolute;
+        width: 100%;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 5em;
+        line-height: 5em;
+        font-size: 0.2em;
+        color: $primary-color-span;
+        display: block;
+        text-align: center;
+        white-space: nowrap;
+    }
+    // background inside the circle
+    &:after {
+        position: absolute;
+        top: $circle-width;
+        left: $circle-width;
+        display: block;
+        content: " ";
+        border-radius: 50%;
+        background-color: $bg-color;
+        width: 1 - (2 * $circle-width);
+        height: 1 - (2 * $circle-width);
+        transform: transition-property(all);
+        transform: transition-duration(0.2s);
+        transform: transition-timing-function(ease-in);
+    }
+    // the slice (mask)
+    .slice {
+        position: absolute;
+        width: 1em;
+        height: 1em;
+        clip: rect(0em, 1em, 1em, 0.5em);
+    }
+    // circle to show the status
+    .bar {
+        @extend .pie;
+    }
+
+    .side {
+        position: absolute;
+        font-size: 0.09em;
+        z-index: 1;
+        border: 1px solid #ABC;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        text-align: center;
+        left: 35%;
+        top: 10px;
+        padding: 1px;
+        background-color: #fffff0;
+    }
+    // loop to create all needed elements automatically
+    @for $j from 51 through 100 {
+
+        &.p#{$j} .slice {
+            @extend .rect-auto;
+        }
+
+        &.p#{$j} .bar:after {
+            @extend .pie-fill;
+        }
+
+        &.p#{$j} .fill {
+            @extend .pie;
+            @extend .pie-fill;
+        }
+    }
+
+    // loop to rotate all 100 circles
+    @for $j from 1 through 100 {
+        &.p#{$j} .bar {
+            transform: rotate((360/100*$j) + deg);
+        }
+    }
+    // hover styles
+    /* &:hover {
+        cursor: default;
+        > span:not(.side) {
+            width: 3.33em;
+            line-height: 3.33em;
+            font-size: 0.3em;
+            color: $primary-color-span;
+        }
+
+        &:after {
+            top: $circle-width-hover;
+            left: $circle-width-hover;
+            width: 1 - (2 * $circle-width-hover);
+            height: 1 - (2 * $circle-width-hover);
+        }
+    }*/
+    // blue
+    &.blue {
+
+        .bar, .fill {
+            border-color: $primary-color-blue !important;
+        }
+
+        &:hover {
+            > span {
+                color: $primary-color-span;
+            }
+        }
+    }
+    // pink skin
+    &.pink {
+
+        .bar, .fill {
+            border-color: $primary-color-pink !important;
+        }
+
+        &:hover {
+            > span {
+                color: $primary-color-span;
+            }
+        }
+    }
+    // green skin
+    &.green {
+
+        .bar, .fill {
+            border-color: $primary-color-green !important;
+        }
+
+        &:hover {
+            > span {
+                color: $primary-color-span;
+            }
+        }
+    }
+    // orange skin
+    &.orange {
+
+        .bar, .fill {
+            border-color: $primary-color-orange !important;
+        }
+
+        &:hover {
+            > span {
+                color: $primary-color-span;
+            }
+        }
+    }
+
+    &.red {
+
+        .bar, .fill {
+            border-color: $primary-color-red !important;
+        }
+
+        &:hover {
+            > span {
+                color: $primary-color-span;
+            }
+        }
+    }
+}

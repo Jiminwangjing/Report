@@ -1,0 +1,71 @@
+.kedi-carousel {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 300px;
+    width: 700px;
+    z-index: 5;
+    visibility: visible;
+    opacity: 1;
+    -webkit-transform: translateY(0);
+        -ms-transform: translateY(0);
+            transform: translateY(0);
+    -webkit-transition: all 2s ease-in-out;
+         -o-transition: all 2s ease-in-out;
+            transition: all 2s ease-in-out;
+}
+
+.kedi-carousel.collapsed {
+    visibility: collapse;
+    opacity: 0;
+    z-index: 0;
+    -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+            transform: translateY(-50%);     
+    -webkit-transition: all 1s ease-out;
+         -o-transition: all 1s ease-out;
+            transition: all 1s ease-out;
+}
+
+.kedi-carousel.full-screen {
+    height: 100vh;
+    width: 100vw;
+}
+
+.kedi-carousel .carousel-prev,
+.kedi-carousel .carousel-next  {
+    position: absolute;
+    z-index: 1;
+    height: 100%;
+    background-color: transparent;
+}
+
+.kedi-carousel .carousel-prev {
+    left: 0;
+}
+
+.kedi-carousel .carousel-next {
+    right: 0;
+}
+
+.kedi-carousel .carousel-item {
+    position: relative;
+    display: block;
+    height: 100%;
+    width: 0%;  
+    -webkit-transition: width 0.7s ease-in-out;
+         -o-transition: width 0.7s ease-in-out;
+            transition: width 0.7s ease-in-out;
+}
+
+.kedi-carousel .carousel-item.active {
+    width: 100%;
+}
+
+.kedi-carousel .carousel-item img {
+    height: 100%;
+    width: 100%;
+    -o-object-fit: cover;
+       object-fit: cover;
+}

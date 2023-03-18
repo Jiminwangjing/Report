@@ -1,0 +1,53 @@
+.hidden {
+    display: none !important;
+}
+
+.dialog-box .wrap-button {
+    min-height: 45px;
+}
+
+.dialog-box .wrap-button .button {
+    height: 35px;
+    line-height: 35px;
+}
+
+.dialog-box .content.login {
+    width: 400px;
+}
+
+.dialog-box .content.login input, 
+.dialog-box .content.login select, 
+.dialog-box .content.login textarea {
+    border-radius: 3px;
+}
+
+.dialog-box .content.outer-content .gridview .wrap-grid {
+    max-height: 135px;
+    overflow-y: auto;
+}
+
+.dialog-box .content.outer-content .gridview .wrap-grid .grid {
+    min-width: 125px;
+    padding: 0;
+    box-shadow: none;
+    justify-content: space-between;
+}
+
+@media(max-width: 375px){
+    .dialog-box .content.outer-content .group-blocks {
+        flex-flow: column-reverse wrap;
+    }
+
+    .dialog-box .content.outer-content .breadcrumb {
+        flex-flow: column wrap;
+    }
+
+    .dialog-box .content.outer-content .breadcrumb .step,
+    .dialog-box .content.outer-content .breadcrumb > li > div {
+        margin-top: .7px;
+    }
+
+    .dialog-box .content.login {
+        width: 95vw;
+    }
+}

@@ -1,0 +1,98 @@
+﻿<style>
+    .hover {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .flex {
+        display: flex;
+    }
+</style>
+<div id="fx-can-ring-report" class="csr-pointer flexbox icon-tab m-1" title="@Localizer["Can Ring Report"]">
+    <i class="fas fa-capsules fa-lg fa-fw fn-white"></i>
+    <div id="content-can-ring-report" style="display: none; height: 440px;">
+        <div class="wrap-block col-three">
+            <div class="left-block">
+                <div class="stack-block">
+                    <label>@Localizer["Date From"]</label>
+                    <input class="date-from" type="date" />
+                </div>
+                <div class="stack-block">
+                    <label>@Localizer["Payment Means"]</label>
+                    <select class="pm-id" asp-items="@ViewBag.PaymentMeans">
+                        <option value="0" selected disabled>@Localizer["---Select---"]</option>
+                    </select>
+                </div>
+            </div>
+            <div class="left-block">
+                <div class="stack-block">
+                    <label>@Localizer["Date To"]</label>
+                    <input class="date-to" type="date" />
+                </div>
+                <div class="stack-block">
+                    <input type="text" id="search-history" placeholder="@Localizer["search something here ..."]" />
+                </div>
+            </div>
+            <div class="left-block">
+                <div class="stack-block">
+                    <label>@Localizer["Customer"]</label>
+                    <div class="choose-customer">
+                        <input type="text" class="customer-name" readonly style="width: 100%" />
+                    </div>
+                    <input type="text" class="customer-id" hidden />
+                </div>
+                <div class="stack-block">
+                    <button class="btn btn-kernel btn-xs" id="filtering">@Localizer["Filter"]</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="widget-scrollbar" style="height: 50vh; width: auto">
+            <div id="can-ring-report-show-hide">
+                <table id="can-ring-report"></table>
+                <div class="options" id="option">
+                    <div class="option">
+                        <div id="autoExpand"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="loading-view" hidden style="overflow: hidden; width: 90%;">
+                <div class="col-md-5"></div>
+                <div class="col-md-3">
+                    <img src="~/Images/ajaxloader/loading.gif" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @* Choose Customers Modal *@
+    <div class="customer-container-list" style="display: none; height: 78vh">
+        <div class="row">
+            <div class="col-md-7"></div>
+            <div class="col-md-5">
+                <div class="group-search-boxes">
+                    <div class="search-box show" title="Text search">
+                        <div class="input-box">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="find-customer" type="text" autocomplete="off" placeholder="Search ...">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="widget-scrollbar mt-2" style="height: 90%">
+            <table id="list-customers">
+                <tr>
+                    <th>No</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Type"]</th>
+                    <th>@Localizer["Phone"]</th>
+                    <th>@Localizer["Action"]</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

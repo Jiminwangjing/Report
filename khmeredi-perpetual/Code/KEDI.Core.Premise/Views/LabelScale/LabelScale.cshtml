@@ -1,0 +1,251 @@
+﻿
+@{
+    ViewData["Title"] = "LabelScale";
+}
+
+<head>
+    <link href="~/Admin/DevReport/css/DevReport.css" rel="stylesheet" />
+</head>
+<body class="dx-viewport">
+    <div class="card card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="lable_datefrom">@Localizer["Price List"]</label>
+                    <select type="text" class="input_branch" id="pricelist">
+                        <option value="0" selected disabled>---Select---</option>
+                    </select>
+                </div>
+                <div class="col-md-4 ">
+                    <button class="btn btn-xs btn-success" id="filter">@Localizer["Filter"]</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="gridContainer"></div>
+    </div>
+</body>
+<script>
+    $(function () {
+
+        filterData();
+
+        //GetPriceList
+        $.ajax({
+            url: "/LabelScale/GetPriceList",
+            type: "GET",
+            dataType: "JSON",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID +'">' + item.Name + '</option>';
+                });
+                $("#pricelist").append(data);
+            }
+        });
+
+        $('#filter').click(function () {
+            filterData(this);
+        });
+
+        function filterData(button) {
+        let btn_filter = $(button).children("i.fa-search");
+        var pluid = $("#pricelist").val();
+        $.ajax({
+            url: "/LabelScale/GetLabelScale",
+            type: 'GET',
+            dataType: 'JSON',
+            data: {
+                PLUID: pluid
+            },
+            beforeSend: function () {
+                btn_filter.addClass("fa-spinner fa-spin");
+            },
+            success: function (reponse) {
+                bindGrid(reponse);
+                btn_filter.removeClass("fa-spinner fa-spin");
+            }
+        });
+        }
+        function bindGrid(reponse) {
+            var dataGrid = $("#gridContainer").dxDataGrid({
+                dataSource: reponse,
+                allowColumnReordering: true,
+                showBorders: true,
+                hoverStateEnabled: true,
+                allowColumnResizing: true,
+                columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: {
+                    columnRenderingMode: "virtual"
+                },
+                grouping: {
+                    autoExpandAll: false,
+                },
+                searchPanel: {
+                    visible: true
+                },
+                filterRow: {
+                    visible: false,
+                    applyFilter: "auto"
+                },
+
+                paging: {
+                    pageSize: 10
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20, 50, 100],
+                    showInfo: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                groupPanel: {
+                    visible: false
+                },
+
+                columns: [ 
+                    {
+                        dataField: "Hotkey",
+                        caption: "Hotkey",
+                    },
+                    {
+                        dataField: "Name",
+                        caption: "Name",
+                    },
+                    {
+                        dataField: "LFCode",
+                        caption: "LFCode",
+                    },
+                    {
+                        dataField: "Code",
+                        caption: "Code",
+                    },
+                    {
+                        dataField: "BarcodeType",
+                        caption: "Barcode Type",
+                    },
+                    {
+                        dataField: "UnitPrice",
+                        caption: "Unit Price",
+                    },
+                    {
+                        dataField: "UnitWeight",
+                        caption: "Unit Weight",
+                    },
+                    {
+                        dataField: "UnitAmount",
+                        caption: "Unit Amount",
+                    },
+                    {
+                        dataField: "Department",
+                        caption: "Department",
+                    },
+                    {
+                        dataField: "PTWeight",
+                        caption: "PT Weight",
+                    },
+                    {
+                        dataField: "ShelfTime",
+                        caption: "Shelf Time",
+                    },
+                    {
+                        dataField: "PackType",
+                        caption: "Pack Type",
+                    },
+                    {
+                        dataField: "Tare",
+                        caption: "Tare",
+                    },
+                    {
+                        dataField: "Error",
+                        caption: "Error(%)",
+                    },
+                    {
+                        dataField: "Message1",
+                        caption: "Message1",
+                    },
+                    {
+                        dataField: "Message2",
+                        caption: "Message2",
+                    },
+                    {
+                        dataField: "Label",
+                        caption: "Label",
+                    },
+                    {
+                        dataField: "Discount",
+                        caption: "Discount/Table",
+                    }
+                ],
+                export: {
+                    enabled: true
+                },
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('PLU-List');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                    }).then(function (dataGridRange) {
+                    }).then(function () {                      
+                        workbook.xlsx.writeBuffer().
+                            then(function (buffer) { 
+                            saveAs(new Blob([buffer], { type: 'application/vnd.ms-excel;' }), 'PLU-List.xls');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "refresh",
+                                onClick: function () {
+                                    dataGrid.refresh();
+                                    filterData();
+                                }
+                            }
+                        },
+                    );
+                }
+
+            }).dxDataGrid("instance");
+            $("#autoExpand").dxCheckBox({
+                value: false,
+                text: "Expand All Groups",
+                onValueChanged: function (data) {
+                    dataGrid.option("grouping.autoExpandAll", data.value);
+                }
+            });
+        }
+        function printPdf() {
+            var datefrom = $("#datefrom").val();
+            var dateto = $("#dateto").val();
+            var branch = $("#bybranch").val();
+            var user = $("#byuser").val();
+            if (datefrom == "" || dateto == "") {
+                $("#datefrom").css("border-color", "red");
+                $("#dateto").css("border-color", "red");
+                return;
+            } else {
+                $("#datefrom").css("border-color", "#DDDDDD");
+                $("#dateto").css("border-color", "#DDDDDD");
+                window.open("/DevPrint/PrintDetailSale?DateFrom=" + datefrom + "&DateTo=" + dateto + "&BranchID=" + branch + "&UserID=" + user + "", "_blank");
+            }
+        }
+    })
+
+
+</script>

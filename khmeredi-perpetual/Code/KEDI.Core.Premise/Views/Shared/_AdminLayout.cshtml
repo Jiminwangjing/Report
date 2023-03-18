@@ -1,0 +1,2040 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <title>KHMER EDI</title>
+    <link rel="icon" href="~/Images/icon/logo.png" type="image/gif" sizes="16x16">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <link href="~/AdminLayout/bundle/core.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/AdminLayout/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/user-defined.css" rel="stylesheet" />
+    <link href="~/AdminLayout/css/bootstrap-custom.css" rel="stylesheet" />
+    <link href="~/AdminLayout/css/kernel-general-style.css" rel="stylesheet" /> 
+     <link href="~/Admin/AdminGeneralSetting/IndexCss.css" rel="stylesheet" />
+     <link href="~/Admin/AdminGeneralSetting/stackcrumb.css" rel="stylesheet" />
+
+    <!--Dev Expess css-->
+    <link href="~/dev/dx.common.css" rel="stylesheet" />
+    <link href="~/dev/dx.light.css" rel="stylesheet" />
+
+    <script src="~/AdminLayout/js/jquery.min.js"></script>
+    <script src="~/lib/aspnet/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/System/system.js"></script>
+    <script src="~/Admin/AlertManagementClient/alert-signalR.js" defer></script>
+    <script src="~/AdminLayout/bundle/core.js" defer></script>
+    <script src="~/AdminLayout/js/bootstrap.min.js" defer></script>
+    <script src="~/AdminLayout/bundle/datapaging/datapaging.js" defer></script>
+    <!--Dev Express js-->
+    <script src="~/dev/js/polyfill.js"></script>
+    <script src="~/dev/js/exceljs.js"></script>
+    <script src="~/dev/js/jszip.js"></script>
+    <script src="~/dev/js/FileSaver.js"></script>
+    <script src="~/dev/dx.all.js"></script>
+    <script src="~/Admin/AdminGeneralSetting/index.js"></script>    
+</head>
+<body>
+    @{
+        UserAccount CurrentUser = UserManager.GetUser(User);
+    }
+
+    <div dialog-container></div>
+    <div id="ck-widget-container" class="ck-widget-container">
+        <nav class="widget-header justify-content-between">
+            <div class="header-sidebar flex-header">
+                <div class="sidebar-logo">
+                    <div class="widget-sidemenu-trigger"></div>
+                </div>
+                <partial name="../Components/_GlobalSearch" />
+            </div>
+            <div class="header-content ">
+                @if (UserManager.CheckEdition(SystemEdition.Enterprise))
+                {
+                    <div class="nav-item">
+                        <a href="/BusinessPartner/Calandar" id="datacalandar">
+                            <img style="width:36px" src="~/Images/icon/calandar-img.png" />
+                        </a>
+                    </div>
+                }
+                <div class="nav-item">
+                    <div class="widget-combobox slide-down pop-left with-crumb">
+                        <div class="combobox-trigger"> @Localizer["About Me"]</div>
+                        <div class="combobox-content">
+                            <div class="combobox-header">
+                                <h4 class="title">@Localizer["About Me"]</h4>
+                                <i class="i-close"></i>
+                            </div>
+                            <div class="combobox-body widget-scrollbar">
+                                <a class="dropdown-item">KHMER EDI</a>
+                                <a class="dropdown-item">Version: V1.6.0</a>
+                                <a class="dropdown-item">Edition: @UserManager.GetLicense().Edition</a>
+                                <a class="dropdown-item">Released Date: 15-Mar-2023</a>
+                            </div>
+                            <div class="combobox-footer">
+                                <i style="line-height: 35px;">
+                                    <a href="https://www.facebook.com/KHMEREDI" target="_blank">
+                                        <img src="~/Images/icon/facebook.png" />
+                                    </a>
+                                </i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="widget-combobox slide-down pop-left with-crumb">
+                        <div class="combobox-trigger"> @Localizer["Online"]</div>
+                        <div class="combobox-content">
+                            <div class="combobox-header">
+                                <h4 class="title">@Localizer["Active Users"]</h4>
+                                <i class="i-close"></i>
+                            </div>
+                            <div class="combobox-body widget-scrollbar">
+                                <!--Online users here...-->
+                                <div data-key="" class="option"><i class="fas fa-user"></i>&nbsp;@CurrentUser.Username</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    @{
+                        await Html.RenderPartialAsync("_ChangeLanguage");
+                    }
+                </div>
+                <div class="widget-combobox slide-down menubox with-crumb list">
+                    <div class="combobox-trigger">
+                        <div id="note-total-appointment" class="ck-notification orange">
+                            <svg class="n-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 156 220.65">
+                                <path d="M78.47,8a6,6,0,1,1-6,6,6,6,0,0,1,6-6m0-8a14,14,0,1,0,14,14,14,14,0,0,0-14-14Z" />
+                                <path class="cls-2" d="M93.38,209.39a4.74,4.74,0,0,0-4.4-6.72c-3.38.05,4.85-.1-11-.1-4.63,0-8.52.27-12,.13a4,4,0,0,0-3.87,5.51,17,17,0,0,0,31.25,1.18Z" />
+                                <path d="M137.19,113.75c-.7-18.82,5.84-52.32-8-75.67-8.77-14.8-16.76-20.22-21.43-22.2a3.65,3.65,0,0,0-5,2.46c-1.67,6.52-7.14,19.6-24.29,19.6S55.84,24.77,54.19,18.27a3.66,3.66,0,0,0-4.83-2.56c-4.9,1.84-13.52,7.13-22.55,22.37-13.84,23.35-7.3,56.84-8,75.67S3.3,147.56,3.3,147.56s37.35,16,74.7,16,74.7-16,74.7-16S137.89,132.57,137.19,113.75Z" />
+                                <path d="M1.5,160.65A191.84,191.84,0,0,0,78,176.55a191.84,191.84,0,0,0,76.5-15.91v10.44a6.45,6.45,0,0,1-4.08,6,197.54,197.54,0,0,1-72,13.76A197.57,197.57,0,0,1,5.61,177.11,6.51,6.51,0,0,1,1.5,171Z" />
+                            </svg>
+                            <span class="n-value bg-red" id="numberOfNotification"></span>
+                        </div>
+                    </div>
+                    <partial name="_NotificationPartial" />
+                </div>
+                <div class="nav-item sidebar-logo">
+                    @{
+                        var _userPhoto = string.IsNullOrWhiteSpace(CurrentUser.Employee.Photo) ?
+                        "/Images/User/default_user.png" : "/Images/employee/" + CurrentUser.Employee.Photo;
+                    }
+                    <div class="widget-combobox slide-down with-crumb">
+                        <div class="combobox-trigger"><img src="@_userPhoto" /></div>
+                        <div class="combobox-content">
+                            <div class="combobox-header">
+                                <h4 class="title">@Localizer["User Profile"]</h4>
+                                <i class="i-close"></i>
+                            </div>
+                            <div class="combobox-body">
+                                <div class="user-info">
+                                    <img class="logo" src="@_userPhoto">
+                                    <div class="title">
+                                        <h4>@CurrentUser.Employee.Name</h4>
+                                        <span class="text-muted">@CurrentUser.Employee.Position</span>
+                                    </div>
+                                </div>
+                                <a class="option" asp-action="Profile" asp-controller="Account"><i class="fas fa-user"></i> @Localizer["My Profile"]</a>
+                                <a class="option" asp-action="ChangePassword" asp-controller="Account"><i class="fas fa-cog"></i> @Localizer["Change Password"]</a>
+                                 <a class="option" asp-action= "SkinUser" asp-controller = "GeneralSettingAdmin"><i class="fas fa-cog"></i> @Localizer["ChangeSkinUser"]</a>
+                                @if (!CurrentUser.UserPos)
+                                {
+                                    <a class="option" asp-action="Reactivate" asp-controller="System"><i class="fas fa-key"></i> @Localizer["Reactivate"]</a>
+                                }
+                                <a class="option" asp-action="Logout" asp-controller="Account"><i class="fa fa-sign-out-alt"></i> @Localizer["Logout"]</a>
+                            </div>
+                            <div class="combobox-footer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="widget-body">
+            <div class="widget-sidemenu">
+                <div class="sidemenu-header">
+                    <div class="sidebar-logo">
+                        <img src="@Url.Content($"~/Images/company/{@CurrentUser.Company.Logo}")" />
+                    </div>
+                    <div class="sidebar-title">@CurrentUser.Company.Name</div>
+                </div>
+                <ul class="sidemenu-group group-root widget-scrollbar">
+                    <li class="sidemenu-item">
+                        <a class="item-label @ViewBag.Dashboard" asp-action="Dashboard" asp-controller="Home">
+                            <i><img src="~/Images/icon/home.png" /></i>
+                            <span>@Localizer["Dashboard"]</span>
+                        </a>
+                    </li>
+                    <li class="sidemenu-item">
+                        <div class="item-title">
+                            <i><img class="icon" src="~/Images/icon/settings.png" /></i>
+                            <div>@Localizer["Control Center"]</div>
+                        </div>
+                        <ul class="sidemenu-group">
+                            <li class="sidemenu-item">
+                                <div class="item-title @ViewBag.Administrator">
+                                    <i>
+                                        <img src="~/Images/icon/com-setting.png" />
+                                    </i>
+                                    <span>@Localizer["General"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    @if (UserManager.Check("A001"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.Company" asp-action="Index" asp-controller="Company">
+                                                <span>@Localizer["Company"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("A002"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.Branch" asp-action="Index" asp-controller="Branch">
+                                                <span class="sub-item">@Localizer["Branch"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("A003"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.Receipt" asp-action="Index" asp-controller="ReceiptInformation">
+                                                <span class="sub-item">@Localizer["Receipt"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("A004"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.UserAccount" asp-action="Index" asp-controller="Account">
+                                                <span class="sub-item">@Localizer["User Account"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("A005"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.PrinterName" asp-action="Index" asp-controller="PrinterName">
+                                                <span class="sub-item">@Localizer["Printer Name"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("ST001"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.Freight" asp-action="index" asp-controller="Freight">
+                                                <span>@Localizer["Freight"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("ST002"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.SettingDashboard" asp-action="DashboardPrivileges" asp-controller="SettingDashboard">
+                                                <span class="sub-item">@Localizer["Dashboard Setting"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("ST003"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.GeneralSettingAdmin" asp-action="Index" asp-controller="GeneralSettingAdmin">
+                                                <span>@Localizer["General Setting"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("ST004"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.ServiceAlert" asp-action="ServiceAlert" asp-controller="ServiceAlertSetup">
+                                                <span>@Localizer["Service"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("ST005"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.RemarkDiscount" asp-action="Index" asp-controller="RemarkDiscount">
+                                                <span>@Localizer["Remark Discount"]</span>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.SlideShow" asp-action="UploadImages" asp-controller="SlideShow">
+                                            <span>@Localizer["Slide Show"]</span>
+                                        </a>
+                                    </li>
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.LoanPartner" asp-action="Index" asp-controller="LoanPartner">
+                                            <span>@Localizer["Loan Partner"]</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    @*<i class="fas fa-key"></i>*@
+                                    <i>
+                                        <img src="~/Images/icon/stock.png" />
+                                    </i>
+                                    <div>@Localizer["Inventory"]</div>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    <li class="sidemenu-item">
+                                        <div class="item-title">
+                                            @*<i class="fas fa-object-group"></i>*@
+                                            <i>
+                                                <img src="~/Images/icon/item-group.png" />
+                                            </i>
+                                            <span>@Localizer["Item Group"]</span>
+
+                                        </div>
+                                        <ul class="sidemenu-group">
+                                            @if (UserManager.Check("A018"))
+                                            {
+                                                <li class="sidemenu-item">
+                                                    <a class="item-label @ViewBag.Item Group1" asp-action="Index" asp-controller="ItemGroup1">
+                                                        <span>@Localizer["Item Group Level 1"]</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                            @if (UserManager.Check("A019"))
+                                            {
+                                                <li class="sidemenu-item">
+                                                    <a class="item-label @ViewBag.ItemGroup2" asp-action="Index" asp-controller="ItemGroup2">
+                                                        <span>@Localizer["Item Group Level 2"]</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                            @if (UserManager.Check("A020"))
+                                            {
+                                                <li class="sidemenu-item">
+                                                    <a class="item-label @ViewBag.ItemGroup3" asp-action="Index" asp-controller="ItemGroup3">
+                                                        <span>@Localizer["Item Group Level 3"]</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                   @if(UserManager.Check("PR03")){
+                                     <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.Index" asp-action="Index" asp-controller="Property">
+                                            <span>@Localizer["Item Properties"]</span>
+                                        </a>
+                                    </li>
+                                   }
+                                </ul>
+                                <ul class="sidemenu-group">
+                                    @if (UserManager.Check("A006"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.UnitofMeasure" asp-action="Index" asp-controller="UnitofMeasure">
+                                                <span>@Localizer["Unit of Measure"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("A007"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.UnitofMeasureGroup" asp-action="Index" asp-controller="GroupUOM">
+                                                <span>@Localizer["Unit of Measure Group"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("A008"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.Warehouse" asp-action="Index" asp-controller="Warehouse">
+                                                <span>@Localizer["Warehouse"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    <i>
+                                        <img src="~/Images/icon/table.png" />
+                                    </i>
+                                    <div>@Localizer["Table"]</div>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    @if (UserManager.Check("A009"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.Table" asp-action="Index" asp-controller="Table">
+                                                <span>@Localizer["Table"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("A010"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.TableGroup" asp-action="Index" asp-controller="GroupTable">
+                                                <span>@Localizer["Table Group"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    <i>
+                                        <img src="~/Images/icon/setup.png" />
+                                    </i>
+                                    <div>@Localizer["Setup"]</div>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    <li class="sidemenu-item">
+                                        <div class="item-title">
+                                            <i>
+                                                <img src="~/Images/icon/sale-setup.png" width="16" />
+                                            </i>
+                                            <span>@Localizer["Sale"]</span>
+                                        </div>
+                                        <ul class="sidemenu-group">
+                                           @if(UserManager.Check("ST007")){
+                                             <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SetupContractTemplate" asp-action="Index" asp-controller="SetupContractTemplate">
+                                                    <span class="sub-item">@Localizer["Service Template"]</span>
+                                                </a>
+                                            </li>
+                                           }
+                                        </ul>
+                                    </li>
+                                    @if(!UserManager.CheckEdition(SystemEdition.Basic))
+                                    {
+                                         <li class="sidemenu-item">
+                                        <div class="item-title">
+                                            <i>
+                                                <img src="~/Images/icon/territory.png" width="16" />
+                                            </i>
+                                            <span>@Localizer["Territiory"]</span>
+                                        </div>
+                                        <ul class="sidemenu-group">
+                                            @if (UserManager.Check("ST006"))
+                                            {
+                                                <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.Territory" asp-action="Index" asp-controller="Territory">
+                                                    <span class="sub-item">@Localizer["Territory"]</span>
+                                                </a>
+                                            </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                    }                                   
+                                    <li class="sidemenu-item">
+                                        <div class="item-title">
+                                            <i>
+                                                <img src="~/Images/icon/tax.png" width="16" />
+                                            </i>
+                                            <span>@Localizer["Financial"]</span>
+                                        </div>
+                                        <ul class="sidemenu-group">
+
+                                           @if(UserManager.Check("ST008")){
+                                             <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.GLAccountDetermination" asp-action="GLAccounting" asp-controller="GLAccountDetermination">
+                                                    <span class="sub-item">@Localizer["G/L Account Determination"]</span>
+                                                </a>
+                                            </li>
+                                           }
+                                            @if (UserManager.Check("A021"))
+                                            {
+                                                <li class="sidemenu-item">
+                                                    <a class="item-label @ViewBag.TaxGroup" asp-action="Index" asp-controller="TaxGroup">
+                                                        <span>@Localizer["Tax Group"]</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    <i>
+                                        <img src="~/Images/icon/systemin.png" />
+                                    </i>
+                                    <div>@Localizer["System Initialization"]</div>
+                                </div>
+                                <ul class="sidemenu-group">
+                                   @if(UserManager.Check("ST009")){
+                                     <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.PeriodIndicator" asp-action="Index" asp-controller="PeriodIndicator">
+                                            <span>@Localizer["Period Indicator"]</span>
+                                        </a>
+                                    </li>
+                                   }
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.PostingPeriods" asp-action="Index" asp-controller="PostingPeriods">
+                                            <span>@Localizer["Posting Periods"]</span>
+                                        </a>
+                                    </li>
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.DocNumbering" asp-action="Index" asp-controller="DocNumbering">
+                                            <span>@Localizer["Document Numbering"]</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    <i>
+                                        <img src="~/Images/icon/notification.png" />
+                                    </i>
+                                    <div>@Localizer["Alert Management"]</div>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.AlertIndex" asp-action="Index" asp-controller="ControlAlert">
+                                            <span>@Localizer["Alert Management"]</span>
+                                        </a>
+                                    </li>
+                                     <li class="sidemenu-item">
+                                <div class="item-label @ViewBag.ApiManagement">
+                                    <i class="fas fa-key"></i>
+                                    <a href="/ClientApi/Submit">
+                                        @Localizer["API Management"]
+                                    </a> 
+                                </div>                                                          
+                            </li>
+                                </ul>
+                            </li>
+                            @if (UserManager.SystemTypes["KSMS"])
+                            {
+                                <li class="sidemenu-item">
+                                    <div class="item-title">
+                                        @*<i class="fa fa-cubes"></i>*@
+                                        <i>
+                                            <img src="~/Images/icon/maintenance.png" />
+                                        </i>
+                                        <span>@Localizer["KSMS SetUp"]</span>
+                                    </div>
+                                    <ul class="sidemenu-group">
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.KSMSServiceSetUp" asp-action="KSMSServiceSetUp" asp-controller="KSMSServiceSetUp">
+                                                <span>@Localizer["SetUp Service"]</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+
+                           
+                        </ul>
+                    </li>
+                    @if (!UserManager.CheckEdition(SystemEdition.Basic))
+                    {
+                         <li class="sidemenu-item">
+                        <div class="item-title">
+                            @*<i class="fas fa-chart-pie"></i>*@
+                            <i>
+                                <img src="~/Images/icon/chart.png" />
+                            </i>
+                            <span>@Localizer["Financials"]</span>
+                        </div>
+                        <ul class="sidemenu-group">
+                            <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.ChartOfAccounts" asp-controller="ChartOfAccounts" asp-action="Detail">
+                                    <span>@Localizer["Chart of Accounts"]</span>
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.JournalEntry" asp-action="JournalEntry" asp-controller="Financials">
+                                    <span>@Localizer["Journal Entry"]</span>
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    @*<i class="fas fa-object-group"></i>*@
+                                    <i>
+                                        <img src="~/Images/icon/growth.png" />
+                                    </i>
+                                    <span>@Localizer["Financial Report"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    @if (UserManager.Check("FR007"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.GerneralLedger" asp-controller="FinancialReports"
+                                               asp-action="GerneralLedger">
+                                                <span>@Localizer["Gerneral Ledger"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("FR001"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.BalanceSheet" asp-controller="FinancialReports"
+                                               asp-action="BalanceSheet">
+                                                <span>@Localizer["Balance Sheet"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("FR002"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.ProfitAndLost" asp-controller="FinancialReports"
+                                               asp-action="ProfitAndLost">
+                                                <span>@Localizer["Profit and Loss"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("FR004"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.CashFlowForTreasury" asp-controller="FinancialReports"
+                                               asp-action="CashFlowForTreasury">
+                                                <span>@Localizer["Cash Flow For Treasury"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("FR003"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.TrialBalance" asp-controller="FinancialReports"
+                                               asp-action="TrialBalance">
+                                                <span>@Localizer["Trail Balance"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("FR006"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.SaleGrossProfit" asp-controller="FinancialReports"
+                                               asp-action="SaleGrossProfit">
+                                                <span>@Localizer["Sale Gross Profit"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("FR005"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.TransactionJournal" asp-controller="FinancialReports"
+                                               asp-action="TransactionJournal">
+                                                <span>@Localizer["Transaction Journal"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    }                   
+                    @if (UserManager.Check("A044"))
+                    {
+                        <li class="sidemenu-item">
+                            <div class="item-title">
+                                @*<i class="fas fa-funnel-dollar"></i>*@
+                                <i>
+                                    <img src="~/Images/icon/edc.png" />
+                                </i>
+
+                                <div>@Localizer["POS"]</div>
+                            </div>
+                            <ul class="sidemenu-group">
+                                @if (UserManager.SystemTypes["KRMS"])
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label" asp-action="KRMS" asp-controller="POS">
+                                            <span>@Localizer["KRMS"]</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (UserManager.SystemTypes["KTMS"])
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label" asp-action="KTMS" asp-controller="POS">
+                                            <span>@Localizer["KTMS"]</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (UserManager.SystemTypes["KBMS"])
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label" asp-action="KBMS" asp-controller="POS">
+                                            <span class="sub-item">@Localizer["KBMS"]</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (UserManager.SystemTypes["KSMS"])
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label" asp-action="KSMS" asp-controller="POS">
+                                            <span class="sub-item">@Localizer["KSMS"]</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul><!--POS-->
+                        </li>
+                    }
+                    @if (UserManager.CheckEdition(SystemEdition.Enterprise))
+                    {
+                        <li class="sidemenu-item">
+                            <div class="item-title">
+                                @*<i class="fas fa-user-friends"></i>*@
+                                <i>
+                                    <img src="~/Images/icon/partner.png" />
+                                </i>
+                                <span>@Localizer["CRM"]</span>
+                            </div>
+                            <ul class="sidemenu-group">
+
+                                @if (UserManager.Check("CRM001"))
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.Opportunity" asp-action="Opportunity" asp-controller="Opportunity">
+                                            <span>@Localizer["Opportunity"]</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (UserManager.Check("CRM002"))
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label  @ViewBag.Activities" asp-action="Activity" asp-controller="BusinessPartner" asp-route-isop="true">
+                                            <span>@Localizer["Activity"]</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (UserManager.Check("CRM003"))
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.OpportunityReports" asp-action="OpportunityReports" asp-controller="Opportunity">
+                                            <span>@Localizer["Opportunity Report"]</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (UserManager.Check("CRM004"))
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.WonOpportunityReports" asp-action="WonOpportunityReports" asp-controller="Opportunity">
+                                            <span>@Localizer["Won Opportunity Report"]</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (UserManager.Check("CRM005"))
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.LostOpportunityReports" asp-action="LostOpportunityReports" asp-controller="Opportunity">
+                                            <span>@Localizer["Lost Opportunity Report"]</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                    @if (UserManager.SystemTypes["KBMS"])
+                    {
+                       <li class="sidemenu-item">
+                            <div class="item-title">
+                                <i>
+                                    <img src="~/Images/icon/canring.jpg" width="19" />
+                                </i>
+                                <span>@Localizer["Can Ring Management"]</span>
+                            </div>
+                            <ul class="sidemenu-group">
+                                @if (UserManager.Check("CR001"))
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.CanRingIndex" asp-action="Index" asp-controller="CanRing">
+                                            <span>@Localizer["Lists Setup"]</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (UserManager.Check("CR003"))
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.ExchangeCanRing" asp-action="ExchangeCanRing" asp-controller="CanRing">
+                                            <span>@Localizer["Sale Can Ring"]</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                    @if (UserManager.Check("AR"))
+                    {
+                        @if (UserManager.SystemTypes["KBMS"])
+                        {
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    <i>
+                                        <img src="~/Images/icon/sale.png" />
+                                    </i>
+                                    <div>@Localizer["Sale A/R"]</div>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    @if(!UserManager.CheckEdition(SystemEdition.Basic)){
+                                        @if (UserManager.Check("SQ"))
+                                         {
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SaleQuotation" asp-action="SaleQuote" asp-controller="Sale">
+                                                    <span>@Localizer["Quotation"]</span>
+                                                </a>
+                                            </li>
+                                         }
+                                        @if (UserManager.Check("SO"))
+                                         {
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SaleOrder" asp-action="SaleOrder" asp-controller="Sale">
+                                                    <span>@Localizer["Sale Order"]</span>
+                                                </a>
+                                            </li>
+                                         }
+                                          @if (UserManager.Check("DN"))
+                                         {
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SaleDelivery" asp-action="SaleDelivery" asp-controller="Sale">
+                                                    <span>@Localizer["Sale Delivery"]</span>
+                                                </a>
+                                            </li>
+                                         }
+                                        @if(UserManager.Check("RD")){
+                                            <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.ReturnDelivery" asp-action="ReturnDelivery" asp-controller="Sale">
+                                                <span>@Localizer["Return Delivery"]</span>
+                                            </a>
+                                        </li>
+                                        }
+                                         @if (UserManager.Check("DP"))
+                                         {
+                                            <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.ARDownPaymentInvoice" asp-action="ARDownPaymentInvoice" asp-controller="Sale">
+                                                <span>@Localizer["A/R Down Payment"]</span>
+                                            </a>
+                                            </li>
+                                         }
+                                    }
+                                     @if(UserManager.Check("IN")){
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.SaleAR" asp-action="SaleAR" asp-controller="Sale">
+                                                <span>@Localizer["A/R Invoice"]</span>
+                                            </a>
+                                        </li>
+                                     }
+                                    @if(!UserManager.CheckEdition(SystemEdition.Basic)){
+                                        @if(UserManager.Check("ST0010")){
+                                            <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.SaleAREdit" asp-action="SaleAREdite" asp-controller="Sale">
+                                                <span>@Localizer["A/R Invoice Editable"]</span>
+                                            </a>
+                                        </li>
+                                        }
+                                        @if(UserManager.Check("ARR")){
+                                            <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.ARReserveInvoice" asp-action="ARReserveInvoice" asp-controller="Sale">
+                                                <span>@Localizer["A/R Reserve Invoice"]</span>
+                                            </a>
+                                        </li>
+                                        }
+                                        @if(UserManager.Check("ST0011")){
+                                             <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.ARReserveInvoiceEDT" asp-action="ARReserveInvoiceEditable" asp-controller="Sale">
+                                            <span>@Localizer["A/R Reserve Editable"]</span>
+                                        </a>
+                                    </li>
+                                        }
+                                        @if(UserManager.Check("ST0012")){
+                                            <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.ServiceContract" asp-action="ServiceContract" asp-controller="Sale">
+                                                <span>@Localizer["A/R Service Contract"]</span>
+                                            </a>
+                                        </li>
+                                        }
+                                    }
+                                     @if(UserManager.Check("CN")){
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.SaleCreditMemo" asp-action="SaleCreditMemo" asp-controller="Sale">
+                                                <span>@Localizer["A/R Credit Memo"]</span>
+                                            </a>
+                                        </li>
+                                     }
+                                </ul>
+                            </li>
+                        }
+                    }
+                    <li class="sidemenu-item">
+                        <div class="item-title">
+                            @*<i class="fas fa-cart-plus"></i>*@
+                            <i>
+                                <img src="~/Images/icon/shopping-cart.png" />
+                            </i>
+                            <span>@Localizer["Purchasing A/P"]</span>
+                        </div>
+                        <ul class="sidemenu-group">
+                            @if(!UserManager.CheckEdition(SystemEdition.Basic)){
+                               @if(UserManager.Check("PR01")){
+                                 <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.PurchaseRequest" asp-action="Index" asp-controller="PurchaseRequest">
+                                        <span>@Localizer["Purchase Request"]</span>
+                                    </a>
+                                </li>
+                               }
+                               @if(UserManager.Check("PQ")){
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.PurchaseQuotation" asp-action="Index" asp-controller="PurchaseQuotation">
+                                        <span>@Localizer["Purchase Quotation"]</span>
+                                    </a>
+                                </li>
+                               }
+                                @if (UserManager.Check("A023"))
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.PurchaseOrder" asp-action="Purchaseorder" asp-controller="PurchaseOrder">
+                                            <span>@Localizer["Purchase Order"]</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (UserManager.Check("A026"))
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.PurchasePO" asp-action="PurchasePO" asp-controller="PurchasePO">
+                                            <span>@Localizer["Goods Receipt PO"]</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (UserManager.Check("PR02"))
+                                {
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.PurchaseAPReserve" asp-action="Index" asp-controller="PurchaseAP">
+                                            <span>@Localizer["A/P Reserve Invoice"]</span>
+                                        </a>
+                                    </li>
+                                }                            
+                            }
+                            @if (UserManager.Check("A024"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.PurchaseAP" asp-action="PurchaseAP" asp-controller="PurchaseAP">
+                                        <span>@Localizer["A/P Invoice"]</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (UserManager.Check("A025"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.PurchaseCreditMemo" asp-action="PurchaseCreditMemo" asp-controller="PurchaseCreditMemo">
+                                        <span>@Localizer["A/P Credit Memo"]</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                    <li class="sidemenu-item">
+                        <div class="item-title">
+                            @*<i class="fa fa-cubes"></i>*@
+                            <i>
+                                <img src="~/Images/icon/inventory.png" />
+                            </i>
+                            <span>@Localizer["Inventory"]</span>
+                        </div>
+                        <ul class="sidemenu-group">
+                            @if (UserManager.Check("A016"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.ItemMasterData" asp-action="Index" asp-controller="ItemMasterData">
+                                        <span>@Localizer["Item Master Data"]</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (UserManager.Check("A017"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.PriceList" asp-action="Index" asp-controller="PriceList">
+                                        <span>@Localizer["Price List"]</span>
+                                    </a>
+                                </li>
+                            }
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    @*<i class="fas fa-exchange-alt"></i>*@
+                                    <i>
+                                        <img src="~/Images/icon/scanning.png" />
+                                    </i>
+                                    <span>@Localizer["Print Barcode"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    @if(UserManager.Check("ST0013")){
+                                         <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.Printbarcode" asp-action="Barcodelayout" asp-controller="Printbarcode">
+                                            <span>@Localizer["Barcode​ A4"]</span>
+                                        </a>
+                                    </li>
+                                    }
+                                   @if(UserManager.Check("ST0014")){
+                                     <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.BarcodePrinter" asp-action="Index" asp-controller="BarcodeToService">
+                                            <span>@Localizer["Label Barcode"]</span>
+                                        </a>
+                                    </li>
+                                   }
+                                </ul>
+                            </li>
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    @*<i class="fas fa-exchange-alt"></i>*@
+                                    <i>
+                                        <img src="~/Images/icon/scale.png" />
+                                    </i>
+                                    <span>@Localizer["Label Scale"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+                                   @if(UserManager.Check("ST0015")){
+                                     <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.LabelScale" asp-action="LabelScale" asp-controller="LabelScale">
+                                            <span>@Localizer["Scale Rongta​"]</span>
+                                        </a>
+                                    </li>
+                                   }
+                                    @if(UserManager.Check("ST0016")){
+                                        <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.LabelScaleCAS" asp-action="LabelScaleCAS" asp-controller="LabelScale">
+                                            <span>@Localizer["Scale CAS"]</span>
+                                        </a>
+                                    </li>
+                                    }
+                                </ul>
+                            </li>
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    @*<i class="fa fa-cubes"></i>*@
+                                    <i>
+                                        <img src="~/Images/icon/trolley.png" />
+                                    </i>
+                                    <span>@Localizer["Item Management"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    <li class="sidemenu-item">
+                                        <div class="item-title">
+                                            @*<i class="fa fa-cubes"></i>*@
+                                            <i>
+                                                <img src="~/Images/icon/bar-code.png" />
+                                            </i>
+                                            <span>@Localizer["Item Serial Numbers"]</span>
+                                        </div>
+                                        <ul class="sidemenu-group">
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SerialNumberManagement" asp-action="SerialNumberManagement" asp-controller="ItemSerialNumbers">
+                                                    <span>@Localizer["Serial Number Management"]</span>
+                                                </a>
+                                            </li>
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SerialNumberDetails" asp-action="SerialNumberDetails" asp-controller="ItemSerialNumbers">
+                                                    <span>@Localizer["Serial Number Details"]</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="sidemenu-item">
+                                        <div class="item-title">
+                                            @*<i class="fa fa-cubes"></i>*@
+                                            <i>
+                                                <img src="~/Images/icon/batch-processing.png" />
+                                            </i>
+                                            <span>@Localizer["Batches"]</span>
+                                        </div>
+                                        <ul class="sidemenu-group">
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.BatchManagement" asp-action="BatchManagement" asp-controller="ItemBatchNo">
+                                                    <span>@Localizer["Batch Management"]</span>
+                                                </a>
+                                            </li>
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.BatchDetails" asp-action="BatchDetails" asp-controller="ItemBatchNo">
+                                                    <span>@Localizer["Batch Details"]</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    @*<i class="fas fa-exchange-alt"></i>*@
+                                    <i>
+                                        <img src="~/Images/icon/Transaction.png" />
+                                    </i>
+                                    <span>@Localizer["Transaction"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    @if (UserManager.Check("A026"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.GoodsReceipt" asp-action="GoodsReceipt" asp-controller="GoodsReceipt">
+                                                <span>@Localizer["Goods Receipt​"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("A027"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.GoodsIssue" asp-action="GoodIssues" asp-controller="GoodIssues">
+                                                <span>@Localizer["Goods Issue"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("A028"))
+                                    {
+                                        @if(!UserManager.CheckEdition(SystemEdition.Basic)){
+                                            @if(UserManager.Check("ST0017")){
+                                                <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.TransferRequest" asp-action="TransferRequest" asp-controller="Transfer">
+                                                    <span>@Localizer["Transfer Request"]</span>
+                                                </a>
+                                            </li>
+                                            }
+                                        } 
+                                            <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.Transfer" asp-action="Transfer" asp-controller="Transfer">
+                                                <span>@Localizer["Transfer"]</span>
+                                            </a>
+                                        </li>
+                                        
+                                    }
+                                    @if (UserManager.Check("A050"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.InventoryCounting" asp-action="InventoryCounting" asp-controller="InventoryCounting">
+                                                <span>@Localizer["Inventory Counting"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <!--Inventory-->
+                    <li class="sidemenu-item">
+                        <div class="item-title">
+                            @*<i class="fas fa-user-friends"></i>*@
+                            <i>
+                                <img src="~/Images/icon/partner.png" />
+                            </i>
+                            <span>@Localizer["Business Partners"]</span>
+                        </div>
+                        <ul class="sidemenu-group">
+                            <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.Customer" asp-action="Customer" asp-controller="BusinessPartner">
+                                    <span>@Localizer["Customer"]</span>
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.Vendor" asp-action="Vendor" asp-controller="BusinessPartner">
+                                    <span>@Localizer["Vendor"]</span>
+                                </a>
+                            </li>
+                            @if(UserManager.Check("ST0018")){
+                                 <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.ImportBp" asp-action="ImportMasterData" asp-controller="BusinessPartner">
+                                    <span>@Localizer["Import Master Data"]</span>
+                                </a>
+                            </li>
+                            }
+                            @if (UserManager.CheckEdition(SystemEdition.Enterprise))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.Acitivity" asp-action="Activity" asp-controller="BusinessPartner">
+                                        <span>@Localizer["Activity"]</span>
+                                    </a>
+                                </li>
+                            }
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    @*<i class="fas fa-exchange-alt"></i>*@
+                                    <i>
+                                        <img src="~/Images/icon/bpreport.png" />
+                                    </i>
+                                    <span>@Localizer["Report"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    @if (UserManager.CheckEdition(SystemEdition.Enterprise))
+                                    {
+                                        @if(UserManager.Check("ST0019")){
+                                            <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.MyActivities" asp-action="MyActivities" asp-controller="BPAging">
+                                                <span>@Localizer["My Activities"]</span>
+                                            </a>
+                                        </li>
+                                        }
+                                        @if(UserManager.Check("ST0020")){
+                                            <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.ActivitiesOverview" asp-action="ActivitiesOverview" asp-controller="BPAging">
+                                                <span>@Localizer["Activities Overview"]</span>
+                                            </a>
+                                        </li>
+                                        }
+                                    }
+                                   @if(UserManager.Check("BP003")){
+                                     <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.CustomerAging" asp-action="CustomerAging" asp-controller="BPAging">
+                                            <span>@Localizer["Customer Aging​"]</span>
+                                        </a>
+                                    </li>
+                                   }
+                                   @if(UserManager.Check("BP004")){
+                                     <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.VendorAging" asp-action="VendorAging" asp-controller="BPAging">
+                                            <span>@Localizer["Vendor Aging"]</span>
+                                        </a>
+                                    </li>
+                                   }
+                                   @if (UserManager.Check("SA004"))
+                                        {
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.CustomerStatement" asp-controller="SaleReport" asp-action="CustomerStatementView">
+                                                    <span>@Localizer["Customer Statement"]</span>
+                                                </a>
+                                            </li>
+                                        }
+                                </ul>
+                            </li>
+                            @if(!UserManager.CheckEdition(SystemEdition.Basic)){
+                                <li class="sidemenu-item">
+                                <div class="item-title">
+                                    @*<i class="fas fa-exchange-alt"></i>*@
+                                    <i>
+                                        <img src="~/Images/icon/member-card.png" width="24" />
+                                    </i>
+                                    <span>@Localizer["Card Member"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.Cards" asp-action="Index" asp-controller="CardMember">
+                                            <span>@Localizer["Cards"]</span>
+                                        </a>
+                                    </li>
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.CardTypeIndex" asp-action="CardTypeIndex" asp-controller="CardMember">
+                                            <span>@Localizer["Type Card"]</span>
+                                        </a>
+                                    </li>
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.DepositCardMember" asp-action="DepositCardMember" asp-controller="CardMember">
+                                            <span>@Localizer["Deposit"]</span>
+                                        </a>
+                                    </li>
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.CardTransaction" asp-action="CardTransaction" asp-controller="CardMember">
+                                            <span>@Localizer["Card Transactions"]</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            }                            
+                        </ul>
+                    </li>
+                    <li class="sidemenu-item">
+                        <div class="item-title">
+                            @*<i class="fas fa-percent"></i>*@
+                            <i>
+                                <img src="~/Images/icon/promotion.png" />
+                            </i>
+                            <span>@Localizer["Loyalty Program"]</span>
+                        </div>
+
+                        <ul class="sidemenu-group">
+                           @if (!UserManager.CheckEdition(SystemEdition.Basic))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.PointSetup" asp-action="PointSetup" asp-controller="MemberPoint">
+                                        <span>@Localizer["Point Setup"]</span>
+                                    </a>
+                                </li>
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.ClearPoint" asp-action="ClearPoint" asp-controller="LoyaltyProgram">
+                                        <span>@Localizer["Clear Point"]</span>
+                                    </a>
+                                </li>
+                            <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.BuyXAmountGetXDis" asp-action="BuyXAmountGetXDisCount" asp-controller="LoyaltyProgram">
+                                    <span>@Localizer["Buy X Amount Get X Discount"]</span>
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.BuyxQtyGetXdis " asp-action="BuyXQtyGetXDis" asp-controller="LoyaltyProgram">
+                                    <span>@Localizer["Buy X Qty Get X Discount"]</span>
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.BuyXGetX" asp-action="BuyXGetX" asp-controller="LoyaltyProgram">
+                                    <span>@Localizer["BuyOne GetOne"]</span>
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.SaleCombo" asp-action="SaleCombo" asp-controller="LoyaltyProgram">
+                                    <span>@Localizer["Combo Sale"]</span>
+                                </a>
+                            </li>
+                           
+                                 <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.PromoCode" asp-action="PromoCode" asp-controller="LoyaltyProgram">
+                                    <span>@Localizer["PromoCode"]</span>
+                                </a>
+                            </li>
+                             }
+                            @if (UserManager.Check("A029"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.Promotion" asp-action="Index" asp-controller="Promotion">
+                                        <span>@Localizer["Promotion"]</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (UserManager.Check("A036"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.DiscountItem" asp-action="Index" asp-controller="DiscountItem">
+                                        <span>@Localizer["Discount Item"]</span>
+                                    </a>
+                                </li>
+
+                            }
+                             @if (!UserManager.CheckEdition(SystemEdition.Basic))
+                            {
+                                <li class="sidemenu-item">
+                                    <div class="item-title">
+                                        @*<i class="fas fa-users"></i>*@
+                                        <i>
+                                            <img src="~/Images/icon/member-card.png" />
+                                        </i>
+                                        <span>@Localizer["Members"]</span>
+                                    </div>
+                                    <ul class="sidemenu-group">
+                                        @if (UserManager.Check("A031"))
+                                        {
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.Register" asp-action="Register" asp-controller="MemberCard">
+                                                    <span>@Localizer["Register"]</span>
+                                                </a>
+                                            </li>
+                                        }
+                                        <li>
+                                            <a class="item-label @ViewBag.CardType" asp-action="Index" asp-controller="CardType">
+                                                <span>@Localizer["CardType"]</span>
+                                            </a>
+                                        </li>
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.MemberCard" asp-action="MemberCard" asp-controller="MemberCard">
+                                                <span>@Localizer["MemberCard​s"]</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        @if (!UserManager.CheckEdition(SystemEdition.Basic))
+                            {
+                                <li class="sidemenu-item">
+                                    <div class="item-title">
+                                        @*<i class="fas fa-users"></i>*@
+                                        <i>
+                                            <img src="~/Images/icon/bpreport.png"/>
+                                        </i>
+                                        <span>@Localizer["Report"]</span>
+                                    </div>
+                                    <ul class="sidemenu-group">
+                                       @if(UserManager.Check("BP005")){
+                                         <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.RedemPoint" asp-action="RedemPoint" asp-controller="DevReport">
+                                                <span>@Localizer["Redeem"]</span>
+                                            </a>
+                                        </li>
+                                       }
+                                        @if(UserManager.Check("BP006")){
+                                            <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.BuyOneGetOne" asp-action="BuyOneGetOne" asp-controller="LoyaltyReport">
+                                                <span>@Localizer["BuyOne GetOne"]</span>
+                                            </a>
+                                        </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        </ul>
+                    </li><!--Promotion-->
+
+                    <li class="sidemenu-item">
+                        <div class="item-title">
+                            @*<i class="fas fa-money-check-alt"></i>*@
+                            <i>
+                                <img src="~/Images/icon/banking.png" />
+                            </i>
+                            <span>@Localizer["Payment"]</span>
+                        </div>
+                        <ul class="sidemenu-group">
+                            @if (UserManager.Check("A049"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.OutgoingPaymentOrderMenu" asp-action="OutgoingpaymentOrder" asp-controller="Outgoingpayment">
+                                        <span>@Localizer["Outgoing Payment Order"]</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (UserManager.Check("A042"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.OutgoingPaymentMenu" asp-action="Outgoingpayment" asp-controller="Outgoingpayment">
+                                        <span>@Localizer["Outgoing Payment"]</span>
+                                    </a>
+                                </li>
+                            }
+                            @if(UserManager.Check("IP01")){
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.IncomingPaymentOrderMenu" asp-action="IncomingpaymentOrder" asp-controller="IncomingPayment">
+                                        <span>@Localizer["Incoming PaymentOrder"]</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (UserManager.Check("IP"))
+                            {
+                                  
+                                
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.IncomingPaymentMenu" asp-action="IncomingPayment" asp-controller="IncomingPayment">
+                                        <span>@Localizer["Incoming Payment"]</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (UserManager.Check("A013"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.Currency" asp-action="Index" asp-controller="Currency">
+                                        <span>@Localizer["Currency"]</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (UserManager.Check("A014"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.ExchangeRate" asp-action="Index" asp-controller="ExchangeRate">
+                                        <span>@Localizer["Exchange Rate"]</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (UserManager.Check("A015"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.PaymentMeansBanking" asp-action="Index" asp-controller="PaymentMeans">
+                                        <span>@Localizer["Payment Means"]</span>
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    </li>
+                    <li class="sidemenu-item">
+                        <div class="item-title">
+                            @*<i class="fas fa-balance-scale"></i>*@
+                            <i>
+                                <img src="~/Images/icon/production.png" />
+                            </i>
+                            <span>@Localizer["Production"]</span>
+                        </div>
+                        <ul class="sidemenu-group">
+                            <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.BOMaterial" asp-action="BOMaterial" asp-controller="Production">
+                                    <span>@Localizer["Bill Of Material"]</span>
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a class="item-label @ViewBag.BomReport" asp-action="BOMReport" asp-controller="Production">
+                                    <span>@Localizer["Bill of Material Report"]</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li><!--Production-->
+                    <li class="sidemenu-item">
+                        <div class="item-title">
+                            @*<i class="fas fa-user-graduate"></i>*@
+                            <i>
+                                <img src="~/Images/icon/employee.png" />
+                            </i>
+                            <span>@Localizer["Human Resources"]</span>
+                        </div>
+                        <ul class="sidemenu-group">
+                            @if (UserManager.Check("A011"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.EmpMasterData" asp-action="Index" asp-controller="Employee">
+                                        <span>@Localizer["Employee MasterData"]</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+
+                    </li>
+                    @if (UserManager.CheckEdition(SystemEdition.Enterprise))
+                    {
+                        @*Project management*@
+                        <li class="sidemenu-item">
+                            <div class="item-title">
+                                <i>
+                                    <img src="~/Images/icon/projectmanagement.png" style="width:25px;height:25px;" />
+                                </i>
+                                <span>@Localizer["Project Management"]</span>
+                            </div>
+                            <ul class="sidemenu-group">
+                               @if(UserManager.Check("ST0022")){
+                                 <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.ProjectCostAS" asp-action="Index" asp-controller="ProjectCostAnalysis">
+                                        <span>@Localizer["Project Cost Analysis"]</span>
+                                    </a>
+                                </li>
+                               }
+                                @if(UserManager.Check("ST00023")){
+                                    <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.SolutionDatamanagement" asp-action="SolutionDataMangement" asp-controller="ProjectCostAnalysis">
+                                        <span>@Localizer["Solution Data Management"]</span>
+                                    </a>
+                                </li>
+                                }
+                            </ul>
+                        </li>
+                    
+                    <li class="sidemenu-item">
+                        <div class="item-title">
+                            <i>
+                                <img src="~/Images/icon/customer-service.png " />
+                            </i>
+                            <span>@Localizer["Service"]</span>
+                        </div>
+                        <ul class="sidemenu-group">
+                            @if (UserManager.Check("SV001"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.ServiceCall" asp-action="ServiceCall" asp-controller="Service">
+                                        <span>@Localizer["Service Call"]</span>
+                                    </a>
+                                </li>
+                            }
+
+                            @if (UserManager.Check("SV003"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.EquipmentCard" asp-action="EquipmentCard" asp-controller="Service">
+                                        <span>@Localizer["Equipment Card"]</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (UserManager.Check("SV002"))
+                            {
+                                <li class="sidemenu-item">
+                                    <a class="item-label @ViewBag.ServiceCallReport" asp-action="ServiceCallReport" asp-controller="Service">
+                                        <span>@Localizer["Service Call Report"]</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                    }
+                    <li class="sidemenu-item">
+                        <div class="item-title">
+                            @*<i class="fas fa-chart-line"></i>*@
+                            <i>
+                                <img src="~/Images/icon/report.png" />
+                            </i>
+                            <div>@Localizer["Reports"]</div>
+                        </div>
+                        <ul class="sidemenu-group">
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    <span>@Localizer["POS"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    @if (UserManager.Check("SR001"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.SummarySale" asp-controller="DevReport" asp-action="SummarySaleView">
+                                                <span>@Localizer["Sale Summary"]</span>
+                                            </a>
+                                        </li>
+                                       
+                                    }
+                                    @if (UserManager.Check("SR010"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.CountMember" asp-controller="DevReport" asp-action="CountMemberView">
+                                                <span>@Localizer["Count Member"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("SR009"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.GroupCustomer" asp-controller="DevReport" asp-action="GroupCustomerView">
+                                                <span>@Localizer["Group Customer Sale"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("SCMO"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.SaleCreditMemoReport" asp-controller="DevReport" asp-action="SeleCreditMemoReport">
+                                                <span>@Localizer["Sale Credit Memo"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if(UserManager.Check("RP001")){
+                                        <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.SaleRevenue" asp-controller="DevReport" asp-action="SaleRevenue">
+                                            <span>@Localizer["Sale Revenue"]</span>
+                                        </a>
+                                    </li>
+                                    }
+                                    @if (UserManager.Check("SR005"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.DetailSale" asp-controller="DevReport" asp-action="DetailSaleView">
+                                                <span>@Localizer["Detail Sale"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("SR002"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.CloseShift" asp-controller="DevReport" asp-action="CloseShiftView">
+                                                <span>@Localizer["Close Shift"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("SR006"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.PaymentMeans" asp-controller="DevReport" asp-action="PaymentMeansView">
+                                                <span>@Localizer["Payment Means"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("SR011"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.PaymentMeansSummary" asp-controller="DevReport" asp-action="PaymentMeansSummaryView">
+                                                <span>@Localizer["Payment Means Summary"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("SR003"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.TopSaleQuantity" asp-controller="DevReport" asp-action="TopSaleQuantityView">
+                                                <span>@Localizer["Top Sale Quantity"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("A048"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.SaleByTable" asp-controller="DevReport" asp-action="SaleByTableView">
+                                                <span>@Localizer["Sale By Table"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("A047"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.VoidOrder" asp-controller="DevReport" asp-action="VoidOrderView">
+                                                <span>@Localizer["Void Order"]</span>
+                                            </a>
+                                        </li>
+                                    }
+
+                                   @if(UserManager.Check("RP002")){
+                                     <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.VoidItem" asp-controller="DevReport" asp-action="VoidItemView">
+                                            <span>@Localizer["Void Item"]</span>
+                                        </a>
+                                    </li>
+                                   }
+                                    @if (UserManager.Check("SR007"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.SaleByCustomer" asp-controller="DevReport" asp-action="SaleByCustomerView">
+                                                <span>@Localizer["Sale By Customer"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("SR008"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.TaxDeclaration" asp-controller="DevReport" asp-action="TaxDeclarationView">
+                                                <span>@Localizer["Tax Declaration"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("RP003"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.DataSelectionExport" asp-controller="DevReport" asp-action="DataSelectionExport">
+                                                <span>@Localizer["Data Selection Export"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                     <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.InvoicePending" asp-controller="DevReport" asp-action="InvoicePending">
+                                            <span>@Localizer["Invoice Pending"]</span>
+                                        </a>
+                                    </li>
+                                     <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.CusConsignment" asp-controller="DevReport" asp-action="CustomerConsignmentView">
+                                            <span>@Localizer["Customer Consignment"]</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li><!--Report Sale-->
+                            @if (UserManager.SystemTypes["KBMS"])
+                            {
+                                <li class="sidemenu-item">
+                                    <div class="item-title">
+                                        <span>@Localizer["Sale A/R"]</span>
+                                    </div>                                    
+                                    <ul class="sidemenu-group">
+                                        @if(!UserManager.CheckEdition(SystemEdition.Basic)){                                        
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SaleQuotationAdmin" asp-controller="SaleReport" asp-action="SaleQuotationView">
+                                                    <span>@Localizer["Quotation"]</span>
+                                                </a>
+                                            </li>
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SaleOrderAdmin" asp-controller="SaleReport" asp-action="SaleOrderView">
+                                                    <span>@Localizer["Sale Order"]</span>
+                                                </a>
+                                            </li>
+                                            <li class="sidemenu-item">
+                                                <a class="item-label  @ViewBag.SaleDeliveryAdmin" asp-controller="SaleReport" asp-action="SaleDeliveryView">
+                                                    <span>@Localizer["Sale Delivery"]</span>
+                                                </a>
+                                            </li>
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SaleARAdmin" asp-controller="SaleReport" asp-action="SaleARView">
+                                                    <span>@Localizer["A/R Invoice"]</span>
+                                                </a>
+                                            </li>
+                                            @if(UserManager.Check("SAR001")){
+                                                <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SaleAEdit" asp-controller="SaleReport" asp-action="SaleAREditView">
+                                                    <span>@Localizer["A/R Editable"]</span>
+                                                </a>
+                                            </li>
+                                            }
+                                             @if(UserManager.Check("SAR0002")){
+                                                <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.ARReserveEditable" asp-controller="SaleReport" asp-action="ARReserveEditable">
+                                                    <span>@Localizer["A/R Reserve Editable"]</span>
+                                                </a>
+                                            </li>
+                                            }
+                                           @if(UserManager.Check("SAR0003")){
+                                             <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.ServiceContractViewAdmin" asp-controller="SaleReport" asp-action="ServiceContractView">
+                                                    <span>@Localizer["Service Contract Maintenance Report"]</span>
+                                                </a>
+                                            </li>
+                                           }
+                                        }
+                                        
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.SaleCreditMemoAdmin" asp-controller="SaleReport" asp-action="SaleCreditMemoView">
+                                                <span>@Localizer["A/R Credit Memo"]</span>
+                                            </a>
+                                        </li>
+                                        @if (UserManager.Check("SA003"))
+                                        {
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SalePaymentTransaction" asp-controller="SaleReport" asp-action="PaymentTransactionView">
+                                                    <span>@Localizer["Payment Transaction"]</span>
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (UserManager.Check("SA004"))
+                                        {
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.CustomerStatement" asp-controller="SaleReport" asp-action="CustomerStatementView">
+                                                    <span>@Localizer["Customer Statement"]</span>
+                                                </a>
+                                            </li>
+                                        }
+                                        @if(UserManager.Check("SAR003")){
+                                            <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.SaleARSummary" asp-controller="SaleReport" asp-action="SaleARSummaryView">
+                                                <span>@Localizer["A/R Summary"]</span>
+                                            </a>
+                                        </li>
+                                        }
+                                    </ul>
+                                </li>
+                                <!--Report Sale Admin-->
+                            }
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    <span>@Localizer["Purchasing A/P"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+
+                                   @if(UserManager.Check("RP01")){
+                                     <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.POSummary" asp-controller="DevReport" asp-action="SummaryPurchaseOrder">
+                                            <span>@Localizer["Purchase Order"]</span>
+                                        </a>
+
+                                    </li>
+                                   }
+                                    @if (UserManager.Check("PR005"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.GRPOSummary" asp-controller="DevReport" asp-action="SummaryGoodsReceiptPO">
+                                                <span>@Localizer["Goods Receipt PO"]</span>
+                                            </a>
+
+                                        </li>
+                                    }
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.PurchaseSummaryReport" asp-controller="DevReport" asp-action="PurchaseSummaryReport">
+                                            <span>@Localizer["A/P SummaryReport"]</span>
+                                        </a>
+                                    </li>
+                                    @if (UserManager.Check("RP02"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.APSummary" asp-controller="DevReport" asp-action="SummaryPurchaseAP">
+                                                <span>@Localizer["A/P Invoice"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                   @if(UserManager.Check("RP03")){
+                                     <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.PCSummary" asp-controller="DevReport" asp-action="SummaryPurchaseMemo">
+                                            <span>@Localizer["A/P Credit Memo"]</span>
+                                        </a>
+                                    </li>
+                                   }
+                                    @if (UserManager.Check("PR004"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.OutgoingPayment" asp-controller="DevReport" asp-action="SummaryOutgoingPayment">
+                                                <span>@Localizer["Outgoing Payment"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.PurchasePaymentTransaction" asp-controller="DevReport" asp-action="SummaryPurchasePaymentTransaction">
+                                            <span>@Localizer["Payment Transaction"]</span>
+                                        </a>
+                                    </li>
+                                    @if (UserManager.Check("PR006"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.VendorStatement" asp-controller="DevReport" asp-action="SummaryPurchaseVendorStatement">
+                                                <span>@Localizer["Vendor Statement"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    <span>@Localizer["Inventory"]</span>
+                                </div>
+
+                                <ul class="sidemenu-group">
+                                   @* <li class="sidemenu-item">
+                                        <div class="item-title">
+                                            <i>
+                                                <img src="~/Images/icon/scanning.png" />
+                                            </i>
+                                            <span>@Localizer["Serial/Batch"]</span>
+                                        </div>
+                                        <ul class="sidemenu-group">
+                                          
+                                         
+                                        </ul>
+                                    </li>*@
+                                     @if(UserManager.Check("IV001")){
+                                         <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.Serial" asp-action="Serial" asp-controller="SerialBatch">
+                                                    <span>@Localizer["Serial Number Report"]</span>
+                                                </a>
+                                       </li>
+                                     }
+                                    @if(UserManager.Check("IV002")){
+                                         <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.Batch" asp-action="Batch" asp-controller="SerialBatch">
+                                                    <span>@Localizer["Serial Batch Report"]</span>
+                                                </a>
+                                            </li>
+                                    }
+                                    @if (UserManager.Check("IR001"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.StockInWarehouse" asp-controller="DevReport" asp-action="StockInWarehouseView">
+                                                <span>@Localizer["Stock In Warehouse"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if(UserManager.Check("IV003")){
+                                         <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.InventoryByUom" asp-controller="DevReport" asp-action="InventoryByUom">
+                                            <span>@Localizer["Inventory By Uom"]</span>
+                                        </a>
+                                    </li>
+                                    }
+                                    @if (UserManager.Check("IR005"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.InventoryAudit" asp-controller="DevReport" asp-action="InventoryAuditView">
+                                                <span>@Localizer["Inventory Audit"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                     @if (UserManager.Check("IR006"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.StockMoving" asp-controller="DevReport" asp-action="StockMovingView">
+                                                <span>@Localizer["Inventory movement"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("IR007"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.StockExpired" asp-controller="DevReport" asp-action="StockExpiredView">
+                                                <span>@Localizer["Stock Expired"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("SR002"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.TransferStock" asp-controller="DevReport" asp-action="TransferStockView">
+                                                <span>@Localizer["Transfer Stock"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("SR003"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.GoodsReceiptStock" asp-controller="DevReport" asp-action="GoodsReceiptStockView">
+                                                <span>@Localizer["Goods Receipt Stock"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (UserManager.Check("SR004"))
+                                    {
+                                        <li class="sidemenu-item">
+                                            <a class="item-label @ViewBag.GoodsIssueStock" asp-controller="DevReport" asp-action="GoodsIssueStockView">
+                                                <span>@Localizer["Goods Issuse Stock"]</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                            <li class="sidemenu-item">
+                                <div class="item-title">
+                                    @*<i class="fas fa-chart-bar"></i>*@
+                                    <i>
+                                        <img src="~/Images/icon/chart-report.png" />
+                                    </i>
+                                    <span>@Localizer["Charts"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+                                    <li class="sidemenu-item">
+                                        <div class="item-title">
+                                            <span class="sub-item">@Localizer["POS"]</span>
+                                        </div>
+                                        <ul class="sidemenu-group">
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.SummarySaleCharts" asp-controller="Charts" asp-action="SummarySaleCharts">
+                                                    <span>@Localizer["Sale Summary"]</span>
+                                                </a>
+                                            </li>
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.TopSaleQuantityCharts" asp-controller="Charts" asp-action="TopSaleQuantityCharts">
+                                                    <span>@Localizer["TopSale Quantity"]</span>
+                                                </a>
+                                            </li>
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.PaymentMeansCharts" asp-controller="Charts" asp-action="PaymentMeansCharts">
+                                                    <span>@Localizer["Payment Means"]</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li><!--Chart Sale-->
+                                    <li class="sidemenu-item">
+                                        <div class="item-title @ViewBag.PurchaseCharts">
+                                            <span>@Localizer["Purchase"]</span>
+                                        </div>
+                                        <ul class="sidemenu-group">
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.APSummaryCharts" asp-controller="Charts" asp-action="PurchaseAPCharts">
+                                                    <span>@Localizer["A/P Invoice"]</span>
+                                                </a>
+                                            </li>
+                                            <li class="sidemenu-item">
+                                                <a class="item-label @ViewBag.OutgoingPaymentCharts" asp-controller="Charts" asp-action="OutgoingPaymentCharts">
+                                                    <span>@Localizer["Outgoing Payment"]</span>
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </li><!--Chart Purchase-->
+                                </ul>
+                            </li><!--Report Charts-->
+                             <li class="sidemenu-item">
+                                <div class="item-title">
+                                    <span>@Localizer["Integrations"]</span>
+                                </div>
+                                <ul class="sidemenu-group">
+                                   <li class="sidemenu-item">
+                                        <a class="item-label @ViewBag.AeonReportSales" asp-controller="Aeon" asp-action="ReportSales">
+                                            <span>@Localizer["Aeon Sales"]</span>
+                                        </a>
+                                    </li>
+                                    <li class="sidemenu-item">
+                                       <a class="item-label @ViewBag.ChipMongReportSales" asp-controller="ChipMong" asp-action="ReportSales">
+                                            <span>@Localizer["Chip Mong Sales"]</span>
+                                        </a>
+                                       
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li><!--Chart of Accounts-->
+                </ul><!--group root-->
+                <div class="sidemenu-footer">
+                    <div class="sidebar-datetime"></div>
+                    <div class="sidebar-logo">
+                        <img src="~/AdminLayout/images/setting.gif" />
+                    </div>
+                </div>
+            </div>
+            <div class="widget-content">
+                <div id="load-screen" class="widget-loadscreen">
+                    <img src="~/AdminLayout/images/loading.gif" />
+                </div>
+                <div id="load-screen-square"style="display:none; position: absolute; left:50%;top:50%; z-index:100">
+                    <img src="~/AdminLayout/images/tenor.gif"  style=" width:30%; "/>
+                </div>
+                <div class="content-toolbar">
+                    <ul class="widget-stackcrumb"></ul>
+                </div>
+                <div class="content-section widget-scrollbar">
+                    <div class="container-fluid" style="padding-top:0px;">
+                        <partial name="_CookieConsentPartial" />
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/AdminLayout/js/setup.js"></script>
+</body>
+</html>
+
+

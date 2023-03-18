@@ -1,0 +1,274 @@
+﻿
+<link href="~/Admin/FinancialReports/trial-balance-report.css" rel="stylesheet">
+@model IEnumerable<KEDI.Core.Premise.Models.Services.ReportSale.dev.CloseshiftdetailView>
+@{
+    ViewData["Title"] = "Preview Close Shift Detail Report";
+}
+
+
+
+
+<div class="data" hidden>@Json.Serialize(Model)</div>
+
+
+<div class="row m-0 bg-white" id="content">
+    <div id="tree-view" class="col-md-12 m-0 col-sm-12 widget-scrollbar overflow " style="height: 65vh">
+        <div class="wrap-table">
+            <table id="Detailcloseshift"></table>
+            <div class="options" id="option">
+                <div class="option">
+                    <div id="autoExpand"></div>
+                </div>
+            </div>
+
+            <div class="row" id="loading-view" hidden style="overflow: hidden; width: 90%;">
+                <div class="col-md-5"></div>
+                <div class="col-md-3">
+                    <img src="~/Images/ajaxloader/loading.gif" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        const data = JSON.parse($(".data").text());
+        viewTable(data);
+        var collapsed = false;
+        function viewTable(data) {
+            const dataGrid = $("#Detailcloseshift").dxDataGrid({
+                dataSource: data,
+                allowColumnResizing: true, columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: { columnRenderingMode: "virtual" },
+                paging: {
+                    pageSize: 10
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [10, 25, 50, 100]
+                },
+                remoteOperations: false,
+                searchPanel: {
+                    visible: true,
+                    highlightCaseSensitive: true
+                },
+                groupPanel: { visible: true },
+                grouping: {
+                    autoExpandAll: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                allowColumnReordering: true,
+                rowAlternationEnabled: true,
+                showBorders: true,
+                export: {
+                    enabled: true
+                },
+                columns: [
+                    {
+                        dataField: "EmpName",
+                        caption: "Emp Name",
+                        groupIndex: 0
+                    },
+                    {
+                        dataField: "GroupName",
+                        caption: "Group Name",
+                        groupIndex: 1
+                    },
+                    {
+                        dataField: "Barcode",
+                        caption: "Barcode",
+                    },
+                    {
+                        dataField: "Code",
+                        caption: "Code",
+                    },
+                    {
+                        dataField: "ItemName",
+                        caption: "ItemName",
+                    },
+                    {
+                        dataField: "Qty",
+                        caption: "Qty",
+                    },
+                    {
+                        dataField: "SalePrice",
+                        caption: "Price",
+                    },
+                    {
+                        dataField: "DiscountItem",
+                        caption: "Discount Item",
+                    },
+                    {
+                        dataField: "Total",
+                        caption: "Total",
+                    },
+
+
+                ],
+                summary: {
+                    groupItems: [
+                        {
+                            column: "Group1",
+                            summaryType: "count",
+                            displayFormat: "{0} items",
+                        },
+                        {
+                            showInColumn: "Code",
+                            column: "Trans",
+                            summaryType: "max",
+                            displayFormat: "Trans: {0}",
+                        },
+                    ],
+                    totalItems: [
+                        {
+                            showInColumn: "Total",
+                            column: "CountReceipt",
+                            summaryType: "max",
+                            displayFormat: "Total Item : {0}",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SoldAmount",
+                            summaryType: "max",
+                            displayFormat: "SoldAmount : {0}",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "DiscountItem",
+                            summaryType: "max",
+                            displayFormat: "Discount Item : {0}",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "DiscountTotal",
+                            summaryType: "max",
+                            displayFormat: "DiscountTotal : {0}",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "TaxValue",
+                            summaryType: "max",
+                            displayFormat: "TaxValue : {0}",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "GrandTotalSys",
+                            summaryType: "max",
+                            displayFormat: "GrandTotalSys : {0}",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "GrandTotal",
+                            summaryType: "max",
+                            displayFormat: "GrandTotal : {0}",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "ItemName",
+                            column: "DateIn",
+                            summaryType: "max",
+                            displayFormat: "Open Shift Date: {0}",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "ItemName",
+                            column: "DateOut",
+                            summaryType: "max",
+                            displayFormat: "Close Shift Date: {0}",
+                            alignment: "left"
+                        },
+
+                    ]
+
+                },
+
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                        topLeftCell: { row: 4, column: 1 }
+                    }).then(function (dataGridRange) {
+                        // header
+                        var headerRow = worksheet.getRow(2);
+                        headerRow.height = 30;
+                        worksheet.mergeCells(2, 1, 2, 8);
+                        headerRow.getCell(1).value = '';
+                        headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
+                        headerRow.getCell(1).alignment = { horizontal: 'center' };
+
+                    }).then(function () {
+                        // https://github.com/exceljs/exceljs#writing-xlsx
+                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'General.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "fas fa-file-pdf",
+                                onClick: function () {
+                                    previewDetail();
+                                }
+                            }
+                        }
+                    );
+                },
+                onContentReady: function (e) {
+                    if (!collapsed) {
+                        collapsed = true;
+                        e.component.expandRow(["EnviroCare"]);
+                    }
+                }
+
+
+
+            }).dxDataGrid("instance");
+            $("#autoExpand").dxCheckBox({
+                value: true,
+                text: "Expand All Groups",
+                onValueChanged: function (data) {
+                    dataGrid.option("grouping.autoExpandAll", data.value);
+                }
+            });
+        }
+
+        function previewDetail() {
+            const key = data[0].Trans;
+            if (key != undefined) {
+                let data = key.split('/');
+                let tran_f = data[0];
+                let tran_t = data[1];
+                let user_id = data[2];
+                window.open("/DevPrint/PrintCloseShiftDetail?TranF=" + tran_f + "&TranT=" + tran_t + "&UserID=" + user_id + "&Type=" + "Admin" + "", "_blank");
+            }
+        }
+    });
+</script>
+

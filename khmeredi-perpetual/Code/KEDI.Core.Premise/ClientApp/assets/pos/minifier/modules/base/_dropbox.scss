@@ -1,0 +1,225 @@
+.dropbox {
+    position: relative;
+    z-index: 3;
+}
+
+.dropbox .dropbox-btn {
+    position: relative;
+    display: block;
+    width: 35px;
+    cursor: pointer;
+    text-align: center;
+    -webkit-user-select: none;
+    /* Chrome/Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE10+ */
+    user-select: none;
+}
+
+.dropbox.crumb .dropbox-btn::after {
+    position: absolute;
+    z-index: 0;
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    visibility: collapse;
+    transition: all .15s;
+}
+
+.dropbox.crumb .dropbox-btn.show::after {
+    visibility: visible;
+    z-index: 1;
+}
+
+.dropbox.down.crumb .dropbox-btn::after {
+    bottom: -7px;
+    right: 20%;
+    border-bottom: 9px solid #AAA;
+}
+
+.dropbox.up.crumb .dropbox-btn::after {
+    top: -10px;
+    border-top: 9px solid #AAA;
+    // visibility: visible;
+    // z-index: 1;
+}
+
+.dropbox .dropbox-btn.full {
+    width: 100%;
+}
+
+.dropbox .dropbox-btn img.img-circle {
+    border-radius: 50%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.dropbox .wrap-dropbox-content {
+    display: block;
+    position: absolute;
+    width: auto;
+    border-radius: 3px;
+    padding: 0;
+    /*-webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);*/
+    -webkit-box-shadow: 0px 0px 2.5px 1.5px rgba(0, 25, 100, 0.5);
+    -moz-box-shadow: 0px 0px 2.5px 1.5px rgba(0, 25, 100, 0.5);
+    box-shadow: 0px 0px 2.5px 1.5px rgba(0, 25, 100, 0.5);
+    background: #AAA;
+    visibility: collapse;
+    z-index: 1;
+    -webkit-transition: all ease .25s;
+    -o-transition: all ease .25s;
+    transition: all ease .25s;
+}
+
+.dropbox .wrap-dropbox-content .dropbox-navigator {
+    position: relative;
+    height: 30px;
+    line-height: 30px;
+}
+
+.dropbox.down .wrap-dropbox-content {
+    right: 0;
+    top: 120%;
+    -webkit-transform: translateY(-10px);
+    -ms-transform: translateY(-10px);
+    transform: translateY(-10px);
+}
+
+.dropbox.up .wrap-dropbox-content {
+    left: 0;
+    bottom: 117%;
+    -webkit-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    transform: translateY(10px);
+}
+
+.dropbox .wrap-dropbox-content.show {
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+    transform-origin: top;
+    visibility: visible;
+    -webkit-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+}
+
+.dropbox .wrap-dropbox-content .dropbox-navigator .i-close {
+    position: absolute;
+    right: 7px;
+    top: 7px;
+    color: #EEE;
+    cursor: pointer;
+}
+
+.dropbox .wrap-dropbox-content>* {
+    display: block;
+}
+
+.dropbox .wrap-dropbox-content .dropbox-content {
+    padding: 5px;
+    min-width: 150px;
+    min-height: 150px;
+}
+
+.dropbox .wrap-dropbox-content .dropbox-content .option {
+    display: block;
+    line-height: 30px;
+    color: #444;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 10px;
+    text-align: left;
+    border-top: 0.5px solid #AAA;
+}
+
+/****************************************/
+/* Dropbox for profile                  */
+/****************************************/
+.dropbox.down.crumb.profile .dropbox-btn.show::after {
+    border-bottom: 9px solid #707070;
+}
+
+.dropbox.profile .wrap-dropbox-content {
+    right: -10%;
+    background: #707070;
+}
+
+.dropbox.profile .wrap-dropbox-content .dropbox-content .option {
+    border-top: 0.5px solid #CCC;
+    background: #707070;
+    color: #EEE;
+}
+
+/**********************************************/
+/* Dropbox for general list                  */
+/**********************************************/
+
+.dropbox.list .dropbox-btn .icon {
+    font-size: 2em;
+    line-height: normal;
+}
+
+.dropbox.list .dropbox-btn .badge {
+    position: absolute;
+    top: -1px;
+    right: -2.5px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 50%;
+    background-color: #f5050F;
+    color: white;
+    font-size: .8em;
+}
+
+.dropbox.list .wrap-dropbox-content .dropbox-content .wrap-option.scroll-y {
+    max-height: 245px;
+    min-height: 100px;
+    overflow-y: auto;
+}
+
+.dropbox.list .wrap-dropbox-content .add-option {
+    width: 100%;
+    margin: .25rem 0;
+    padding: 0rem 1rem;
+    box-sizing: border-box;
+    outline: none;
+    font-size: 1.5em;
+    display: inline-block;
+    background: #6996C9;
+    border: none;
+    color: #eee;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    height: 36px;
+    line-height: 36px;
+}
+
+.dropbox.list .wrap-dropbox-content.show .dropbox-content .option {
+    -webkit-transition: all ease 0.25s;
+    -o-transition: all ease 0.25s;
+    transition: all ease 0.25s;
+}
+
+.dropbox.list .wrap-dropbox-content .dropbox-content .option:hover {
+    background-color: #EEE;
+}
+
+.dropbox.list .wrap-dropbox-content .dropbox-content .option.active {
+    background-color: rgba(81, 94, 123, 0.5);
+    color: #F3F6F9;
+    -webkit-transform: scaleX(1.07);
+    -ms-transform: sscaleX(1.07);
+    transform: scaleX(1.07);
+}

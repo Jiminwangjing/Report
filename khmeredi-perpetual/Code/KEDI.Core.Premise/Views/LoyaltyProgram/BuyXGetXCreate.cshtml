@@ -1,0 +1,177 @@
+﻿@model KEDI.Core.Premise.Models.Services.LoyaltyProgram.BuyXGetX.BuyXGetXModel;
+<style>
+    .label {
+        font-size: 15px;
+        font-family: Arial;
+    }
+    .input-box {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+    }
+    .selectbox {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+    }
+    .check-box {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        width: 60px;
+        font-family: Arial;
+    }
+    .checkbox label {
+        font-size: 15px;
+        font-family: Arial;
+        float: right;
+        margin-top: 10px;
+    }
+    .wrap-table {
+        margin-top: 10px;
+    }
+    input {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 50px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+        background-color: #ffffff;
+    }
+
+   /* .flexbox > *:not(:first-child) {
+        margin-left: .25rem;
+        display: block;
+    }*/
+</style>
+<div class="card card-body">
+    <div class="row">
+        <div id="buyxgetx" hidden>@Json.Serialize(Model)</div>
+        <div class="col-md-3">
+            <label class="label">@Localizer["Name"]</label>
+            <input asp-for="BuyXGetX.Name" id="promocode-input"
+                class="input-box" type="text" placeholder="@Localizer["Name"]"
+                />
+        </div>
+
+        <div class="col-md-3">
+            <label class="label">@Localizer["Code"]</label>
+            <input asp-for="BuyXGetX.Code" id="promoname-input"
+                class="input-box" type="text" placeholder="@Localizer["Code"]"
+                />
+        </div>
+        <div class="col-md-3">
+            <div class="check-box">
+                <label class="label">@Localizer["Active"]</label>
+                <input asp-for="BuyXGetX.Active" type="checkbox" id="active" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="label">@Localizer["Date From"]</label>
+            <input type="datetime-local" id="datef"
+                class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label class="label">@Localizer["Date To"]</label>
+            <input type="datetime-local" id="datet"
+                class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label class="label">@Localizer["Price List"]</label>
+            <select class="selectbox pricelist" id="Pricelist"
+                asp-items="@ViewBag.PriceLists">
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-11"></div>
+        <div class="col-md-1">
+            <button class="btn btn-xs btn-kernel" id="choose-items">@Localizer["Choose"]</button>
+        </div>
+
+    </div>
+    <div class="flexbox widget-scrollbar p-3">
+        <table id="list-BuyXGetXDetail">
+            <thead>
+                <tr>
+                    <th>@Localizer["No."]</th>
+                    <th>@Localizer["Procode"]</th>
+                    <th>@Localizer["Item Code"]</th>
+                    <th>@Localizer["Item Name 1"]</th>
+                    <th>@Localizer["Qty"]</th>
+                    <th>@Localizer["Uom"]</th>
+                    <th> => </th>
+                    <th>@Localizer["Item Code"]</th>
+                    <th>@Localizer["Item Name 1"]</th>
+                    <th>@Localizer["Qty"]</th>
+                    <th>@Localizer["Uom"]</th>
+                    <th>@Localizer["Action"]</th>
+                </tr>
+            </thead>
+        </table>
+
+        <div id="choose_Item" style="display:none; height: 400px;">
+            <div class="group-search-boxes" style="display:flex;">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="search-item"
+                            autocomplete="off" type="text"
+                            placeholder="@Localizer["Search ..."]">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display:
+                        none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+            <table id="list-items" class="table-responsive-sm mt-2">
+                <thead>
+                    <tr>
+                        <th>@Localizer["No."]</th>
+                        <th>@Localizer["Code"]</th>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["Uom"]</th>
+                        <th>@Localizer["Choose"]</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div id="error-summary"></div>
+    <div class="row" id="pager" style="margin-top:10px;">
+        <div class="col-sm-2 text-left">
+            <button id="add-item" class="btn btn-kernel btn-xs ">@Localizer["Add"]</button>
+            <a asp-action="BuyXGetX" class="btn btn-xs btn-kernel">@Localizer["Cancel"]</a>
+        </div>
+    </div>
+</div>
+<script src="~/Modules/LoyaltyProgram/BuyXGetX/BuyXGetXCreate.js"></script>

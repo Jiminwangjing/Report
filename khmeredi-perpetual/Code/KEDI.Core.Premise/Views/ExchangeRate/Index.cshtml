@@ -1,0 +1,129 @@
+﻿@model IEnumerable<CKBS.Models.Services.Banking.ExchangeRate>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .rate_hover:hover {
+        background-color: white;
+    }
+
+    .fa {
+        margin-right: 4px;
+    }
+
+    .stylebutton {
+        margin-left: 12px;
+    }
+
+    b {
+        margin-left: 10px;
+        color: white;
+    }
+</style>
+<div class="card card-body">
+    <div class="wrap-table list">
+        <table id="table_id">
+            <tr>
+                <th>@Localizer["SystemCurreny"]</th>
+                <th style="text-align:center;">=></th>
+                <th>@Localizer["Exchage"]</th>
+                <th>@Localizer["Rate In"]</th>
+                <th>@Localizer["Display Rate"]</th>
+                <th hidden>@Localizer["Convert Rate"]</th>
+                <th hidden>@Localizer["Rate Out"]</th>
+            </tr>
+            @foreach (var item in ViewData["Currency"] as IEnumerable<ExchangeRate>)
+            {
+                <tr>
+                    <td hidden>@item.ID</td>
+                    <td style="text-align:center!important;">1 @ViewData["BaseCurrencyName"]</td>
+                    <td>=></td>
+                    <td>@item.Currency.Description ( @item.Currency.Symbol )</td>
+                    <td contenteditable="true" class="rate_hover">@item.SetRate</td>
+                    <td contenteditable="true" class="rate_hover">@item.DisplayRate</td>
+                    <td hidden contenteditable="true" class="rate_hover">@item.Rate</td>
+                    <td hidden contenteditable="true" class="rate_hover">@item.RateOut</td>
+                    <td hidden>@item.CurrencyID</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <div class="row pull-left">
+        <div class="col-md-12">
+            <button class="btn btn-kernel btn-xs" id="save" data-toggle="modal" data-target="#ClickSave">@Localizer["Save"]</button>
+        </div>
+    </div>
+</div>
+@*Pup up information*@
+@*<div class="modal fade" id="ClickSave" style="margin-top:50px;">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:blue;">
+                    <i class="far fa-edit"><b>@Localizer["success"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <h3>@Localizer["description"]</h3>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btn-sm" data-dismiss="modal"><i class="far fa-calendar-check"></i> @Localizer["OK"]</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*Script*@
+<script>
+    //Declare varialble
+
+    var arr_data = [];
+    var list_data =
+    {
+        ExchangeRates: arr_data
+    }
+
+    //JQuery
+    $('#save').on('click', function () {
+        var table = document.getElementById("table_id");
+
+        if (table.rows.length > 1) {
+            $('#save').attr('disabled', false);
+            for (var i = 1; i < table.rows.length; i++) {
+
+                var data = {
+                    ID: 0,
+                    SetRate: 0,
+                    Rate: 0,
+                    DisplayRate: 0,
+                    RateOut: 0,
+                    CurrencyID: 0
+                }
+                data.ID = parseFloat(table.rows[i].cells[0].innerHTML);
+                data.SetRate = parseFloat(table.rows[i].cells[4].innerHTML);
+                data.Rate = 1 / data.SetRate; //parseFloat(table.rows[i].cells[5].innerHTML);
+                data.RateOut = parseFloat(table.rows[i].cells[6].innerHTML);
+                data.CurrencyID = parseFloat(table.rows[i].cells[8].innerHTML);
+                data.DisplayRate = parseFloat(table.rows[i].cells[5].innerHTML);
+                arr_data.push(data);
+            }
+            $.ajax({
+                url: "/ExchangeRate/Edit",
+                type: "POST",
+                dataType: "JSON",
+                data: { data: list_data },
+                success: function (response) {
+                    arr_data = [];
+                    window.location.reload();
+
+                }
+            });
+        }
+        else {
+
+            $('#save').attr('disabled', true);
+        }
+
+    });
+</script>

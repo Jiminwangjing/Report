@@ -1,0 +1,127 @@
+.ck-widget-container .hover-resize:hover {
+    -webkit-animation: 1s resize ease infinite alternate-reverse;
+    animation: 1s resize ease infinite alternate-reverse;
+}
+
+.ck-widget-container .hover-spin:hover {
+    -webkit-animation: 1s spin ease infinite forwards;
+    animation: 1s spin ease infinite forwards;
+}
+
+.ck-widget-container .hover-spin.spin-once:hover {
+    -webkit-animation: 1s spin ease forwards;
+    animation: 1s spin ease forwards;
+}
+
+.ck-widget-container .hover-spin-back:hover {
+    -webkit-animation: 1s spin ease infinite backwards;
+    animation: 1s spin ease infinite backwards;
+}
+
+.ck-widget-container .hover-spin-back.spin-once:hover {
+    -webkit-animation: 1s spin ease backwards;
+    animation: 1s spin ease backwards;
+}
+
+.ck-widget-container .hover-spin-alt:hover {
+    -webkit-animation: 1s spin ease infinite alternate;
+    animation: 1s spin ease infinite alternate;
+}
+
+.ck-widget-container .hover-spin-alt.spin-once:hover {
+    -webkit-animation: 1s spin ease alternate;
+    animation: 1s spin ease alternate;
+}
+
+.ck-widget-container .hover-spin-reverse:hover {
+    -webkit-animation: 1s spin ease infinite reverse;
+    animation: 1s spin ease infinite reverse;
+}
+
+.ck-widget-container .hover-spin-reverse.spin-once:hover {
+    -webkit-animation: 1s spin ease reverse;
+    animation: 1s spin ease reverse;
+}
+
+.ck-widget-container .hover-spin-reverse-alt:hover {
+    -webkit-animation: 1s spin ease infinite alternate-reverse;
+    animation: 1s spin ease infinite alternate-reverse;
+}
+
+.ck-widget-container .hover-spin-reverse-alt.spin-once:hover {
+    -webkit-animation: 1s spin ease alternate-reverse;
+    animation: 1s spin ease alternate-reverse;
+}
+
+/* Animation keyframes */
+@-webkit-keyframes resize {
+    from {
+        -webkit-transform: scale(.95);
+        transform: scale(.9);
+    }
+
+    to {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+@keyframes resize {
+    from {
+        -webkit-transform: scale(.9);
+        transform: scale(.9);
+    }
+
+    to {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spin-half {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes spin-half {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+}

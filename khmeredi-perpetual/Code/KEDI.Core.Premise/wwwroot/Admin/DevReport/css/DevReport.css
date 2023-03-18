@@ -1,0 +1,177 @@
+﻿.dx-datagrid .dx-row>td[role=gridcell] {
+    padding-bottom: 0px;
+    padding-top: 2px;
+    font-weight: normal;
+    opacity: 1 !important;
+    color: black !important;
+}
+
+
+.options {
+    padding: 20px;
+}
+
+.caption {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.option {
+    margin-top: 10px;
+}
+
+#gridContainer .dx-datagrid-header-panel .dx-toolbar {
+    margin: 0;
+    padding-right: 20px;
+    background-color: transparent;
+}
+
+#gridContainer .dx-datagrid-header-panel .dx-toolbar-items-container {
+    height: 70px;
+}
+
+#gridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:not(:first-child) {
+    background-color: rgba(103, 171, 255, 0.6);
+}
+
+#gridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:last-child {
+    padding-right: 10px;
+}
+
+#gridContainer .dx-datagrid-header-panel .dx-selectbox {
+    margin: 17px 10px;
+}
+
+#gridContainer .dx-datagrid-header-panel .dx-button {
+    margin: 17px 0;
+}
+
+#gridContainer .informer {
+    height: 70px;
+    width: 130px;
+    text-align: center;
+    color: #fff;
+}
+
+#gridContainer .count {
+    padding-top: 15px;
+    line-height: 27px;
+    margin: 0;
+}
+
+.dx-row.dx-data-row.dx-column-lines:not(:first-child):nth-child(even) {
+    background-color: #f2f2f2 !important;
+}
+
+table.dx-datagrid-table tr.dx-row.dx-column-lines:nth-child(2n+1) {
+    background-color: rgb(255, 255, 255) !important;
+}
+
+
+/* 
+.input_datefrom,
+.input_dateto,
+.input_user,
+.input_branch,
+.input_warehouse {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid #DDDDDD;
+    width: 100%;
+    min-width: 100%;
+    height: 34px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    border-radius: 3px;
+} */
+
+.input_datefrom,
+.input_dateto,
+.input_user,
+.input_branch,
+.input_warehouse {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    /* padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px; */
+    border: 1px solid #DDDDDD;
+    width: 100%;
+    min-width: 100%;
+    /* height: 34px; */
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    border-radius: 3px;
+}
+
+.lable_branch,
+.lable_datefrom,
+.lable_dateto,
+.lable_user,
+.lable_warehouse {
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.btn-kernel,
+.btn-primary {
+    /* margin-top: 32px; */
+    margin-top: 27px;
+}
+
+table.dx-datagrid-table tr.dx-row.dx-column-lines.dx-header-row {
+    background-color: #f2f2f2;
+    color: black;
+    opacity: 1;
+    line-height: 20px;
+    transition: all .2s ease-out;
+}
+
+table.dx-datagrid-table tr.dx-row.dx-column-lines:nth-child(2n+1) {
+    background-color: #f2f2f2;
+}
+
+
+.dx-toolbar-before .dx-toolbar-item:not(:first-child) {
+    background-color: none;
+}
+
+dx-datagrid-summary-item,
+.dx-group-cell {
+    /* color: rgba(51,51,51,.7); */
+    font-weight: normal !important;
+    opacity: 1 !important;
+    color: black !important;
+}
+
+
+.dx-datagrid-rowsview .dx-row.dx-group-row td {
+    color: black;
+}
+
+.dx-datagrid-summary-item {
+    font-weight: normal !important;
+    opacity: 1 !important;
+    color: black !important;
+}
+
+row:not(.dx-row-focused) {
+    font-weight: normal;
+    /* color: #959595; */
+    background-color: #f7f7f7;
+}
+
+table tr:not(.active),
+table tr:hover:not(.active) {
+    background-color: #f2f2f2 !important;
+}
+
+td[aria-selected] {
+    font-weight: normal;
+}

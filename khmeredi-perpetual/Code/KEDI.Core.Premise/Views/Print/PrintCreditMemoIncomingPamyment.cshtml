@@ -1,0 +1,175 @@
+﻿@model IEnumerable<KEDI.Core.Premise.Models.Sale.Print.PrintSaleHistory>
+@{
+    ViewData["Title"] = "IncomingCustomer";
+    Layout = "_Layout_print";
+    var num = 0;
+    double sub_Total = 0;
+    double DisValue = 0;
+    double Vatvalue = 0;
+    double Applied_Amount = 0;
+    double Totalamount = 0;
+
+
+}
+<style>
+    body {
+        font-family: 'Khmer OS Battambang';
+        font-size: 14px;
+    }
+
+    .tbfontsize {
+        font-size: 16px;
+    }
+</style>
+<div class="row">
+    <div class="col-xs-12" style="margin-top:15px;">
+        <h2 style="width: 100%; text-align: center; color:orangered;">@Model.FirstOrDefault().Branch </h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-4">
+        <div style="margin-top: 20px; padding:10px;">
+            <h3>Information Customer</h3>
+        </div>
+        <table class="tbfontsize">
+            <tr>
+                <th>Name</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@Model.FirstOrDefault().CusName</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@Model.FirstOrDefault().Phone</td>
+            </tr>
+            <tr>
+                <th>BaseOn</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@Model.FirstOrDefault().BaseOn</td>
+            </tr>
+            <tr>
+                <th>Reff No</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@Model.FirstOrDefault().RefNo</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td style="padding: 0 5px 0 5px">:</td>
+                <td>@Model.FirstOrDefault().Address</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-4"></div>
+    <div class="col-xs-4">
+        <div style="margin-top:50px;" class="pull-right">
+            <table class="tbfontsize">
+                <tr>
+                    <th>Invoice No</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td>@Model.FirstOrDefault().Invoice</td>
+                </tr>
+                <tr>
+                    <th>Posting Date</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td>@Model.FirstOrDefault().PostingDate</td>
+                </tr>
+                <tr>
+                    <th>DueDate</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td>@Model.FirstOrDefault().DueDate</td>
+                </tr>
+                <tr>
+                    <th>Document Date</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td>@Model.FirstOrDefault().DocumentDate</td>
+                </tr>
+                <tr>
+                    <th>By User</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td>@Model.FirstOrDefault().UserName</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div style="text-align:center;">
+    <h3>SCMO INVOICE</h3>
+</div>
+<br />
+<div style="min-height:850px;border: 1px outset grey">
+    <table class="table">
+        <thead>
+            <tr style="background:#5F758B;color:white;">
+                <th width="50">No.</th>
+                <th width="100">ItemCode</th>
+                <th width="150">ItemName(KH)</th>
+                <th width="100">Qty</th>
+                <th width="100">UomName</th>
+                <th width="100">Price</th>
+                <th width="100">Discount</th>
+                <th width="50">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                num++;
+                sub_Total += item.Amount;
+                DisValue = item.DiscountValue;
+                Vatvalue  = item.VatValue;
+                Applied_Amount = item.Applied_Amount;
+                Totalamount = item.TotalAmount;
+                <tr>
+                    <td>@num</td>
+                    <td>@item.ItemCode</td>
+                    <td>@item.ItemNameKh</td>
+                    <td>@item.Qty</td> 
+                    <td>@item.UomName</td>
+                    <td>@item.Price</td>
+                    <td>@item.DiscountValue_Detail</td>
+                    <td>@item.Amount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div style="float:right; border:1px outset grey; border-top:0px !important; padding:10px 22px 10px 10px">
+    <table>
+        <tr>
+            <th>Sub Total</th>
+            <td style="padding: 0 40px 0 15px">:</td>
+            <td>@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n3}", sub_Total))</td>
+
+        <tr>
+            <th>Discount Total</th>
+            <td style="padding: 0 40px 0 15px">:</td>
+            <td>@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n3}", DisValue))</td>
+        </tr>
+        <tr>
+            <th>Vat</th>
+            <td style="padding: 0 40px 0 15px">:</td>
+            <td>@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n3}", Vatvalue))</td>
+        </tr>
+        <tr>
+            <th>Applied Amount</th>
+            <td style="padding: 0 40px 0 15px">:</td>
+            <td>@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n3}", Applied_Amount))</td>
+        </tr>
+        <tr>
+            <th>Total Amount</th>
+            <td style="padding: 0 40px 0 15px">:</td>
+            <td>@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n3}", Totalamount))</td>
+        </tr>
+    </table>
+</div>
+
+<footer style="margin-top: 100px;">
+    <div style="margin-top: 90px; padding:10px">
+        <h5>Print Date : @DateTime.Now.ToString("dd-MM-yyyy")</h5>
+    </div>
+</footer>
+
+
+
+
+

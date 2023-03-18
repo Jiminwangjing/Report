@@ -1,0 +1,210 @@
+﻿<style>
+   
+    #table, tr, th {
+        text-align: center !important;
+    }
+
+    #table, tr, td {
+        text-align: center !important;
+    }
+</style>
+
+<div class="card card-body">
+    <div class="d-flex justify-content-between widget-scrollbar">
+        <a asp-action="PromoCodeCreate" class="btn btn-xs btn-kernel"> @Localizer["Create"]</a>
+        <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-promo" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="wrap-table myt1 grid-box widget-scrollbar">
+        <table id="list-Promo">
+            <thead>
+                <tr>
+                    <th>@Localizer["No."]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Date From"]</th>
+                    <th>@Localizer["Time From"]</th>
+                    <th>@Localizer["Date To"]</th>
+                    <th>@Localizer["Time To"]</th>
+                    <th>@Localizer["Promo Value"]</th>
+                    <th>@Localizer["PriceList"]</th>
+                    <th>@Localizer["Promo Count"]</th>
+                    <th>@Localizer["Use Count Code"]</th>
+                    <th>@Localizer["String Count"]</th>
+                    <th>@Localizer["Active"]</th>
+                    <th>@Localizer["Action"]</th>
+                </tr>
+            </thead>
+                   
+        </table>      
+    </div>
+    <div class="form-group form-inline">
+    <input type="checkbox" class="form-check-input" id="ch-show-inactive" />
+        @Localizer["Used"]
+    </div>
+   
+</div>
+<div id="container-detail"class="wrap-table" style="height: auto; display: none">
+    <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-detail" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+     <div class="wrap-table myt1 grid-box">
+        <table id="list-detail">
+            <thead>
+                <tr>
+                    <th>@Localizer["No."]</th>
+                    <th>@Localizer["Promo Code"]</th>
+                     <th>@Localizer["Use Count Code"]</th>
+                    <th>@Localizer["Max Use"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        PromoCode(false);
+        $('#ch-show-inactive').change(function () {
+            var isUsed = $(this).prop("checked");   
+            PromoCode(isUsed);
+        });
+
+        function PromoCode(isUsed) {
+             var $listView = ViewTable({
+                keyField: "ID",
+                selector: "#list-Promo",
+                visibleFields: ["Code", "Name", "DateF","TimeF","DateT","TimeT","PromoValue","PromoCount","UseCountCode","stringCount","Active","Used","PriceList"],
+                indexed: true,
+                columns: [
+                    {
+                       name: "Active",
+                       template: "<input type='checkbox' class='input-box-kernel' disabled='disabled'>",
+                       on: {
+                            "click": function (e) {
+                                const active = $(this).prop("checked") ? true : false;
+                            }
+                        }
+                    },
+                    {
+                       name: "Used",
+                       template: "<input type='checkbox' class='input-box-kernel' disabled='disabled'>",
+                        on: {
+                            "click": function (e) {
+                                const active = $(this).prop("checked") ? true : false;
+                            }
+                        }
+                    },
+                ],
+                actions: [
+               
+                         {
+                        template: "<i class='fas fa-edit fn-orange fa-lg csr-pointer'></i>",
+                        on: {
+                            "click": function (e) {
+                                location.href = "/LoyaltyProgram/PromoCodeEdit?ID=" + e.key;
+                            }
+                        }
+                    },
+                    {
+                        template: '<i class="fas fa-info-circle fa-lg csr-pointer"></i>',
+                        on: {
+                            "click": function (e) {
+                               setCode(e.data);
+                            }
+                        }
+                    },
+                ],
+             });
+            searchpromo($listView);
+            $("#search-promo").on("keyup", function () {
+                searchpromo($listView, this.value);
+            });    
+           
+            function searchpromo($listView, keyword = "") {
+                $.get("/LoyaltyProgram/GetPromoCode", {
+                    keyword: keyword,
+                    isUsed : isUsed
+                },
+                function (PromoCode) {
+                    $listView.clearRows();
+                    $listView.bindRows(PromoCode);
+                });
+            }
+        }
+        function setCode(e) {      
+            let dialog = new DialogBox({
+                button: {
+                    ok: {
+                        text: "OK",
+                    }
+                },
+                caption: "Detail Code",
+                content: {
+                    selector: "#container-detail"
+                },
+                type: "ok"
+            });
+            dialog.invoke(function () {
+                binddetail(dialog, e);
+            });
+            dialog.confirm(function () {
+                dialog.shutdown();
+            });
+            dialog.reject(function () {
+                dialog.shutdown();
+            });
+        }
+
+        function binddetail(dialog, e){
+            var id = e.ID;
+            const $listViewDetail = ViewTable({
+                keyField: "PromoCodeID",
+                selector: dialog.content.find("#list-detail"),
+                visibleFields: ["PromoCode","UseCount","MaxUse"],
+                indexed: true,
+                columns: [
+                    {
+                        name: "PromoCode",
+                        template: '<input type="text" class="copy-to-clipboard" id="copy">',
+                        on: {
+                            "dbclick": function (e) {
+                                    var copy = e.data.PromoCode;
+                                    copy.select();
+                                }
+                            }
+                    }
+                ],
+            });
+    
+            searchdetail($listViewDetail);
+            $("#search-detail").on("keyup", function () {
+                searchdetail($listViewDetail, this.value);
+            }); 
+            function searchdetail($listView, keyword = "") {
+            $.get("/LoyaltyProgram/GetPromoCodeDetail", {
+                keyword: keyword,
+                ID : id,
+            }, function (PromoCodeDetail) {
+                $listView.clearRows();
+                $listView.bindRows(PromoCodeDetail);
+            });
+        }
+        }    
+        
+    }); 
+</script>

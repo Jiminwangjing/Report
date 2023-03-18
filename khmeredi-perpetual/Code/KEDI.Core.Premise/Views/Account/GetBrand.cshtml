@@ -1,0 +1,177 @@
+
+<div class="card card-body">
+          <legend class="title">@Localizer["MultiBrand"]</legend>
+          <div class="group-search-boxes">
+    <div id="text-search" class="wrap-search-box mb-2">
+        <div class="wrap-input show">
+            <i id="i-search" class="i-search fas fa-search"></i>
+            <input class="ignore" id="search-branches" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+            <i id="i-close" class="i-close far fa-times-circle"></i>
+        </div>
+        <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+    </div>
+</div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <table id="list-brand">
+                            <thead>
+                                <tr>
+                                    <th>@Localizer["No."]</th>
+                                    <th>@Localizer["Brand Name"]</th>
+                                    <th>@Localizer["Active Branch"]</th>
+                                    <th>@Localizer["Defualt"] </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                 <input hidden id="item-id" />
+                  <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group pull-left">
+                        <button class="btn btn-kernel btn-xs" id="submit" title="Save">@Localizer["Save"]</button>
+                        <a href="@Url.Action("Index", "Account")" class="btn btn-kernel btn-xs">@Localizer["Back"]</a>               
+                    </div>
+                    <div class="display-message"></div>
+                </div>
+            </div>
+            </div>  
+<input type="text" hidden value='@ViewData["UserID"]' id= "userId">
+<script>
+    $(document).ready(function () {
+        //var $j = jquery.noConflict();
+
+        let _data = [];
+        let _mutibranch=[];
+       var list = ViewTable({
+            keyField: "LineID",
+            selector: "#list-brand",
+            dataSynced: true,
+            indexed: true,
+            paging: {
+                pageSize: 10,
+                enabled: false
+            },
+            visibleFields: ["Name", "Active", "Defualt"],
+            columns:[
+                 {
+                    name: "Active",
+                     template: "<input type='checkbox'>",
+                    on: {
+                        "change": function (e) {
+                            const active = $(this).prop("checked") ? true : false;
+                            
+                              updatedata(_data, "LineID", e.data.LineID, "Active", active);
+                               
+                              if(active == true){
+                                list.disableColumns(e.key, ["Defualt"], false);
+                                  console.log("0",active);
+                              }
+                              else{
+                                updatedata(_data, "LineID", e.data.LineID, "Defualt", active);
+                                 list.updateColumn(e.key, "Defualt",active);
+                                 list.disableColumns(e.key,["Defualt"], true);
+                                
+                               
+                                
+                                      console.log("1",active);
+                              }
+                              
+                        }
+                    }
+                },
+                  {
+                    name: "Defualt",
+                     template: "<input type='radio' name='Defualt'>",
+                    on: {
+                        "change": function (e) {      
+                             let active = $(this).prop("checked") ? true : false;                   
+                                 updatedata(_data, "LineID", e.data.LineID, "Defualt", active);
+                                 list.updateColumn(e.key, "Defualt",active)
+                                 _data.forEach(i=>{
+                                    if(i.LineID != e.key)
+                                    {
+                                        i.Defualt=false;
+                                    }
+                                 });
+                        } 
+                    }
+                },
+            ],
+        });
+        $.get("/Account/MultiBrand",{userId: parseInt($("#userId").val())},function(item){
+            if(item.length > 0){
+                    list.clearRows();
+                    item.forEach(i=>{
+                        _data.push(i);
+                    })                         
+                    list.bindRows(_data);
+                     $("#search-branches").on("keyup", function () {
+                        let __value = this.value.toLowerCase().replace(/\s/g, "");
+                        let items = $.grep(item, function (item) {
+                            return item.Name.toLowerCase().replace(/\s/g, "").includes(__value)
+                        });
+                        list.bindRows(items);
+                    });
+                    _data.forEach(s=>{
+                        if(s.Defualt == false&& s.Active==false){
+                            list.disableColumns(s.LineID, ["Defualt"]);
+                        }
+                    })
+                }
+        });
+       
+          
+   
+      function isValidArray(values) {
+        return Array.isArray(values) && values.length > 0;
+    }
+     function updatedata(_data, keyField, keyValue, prop, propValue) {
+        if (isValidArray(_data)) {
+            _data.forEach(i => {
+                if (i[keyField] === keyValue)
+                    i[prop] = propValue
+            })
+        }
+    }
+        $("#submit").click(function () {
+            $("#item-id").val();
+                _mutibranch=[];
+         _data.forEach(s=>{
+            if(s.Active==true||s.ID>0){
+                s.UserID = parseInt($("#userId").val());
+                  _mutibranch.push(s); 
+                 @* _data.push(s);  *@
+         
+            }
+           
+         })
+         console.log("_mutibranch",_mutibranch);
+         console.log("_data",_data);
+
+        $.ajax({
+            url: "/Account/SubmitMultiBrand",
+            type: "POST",
+            dataType: "JSON",
+            data: { data: _mutibranch},
+            success: function (respones) {
+                if (respones.IsApproved) {
+                    ViewMessage({
+                        summary: {
+                            selector: ".display-message"
+                        }
+                    }, respones).refresh(1000);
+                } else {
+                    ViewMessage({
+                        summary: {
+                            selector: ".display-message"
+                        }
+                    }, respones);
+                }
+            }
+        })
+         
+
+    });
+     })
+</script>

@@ -1,0 +1,125 @@
+﻿<style>
+    .__mt-1 {
+        margin-top: 0.25rem !important;
+    }
+
+    .serail-detail-container {
+        height: 29vh;
+        overflow: auto;
+        width: 100%;
+    }
+    table thead tr th {
+        font-size: 12px;
+    }
+</style>
+@*// Model Serial //*@
+<div id="container-list-batch" class="wrap-table widget-scrollbar" style="height: 430px; display: none; overflow: hidden">
+    <div style="overflow: auto; height: 30%;" class="widget-scrollbar">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="batch-lists">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["No"]</th>
+                            <th>@Localizer["Item Code"]</th>
+                            <th>@Localizer["Item Name"]</th>
+                            <th>@Localizer["Whse Code"]</th>
+                            <th>@Localizer["Quantity"]</th>
+                            <th>@Localizer["Total Needed"]</th>
+                            <th>@Localizer["Total Created"]</th>
+                            <th>@Localizer["Total Batches"]</th>
+                            <th>@Localizer["Derection"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div style="overflow: auto; height: 47%;" class="widget-scrollbar">
+        <div class="row">
+            <div class="col-md-7">
+                <p class="font-size">@Localizer["Available Batches"]</p>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="font-size">@Localizer["Find"]</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input class="form-control font-size" id="searchBatchNo" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="font-size">@Localizer["Display Available SNs"]</label>
+                    </div>
+                    <div class="col-md-7">
+                        <select class="form-control font-size" id="filterBP" disabled>
+                            <option value="1" selected>@Localizer["All"]</option>
+                            <option value="2">@Localizer["Related to Current BP"]</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <p class="text-center font-size">@Localizer["Selected Batches"]</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7 widget-scrollbar" style="overflow: auto; height: 100px;">
+                <table class="batch-unselect-lists">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["Batch"]</th>
+                            <th>@Localizer["Available Qty"]</th>
+                            <th>@Localizer["Selected Qty"]</th>
+                            <th>@Localizer["Unit Cost"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-md-5 widget-scrollbar" style="overflow: auto; height: 100px;">
+                <table class="batch-select-lists">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["Batch"]</th>
+                            <th>@Localizer["Selected Qty"]</th>
+                            <th>@Localizer["Unit Cost"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="font-size">@Localizer["Available Quantity"]</label>
+                </div>
+                <div class="col-md-7">
+                    <input class="font-size form-control" readonly id="avbQtyBatch" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="font-size">@Localizer["Total Selected"]</label>
+                </div>
+                <div class="col-md-7">
+                    <input class="font-size form-control" readonly id="ttSltbatch" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="serailErrorMessage"></div>
+        </div>
+    </div>
+</div>
+<input id="checkingBatchString" value="unchecked" hidden />
+<script src="~/Admin/Components/SerialsBatches/POS/batchNo.js"></script>

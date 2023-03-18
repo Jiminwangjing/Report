@@ -1,0 +1,340 @@
+﻿<script src="~/js/warehouse.js"></script>
+<script src="~/js/table.js" defer></script>
+<style>
+
+    .input_datefrom, .input_dateto, .input_user, .input_branch,.input_fromwarehouse {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 100%;
+        min-width: 100%;
+        height: 28px;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size: 12px;
+        border-radius: 3px;
+    }
+
+    .lable_branch, .lable_datefrom, .lable_dateto, .lable_user, .lable_fromwarehouse {
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .btn-success {
+        margin-top: 22px;
+        font-size: 12px;
+        font-family: Arial;
+        height: 28px;
+    }
+
+    .wrap-table {
+        margin-top: 20px;
+    }
+
+    .grandtotal {
+        margin-left: 15px;
+    }
+
+    .subtotaltd {
+        border-bottom: 1px solid gray;
+        font-weight: 700;
+    }
+
+    .hidden {
+        visibility: collapse !important;
+    }
+
+    .styletr {
+        font-weight: 800;
+    }
+
+    .list_detail {
+        float: right;
+        min-width: 1000px;
+    }
+
+    #list_transfer {
+        margin-top: 10px;
+    }
+</style>
+<link href="~/css/Modal.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-md-2">
+        <label class="lable_datefrom">@Localizer["Date From"]</label>
+        <input type="date" class="input_datefrom" id="datefrom" />
+        <label class="lable_fromwarehouse">@Localizer["From Warehouse"] </label>
+        <select type="text" class="input_fromwarehouse" id="fromwarehousue">
+            <option value="0"></option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="lable_dateto">@Localizer["Date To"]</label>
+        <input type="date" class="input_dateto" id="dateto" />
+        <label class="lable_fromwarehouse">@Localizer["To Warehouse"] </label>
+        <select type="text" class="input_fromwarehouse" id="towarehouse">
+            <option value="0"></option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="lable_branch">@Localizer["From Branch"]</label>
+        <select type="text" class="input_branch" id="frombranch">
+            <option value="0"></option>
+        </select>
+        <label class="lable_user">@Localizer["User"] </label>
+        <select type="text" class="input_user" id="byuser">
+            <option value="0"></option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="lable_branch">@Localizer["To Branch"]</label>
+        <select type="text" class="input_branch" id="tobranch">
+            <option value="0"></option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-xs btn-success" id="filter">@Localizer["Filter"]</button>
+    </div>
+  
+</div>
+<div class="wrap-table list">
+    <table id="list_transfer">
+        <tr style="background:#5F758B;color:white;">
+            <th width="80">@Localizer["Detail"]</th>
+            <th style="min-width:100px;">@Localizer["Number"]</th>
+            <th style="min-width:115px;">@Localizer["Posting Date"]</th>
+            <th style="min-width:115px;">@Localizer["Document Date"]</th>
+            <th class="text-right" style="min-width:100px;">@Localizer["Time"]</th>
+        </tr>
+    </table>
+</div>
+<i class="fa fa-arrows-circle-down"></i>
+<script src="~/pos/scripts/krms/numeral.min.js"></script>
+<script>
+    var db = new Warehouse();
+    $(document).ready(function () {
+         $('#list_transfer').append('<tr><td class="text-center" colspan="7">@Localizer["No Data"]</td></tr>');
+        //Get branch From
+        $.ajax({
+            url: "/Report/GetBranch",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#frombranch").append(data);
+            }
+        });
+        //Get branch to 
+        $.ajax({
+            url: "/Report/GetBranchTo",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#tobranch").append(data);
+            }
+        });
+    });
+    // fillter from branch
+    $("#frombranch").on('change', function () {
+        var branchid = $(this).val();
+        $.ajax({
+            url: "/Report/GetEmployee",
+            type: "Get",
+            dataType: "Json",
+            data: { BranchID: branchid },
+            success: function (respones) {
+                var data = '';
+                $("#byuser option:not(:first-child)").remove();
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Employee.Name + '</option>';
+                });
+                $("#byuser").append(data);
+            }
+        });
+        $.ajax({
+            url: "/Report/GetWarehouse",
+            type: "Get",
+            dataType: "Json",
+            data: { BranchID: branchid },
+            success: function (respones) {
+                var data = '';
+                $("#fromwarehousue option:not(:first-child)").remove();
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">'+item.Name+'</option>';
+                });
+                $("#fromwarehousue").append(data);
+            }
+        });
+    });
+    //filter to branch 
+    $("#tobranch").on('click', function () {
+        var branchid = $(this).val();
+        $.ajax({
+            url: "/Report/GetWarehouseTo",
+            type: "Get",
+            dataType: "Json",
+            data: { BranchID: branchid },
+            success: function (respones) {
+                var data = '';
+                $("#towarehouse option:not(:first-child)").remove();
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#towarehouse").append(data);
+            }
+        });
+
+    });
+    //find
+    $("#filter").on('click', function () {
+        var datefrom = $("#datefrom").val();
+        var dateto = $("#dateto").val();
+        var from_branch = $("#frombranch").val();
+        var to_branch = $("#tobranch").val();
+        var from_warhouse = $("#fromwarehousue").val();
+        var to_warehouse = $("#towarehouse").val();
+        var user = $("#byuser").val();
+        let listSummary = $.ajax({
+            url: "/Report/GetSummaryTransferStock",
+            type: "Get",
+            dataType: "Json",
+            async: false,
+            data: { DateFrom: datefrom, DateTo: dateto, FromBranchID: from_branch, ToBranchID: to_branch, FromWarehouse:from_warhouse,ToWarehouse:to_warehouse,UserID: user},
+            success: function (respones) {
+            }
+        }).responseJSON;
+        db.table("tb_summary").clear();
+        if (listSummary.length !== 0) {
+
+            $("#list_transfer tr:not(:first-child)").remove();
+             db.insert("tb_summary", listSummary, "TranID");
+        }
+         else {
+            $("#list_transfer tr:not(:first-child)").remove();
+            $('#list_transfer').append('<tr><td class="text-center" colspan="7">@Localizer["No Data"]</td></tr>');
+        }
+       
+        if (db.from("tb_summary") !== 0) {
+            db.from("tb_summary").where(function (item) {
+                GetDataBindTable(item);
+            });
+        }
+        $(".tabelshow").addClass("fa-plus-circle");
+    });
+    function GetDataBindTable(item) {
+        var data = '';
+        data +=
+        '<tr style="border-bottom:3px solid #e0e0d1;">' +
+            '<td>' + '<i class="fa  tabelshow" style="color:#008000;" data-id='+item.TranID+'></i>' +'<input hidden type="checkbox" class="check_box" checked/>'+ '</td>' +
+            '<td hidden>' + item.TranID + '</td>' +
+            '<td >' + item.Number + '</td>' +
+            '<td>' + item.PostingDate + '</td>' +
+            '<td>' + item.DocumentDate + '</td>' +
+            '<td class="text-right">' + item.Time + '</td>' +
+         '</tr>' +
+         '<tr class="nestedtable hidden">' +
+                '<td colspan="5">' +
+                    '<table id='+item.TranID+' class="table-hover list_detail">'+
+
+                    '</table>' +
+           '</td>' +
+        '<tr>' ;
+        $("#list_transfer").append(data);
+    }
+    $("#list_transfer").on('click', '.tabelshow', function () {
+        var tranid = $(this).data("id");
+        if ($(this).parent().find(".check_box").is(':checked')) {
+            $(this).parent().find(".check_box").prop('checked',false);
+            $(this).parent().parent().next().toggleClass("hidden");
+            $(this).removeClass("fa-plus-circle");
+            $(this).addClass("fa-minus-circle");
+            $(this).css("color", "red");
+            $.ajax({
+                    url: "/Report/GetDetailTarnsfer",
+                    type: "Get",
+                    dataType: "Json",
+                    data: { TranID: parseInt(tranid) },
+                    success: function (e) {
+                        let data = '<tr class="styletr">'+
+                                '<td>@Localizer["Code"]</td>' +
+                                '<td>@Localizer["Khmer Name"]</td>' +
+                                '<td>@Localizer["English Name"]</td>' +
+                                '<td>@Localizer["Qty"]</td>' +
+                                '<td>@Localizer["Cost"]</td>' +
+                                '<td>@Localizer["Uom"]</td>' +
+                               '<td>@Localizer["Barcode"]</td>' +
+                               '<td class="text-right">@Localizer["Expire Date"]</td>' +
+                            '</tr>';
+                        $.each(e, function (i, item) {
+                            data +=
+                                '<tr>' +
+                               '<td hidden>' + item.ID + '</td>' +
+                                '<td>' + item.Code + '</td>' +
+                                '<td>' + item.KhmerName + '</td>' +
+                                '<td>' + item.EnglishName + '</td>' +
+                                '<td>' + item.Qty + '</td>' +
+                            '<td>' + item.Currency + " " + item.Cost + '</td>' +
+                                '<td>' + item.Uom + '</td>' +
+                                '<td>' + item.Barcode + '</td>' +
+                                '<td class="text-right">' + item.ExpireDate + '</td>' +
+                                '</tr>';
+                        });
+                        $('#' + tranid).html(data);
+                    }
+            }).responseJSON;
+        }
+        else {
+
+            $(this).parent().find(".check_box").prop('checked', true);
+            $(this).parent().parent().next().toggleClass("hidden");
+            $(this).removeClass("fa-minus-circle");
+            $(this).addClass("fa-plus-circle");
+            $(this).css("color", "#008000");
+        }
+    });
+    
+    function fnExcelReport() {
+        //$("td:hidden").remove();
+        var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+        var textRange; var j = 0;
+        tab = document.getElementById('list_transfer'); // id of table
+        for (j = 0; j < tab.rows.length; j++) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+        }
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+        {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+        }
+        else
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+        return (sa);
+    }
+</script>   

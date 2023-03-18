@@ -1,0 +1,448 @@
+
+//@version 1.0
+.dialog-box-background {
+    position: absolute;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    -webkit-transition: all .25s;
+         -o-transition: all .25s;
+            transition: all .25s;
+    -webkit-box-direction: normal;
+       -webkit-box-orient: vertical;   
+       -ms-flex-direction: column;
+           flex-direction: column;
+}
+
+.dialog-box-background *, 
+.dialog-box-background *::before, 
+.dialog-box-background *::after {
+    -webkit-box-sizing: border-box;
+         box-sizing: border-box;
+}
+
+.dialog-box-background.blur {
+    top: 0;
+    background: rgba(0, 0, 0, .3);
+    z-index: 1;
+    -webkit-transition: all .25s;
+         -o-transition: all .25s;
+            transition: all .25s;
+}
+
+//dialog-box positions
+.dialog-box-background.center {
+    -webkit-box-align: center;
+       -ms-flex-align: center;
+          align-items: center;
+     -webkit-box-pack: center;
+        -ms-flex-pack: center;
+           justify-content: center;
+}
+
+.dialog-box-background.center-left {
+    -webkit-box-align: start;
+       -ms-flex-align: start;
+          align-items: flex-start;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+           justify-content: center;
+}
+
+.dialog-box-background.center-right {
+    -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+           justify-content: center;
+}
+
+.dialog-box-background.top-left {
+    -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+     -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
+.dialog-box-background.top-center {
+    -webkit-box-align: center;
+       -ms-flex-align: center;
+          align-items: center;
+     -webkit-box-pack: start;
+        -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
+.dialog-box-background.top-right {
+    -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+     -webkit-box-pack: start;
+        -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
+.dialog-box-background.bottom-left {
+    -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+     -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+.dialog-box-background.bottom-center {
+    -webkit-box-align: center;
+       -ms-flex-align: center;
+          align-items: center;
+     -webkit-box-pack: end;
+        -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+.dialog-box-background.bottom-right {
+    -webkit-box-align: end;
+       -ms-flex-align: end;
+          align-items: flex-end;
+    -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+.dialog-box {
+    position: relative;
+    background: #FFF;
+    z-index: -1;
+    margin: .25rem;
+    -webkit-box-shadow: 0px 0px 5px .25px rgba(0,0,0,0.25);
+    -moz-box-shadow: 0px 0px 5px .25px rgba(0,0,0,0.25);
+    box-shadow: 0px 0px 5px .25px rgba(0,0,0,0.25);
+    border-radius: 5px;
+    background: #EEE;
+    opacity: 0;
+    visibility: collapse;
+    transition: all .2s;
+    width: auto;
+    height: auto;
+}
+
+.dialog-box.shutdown {
+    visibility: collapse;
+    opacity: 0;
+    -webkit-transition: all .2s;
+         -o-transition: all .2s;
+            transition: all .2s;
+}
+
+.dialog-box.startup {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transform: translate(0) !important;
+        -ms-transform: translate(0) !important;
+            transform: translate(0) !important;
+    -webkit-transition: all .2s;
+         -o-transition: all .2s;
+            transition: all .2s;
+}
+
+.dialog-box .header {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    text-align: center;
+    background: #CCC;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 1px solid #AAA;
+    width: 100%;
+    font-family: monospace;
+    font-size: 1.5em;
+    -webkit-box-pack: justify;
+       -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.dialog-box .header .wrap-icon {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    width: 40px;
+    height: 40px;
+    -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+    -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.dialog-box .header .caption {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    width: calc(100% - 2 * 40px);
+    font-size: .9em;
+    font-weight: bold;
+}
+
+.dialog-box .content {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    min-height: 150px;
+    padding: 7px;
+    background: #BCC;
+    text-align: center;
+    white-space: normal;
+    word-break: break-word;
+    border-bottom: 1px solid #AAA;
+    width: 350px;
+     -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+    -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.dialog-box .content.outer-content {
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    max-height: calc(100vh - 200px);
+    width: auto;
+    min-width: 350px;
+    overflow-y: auto;
+}
+
+.dialog-box .content > * {
+    width: 100%;
+    text-align: center; 
+    display: block !important;
+}
+
+.dialog-box .content.outer-content > * {
+    text-align: left;
+    min-height: 150px;
+    width: calc(100vw - 300px);
+    height: 100%;
+}
+
+.dialog-box .content.outer-content > *.size-auto {
+    width: auto;
+    height: auto;
+}
+
+.dialog-box .footer {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background: #ACADAE;
+}
+
+.dialog-box .icon {
+    position: relative;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, .5);
+    text-align: center;
+    color: #FFF;
+    font-family: sans-serif;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 0.8em;
+    z-index: inherit;
+    background: #2D905F;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.dialog-box .icon.icon-circle {
+    border-radius: 50%;
+}
+
+.dialog-box .icon.icon-square {
+    border-radius: 3px;
+}
+
+.dialog-box .icon > * {
+    font-size: .75em;
+}
+
+.dialog-box .icon.icon-close {
+    background: #EEE;
+    width: 23px;
+    height: 23px;
+    cursor: pointer;
+    font-family: serif;
+    font-size: 1.1em;
+}
+
+.dialog-box .icon.icon-close::after {
+    position: absolute;
+    content: "×";
+    color: #333;
+    height: auto;
+}
+
+.dialog-box .icon.info {
+    background: #2D905F;
+}
+.dialog-box .icon.info::after {
+    content: "i";
+}
+
+.dialog-box .icon.warning {
+    background: #D77007;
+}
+.dialog-box .icon.warning::after {
+    content: "!";
+}
+
+.dialog-box .icon.danger {
+    background: #E5050A;
+}
+.dialog-box .icon.danger::after {
+    content: "×"; 
+}
+
+.dialog-box .wrap-button {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;  
+    min-height: 40px !important;
+    padding: 0 5px;
+    width: 100%;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    -webkit-box-pack: center;
+       -ms-flex-pack: center;
+          justify-content: center;
+    -webkit-box-align: center;
+       -ms-flex-align: center;
+          align-items: center;
+}
+
+.dialog-box .wrap-button.free-space {
+    min-height: 40px;
+}
+
+.dialog-box .wrap-button > *:not(:last-child) {
+    margin-right: 5px;
+}
+
+.dialog-box .wrap-button.left {
+    -webkit-box-pack: start;
+     -ms-flex-pack: start;
+         justify-content: flex-start;
+}
+
+.dialog-box .wrap-button.center {
+    -webkit-box-pack: center;
+     -ms-flex-pack: center;
+         justify-content: center;
+}
+
+.dialog-box .wrap-button.right {
+    -webkit-box-pack: end;
+     -ms-flex-pack: end;
+         justify-content: flex-end;
+}
+
+.dialog-box .wrap-button .button {
+    padding: 0rem 10px;
+    border-radius: 3px;
+    outline: none;
+    font-family: monospace;
+    font-size: 1em;
+    display: inline-block;
+    background: #5588C0;
+    border: .5px solid;
+    color: #EEE;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    min-width: 70px;
+    height: 30px !important;
+    line-height: 30px !important;
+}
+
+.dialog-box .wrap-button .button[disabled] {
+    pointer-events: none;
+    background-color: #AAA !important;
+}
+
+/*.dialog-box .wrap-button .button:hover,
+.dialog-box .wrap-button .button.bg-info:hover {
+    background: darken($info, 5%) !important;
+}
+
+.dialog-box .wrap-button .button.bg-success:hover {
+    background: darken($success, 5%) !important;
+}
+
+.dialog-box .wrap-button .button.bg-danger:hover {
+    background: darken($danger, 5%) !important;
+}*/
+
+@media(max-width: 768px){
+    .dialog-box .content.outer-content {
+        max-height: calc(100vh - 170px) !important;
+        width: 100%;
+        min-width: 100%;
+        overflow: auto;
+    }
+
+    .dialog-box .content.outer-content > * {
+        width: 100%;
+        min-height: 100%;
+        min-width: 100%;
+    }
+}
+
+@media(max-width: 415px){
+
+    .dialog-box {
+        width: calc(100vw - 1rem);
+        min-height: 125px;
+    }
+
+    .dialog-box .content {
+        width: 100%;
+    }  
+}

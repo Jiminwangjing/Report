@@ -1,0 +1,1205 @@
+﻿@model CKBS.Models.Services.POS.Template.POSModel;
+@{
+    Layout = "_POSLayout";
+    var panelViewMode = Model.Setting.Setting.PanelViewMode;
+    string fullwidth = "";
+    string fullDesktop = "";
+    string viewModeIcon = "/pos/icons/single-screen.png";
+    switch (panelViewMode)
+    {
+        case PanelViewMode.Single:
+            fullwidth = "width-full";
+            fullDesktop = "full-desktop";
+            viewModeIcon = "/pos/icons/dual-screens.png";
+            break;
+    }
+}
+
+<link href="~/AutoMobile/css/yearpicker.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+<link href="~/pos/output/core/core.css" rel="stylesheet" />
+
+<script src="~/AutoMobile/js/yearpicker.js" defer></script>
+<script src="~/AutoMobile/js/POS_VehicleModel.js" defer></script>
+
+<style>
+    .yearpicker-items.selected {
+        color: #007bff;
+    }
+
+    .yearpicker-items:hover {
+        color: #569fee;
+    }
+
+    table tr td .vmcselect {
+        background: transparent;
+        max-width: 150px;
+        width: auto;
+    }
+
+    /*table tr td input .vmcinput{
+        background: transparent;
+        text-align: center;
+        max-width: 100px;
+    }*/
+
+    table tr td .vmcinput {
+        max-width: 120px;
+        width: auto;
+        text-align: center;
+        background: transparent;
+    }
+
+    div.sticky {
+        position: sticky;
+        top: 0;
+        padding: 50px;
+        z-index: 1;
+    }
+</style>
+
+<div hidden id="master-bus">@Json.Serialize(@ViewBag.Master_bus)</div>
+
+<div dialog-container></div>
+<nav class="nav-header">
+    <div class="item">
+        <partial name="MenuSetting" />
+    </div>
+    <div class="item">
+        @if (!Convert.ToBoolean(User.FindFirst("UserPos").Value))
+        {
+            <a href="/home/dashboard" target="_blank" title="Administrator"><i class="fas fa-user-shield fa-fw fa-lg fn-white"></i></a>
+        }
+    </div>
+    <div class="item grow"></div>
+    <div class="item flexbox">
+        <img id="panel-view-mode" class="csr-pointer icon-panel-view-mode"
+             data-view-mode="@((int)Model.Setting.Setting.PanelViewMode)" src="@viewModeIcon" />
+    </div>
+    <div class="item">
+        <div class="dropbox down crumb profile">
+            <div class="dropbox-btn"><img class="img-circle" src="@Url.Content(@User.FindFirst("Photo").Value)" alt="..." /></div>
+            <div class="wrap-dropbox-content">
+                <div class="dropbox-navigator">
+                    <div class="i-close far fa-window-close"></div>
+                </div>
+                <div class="dropbox-content">
+                    <a href="#" class="option"><i class="fas fa-user fa-fw"></i>@User.FindFirst("FullName").Value</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Account" asp-action="Logout" class="option"><i class="fas fa-sign-out-alt fa-fw"></i>@Localizer["Log out"]</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="panel">
+    <div id="panel-payment" class="full-panel bg-gray">
+        <nav class="nav-toolbar bg-dark-pink">
+            <div class="item csr-pointer">
+                <div id="goto-panel-group-items" class="tag-border"><i class="fas fa-caret-left fa-lg"></i>&nbsp;@Localizer["Back"]</div>
+            </div>
+            <div class="item">
+                <div class="title Table"></div>
+            </div>
+            <div class="grow"></div>
+        </nav>
+        <div class="wrap-block col-two measure p1 widget-scrollbar">
+            <div class="left-block">
+                <fieldset class="shadow" style="height: 100%;">
+                    <legend class="title">@Localizer["Quick Number"]</legend>
+                    <div class="gridview number-pad">
+                        <div class="wrap-grid">
+                            <span class="grid" data-value="7">7</span>
+                            <span class="grid" data-value="8">8</span>
+                            <span class="grid" data-value="9">9</span>
+                            <span class="grid" data-value="4">4</span>
+                            <span class="grid" data-value="5">5</span>
+                            <span class="grid" data-value="6">6</span>
+                            <span class="grid" data-value="1">1</span>
+                            <span class="grid" data-value="2">2</span>
+                            <span class="grid" data-value="3">3</span>
+                            <span class="grid" data-value="."><img src="~/pos/icons/dot.png" /></span>
+                            <span class="grid" data-value="0">0</span>
+                            <span class="grid" data-value="-1"><img src="~/pos/icons/backspace.png" /></span>
+                        </div>
+                    </div>
+                    <div class="gridview quick-number number-plus">
+                        <div class="wrap-grid">
+                            <span class="grid bg-green" data-value="10">+10</span>
+                            <span class="grid bg-sky" data-value="50">+50</span>
+                            <span class="grid bg-yellow" data-value="100">+100</span>
+                            <span class="grid bg-orange" data-value="500">+500</span>
+                            <span class="grid bg-red" data-value="1000">+1000</span>
+                        </div>
+                    </div>
+                    <div class="gridview quick-number number-multiply">
+                        <div class="wrap-grid">
+                            <span class="grid bg-green" data-value="2">x2</span>
+                            <span class="grid bg-sky" data-value="5">x5</span>
+                            <span class="grid bg-yellow" data-value="10">x10</span>
+                            <span class="grid bg-orange" data-value="50">x50</span>
+                            <span class="grid bg-red" data-value="100">x100</span>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+            <div class="right-block">
+                <fieldset class="shadow px1">
+                    <legend class="title">@Localizer["Payment detail"]</legend>
+                    <div class="block">
+                        <div class="title">@Localizer["Payment Means"]</div>
+                        <select asp-items="Model.Setting.PaymentMeans" id="payment-mean-id"></select>
+                    </div>
+                    <div class="stack-inline">
+                        <div class="widget-stackcrumb">
+                            <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Total"]</i></div>
+                        </div>
+                        <input id="pay-total" readonly>
+                        <div class="base-currency symbol bg-grey"></div>
+                    </div>
+                    <div class="stack-inline">
+                        <div class="widget-stackcrumb">
+                            <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Total"]</i></div>
+                        </div>
+                        <input id="pay-total-alt" readonly>
+                        <div class="alt-currency symbol bg-grey"></div>
+                    </div>
+
+                    <div class="stack-inline">
+                        <div class="widget-stackcrumb">
+                            <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Cash"]</i></div>
+                        </div>
+                        <input autocomplete="off" class="number" id="pay-cash" value="0">
+                        <div class="base-currency symbol bg-grey"></div>
+                    </div>
+
+                    <div class="stack-inline">
+                        <select class="symbol bg-grey" id="other-currency-list"></select>
+                        <input autocomplete="off" class="number" id="pay-other-currency" value="0">
+                        <div class="other-curr-symbol symbol bg-grey"></div>
+                    </div>
+
+                    <div class="stack-inline">
+                        <div class="widget-stackcrumb">
+                            <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Received"]</i></div>
+                        </div>
+                        <input readonly id="pay-received" value="0">
+                        <div class="base-currency symbol bg-grey"></div>
+                    </div>
+
+                    <div class="stack-inline">
+                        <div class="widget-stackcrumb">
+                            <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Changed"]</i></div>
+                        </div>
+                        <input readonly id="pay-change" class="error-change" value="0">
+                        <div class="base-currency symbol bg-grey"></div>
+                    </div>
+                    <div class="stack-inline">
+                        <div class="widget-stackcrumb">
+                            <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Changed"]</i></div>
+                        </div>
+                        <input readonly id="pay-change-alt" class="error-change" value="0">
+                        <div class="alt-currency symbol bg-grey"></div>
+                    </div>
+                    <div id="display-change-rate"></div>
+                    <div class="btn submit" id="pay"><i class="fas fa-shopping-cart"></i> @Localizer["Pay"]</div>
+
+                </fieldset>
+
+            </div>
+        </div>
+
+    </div><!--End full-panel-->
+
+    <div id="panel-group-tables" class="full-panel">
+        <nav class="nav-toolbar top">
+            <div class="item breadcrumb desktop table-group">
+                <div class="step" id="all-table">@Localizer["All"]</div>
+
+            </div>
+            <span class="item grow"></span>
+
+            <div class="item group-search-boxes">
+
+                <div id="text-search" class="search-box">
+                    <div class="input-box">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" name="item-name" type="text" value="" placeholder="@Localizer["Text search ..."]" id="table_search">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+
+        </nav>
+        <nav class="nav-toolbar responsive">
+            <div class="item breadcrumb table-group">
+                <div class="step" id="all-table">@Localizer["All"]</div>
+            </div>
+        </nav>
+
+        <div id="table-item-gridview" class="gridview item-gridview full-desktop">
+            <!--gridview-->
+            <div class="wrap-grid">
+
+            </div>
+            <svg class="svg-footer-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#5B6F9D" fill-opacity="1" d="M0,320L1440,0L1440,320L0,320Z"></path></svg>
+        </div><!--end-gridview-->
+
+    </div><!--End panel-group-tables-->
+
+    <div id="panel-group-items" class="full-panel show flexbox">
+        <div class="left-panel flexbox column flex-1">
+            <nav class="nav-toolbar top">
+
+                <div class="item">@Localizer["Customer :"]</div>
+                <div><label id="count-item" style="color:whitesmoke"></label></div>
+                <span><i class="fa fa-user" style="color:whitesmoke"></i><span class="item customer-name csr-pointer change-customer" title="Choose customer">@Localizer[ViewBag.DefaultCusName]</span></span>
+            </nav>
+
+            <div id="wrap-list" class="wrap-table flex-1 widget-scrollbar">
+                <table id="item-listview">
+                    <tr>
+                        @*<th>№</th>*@
+                        <th>@Localizer["Code"]</th>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["Price"]</th>
+                        <th class="text-center">@Localizer["Qty"]</th>
+                        <th>@Localizer["Uom"]</th>
+                        <th>@Localizer["Dis."]</th>
+                        <th>@Localizer["Amount"]</th>
+                        <th>@Localizer["Action"]</th>
+                    </tr>
+
+                </table>
+            </div>
+
+            <div class="wrap-table summary">
+                <table>
+                    <tr>
+                        <th>@Localizer["Subtotal"]</th>
+                        <th>@Localizer["Discount"]</th>
+                        <th>@Localizer["VAT"]</th>
+                        <th>@Localizer["Total"]</th>
+                    </tr>
+                    <tr>
+                        <td id="summary-sub-total">0.000</td>
+                        <td id="summary-discount">- %</td>
+                        <td id="summary-vat">0.000</td>
+                        <td id="summary-total">0.000</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="group-btns">
+                <div class="wrap-btn dropbox up crumb list flex-1">
+                    <div class="dropbox-btn btn bg-dark-purple"><i class="fas fa-ellipsis-h fa-fw"></i></div>
+                    <label class="label">@Localizer["Functions"]</label>
+
+                    <div class="wrap-dropbox-content">
+                        <div class="dropbox-content">
+                            @*VMC Edition*@
+                            <a href="#" id="fx-save-quotation" class="option"><i class="fas fa-save" style="padding-right:5px;"></i>@Localizer["Save & Preview Quote"]</a>
+                            <a href="#" id="fx-list-quotation" class="option"><i class="fas fa-list-ol" style="padding-right:5px;"></i>@Localizer["List of Quotations"]</a>
+                            <a href="#" id="fx-list-invoice" class="option"><i class="fas fa-list" style="padding-right:5px;"></i>@Localizer["List of Invoices"]</a>
+                            @*End of VMC Edition*@
+                            <a href="#" id="fx-clear-order" class="option"><i class="fas fa-broom fa-fw"></i> @Localizer["Clear Order"]</a>
+                            <a href="#" id="fx-discount-membercard" class="option"><i class="fa fa-users fa-fw"></i> @Localizer["Discount Member"]</a>
+                            <a href="#" id="fx-discount-item" class="option"><i class="fas fa-percent fa-fw"></i> @Localizer["Discount Item"]</a>
+                            @*<a href="#" id="fx-cancel-receipts" class="option"><i class="fas fa-trash-restore fa-fw"></i> @Localizer["Cancel Receipt"]</a>*@
+                            <a href="#" id="fx-return-receipts" class="option"><i class="fas fa-file-invoice-dollar fa-fw"></i> @Localizer["Return Receipt"]</a>
+                            <a href="/ItemMasterData/Create" id="fx-add-new-item" class="option"><i class="fas fa-plus-square fa-fw"></i> @Localizer["Add New Item"]</a>
+                        </div>
+                        <div class="dropbox-navigator">
+                            <div class="i-close far fa-window-close"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id='fx-discount-total' class="wrap-btn flex-1">
+                    <div class="btn bg-red"><i class="fas fa-percent fa-fw"></i></div>
+                    <label class="label">@Localizer["Discount"]</label>
+                </div>
+
+                <div class="wrap-btn flex-1" id="fx-edit-price">
+                    <div class="btn bg-orange"><i class="fas fa-clone fa-edit"></i></div>
+                    <label class="label" id="bill-pro">@Localizer["Edit Price"]</label>
+                </div>
+                <div class="wrap-btn dropbox up flex-1">
+                    <div id="goto-panel-payment" class="btn bg-dark-pink"><i class="far fa-money-bill-alt fa-fw"></i></div>
+                    <label class="label">@Localizer["Pay"]</label>
+                </div>
+            </div>
+        </div><!--end left-panel-->
+
+        <div class="right-panel @fullwidth">
+            <nav class="nav-toolbar top">
+                <div class="item nav-toolbar desktop">
+                    <div class="widget-stackcrumb clear-initial-trail group-item-steps">
+                        <div class="all-groups active">@Localizer["All"]</div>
+                    </div>
+                </div>
+                <span class="item grow"></span>
+                <div class="item group-search-boxes">
+                    <div id="open-barcode" class="search-box">
+                        <div class="input-box">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" placeholder="@Localizer["Read barcode ..."]" autocomplete="off" id="item-search-barcode" type="text">
+                            <i id="i-close" class="i-close far fa-times-circle close-barcode"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search"><i class="fas fa-barcode"></i></div>
+                    </div>
+                    <div id="text-search" class="search-box">
+                        <div class="input-box">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="item-search" type="text" autocomplete="off" placeholder="@Localizer["Search name, barcode ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+
+            </nav>
+            <nav class="nav-toolbar responsive">
+                <div class="item widget-stackcrumb desktop clear-initial-trail group-item-steps">
+                    <div class="all-groups active">@Localizer["All"]</div>
+                </div>
+            </nav>
+            <div class="group-item-views">
+                <div id="group-item-gridview" class="gridview item-gridview @fullDesktop" style="display:none;">
+                    <!--gridview-->
+                    <div class="wrap-grid widget-scrollbar copper-lite">
+                        @*Grid object here*@
+                        @*@foreach (var group1 in Model.ItemGroup1s)
+                {
+                    <div class="grid">
+                        <div data-id="@group1.ItemG1ID" data-group="1" data-group1="@group1.ItemG1ID" data-group2="0" data-group3="0" data-name="@group1.Name" hidden></div>
+                        <div class="grid-caption">@group1.Name </div>
+                        <div class="grid-image">
+                            <img src="~/Images/itemgroup/@group1.Images" />
+                        </div>
+                    </div>
+                }*@
+
+                    </div>
+
+                </div><!--end-gridview-->
+                <div id="group-item-listview" class="item-listview widget-scrollbar" style="display:none;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Code"]</th>
+                                <th>@Localizer["Khmer name"]</th>
+                                <th>@Localizer["Unit price"]</th>
+                                <th>@Localizer["UoM"]</th>
+                                <th>@Localizer["Choose"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                <div id="image-not-found" class="not-found hide">
+                    <img src="~/pos/images/no-products.png" />
+                </div>
+                <svg class="svg-header-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#7C555C" fill-opacity="1" d="M0,0L120,16C240,32,480,64,720,106.7C960,149,1200,203,
+                                1320,229.3L1440,256L1440,0L1320,0C1200,0,960,0,720,0C480,0,240,0,120,0L0,0Z">
+                    </path>
+                </svg>
+                <svg class="svg-footer-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#7C555C" fill-opacity="1"
+                          d="M0,32L120,64C240,96,480,160,720,208C960,256,1200,288,1320,304L1440,320L1440,320L1320,
+                                    320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z">
+                    </path>
+                </svg>
+            </div>
+            <nav class="nav-toolbar bottom">
+                <div class="item" id="pagination-list" style="z-index: 1;"></div>
+                <span class="grow"></span>
+                <div class="item">
+                    <div id="datetime" class="datetime">@DateTime.Now.ToString("M/d/yyyy h:m:ss tt")</div>
+                </div>
+            </nav>
+        </div><!--End right-panel-->
+    </div><!--End panel-group-items-->
+    <i id="panel-resizer" class="icon-panel-resizer fas fa-compress hidden"></i>
+</div>
+
+<div id='move-table' class='dbl-function' style='display:none;'>
+    <div class="item group-search-boxes">
+        <div id="text-search" class="search-box show">
+            <div class="input-box">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" name="search-move-table" type="text" value="" placeholder="@Localizer["Search by group ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div id='move-table-breadcrumb' class="item breadcrumb" style="margin: .5rem 0 .5rem;">
+        <div id="all-table-move" class="step">@Localizer["All"]</div>
+    </div>
+    <div class='block'>
+        <div class='title'>@Localizer["Choose Table"]</div>
+        <div id='move-table-list' class="move-table-list scroll-y" style='height: 260px;'>
+
+        </div>
+    </div>
+
+</div><!--End #move-table-->
+
+<div id='combine-receipt' class='dbl-function' style="display: none;">
+    <div class="group-search-boxes">
+        <div id="text-search" class="search-box show">
+            <div class="input-box">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" name="search-combine-receipt" type="text" value="" placeholder="@Localizer["Text search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" style="display:none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div class='block'>
+        <div class='title'>@Localizer["Choose Receipts"]</div>
+        <div id='combine-receipt-list' class="combine-receipt-list scroll-y" style='height: 260px;'>
+
+        </div>
+    </div>
+
+</div><!--End #combine-receipt-->
+<!-----------------------------Discount Member Card--------------------------->
+<div id="membercard-discount" style="display: none;">
+    <div class='wrap-block col-two'>
+        <div class='left-block m0'>
+            <div class="block">
+                <nav class='nav-toolbar'>
+                    @*<div class='item'>
+                            <div class='btn'
+                                 style="height: 30px; line-height: 30px;">
+                                <i class="far fa-plus-square"></i>
+                            </div>
+                        </div>*@
+                    <div class="item group-search-boxes">
+                        <div id="text-search" class="search-box show">
+                            <div class="input-box" style="max-width: 326px;">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input class="ignore" name="search-member" type="text" value="" placeholder="@Localizer["ID,Name search ..."]">
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+                </nav>
+                <div class='wrap-table list scroll-xy bg-gray'
+                     style="height: 350px; margin: .5rem 0 0 .25rem;">
+                    <table class="membercard-discount-listview">
+                        <tr>
+                            <th>@Localizer["ID"]</th>
+                            <th>@Localizer["Card Name"]</th>
+                            <th>@Localizer["Card Type"]</th>
+
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class='right-block  m0'>
+            <h4>@Localizer["Detail"]</h4>
+            <hr />
+            <table>
+                <tr>
+                    <td>@Localizer["ID"]</td>
+                    <td>:</td>
+                    <td class="member-id"></td>
+                </tr>
+                <tr>
+                    <td>@Localizer["Name"]</td>
+                    <td>:</td>
+                    <td class="member-name"></td>
+                </tr>
+                <tr>
+                    <td>@Localizer["Card Type"]</td>
+                    <td>:</td>
+                    <td class="member-card-type"></td>
+                </tr>
+                <tr>
+                    <td>@Localizer["Discount"]</td>
+                    <td>:</td>
+                    <td class="member-discount"></td>
+                </tr>
+                <tr>
+                    <td>@Localizer["Expire Date"]</td>
+                    <td>:</td>
+                    <td class="member-expire"></td>
+                </tr>
+                <tr>
+                    <td>@Localizer["Description"]</td>
+                    <td>:</td>
+                    <td class="member-descr"></td>
+                </tr>
+
+            </table>
+
+            <hr />
+        </div>
+
+    </div>
+</div>
+
+<!-----------------------------Discount Member Card--------------------------->
+<div id="item-add-on" style="display: none;">
+    <div class='wrap-block col-two'>
+        <div class='left-block m0'>
+            <div class="block">
+                <nav class='nav-toolbar'>
+                    <div class='item'>
+                        <div class='btn'
+                             style="height: 30px; line-height: 30px;">
+                            <i class="far fa-plus-square"></i>
+                        </div>
+                    </div>
+                    <div class="item group-search-boxes">
+                        <div id="text-search" class="search-box show">
+                            <div class="input-box" style="max-width: 326px;">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input class="ignore" name="search-member" type="text" value="" placeholder=@Localizer["Code,Name search ..."]>
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+                </nav>
+                <div class='wrap-table list scroll-xy bg-gray'
+                     style="height: 350px; margin: .5rem 0 0 .25rem;">
+                    <table class="item-add-on-listview">
+                        <tr>
+                            <th>@Localizer["Image"]</th>
+                            <th>@Localizer["Code"]</th>
+                            <th>@Localizer["Name"]</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class='right-block  m0'>
+            <h3 id="detail-item-add-on"></h3>
+
+            <h4>@Localizer["*Add on"]</h4>
+            <hr />
+            <div class='wrap-table list scroll-xy bg-gray'
+                 style="height:150px; margin: .5rem 0 0 .25rem;">
+                <table class="item-add-on-listview">
+                    <tr>
+                        <th>@Localizer["Code"]</th>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["Delete"]</th>
+                    </tr>
+                </table>
+            </div>
+            <h4>@Localizer["*Comment"]</h4>
+            <textarea></textarea>
+            <hr />
+        </div>
+
+    </div>
+</div>
+
+
+<div id="split-receipt" class='wrap-table list' style="display: none; height: 355px;">
+    <table id="split-receipt-listview">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            @*<th>Qty</th>*@
+            <th>@Localizer["Origin Qty"]</th>
+            <th>@Localizer["To-"]</th>
+            <th>@Localizer["Split-(Qty)"]</th>
+            <th></th>
+        </tr>
+
+    </table>
+</div>
+
+<div id="items-return" class='wrap-table list' style="display: none; height: 355px;">
+    <table id="items-return-listview">
+        <tr>
+            @*<th>№</th>*@
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["In Stock"]</th>
+            <th>@Localizer["Ordered Qty"]</th>
+            <th>@Localizer["Commited Qty"]</th>
+
+        </tr>
+
+    </table>
+</div>
+
+<div id="edit-item-price" class='wrap-table list' style="display: none; height: 355px;">
+    <table id="edit-item-price-listview">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Uom"]</th>
+            <th>@Localizer["Origin Price"]</th>
+            <th>@Localizer["To-"]</th>
+            <th>@Localizer["New Price"]</th>
+
+        </tr>
+
+    </table>
+</div>
+
+<!--Discount item-->
+<div id="discount-item" style="display: none;">
+    <div class="stack-block width-half">
+        <label>@Localizer["Discount Type"]</label>
+        <input class="discount-item-type" value="Percent ( % )" readonly />
+    </div>
+    <fieldset class="shadow wrap-table widget-scrollbar" style="height: 350px;">
+        <legend class="title">@Localizer["List of items"]</legend>
+        <div class="error-message fn-red"></div>
+        <table class="discount-item-listview">
+            <tr>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["UnitPrice"]</th>
+                <th>@Localizer["Qty"]</th>
+                <th>@Localizer["Uom"]</th>
+                <th>@Localizer["Discount Rate"]</th>
+                <th>@Localizer["Discount Value"]</th>
+                <th>@Localizer["Total"]</th>
+            </tr>
+        </table>
+    </fieldset>
+</div>
+
+@*--------------------List Return Invoice---------------------*@
+<div id="return-receipt-content" style="display: none;">
+    <div class='wrap-block col-three' style="width: 800px;">
+        <div class='left-block m0'>
+
+            <div class="stack-block width-full">
+                <label>@Localizer["From Date"] </label>
+                <input type="date" class="return-date-from" />
+            </div>
+            <div class="stack-block width-full">
+                <label>@Localizer["To Date"] </label>
+                <input type="date" class="return-date-to" />
+            </div>
+            <div class="group-search-boxes mt-2 mr-2">
+                <div id="text-search" class="search-box show" style="width: 250px;">
+                    <div class="input-box width-full">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input id="search-return-receipts" class="ignore" autocomplete="off" type="text" value="" placeholder=@Localizer["Search ..."]>
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+            <div class='wrap-table widget-scrollbar' style="height: 300px; margin-top: 10px;">
+                <table class="listview-return-receipts">
+                    <tr>
+                        <th style="width: 250px;">@Localizer["Receipt No."]</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class='right-block fuse m0'>
+            <fieldset class="shadow">
+                <legend class="title">@Localizer["List of items"]</legend>
+                <div class="error-message fn-red"></div>
+                <div class='wrap-table widget-scrollbar' style="height: 370px;">
+                    <table class="item-return-choosed-listview">
+                        <tr>
+                            <th>@Localizer["Code"]</th>
+                            <th>@Localizer["Item Name"]</th>
+                            <th>@Localizer["UoM"]</th>
+                            <th>@Localizer["Original Qty"]</th>
+                            <th>@Localizer["Return Qty"]</th>
+                        </tr>
+                    </table>
+                </div>
+            </fieldset>
+
+        </div>
+
+    </div>
+</div>
+
+@*login admin*@
+<div id="admin-authorization" hidden>
+    <div class="block m1">
+        <form>
+            <div class="flexbox wrap space-between full-flex">
+                <label>Username</label>
+                <input class="security-username" type="search">
+            </div>
+            <div class="flexbox wrap space-between full-flex">
+                <label>Password</label>
+                <input class="security-password" type="password" autocomplete="off">
+            </div>
+            <div class="error-security-login" style="color:red"></div>
+        </form>
+    </div>
+</div>
+@*edit name order*@
+<div id="order-editname" hidden>
+    <div class="block m1">
+        <div class="flexbox wrap space-between full-flex">
+            <label>Addition : </label>
+            <input class="order-khname" type="search">
+        </div>
+    </div>
+</div>
+@*set discount total*@
+<div id="content-discount-total" hidden>
+    <div class="block m1">
+        <div class="flexbox wrap space-between full-flex">
+            <label>@Localizer["Discount Type"]</label>&nbsp;
+            <input class="discount-item-type" value="Percent ( % )" readonly style="width: 100%;">
+        </div>
+        <div class="flexbox wrap space-between full-flex">
+            <label>@Localizer["Discount "]</label>&nbsp;
+            <input class="discount-total" type="search" style="width: 100%;">
+            <span class="discount-total-erorr fn-red"></span>
+        </div>
+    </div>
+</div>
+@*List Cancel Order*@
+<div id='cancel-receipt-content' style="display: none;">
+    <div class="item group-search-boxes">
+        <div id="text-search" class="search-box show">
+            <div class="input-box">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="txt-item-cancel-search" name="search-receipt-cancel" type="text" value="" placeholder=@Localizer["Search ..."]>
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div class="flexbox my1">
+        <span class="mxr1"><label>@Localizer["From"] </label><input type="date" class="cancel-date-from" /></span>
+        <span><label>@Localizer["To"] </label><input type="date" class="cancel-date-to" /></span>
+    </div>
+    <div id="cancel-receipt" class='wrap-table list'>
+        <table class="cancel-receipt-listview">
+            <tr>
+                <th>@Localizer["Receipt №"]</th>
+                <th>@Localizer["Cashier"]</th>
+                <th>@Localizer["Date"]</th>
+                <th>@Localizer["Time"]</th>
+                <th hidden>@Localizer["Table"]</th>
+                <th>@Localizer["Amount"]</th>
+                <th>@Localizer["Currency"]</th>
+                <th>@Localizer["Action"]</th>
+            </tr>
+
+        </table>
+    </div>
+</div>
+
+@*VMC Edition*@
+@*Create Customer in POS Dialog*@
+<div id="create-customer-content" class="widget-scrollbar" style="display: none; height:80vh">
+    <div class="row m-0 mt-2 p-0 pt-1 pb-2 form-control" style="display:none; background-color:#ff4d4d;" id="form-customer">
+        <div class="col-md-12">
+            <i class="fa fa-exclamation-triangle" style="color:white; font-size:x-large;"></i>
+            <span class="customer-code-validate" style="color:white; font-size:medium; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; position:sticky"></span>
+        </div>
+    </div>
+
+
+    <div class="wrap-block col-two" style="width:auto;">
+        <div class="left-block" style="width:500px;">
+            <div class="block border" style="padding-top:0.7rem; border-top-right-radius: 10px; border-top-left-radius: 10px; border-bottom-left-radius:10px;">
+
+                <label class="form-label myb1" style="margin-top:5px; font-weight:bold;">@Localizer["Code"]</label>
+                <input class="form-control customer-code" autocomplete="off" value="" />
+
+                <label class="form-label myb1" style="margin-top:5px; font-weight:bold;">@Localizer["Name"]</label>
+                <input class="form-control customer-name" autocomplete="off" value="" />
+
+                <label class="form-label myb1" style="margin-top:5px; font-weight:bold;">@Localizer["Price List"]</label>
+                <select class="form-control price-list-id" asp-items="ViewBag.PlQcus">
+                    <option selected disabled value="0">Select</option>
+                </select>
+
+                <label class="form-label myb1" style="margin-top:5px; font-weight:bold;">@Localizer["Type"]</label>
+                <input class="form-control customer-type" autocomplete="off" value="Customer" readonly />
+
+
+            </div>
+        </div>
+
+        <div class="right-block" style="width:500px;">
+            <div class="block border" style="padding-top:0.7rem; border-top-right-radius: 10px; border-top-left-radius: 10px; border-bottom-right-radius:10px; padding-bottom: 8px;">
+
+                <label class="form-label myb1" style="margin-top:5px; font-weight:bold;">@Localizer["Phone"]</label>
+                <input class="form-control customer-phone" autocomplete="off" value="" />
+
+                <label class="form-label myb1" style="margin-top:5px; font-weight:bold;">@Localizer["Email"]</label>
+                <input class="form-control customer-email" autocomplete="off" value="" />
+
+                <label class="form-label myb1" style="margin-top:5px; font-weight:bold;">@Localizer["Address"]</label>
+                <input class="form-control customer-address" autocomplete="off" value="" />
+
+                <div class="form-group form-inline" id="formchk" style="margin-top:1rem;">
+                    <label class="switch" style="margin-top:36px; margin-bottom: 2.5px;">
+                        <input type="checkbox" class="form-control" id="chkbox">
+                        <span class="slider round"></span>
+                    </label>
+                    <span style="position:absolute; margin-left:2px; margin-bottom:44px; font-weight:bold;">Vehicle</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row block border mt-3 mb-3" role="dialog" id="list_vehicle" style="display:none; margin-left:2px; margin-right:2px; border-radius:5px; width:auto; padding-left:5px; padding-right:5px; height:auto">
+        <div class="row title mt-2" style="padding-top:10px; margin-left:5px; height:41px; padding-left:7px; padding-right:10px; width:auto; background-color:#5f758b; border-top-left-radius:7px; border-top-right-radius:7px;">@Localizer["List of Vehicle"]&nbsp;<i id="create_new_vehicle" class="fa fa-plus-circle fn-green csr-pointer" style="line-height: 22px; margin-left:inherit"></i></div>
+        <div class="row wrap-table ml-0">
+            <table id="list-body-vehicle">
+                <thead style="background-color:#5F758B;">
+                    <tr style="color:white">
+                        @*<td>#</td>*@
+                        <th>@Localizer["Plate"]</th>
+                        <th>@Localizer["Frame"]</th>
+                        <th>@Localizer["Engine"]</th>
+                        <th>@Localizer["Type"]</th>
+                        <th>@Localizer["Brand"]</th>
+                        <th>@Localizer["Model"]</th>
+                        <th>@Localizer["Year"]</th>
+                        <th>@Localizer["Color"]</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@*Model Customer Item Form*@
+<div class="modal fade widget-scrollbar" style="margin-top:5vh; height:150vw" id="model_create_v" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header pb-1 pt-1" style="background-color:#5588c0; color:#F3F6F9;">
+                <h4 class="modal-title"><i class="fa fa-car"></i>​​ @Localizer["Customer Items Form"]</h4>
+                <button style="color:#F3F6F9" onclick="ClearVehicle()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div style="position:relative; display:none;" id="show-hide">
+                    <i class="fa fa-exclamation-triangle" style="position:absolute;font-size:25px; top:6px; left:10px; color:white; z-index:99;"></i>
+                    <div class="block border pl-5 p-2" style="background-color:#ff4d4d; color:white;" id="error-val"></div>
+                </div>
+
+                <div class="row" id="cus_item_form">
+                    <div class="col-md-12">
+                        <div class="wrap-block col-two">
+                            <div class="left-block">
+                                <div class="block border" style="padding:0rem .5rem .3rem .5rem;">
+                                    <div class="wrap-block">
+
+                                        <label class="form-label" style="margin-top:5px;">@Localizer["Plate"]#</label>
+                                        <input class="form-control" id="plateid" autocomplete="off" placeholder="1AB-0001" />
+
+                                        <label class="form-label">@Localizer["Frame"]#</label>
+                                        <input class="form-control" id="frameid" autocomplete="off" />
+
+                                        <label class="form-label">@Localizer["Engine"]#</label>
+                                        <input class="form-control" id="engineid" autocomplete="off" />
+
+                                        <label class="form-label">@Localizer["Type"]</label>
+                                        <select id="typeid" class="form-control" asp-items="ViewBag.SelType">
+                                            <option selected disabled value="0">Select</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-block">
+                                <div class="block border" style="padding:0rem .5rem .3rem .5rem;">
+                                    <div class="wrap-block">
+
+                                        <label class="form-label" style="margin-top:5px;">@Localizer["Brand"]</label>
+                                        <select id="brandid" class="form-control" asp-items="ViewBag.SelBrand">
+                                            <option selected disabled value="0">Select</option>
+                                        </select>
+
+                                        <label class="form-label">@Localizer["Model"]</label>
+                                        <select id="modelid" class="form-control" asp-items="ViewBag.SelModel">
+                                            <option selected disabled value="0">Select</option>
+                                        </select>
+
+                                        <label class="form-label">@Localizer["Year"]</label>
+                                        <input data-year id="yearid" class="form-control" autocomplete="off" />
+
+                                        <label class="form-label">@Localizer["Color"]</label>
+                                        <select id="colorid" class="form-control" asp-items="ViewBag.SelColor">
+                                            <option selected disabled value="0">Select</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer pb-1 pt-1">
+                <button class="btn btn-sm btn-success" style="background-color:#34a95f; border-radius:7px;" id="drop_down_modal"><i class="fa fa-chevron-circle-down">&ensp;@Localizer["Drop to list"]</i></button>
+                <button class="btn btn-sm btn-danger" style="background-color:#d44f54; border-radius:7px;" onclick="ClearVehicle()" data-dismiss="modal"><i class="fa fa-window-close">&ensp;@Localizer["Close"]</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Model List Customer Form*@
+<div class="modal fade" style="margin-top:10px;" id="modal-list-cus-form" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header pt-2 pl-2 pr-2 pb-1 sticky" style="background-color:#ccc">
+                <div style="font-size:25px; font-weight:bold; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["List of Customers"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky mt-1" data-dismiss="modal"></i></span>
+            </div>
+            <div class="modal-body p-0" style="background-color:#bcc; padding: 0 10px !important;">
+                <div class="item group-search-boxes mt-1">
+                    <div id="text-search" class="search-box">
+                        <div class="input-box">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="search-listCus" type="text" autocomplete="off" value="" placeholder=@Localizer["Code,Name,Phone..."]>
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+                <div class="wrap-table widget-scrollbar mb-1 mt-1" style="height: 500px;">
+                    <table id="list-cus-form-pos">
+                        <thead>
+                            <tr>
+                                <th class="text-left" style="border-top-left-radius: 5px; border-bottom-left-radius: 5px;">@Localizer["Code"]</th>
+                                <th class="text-left">@Localizer["Name"]</th>
+                                <th class="text-left">@Localizer["Phone"]</th>
+                                <th class="text-left">@Localizer["Email"]</th>
+                                <th class="text-left">@Localizer["Address"]</th>
+                                <th class="text-left" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;">@Localizer["Action"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer p-1 pt-2" style="background-color:#ccc;">
+                <button class="btn btn-sm btn-danger" style="background-color:#88373a; padding-right:6px; height:2rem; line-height:2rem; border-radius:7px; padding-left:6px; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Model List V after Drop*@
+<div class="modal fade" style="margin-top:10px;" id="modal-list-v-cus-form" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="overflow:auto; height:444px;">
+            <div class="modal-header p-2 sticky" style="background-color:#ccc">
+                <div class="block">
+                    <div class="item group-search-boxes">
+                        <div id="text-search" class="search-box">
+                            <div class="input-box">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input class="ignore" id="search-listV" autocomplete="off" type="text" value="" placeholder=@Localizer["Plate,Frame,Engine..."]>
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-size:20px; font-weight:bold; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["List of Customer's Vehicles"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky" data-dismiss="modal"></i></span>
+            </div>
+            <div class="modal-body p-0" style="background-color:#bcc">
+                <div class="wrap-table">
+                    <table id="list-v-cus-form-pos">
+                        <thead>
+                            <tr>
+                                <th class="text-left">@Localizer["Plate"]</th>
+                                <th class="text-left">@Localizer["Frame"]</th>
+                                <th class="text-left">@Localizer["Engine"]</th>
+                                <th class="text-left">@Localizer["Type"]</th>
+                                <th class="text-left">@Localizer["Brand"]</th>
+                                <th class="text-left">@Localizer["Model"]</th>
+                                <th class="text-left">@Localizer["Year"]</th>
+                                <th class="text-left">@Localizer["Color"]</th>
+                                <th class="text-center">@Localizer["Action"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer p-1 pt-2" style="background-color:#ccc">
+                <button class="btn btn-sm btn-danger" style="background-color:#88373a; padding-right:6px; height:2rem; line-height:2rem; border-radius:7px; padding-left:6px; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Model Warning Save Quote without select any items*@
+<div class="modal fade" style="margin-top:10px;" id="modal-warning-save-quote" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="overflow:auto;">
+            <div class="modal-header p-1" style="background-color:#ccc">
+                <span><i style="font-size:x-large" class="fa fa-warning fn-red"></i></span>
+                <div style="font-size:20px; font-weight:bold; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["Warning"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-red" data-dismiss="modal"></i></span>
+            </div>
+            <div class="modal-body p-2 pt-4 pb-4" style="background-color:#bcc; text-align:center">
+                @Localizer["Please choose any items or services...!"]
+            </div>
+        </div>
+    </div>
+</div>
+@*Model Warning Save Quote without select any vehicles when the customer has it*@
+<div class="modal fade" style="margin-top:10px;" id="modal-warning-save-quote-hascusv" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="overflow:auto;">
+            <div class="modal-header p-1" style="background-color:#ccc">
+                <span><i style="font-size:x-large" class="fa fa-warning fn-red"></i></span>
+                <div style="font-size:20px; font-weight:bold; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["Warning"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-red" data-dismiss="modal"></i></span>
+            </div>
+            <div class="modal-body p-2 pt-4 pb-4" style="background-color:#bcc; text-align:center">
+                @Localizer["Please choose a vehicle for this customer!"]
+            </div>
+        </div>
+    </div>
+</div>
+@*Model List Quote*@
+<div class="modal fade" style="margin-top:10px;" id="modal-list-quote" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="overflow:auto;">
+            <div class="modal-header pt-2 pl-2 pr-2 pb-1 sticky" style="background-color:#ccc">
+                <div style="font-size:23px; font-weight:bold; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["List of Quotation"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky" data-dismiss="modal"></i></span>
+            </div>
+            <div class="modal-body p-0" style="background-color:#bcc">
+
+                <div class="block">
+                    <div class="item group-search-boxes mt-1 mb-1">
+                        <div id="text-search" class="search-box">
+                            <div class="input-box">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input class="ignore" id="search-listQuote" type="text" autocomplete="off" value="" placeholder=@Localizer["Q.Nº,Name,Phone..."]>
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wrap-table">
+                    <table id="list-quote-form" style="position:relative">
+                        <thead>
+                            <tr>
+                                <th class="text-left">@Localizer["Q.Nº"]</th>
+                                <th class="text-left">@Localizer["Name"]</th>
+                                <th class="text-left">@Localizer["Phone"]</th>
+                                <th class="text-left">@Localizer["Plate"]</th>
+                                <th class="text-left">@Localizer["Brand"]</th>
+                                <th class="text-left">@Localizer["Model"]</th>
+                                <th class="text-left">@Localizer["Color"]</th>
+                                <th class="text-left">@Localizer["Year"]</th>
+                                <th class="text-left">@Localizer["Action"]</th>
+                                <th class="text-center">@Localizer["Preview"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer p-1 pt-2" style="background-color:#ccc;">
+                <button class="btn btn-sm btn-danger" style="background-color:#88373a; padding-right:6px; height:2rem; line-height:2rem; border-radius:7px; padding-left:6px; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Model List Invoice*@
+<div class="modal fade" style="margin-top:10px;" id="modal-list-invoice" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="overflow:auto;">
+            <div class="modal-header pt-2 pl-2 pr-2 pb-1 sticky" style="background-color:#ccc">
+                <div style="font-size:23px; font-weight:bold; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["List of Invoice"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky" data-dismiss="modal"></i></span>
+            </div>
+            <div class="modal-body p-0" style="background-color:#bcc">
+
+                <div class="block">
+                    <div class="item group-search-boxes mt-1 mb-1">
+                        <div id="text-search" class="search-box">
+                            <div class="input-box">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input class="ignore" id="search-listInvoice" type="text" autocomplete="off" value="" placeholder=@Localizer["Receipt.Nº,Name,Phone..."]>
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wrap-table">
+                    <table id="list-invoice-form" style="position:relative">
+                        <thead>
+                            <tr>
+                                <th class="text-left">@Localizer["Receipt.Nº"]</th>
+                                <th class="text-left">@Localizer["Name"]</th>
+                                <th class="text-left">@Localizer["Phone"]</th>
+                                <th class="text-left">@Localizer["Plate"]</th>
+                                <th class="text-left">@Localizer["Brand"]</th>
+                                <th class="text-left">@Localizer["Model"]</th>
+                                <th class="text-left">@Localizer["Color"]</th>
+                                <th class="text-left">@Localizer["Year"]</th>
+                                <th class="text-center">@Localizer["Preview"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer p-1 pt-2" style="background-color:#ccc;">
+                <button class="btn btn-sm btn-danger" style="background-color:#88373a; padding-right:6px; height:2rem; line-height:2rem; border-radius:7px; padding-left:6px; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+<script>
+    function ClearVehicle() {
+        $("#plateid").val("");
+        $("#frameid").val("");
+        $("#engineid").val("");
+        $("#yearid").val("");
+        $("#typeid").val(0);
+        $("#brandid").val(0);
+        $("#modelid").val(0);
+        $("#colorid").val(0);
+    }
+</script>
+
+<!--Scripts embeded-->
+@*<script src="~/pos/output/core/core.js"></script>
+    <script src="~/pos/js/pos-core.js"></script>
+    <script src="~/pos/js/pos-utils.js"></script>
+    <script src="~/pos/js/pos-kvms-utils.js"></script>
+    <script src="~/pos/js/pos-payment.js"></script>
+    <script src="~/pos/js/start-kvms.js"></script>*@
+
+@*<script src="~/pos/signalr/realbox.js"></script>*@
+
+@*VMC Script*@
+<script src="~/pos/output/core/core.js"></script>
+<script src="~/js/warehouse.js"></script>
+<script src="~/pos/js/kvms/pos-core.js"></script>
+<script src="~/pos/js/kvms/pos-utils.js"></script>
+<script src="~/pos/js/kvms/pos-kvms-utils.js"></script>
+<script src="~/pos/js/kvms/pos-payment.js"></script>
+<script src="~/pos/js/kvms/start-kvms.js"></script>

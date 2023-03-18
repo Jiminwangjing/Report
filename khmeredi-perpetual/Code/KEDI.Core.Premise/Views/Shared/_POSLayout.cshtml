@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@Localizer["POS"]</title>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="~/Images/icon/edc.png" type="image/gif" sizes="16x16">
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.min.css" rel="stylesheet" />
+    <link href="~/pos/output/core.css" rel="stylesheet" />
+    <link href="~/AdminLayout/bundle/admin/_admin.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!--Dev Expess css-->
+    <link href="~/dev/dx.common.css" rel="stylesheet" />
+    <link href="~/dev/dx.light.css" rel="stylesheet" />
+
+    <script src="~/pos/js/database/warehouse.js"></script>
+    <script src="~/js/easytimer.min.js"></script>
+    <!--Signal R-->
+    <script src="~/lib/aspnet/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/System/system.js"></script>
+    <!--Dev Express js-->
+    <script src="~/dev/js/polyfill.js"></script>
+    <script src="~/dev/js/exceljs.js"></script>
+    <script src="~/dev/js/jszip.js"></script>
+    <script src="~/dev/js/FileSaver.js"></script>
+    <script src="~/dev/dx.all.js"></script>
+</head>
+<body>
+    <style>
+        .dialog-box.startup {
+            top: 35px;
+        }
+    </style>
+    <div class="ck-widget-container container-fluid">
+        <div id="loadscreen" class="widget-loadscreen">
+            <img src="~/AdminLayout/images/loading.gif" />
+        </div>
+        <div dialog-container></div>
+        <partial name="Components/_SerialNumber" />
+        <partial name="Components/_BatchNo" />
+        <partial name="Components/_ListDeleteSerialItem" />
+        @*<partial name="Components/_ListDeleteBatchItem" />*@
+        @RenderBody()
+
+    </div>
+    <script src="~/pos/output/core.js"></script>
+    <script src="~/pos/js/pos-core.js"></script>
+    <script src="~/pos/js/pos-utils.js"></script>
+    <script src="~/pos/js/pos-ksms.js"></script>
+    <script src="~/pos/js/pos-promotion.js"></script>
+    <script src="~/pos/js/pos-payment.js"></script>
+    <script src="~/pos/js/card-member.js"></script>
+    <script src="~/pos/js/KBMS-can-ring-exchange.js"></script>
+    <script src="~/pos/js/reportsale-pos.js"></script>
+    <script src="/AdminLayout/js/setup.js"></script>
+</body>
+</html>
+

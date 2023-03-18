@@ -1,0 +1,260 @@
+.group-btns {
+    display: -webkit-box;
+    display: -ms-flexbox; 
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    width: 100%;
+    padding: 5px;
+}
+
+.group-btns > *:not(:last-child) {
+    margin-right: 5px;
+}
+
+.wrap-btn {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: column wrap;
+    flex-flow: column wrap;
+    min-width: calc(20% - 5px);
+    text-align: center;
+    border-radius: 3px;
+    background: $gray;
+    align-items: center;
+    cursor: pointer;
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.5);
+}
+
+.wrap-btn > * {
+    padding: 0 5px;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.wrap-btn .btn {
+    border-radius: 3px 3px 0 0;
+    height: 30px;
+}
+
+.wrap-btn > .label {
+    display: inline-block;
+    align-items: center;
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.wrap-btn.inline {
+    flex-direction: row;
+}
+
+.group-btns .wrap-btn.full, .wrap-btn .btn {
+    width: 100% !important;
+}
+
+.btn {
+	padding: 0rem 1rem;
+	border-radius: 2px;
+	box-sizing: border-box;
+	outline: none;
+	font-size: inherit;
+	display: inline-block;
+	background-color: $sky;
+    border: none;
+	color: #EEE;
+	cursor: pointer;
+	text-decoration: none;
+	text-align: center;
+    height: 35px;
+    line-height: 35px;
+}
+
+.btn .tag-count {
+    position: absolute;
+    left: 2.5px;
+    top: 2.5px;
+    padding: 0 5px;
+    border-radius: 50%;
+    border: .5px solid #FFF;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: .7em;
+    display: block;
+    background: #5F9EA0;
+}
+
+.btn.submit {
+    display: block;
+    min-width: 100px;
+    height: 50px;
+    line-height: 50px;
+    width: 100%;
+}
+
+.btn.right {
+    display: block;
+    float: right;
+}
+
+.btn.left {
+    display: block;
+    float: left;
+}
+
+.btn.full {
+  width: 100%;
+}
+
+.btn.btn-small { 
+	height: 25px;
+  line-height: 25px;
+}
+
+.btn.btn-xsmall { 
+	height: 20px;
+  line-height: 20px;
+}
+
+.btn.btn-big { 
+  height: 52px;
+  line-height: 52px;
+}
+
+.btn.btn-round { 
+	border-radius: 4px;
+}
+
+.btn:hover {
+    background: darken($sky, 10%);
+}
+
+a.btn:hover, a.btn:focus, a.btn:active {
+	color: #FFF;
+}
+
+/* -------------------------------------
+	Colors and Hover color
+   ------------------------------------ */ 
+.btn.yellow {
+	background: #F1C40F;
+}
+.btn.yellow:hover {
+	background: darken(#F1C40F, 15%);
+}
+
+.btn.orange {
+	background: #E67E22;
+}
+.btn.orange:hover {
+	background: darken(#E67E22, 15%);
+}
+
+.btn.red {
+	background: #F00;
+}
+.btn.red:hover {
+	background: darken(#F00, 15%);
+}
+
+.btn.green {
+	background: #5ab380;
+}
+.btn.green:hover {
+	background: darken(#5ab380, 15%);
+}
+
+.btn.mint {
+	background: #00BEB3;
+}
+.btn.mint:hover {
+	background: darken(#00BEB3, 15%);
+}
+
+.btn.white {
+	background: #FFF;
+	color: #253aa5;
+  border: 1px solid #253aa5;
+}
+
+.btn.gray {
+	background: #CCC;
+  color: #333;
+}
+
+.btn.gray:hover {
+	background: darken(#CCC, 15%);
+}
+
+.btn.pink {
+	background: #FE4365;
+}
+
+.btn.pink:hover {
+	background: darken(#FE4365, 15%);
+}
+
+a.btn.white:hover, a.btn.white:focus, a.btn.white:active {
+	color: #333;
+}
+
+a.btn.white:active {
+	color: #333;
+}
+
+/*----------
+Font-Awesome Icon
+------------------*/
+
+.btn .fa.inline{
+	display: block;
+}
+
+/* -------------------------------------
+	Wrap Controls
+   ------------------------------------ */ 
+
+.controls {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  
+  -webkit-flex-wrap: wrap;
+     -moz-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+          
+  background: #FFF;
+  -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75);
+  border-radius: 2px;
+  padding: 1px;
+}
+
+@media(max-width: 415px){
+    .wrap-btn > .btn {
+        height: 25px !important;
+        line-height: 25px !important;
+    }
+
+    .wrap-btn > .label {
+        font-size: .8em;
+        height: 20px;
+        line-height: 20px;
+    }
+}

@@ -1,0 +1,325 @@
+﻿@using KEDI.Core.Premise.Models.Services.Inventory;
+@using KEDI.Core.Premise.Models.Services.ServiceContractTemplate
+<style>
+    .form-check-label-custom {
+        margin-left: 32px;
+        margin-top: -6px;
+    }
+</style>
+<div class="col-md-4" id="warrantyContainer" hidden>
+    <label>@Localizer["Service Attributes"]</label>
+    <div class="form-group ">
+        <label class="font-size">@Localizer["Warranty Template"]</label>
+        <div class="input-group">
+            <input type="text" readonly style="height: 25px !important;" class="form-control font-size" id="warrantyName">
+            <div class="input-group-append">
+                <span class="input-group-text sh-posting-period" id="choose-warranty">
+                    <i class="fa fa-plus-circle btn-warranty-template cursor"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Warranty Template Dialog *@
+<div id="warranty-dailog-container" style="display:none; height: 400px;">
+    <div class="item group-search-boxes">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search" style="margin-right: 5px;"></i>
+                <input class="ignore font-size" id="find-warranty" autocomplete="off" type="text" placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div id="container-list-warranty" class="wrap-table myt1" style="height: 60vh">
+        <table class="list-warranty">
+            <thead>
+                <tr>
+                    <th class="text-center font-size">@Localizer["#"]</th>
+                    <th class="text-center font-size">@Localizer["Template Name"]</th>
+                    <th class="text-center font-size">@Localizer["Contract Type"]</th>
+                    <th class="text-center font-size">@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@*Dialog Creating Warranty Teplate*@
+<div id="warranty-creating-dailog-container" style="display:none; height: 430px;">
+    <div class="card card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <label class="font-size">@Localizer["Name"]</label>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control w100 font-size" type="text" id="name" />
+            </div>
+            <div class="col-md-3">
+                <div class="form-check checkMt-1">
+                    <input type="checkbox" class="form-check-input font-size" id="expired">
+                    <label class="form-check-label font-size" for="expired">@Localizer["Expired"]</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label class="font-size">@Localizer["Contract Type"]</label>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control font-size" id="contract-type"></select>
+                @*<select asp-ite@ms="Html.GetEnumSelectList<ContractType>()" class="form-control font-size" id="contract-type"></select>*@
+            </div>
+           @* <div class="col-md-2">
+                <label class="font-size">@Localizer["Duration"]</label>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input class="form-control font-size" type="text" id="duration" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="font-size font-size">@Localizer["Month(s)"]</label>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label class="font-size">@Localizer["Response Time"]</label>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input class="form-control font-size" type="text" id="response-time-value" />
+                    </div>
+                    <div class="col-md-6">
+                        <select asp-items="Html.GetEnumSelectList<ResOrResoType>()" class="form-control font-size" id="res-type"></select>
+                    </div>
+                </div>
+            </div>
+           @* <div class="col-md-3">
+                <div class="form-check checkMt-1">
+                    <input type="checkbox" class="form-check-input font-size" id="renewal">
+                    <label class="form-check-label font-size" for="renewal">@Localizer["Renewal"]</label>
+                </div>
+            </div>*@
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label class="font-size">@Localizer["Resolution Time"]</label>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input class="form-control font-size" type="text" id="resolution-time-value" />
+                    </div>
+                    <div class="col-md-6">
+                        <select asp-items="Html.GetEnumSelectList<ResOrResoType>()" class="form-control font-size" id="reso-type"></select>
+                    </div>
+                </div>
+            </div>
+          @*  <div class="col-md-2">
+                <label class="font-size">@Localizer["Reminder"]</label>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input class="form-control font-size" type="text" id="reminder-value" />
+                    </div>
+                    <div class="col-md-6">
+                        <select asp-items="Html.GetEnumSelectList<ReminderType>()" class="form-control font-size" id="reminder-type" disabled></select>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label class="font-size">@Localizer["Description"]</label>
+            </div>
+            <div class="col-md-10">
+                <input class="form-control font-size w100" id="description" type="text" />
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-12">
+                <ul class="widget-tab" style="height: 250px;">
+                    <li class="tab-sheet active">
+                        <div class="tab-title">@Localizer["Coverage"]</div>
+                        <div class="tab-content widget-scrollbar" style="overflow: auto">
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="row">
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-4">
+                                            <label class="font-size">@Localizer["Start Time"]</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="font-size">@Localizer["End Time"]</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input font-size" id="monday">
+                                                <label class="form-check-label-custom font-size" for="monday">@Localizer["Monday"]</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="08:00" id="mondayStartTime" disabled />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="17:00" id="mondayEndTime" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input font-size" id="tuesday">
+                                                <label class="form-check-label-custom font-size" for="tuesday">@Localizer["Tuesday"]</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="08:00" id="tuesdayStartTime" disabled />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="17:00" id="tuesdayEndTime" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input font-size" id="wednesday">
+                                                <label class="form-check-label-custom font-size" for="wednesday">@Localizer["Wednesday"]</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="08:00" id="wednesdayStartTime" disabled />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="17:00" id="wednesdayEndTime" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input font-size" id="thursday">
+                                                <label class="form-check-label-custom font-size" for="thursday">@Localizer["Thursday"]</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="08:00" id="thursdayStartTime" disabled />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="17:00" id="thursdayEndTime" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input font-size" id="friday">
+                                                <label class="form-check-label-custom font-size" for="friday">@Localizer["Friday"]</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="08:00" id="fridayStartTime" disabled />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="17:00" id="fridayEndTime" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input font-size" id="saturday">
+                                                <label class="form-check-label-custom font-size" for="saturday">@Localizer["Saturday"]</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="08:00" id="saturdayStartTime" disabled />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="17:00" id="saturdayEndTime" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input font-size" id="sunday">
+                                                <label class="form-check-label-custom font-size" for="sunday">@Localizer["Sunday"]</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="08:00" id="sundayStartTime" disabled />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="time" class="form-control font-size" value="17:00" id="sundayEndTime" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <div class="circle">
+                                        <label class="font-size">@Localizer["Include"]</label>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-check checkMt-1">
+                                                    <input type="checkbox" class="form-check-input font-size" id="parts">
+                                                    <label class="form-check-label-custom font-size" for="parts">@Localizer["Parts"]</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-check checkMt-1">
+                                                    <input type="checkbox" class="form-check-input font-size" id="labor">
+                                                    <label class="form-check-label-custom font-size" for="labor">@Localizer["Labor"]</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-check checkMt-1">
+                                                    <input type="checkbox" class="form-check-input font-size" id="travel">
+                                                    <label class="form-check-label-custom font-size" for="travel">@Localizer["Travel"]</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row ml-3">
+                                        <div class="col-md-12">
+                                            <div class="form-check checkMt-1 ml-3">
+                                                <input type="checkbox" class="form-check-input font-size" id="include-holiday">
+                                                <label class="form-check-label-custom font-size" for="include-holiday">@Localizer["Include Holiday"]</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="tab-sheet">
+                        <div class="tab-title">@Localizer["Remarks"]</div>
+                        <div class="tab-content widget-scrollbar">
+                            <div class="card card-body" style="height: 200px">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <textarea class="form-control font-size w100" style="height: 150px !important;" id="remarks"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    @*<li class="tab-sheet">
+                            <div class="tab-title">@Localizer["Standard"]</div>
+                            <div class="tab-content widget-scrollbar">
+
+                            </div>
+                        </li>*@
+                </ul>
+            </div>
+        </div>
+        <div class="err-success-contract"></div>
+    </div>
+</div>

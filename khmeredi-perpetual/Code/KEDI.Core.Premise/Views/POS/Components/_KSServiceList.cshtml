@@ -1,0 +1,47 @@
+﻿<div id="fx-choose-ks" class="csr-pointer flexbox icon-tab m-1" title="@Localizer["Choose Services"]">
+    <i class="fas fa-cogs fa-lg fn-white"></i>
+    <div id="choose-content-ks" style="display: none; height: 440px;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="group-search-boxes mb-2">
+                    <div id="text-ks" class="search-box show">
+                        <div class="input-box" style="width: 250px;">
+                            <i id="i-ks" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="search-ks" type="text" autocomplete="off" placeholder="@Localizer["Search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+                <div class="widget-scrollbar">
+                    <table id="ksservice-list">
+                        <tr>
+                            <th>@Localizer["No"]</th>
+                            <th>@Localizer["Service Code"]</th>
+                            <th>@Localizer["Item Code"]</th>
+                            <th>@Localizer["Item Name"]</th>
+                            <th>@Localizer["Qty"]</th>
+                            <th>@Localizer["Uom"]</th>
+                            <th>@Localizer["Price"]</th>
+                            <th>@Localizer["Currency"]</th>
+                            <th>@Localizer["Max Count"]</th>
+                            <th>@Localizer["Used Count"]</th>
+                            <th>@Localizer["Choose"]</th>
+                        </tr>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="loading" id="no-data" hidden>
+                                <h3>@Localizer["No Data"]</h3>
+                            </div>
+                            <div class="loading" id="loading">
+                                <img class="img-loading" src="~/ajaxloader/loading.gif" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

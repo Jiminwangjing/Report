@@ -1,0 +1,297 @@
+﻿@model CKBS.Models.Services.POS.Template.POSModel;
+
+<div id="master_bus" hidden> @Json.Serialize(Model.Customer) </div>
+@*<div id="detail_auto" hidden> @Json.Serialize(Model.Customer.AutoMobile) </div>*@
+<link href="~/AutoMobile/css/yearpicker.css" rel="stylesheet" />
+<link href="~/BussinessPartner/css/create.css" rel="stylesheet" />
+<div id="fx-choose-customer" class="csr-pointer flexbox icon-tab m-1" title="@Localizer["Choose customer"]">
+    <i class="fas fa-user fa-lg fn-white"></i>
+    @*<span id="chosen-customer" class="item" title="@Localizer["Choose customer"]">@Model.Customer.Name</span>     *@
+    <div id="choose-customer-content" style="display: none; height: 80vh;">
+        <div class="widget-tab stretch">
+            <div class="tab-sheet active">
+                <div class="tab-title"><i class="fas fa-list-alt"></i> @Localizer["List"]</div>
+                <div class="tab-content widget-scrollbar">
+                    <div class="group-search-boxes mb-2" style="float: right;">
+                        <div id="text-search" class="search-box show">
+                            <div class="input-box" style="width: 250px;">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input class="ignore" id="search-customers" type="text" autocomplete="off" placeholder="@Localizer["Search ..."]">
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+                    <table id="listview-customers">
+                        <tr>
+                            <th>@Localizer["№"]</th>
+                            <th>@Localizer["Code"]</th>
+                            <th>@Localizer["Name"]</th>
+                            <th>@Localizer["Type"]</th>
+                            <th>@Localizer["Phone"]</th>
+                            <th>@Localizer["Email"]</th>
+                            <th>@Localizer["Choose"]</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-sheet" id="new-customer">
+                <div class="tab-title" id="createcus"><i class="fas fa-plus-circle" ></i> @Localizer["Create"]</div>
+                <div class="tab-content">
+                    <form id="form-customer">
+                        @Html.AntiForgeryToken()
+                        <div class="wrap-block col-two">
+                            <div class="left-block">
+                                <input asp-for="Customer.ID" type="hidden" class="cus-id" />
+                                <div class="stack-block">
+                                    <label>@Localizer["Code"]</label>
+                                    <input asp-for="Customer.Code"  class="cus-code" id="new-cus-code" />
+                                    <span asp-validation-for="Customer.Code"></span>
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Name"]</label>
+                                    <input asp-for="Customer.Name" class="cus-name" />
+                                    <span asp-validation-for="Customer.Name"></span>
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Phone"]</label>
+                                    <input asp-for="Customer.Phone" class="cus-phone" />
+                                    <span asp-validation-for="Customer.Phone"></span>
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Price List"]</label>
+                                    <select asp-for="Customer.PriceListID" class="cus-pricelist" asp-items="Model.Setting.PriceLists"></select>
+                                    <span asp-validation-for="Customer.PriceListID"></span>
+                                </div>
+
+                            </div>
+                            <div class="right-block">
+                                <div class="stack-block">
+                                    <label>@Localizer["Email"]</label>
+                                    <input asp-for="Customer.Email" class="cus-email" />
+                                    <span asp-validation-for="Customer.Email"></span>
+                                </div>
+                                <div class="stack-block">
+                                    <label>@Localizer["Address"]</label>
+                                    <textarea asp-for="Customer.Address" class="cus-address" style="height: 86px;"></textarea>
+                                    <span asp-validation-for="Customer.Address"></span>
+                                </div>
+                                     @if(!UserManager.CheckEdition(SystemEdition.Basic))
+                                        {
+                                        <div class="stack-block" id="choose-glacc">
+                                            <label>@Localizer["Account Receivable"]</label>
+                                            <input asp-for="Customer.GLAccID" class="glaccId" hidden />
+                                            <input class="glaccNumber" type="text" readonly />
+                                            <span asp-validation-for="Customer.GLAccID"></span>
+                                        </div>
+                                     }
+                            </div>
+
+                        </div>
+
+                        <div class="wrap-table" hidden>
+                            <table id="form-vehicles">
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            @Localizer["Plate"]
+                                        </td>
+                                        <td>@Localizer["Frame"]</td>
+                                        <td>@Localizer["Engine"]</td>
+                                        <td>@Localizer["Type"]</td>
+                                        <td>@Localizer["Brand"]</td>
+                                        <td>@Localizer["Model"]</td>
+                                        <td>@Localizer["Year"]</td>
+                                        <td>@Localizer["Color"]</td>
+                                        <td>@Localizer["Action"]</td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                        <div class="row ml-1" role="dialog" id="list_vehicle">
+                            <div class="title font-weight-bold p-1 auto-body">
+                                @Localizer["List of Vehicle"]&nbsp;
+                                <i id="create_vehicle" class="fas fa-arrow-alt-circle-down fn-green csr-pointer"></i>
+                            </div>
+                            <div class="wrap-table widget-scrollbar">
+                                <table id="list-body-vehicle">
+                                    <thead>
+                                        <tr>
+                                            <td>
+                                                <i id="add-vehicle-row" class="fa fa-plus-circle fn-green csr-pointer"></i>
+                                                @Localizer["Plate"]
+                                            </td>
+                                            <td>@Localizer["Frame"]</td>
+                                            <td>@Localizer["Engine"]</td>
+                                            <td>@Localizer["Type"]</td>
+                                            <td>@Localizer["Brand"]</td>
+                                            <td>@Localizer["Model"]</td>
+                                            <td>@Localizer["Year"]</td>
+                                            <td>@Localizer["Color"]</td>
+                                            @*<td>@Localizer["Action"]</td>*@
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                        <button id="save-customer" class="btn" type="button"><i class="fas fa-save"></i> @Localizer["Save"]</button>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="choose-vehicle-content" style="display: none;">
+        <div class="group-search-boxes mb-2">
+            <div id="text-search" class="search-box show">
+                <div class="input-box" style="width: 250px;">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-vehicle" type="text" autocomplete="off" placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+
+        <table id="listview-vehicles">
+            <tr>
+                <th>@Localizer["№"]</th>
+                <th>@Localizer["Plate"]</th>
+                <th>@Localizer["Frame"]</th>
+                <th>@Localizer["Engine"]</th>
+                <th>@Localizer["Type"]</th>
+                <th>@Localizer["Brand"]</th>
+                <th>@Localizer["Model"]</th>
+                <th>@Localizer["Year"]</th>
+                <th>@Localizer["Color"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="controlAc-gl-content" style="display:none; height: 400px;">
+    <div class="group-search-boxes mb-2">
+        <div id="text-search" class="search-box show">
+            <div class="input-box" style="width: 250px;">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-customers-glacc" type="text" autocomplete="off" placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="list-controlAc-gl" class="table-responsive-sm">
+        <thead>
+            <tr>
+                <th class="text-center">@Localizer["#"]</th>
+                <th class="text-center">@Localizer["Code"]</th>
+                <th class="text-center">@Localizer["Name"]</th>
+                <th class="text-center">@Localizer["Choose"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div id="model_create_v" style="display:none; height: 400px;">
+    <div style="position:relative; display:none;" id="show-hide">
+        <i class="fa fa-exclamation-triangle" style="position:absolute;font-size:25px; top:6px; left:10px; color:white; z-index:99;"></i>
+        <div class="block border pl-5 p-2" style="background-color:#ff4d4d; color:white;" id="error_val"></div>
+    </div>
+    <div class="row row-mt-4">
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class="stack-block">
+                    <label class="form-label">@Localizer["Plate"]#</label>
+                    <input class="input-box-kernel-dialog" id="plateid" autocomplete="off" placeholder="1AB-0001" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="stack-block">
+                    <label class="form-label">@Localizer["Frame"]#</label>
+                    <input class="input-box-kernel-dialog" id="frameid" autocomplete="off" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="stack-block">
+                    <label class="form-label">@Localizer["Engine"]#</label>
+                    <input class="input-box-kernel-dialog" id="engineid" autocomplete="off" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="stack-block">
+                    <label class="form-label">@Localizer["Type"]</label>
+                    <select id="typeid" class="input-box-kernel-dialog" asp-items="ViewBag.Types">
+                        <option value="0">Select</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                @*<label class="lable_branch">@Localizer["By Branch"]</label>
+                    <select type="text" class="input_branch" id="brandid">
+                        <option value="0"></option>
+                    </select>*@
+                <div class="stack-block">
+                    <label class="form-label">@Localizer["Brand"]</label>
+                    <select asp-items="ViewBag.Brands" id="brandid" class="input-box-kernel-dialog">
+                        <option value="0">Select</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="stack-block">
+                    <label class="form-label">@Localizer["Model"]</label>
+                    <select asp-items="ViewBag.Models" id="modelid" class="input-box-kernel-dialog">
+                        <option value="0">Select</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="stack-block">
+                    <label class="form-label">@Localizer["Year"]</label>
+                    <input id="yearid" class="input-box-kernel-dialog" autocomplete="off" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="stack-block">
+                    <label class="form-label">@Localizer["Color"]</label>
+                    <select asp-items="ViewBag.Colors" id="colorid" class="input-box-kernel-dialog">
+                        <option value="0">Select</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialog-define-new" hidden>
+    <div class="wrap-table">
+        <table>
+            <tr>
+                <th>@Localizer["No."]</th>
+                <th>@Localizer["Name"]</th>
+                <th hidden>@Localizer["Active"]</th>
+            </tr>
+        </table>
+    </div>
+</div>
+<script src="~/AutoMobile/js/yearpicker.js"></script>
+@*<script src="~/AutoMobile/js/VehicleModel.js"></script>*@
+<script src="~/BussinessPartner/js/create_customer.js"></script>
+@*<script src="~/BussinessPartner/js/group.js"></script>
+    <script src="~/BussinessPartner/js/PaymentTerm/PaymentTerms.js"></script>
+    <script src="~/BussinessPartner/js/PaymentTerms.js"></script>*@
+<script>
+    $("#createcus").click(function () {
+        $.get("/pos/GetCustomerCode", function (code) {
+            $("#new-cus-code").val(code);
+
+          
+        });
+    })
+
+</script>

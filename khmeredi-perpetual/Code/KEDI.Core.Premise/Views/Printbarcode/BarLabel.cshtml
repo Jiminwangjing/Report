@@ -1,0 +1,192 @@
+﻿@using KEDI.Core.Premise.Models.ServicesClass.PrintBarcode;
+@model IEnumerable<ItemPrintBarcodeView>
+@{
+    Layout = "_Layout_Print";
+}
+<link href="~/AdminLayout/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+    @@media print {
+        .content-toolbar, .widget-sidemenu, .widget-header, .btn {
+            display: none !important;
+        }
+
+        button {
+            display: none;
+        }
+
+        #head {
+            display: none;
+        }
+
+        .barcode-container {
+            page-break-after: always;
+            margin-left: -9px;
+        }
+
+        .barcode-container1 {
+            page-break-after: always;
+            margin-left: -9px;
+        }
+
+        .barcode-container2 {
+            page-break-after: always;
+            margin-top: 7px;
+        }
+    }
+
+    .barcode-container {
+        height: 78px;
+        width: 151px;
+        margin-left: -18px;
+        margin-top: 4px;
+    }
+
+    p {
+        margin-left: 60px;
+    }
+
+    small {
+        margin-left: 10%;
+        font-size: 1.2em;
+        font-family: Battambang;
+    }
+
+    #price1 {
+        margin-left: 60px;
+        font-size: 1.1em;
+    }
+
+    .barcode-container1 {
+        height: 78px;
+        width: 130px;
+        margin-left: -21px;
+        margin-top: 4px;
+    }
+
+    #pricebc2 {
+        margin-left: 60px;
+        font-size: 1.1em;
+    }
+
+    #bc2 {
+        margin-left: 10%;
+        font-size: 1.2em;
+        font-family: Battambang;
+    }
+
+    .barcode-container2 {
+        width: 27%;
+        height: 150px;
+        margin-left: -10px;
+        margin-top: 10px
+    }
+
+    .barcode-container1 > * {
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+    }
+
+    #barcode {
+        margin-left: -2%
+    }
+
+    h4 {
+        font-family: 'NiDA Funan';
+        margin-left: 10px;
+        font-size: 1.8em;
+    }
+
+    #des {
+        font-size: 17px;
+        font-family: Battambang;
+        margin-left: 10px;
+    }
+
+    h5 {
+        float: left;
+        font-family: Battambang;
+        font-size: 17px;
+        margin-left: 10px;
+    }
+
+    #many1 {
+        text-align: right;
+        margin-right: 8px;
+        font-size: 2em;
+    }
+
+    #many {
+        text-align: right;
+        margin-right: 8px;
+        font-size: 2em;
+        margin-top: 4px;
+    }
+
+    #barcode_n {
+        float: left;
+        margin-left: -8px;
+    }
+</style>
+<script src="~/lib/jquery/jquery-barcode.js"></script>
+<script src="~/lib/jquery/jquery-barcode.min.js"></script>
+
+<div class="container">
+    <button onclick="window.print()" class="btn btn-success">Print</button>
+    <div id="bcTarget"></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        const data = @Json.Serialize(Model);
+        if (data.length > 0) {
+            data.forEach((item, index) => {
+                if (item.Setting == 1) {
+                    const dataStringTag = $(`
+                         <div class=" barcode-container">
+                               <small>${item.ItemName}</small>
+                               <div id="barcode-flex"><div></div></div>
+                               <p>${item.UnitPrice}</p>
+                         </div>
+
+                    `)
+                    var b = dataStringTag.find("#barcode-flex").children("div");
+                    $("#bcTarget").append(dataStringTag)
+                    b.barcode(item.ItemBarcode, "code128", { fontSize: 11, barWidth: 1, barHeight: 25 });
+                } else if (item.Setting == 2) {
+                    const dataStringTag = $(`
+                     <div class=" barcode-container1">
+                           <div id="bc2">${item.ItemName}</div>
+                           <div id="barcode-flex"><div></div></div>
+                           <p id="pricebc2">${item.UnitPrice}</p>
+                    </div>
+
+                `)
+                    var b = dataStringTag.find("#barcode-flex").children("div");
+                    $("#bcTarget").append(dataStringTag)
+                    b.barcode(item.ItemBarcode, "code128", { fontSize: 12, barWidth: 1, barHeight: 40 });
+                } else if (item.Setting==3) {
+                    const dataStringTag = $(`
+                         <div class=" barcode-container2">
+                          <h4>${item.ItemName}</h4>
+                          <div id="des">${item.Itemdesscription}</div>
+                          <h5>${item.ItemName2}</h5><br/>
+                          <div id="many1">${item.UnitPrice}</div>
+                           <div id="barcode_n"><div></div></div>
+                           <div id="many">${item.ItemUnitprice}</div>
+                        </div>
+
+                    `)
+                    var b = dataStringTag.find("#barcode_n").children("div");
+                    $("#bcTarget").append(dataStringTag)
+                    b.barcode(item.ItemBarcode, "code128", { fontSize: 15, barWidth: 1, barHeight: 28 });
+                }
+            })
+        }
+        window.onafterprint = function () {
+            window.close()
+        }
+        window.print();
+    });
+
+</script>

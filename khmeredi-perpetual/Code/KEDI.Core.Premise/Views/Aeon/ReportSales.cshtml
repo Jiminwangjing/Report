@@ -1,0 +1,246 @@
+﻿<div class="card card-body">   
+    <div class="row">
+        <div class="col-md-2">
+            <label>@Localizer["Sale Type"]</label>
+            <select id="sale-type" class="form-control" asp-items="@ViewBag.DocumentTypes"></select>
+        </div>
+        <div class="col-md-3">
+            <label>@Localizer["Date From"]</label>
+            <input id="date-from" type="datetime-local" class="form-control">           
+        </div>
+        <div class="col-md-3">
+            <label>@Localizer["Date To"]</label>
+            <input id="date-to" type="datetime-local" class="form-control">
+        </div>
+    </div> 
+    <div id="container-report-sales" class="mt-2"></div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        let dateFrom = $("#date-from"),
+            dateTo = $("#date-to"),
+            saleType = $("#sale-type");
+        dateFrom.val(datetimeLocal());
+        dateTo.val(datetimeLocal());
+
+        bindTenantSales();
+        saleType.on("change", function(){
+            bindTenantSales();
+        });
+
+        dateFrom.on("change", function(){
+            bindTenantSales();
+        });
+
+        dateTo.on("change", function(){
+            bindTenantSales();
+        });
+
+        function bindTenantSales(){
+            $.post("/aeon/GetReportSales", {
+                saleType: saleType.val(),
+                dateFrom: dateFrom.val(),
+                dateTo: dateTo.val()
+            }, function (sales) {
+                createDataGrid(sales);
+            });
+        }
+        
+
+        function datetimeLocal(datetime) {
+            let dt = new Date();
+            if(datetime){
+                dt = new Date(datetime);
+            }
+            
+            dt.setMinutes(dt.getMinutes() - dt.getTimezoneOffset());
+            return dt.toISOString().slice(0, 16);
+        }
+
+        function createDataGrid(sales = []){
+            var dataGrid = $("#container-report-sales").dxDataGrid({
+                dataSource: sales,
+                allowColumnReordering: true,
+                showBorders: true,
+                hoverStateEnabled: true,
+                allowColumnResizing: true,
+                columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: {
+                    columnRenderingMode: "virtual"
+                },
+                grouping: {
+                    autoExpandAll: false,
+                },
+                searchPanel: {
+                    visible: true
+                },
+                filterRow: {
+                    visible: false,
+                    applyFilter: "auto"
+                },
+
+                paging: {
+                    pageSize: 20
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [20, 50, 100, 150],
+                    showInfo: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                groupPanel: {
+                    visible: false
+                },
+
+                columns: [                   
+                    {
+                        dataField: "invoice_id",
+                        caption: "Invoice No"
+                    },
+                     {
+                        caption: "Invoice Date",
+                        dataField: "date_time",
+                    }, 
+                    {
+                        caption: "Document Type",
+                        dataField: "document_type",
+                        width: 150,                   
+                    },
+                     {
+                        caption: "Exchange Rate",
+                        dataField: "exchange_rate_value"
+                    },
+                   
+                   
+                    {
+                        caption: "Payment Amount",
+                        dataField: "payment_amount_1",
+                    },
+                    {
+                        caption: "Amount before VAT & Discount",
+                        dataField: "amount_before_vat_discount",
+                    },    
+                    {
+                        caption: "Change Amount (USD)",
+                        dataField: "change_amount_dollar"
+                    },
+                    {
+                        caption: "Change Amount (Base)",
+                        dataField: "change_amount_base"
+                    },                    
+                     {
+                        caption: "Discount Amount",
+                        dataField: "discount_amount",
+                    },
+                    {
+                        caption: "Discount Type",
+                        dataField: "discount_type",
+                    },                 
+                    {
+                        caption: "Returned Amount",
+                        dataField: "return_amount",
+                    },
+                    {
+                        caption: "Returned Qty",
+                        dataField: "return_qty",
+                    },
+                    {
+                        caption: "Refunded Amount",
+                        dataField: "refund_amount",
+                    },
+                    
+                    {
+                        caption: "Refunded Qty",
+                        dataField: "refund_qty",
+                    },
+                    {
+                        caption: "Currency",
+                        dataField: "currency_name",
+                    },
+                    {
+                        caption: "Payment Method",
+                        dataField: "payment_method_1",
+                    },            
+                     {
+                        caption: "Delivery Service",
+                        dataField: "delivery_service"
+                    },      
+                    {
+                        dataField: "cashier_id",
+                        caption: "Cashier"
+                    },        
+                    {
+                        dataField: "transaction_oid",
+                        caption: "Transaction ID"
+                    }                                 
+                ],
+
+                summary: {                   
+                    totalItems: []
+                },
+                export: {
+                    enabled: true
+                },
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('summary-sale-report');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                        topLeftCell: { row: 4, column: 1 }
+                    }).then(function (dataGridRange) {
+                        // header
+                        var headerRow = worksheet.getRow(2);
+                        headerRow.height = 30;
+                        worksheet.mergeCells(2, 1, 2, 7);
+                        headerRow.getCell(1).value = 'Summary Sale Report';
+                        headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
+                        headerRow.getCell(1).alignment = { horizontal: 'center' };
+                        // footer
+                        //var footerRowIndex = dataGridRange.to.row + 2;
+                        //var footerRow = worksheet.getRow(footerRowIndex);
+                        //worksheet.mergeCells(footerRowIndex, 1, footerRowIndex, 8);
+                        //footerRow.getCell(1).value = 'www.wikipedia.org';
+                        //footerRow.getCell(1).font = { color: { argb: 'BFBFBF' }, italic: true };
+                        //footerRow.getCell(1).alignment = { horizontal: 'right' };
+
+                    }).then(function () {
+                        // https://github.com/exceljs/exceljs#writing-xlsx
+                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'summary-sale-report.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "refresh",
+                                onClick: function () {
+                                    dataGrid.refresh();
+                                    filterData();
+                                }
+                            }
+                        }
+                    );
+                }
+
+            }).dxDataGrid("instance");
+        }
+    });
+</script>

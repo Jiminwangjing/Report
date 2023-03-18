@@ -1,0 +1,79 @@
+﻿@model KEDI.Core.Premise.Models.Services.LoyaltyProgram.PromoCode.PromoSetup;
+<div class="card card-body">
+    <div class="widget-tab" style="height: 500px;">
+        <div class="tab-content widget-scrollbar">
+             <form id="form-promo" asp-action="SubmitPromoCode" asp-controller="LoyaltyProgram">
+                 <div class="row">
+                    <div class="col-sm-3">
+                        <input asp-for="PromoCodeDiscount.ID" type="hidden" />
+                        <label>@Localizer["Code"]</label>
+                        <input asp-for="PromoCodeDiscount.Code" class="form-control" />
+                        <label>@Localizer["Name"]</label>
+                        <input asp-for="PromoCodeDiscount.Name"  class="form-control" autofocus />                   
+                    </div>
+                    <div class="col-sm-3">
+                        <label>@Localizer["Date From"]</label>
+                        <input asp-for="PromoCodeDiscount.DateF" class="form-control" type="date"/>
+                         <label>@Localizer["Time From"]</label>
+                        <input asp-for="PromoCodeDiscount.TimeF" class="form-control" type="time"/>
+                       </div>
+                    <div class="col-sm-3">
+                        <label>@Localizer["Date To"]</label>                        
+                        <input asp-for="PromoCodeDiscount.DateT" class="form-control" type="date"/>
+                        <label>@Localizer["Time To"]</label>                        
+                        <input asp-for="PromoCodeDiscount.TimeT" class="form-control" type="time"/>                                   
+                    </div>
+                     <div class="col-sm-3">
+                          <label>@Localizer["Price List"]</label>
+                          <select class="form-control" asp-items="@Model.SelectPriceList" asp-for="PromoCodeDiscount.PriceListID" readonly>
+                          <option selected> ---Select---</option>
+                           </select>
+                          <label>@Localizer["Promo Type"]</label>                        
+                          <select id="type-id" asp-for="PromoCodeDiscount.PromoType" class="form-control" readonly>
+                            <option value="1">Percent</option>
+                            <option value="2">Value</option>
+                        </select> 
+                    </div>
+                     <div class="col-sm-3">
+                         <label>@Localizer["Promo Count"]</label>
+                        <input asp-for="PromoCodeDiscount.PromoCount" class="form-control"readonly/>
+                    </div>  
+                    <div class="col-sm-3">
+                        <label>@Localizer["Use Count Code"]</label>
+                        <input asp-for="PromoCodeDiscount.UseCountCode" class="form-control"readonly/>
+                    </div>
+                     <div class="col-sm-3">
+                        <label>@Localizer["String Code"]</label>
+                        <input asp-for="PromoCodeDiscount.StringCount" class="form-control"readonly/>
+                    </div>
+                      <div class="col-sm-3">
+                          <label>@Localizer["Promo Value"]</label>
+                        <input id="promo" asp-for="PromoCodeDiscount.PromoValue" class="form-control" readonly/>
+                    </div>
+                     <div class="col-sm-1">
+                         <label>@Localizer["Active"]</label>
+                        <input asp-for="PromoCodeDiscount.Active" type="checkbox" class="form-control"style="margin-left:10px;"readonly/>
+                    </div>
+                    @*<div class="col-sm-2">
+                         <label>@Localizer["Used"]</label>
+                        <input asp-for="PromoCodeDiscount.Used" type="checkbox" class="form-control"readonly/>
+                    </div>*@
+                </div>
+                <button id="submit-promocode" class="btn btn-kernel mt-4" type="button">@Localizer["Save"]</button>
+                <a href="/loyaltyProgram/PromoCode" class="btn btn-kernel mt-4"> @Localizer["Cancel"] </a>
+            </form>
+            <div asp-validation-summary="All" class="text-danger"></div><hr />   
+        </div>       
+</div>
+<script>
+    $(document).ready(function(){  
+        $("#submit-promocode").click(function(){
+            $.post("/LoyaltyProgram/SubmitPromoCode", $("#form-promo").serialize() , function(message){
+                if(message.IsApproved){
+                    location.href = "/LoyaltyProgram/PromoCode";
+                }
+                ViewMessage({}, message);                 
+            });               
+        });
+    });
+</script>

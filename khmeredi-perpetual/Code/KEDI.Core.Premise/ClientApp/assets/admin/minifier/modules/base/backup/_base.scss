@@ -1,0 +1,19 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    -webkit-user-select: none; /* Chrome/Safari */        
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+ */
+            user-select: none;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Red Hat Display', sans-serif;
+}
+
+.measure {
+    max-width: 1200px;
+    margin: 0 auto;
+    max-height: calc(100vh - 2 * 40px);
+}

@@ -1,0 +1,1279 @@
+﻿@model CKBS.Models.Services.HumanResources.BusinessPartnerViewModel
+
+<div id="master_bus" hidden> @Json.Serialize(Model.BusinessPartner) </div>
+<div id="detail_auto" hidden> @Json.Serialize(Model.AutoMobiles) </div>
+<link href="~/AutoMobile/css/yearpicker.css" rel="stylesheet" />
+<link href="~/BussinessPartner/css/create.css" rel="stylesheet" />
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <span>@ViewBag.Error</span>
+                <label class="control-label">@Localizer["Code"]</label>
+                <input id="codeid" value="@ViewBag.Code" autocomplete="off" class="input-box-kernel" />
+                <span class="text-danger">@ViewBag.Error</span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Name1"]</label>
+                <input id="nameid" autocomplete="off" class="input-box-kernel" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Name2"]</label>
+                <input id="nameid2" autocomplete="off" class="input-box-kernel" />
+            </div>
+
+
+            <div class="form-group ">
+                <label class="font-size">@Localizer["PriceList"]</label>
+                <div class="input-group">
+                    <select class="input-box-kernel cursor" asp-items="ViewBag.B" id="pricelistid">
+                        <option value="0" selected disabled>@Localizer["--- Select ---"]</option>
+                    </select>
+                    <div class="input-group-append">
+                        <span class="input-group-text add-price-list cursor">
+                            <i class="fa fa-plus-circle mll_2"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="text-danger">@ViewBag.pricelist</div>
+            </div>
+
+            <div class="form-group ">
+                <label class="font-size">@Localizer["Group 1"]</label>
+                <div class="input-group">
+                    <select class="input-box-kernel cursor" asp-items="ViewBag.G1" id="slg1">
+                        <option value="0" selected>@Localizer["--- Select ---"]</option>
+                    </select>
+                    <div class="input-group-append">
+                        <span class="input-group-text add-group-1 cursor">
+                            <i class="fa fa-plus-circle mll_2"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">@Localizer["Phone"]</label>
+                <input class="input-box-kernel" autocomplete="off" id="phoneid" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Email"]</label>
+                <input class="input-box-kernel" autocomplete="off" id="emailid" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Localizer["Address"]</label>
+                <input class="input-box-kernel" autocomplete="off" id="addressid" />
+            </div>
+
+
+            <div class="form-group ">
+                <label class="font-size">@Localizer["Group 2"]</label>
+                <div class="input-group">
+                    <select class="input-box-kernel cursor" asp-items="ViewBag.G2" id="txtg2">
+                        <option value="0" selected>@Localizer["--- Select ---"]</option>
+                    </select>
+                    <div class="input-group-append">
+                        <span class="input-group-text add-group-2 cursor">
+                            <i class="fa fa-plus-circle mll_2"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <ul class="widget-tab" style="height: 38vh;">
+        <li class="tab-sheet active">
+            <div class="tab-title">@Localizer["General"]</div>
+            <div class="tab-content widget-scrollbar ">
+                <div class="row ml-5 mt-3 hide-scroll">
+                    <div class="col-md-2 col-sm-4">
+                        <label>@Localizer["Sale Employee:"]</label>
+                    </div>
+                    <div class="col-md-3 col-sm-4">
+
+                        <input hidden id="txt_empid" />
+                        <input class="input-box-kernel" id="txt_saleemp" readonly />
+
+                    </div>
+                    <div class="col-md-5 col-sm-4 mt-1">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="row ml-5 mt-3 hide-scroll">
+                    <div class="col-md-2 col-sm-4">
+                        <label>@Localizer["Vat Number:"]</label>
+                    </div>
+                    <div class="col-md-3 col-sm-4">
+                        <input class="input-box-kernel" id="txt_vatnumber" autocomplete="off" />
+                    </div>
+                    @*<div class="col-md-5 col-sm-4 mt-1">
+                            <span id="name"></span>
+                        </div>*@
+                </div>
+                <div class="row ml-5 mt-3 hide-scroll">
+                    <div class="col-md-2 col-sm-4">
+                        <label>@Localizer["GPS Link:"]</label>
+                    </div>
+                    <div class="col-md-3 col-sm-4">
+                        <input class="input-box-kernel" id="gpslink" autocomplete="off" />
+                    </div>
+
+                </div>
+            </div>
+        </li>
+         @if(!UserManager.CheckEdition(SystemEdition.Basic))
+                {
+            <li class="tab-sheet" id="Accounts">
+                        <div class="tab-title">@Localizer["Account Payable"]</div>
+                        <div class="tab-content widget-scrollbar">
+                            <div class="row ml-5 mt-3 hide-scroll">
+                                <div class="col-md-3 col-sm-4">
+                                    <label>@Localizer["Account Payable"]</label>
+                                </div>
+                                <div class="col-md-3 col-sm-4" id="accounts-receivable">
+                                    <input class="input-box-kernel" readonly />
+                                </div>
+                                <div class="col-md-5 col-sm-4">
+                                    <span id="name"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+       
+        <li class="tab-sheet  " style="height:auto !important" id="Accounts">
+            <div class="tab-title">@Localizer["Contact Person"]</div>
+            <div class="tab-content widget-scrollbar">
+
+                <div class="row mt-3 ">
+                    <div class="col-md-12">
+                        <table class="item-detail">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">No</th>
+                                    <th class="text-center">@Localizer["Contact ID"]</th>
+                                    <th class="text-center">@Localizer["First Name"]</th>
+                                    <th class="text-center">@Localizer["Midel Name"]</th>
+                                    <th class="text-center">@Localizer["Last Name"]</th>
+                                    <th class="text-center">@Localizer["Title"]</th>
+                                    <th class="text-center">@Localizer["Position"]</th>
+                                    <th class="text-center">@Localizer["Address"]</th>
+                                    <th class="text-center">@Localizer["Telephone1"]</th>
+                                    <th class="text-center">@Localizer["Telephone2"]</th>
+                                    <th class="text-center">@Localizer["Mobel Phone"]</th>
+                                    <th class="text-center">@Localizer["Fax"]</th>
+                                    <th class="text-center">@Localizer["Emali"]</th>
+                                    <th class="text-center">@Localizer["Pager"]</th>
+                                    <th class="text-center">@Localizer["Remark1"]</th>
+                                    <th class="text-center">@Localizer["Remark2"]</th>
+                                    <th class="text-center">@Localizer["Password"]</th>
+                                    <th class="text-center">@Localizer["Contry Of Birth"]</th>
+                                    <th class="text-center">@Localizer["Date Of Birth"]</th>
+                                    <th class="text-center">@Localizer["Gender"]</th>
+                                    <th class="text-center">@Localizer["Profession"]</th>
+                                    <th class="text-center">@Localizer["SetAsDefualt"]</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </li>
+
+        @*//==========Payment Term============*@
+        <li class="tab-sheet  " id="payment">
+            <div class="tab-title">@Localizer["Payment Term"]</div>
+            <div class="tab-content widget-scrollbar">
+                <div class="row mt-3">
+                    <div class="col-md-2 mt-2">
+                        <label>@Localizer["Payment Term"]</label>
+                    </div>
+                    <span><i class="far fa-arrow-alt-circle-right mt-4" style="color:#ACA99D" id="showInfoPT" data-toggle="modal" data-target="#EditModalPayment"></i></span>
+                    <div class="col-md-3  mt-1">
+                        <input type="text" id="cashdisid" hidden />
+                        <select class="form-control " asp-items="ViewBag.P" onchange="singleSelectChangeValue()" id="paymentid" style="font-family:'Times New Roman'">
+                            <option value="0">-Cash-Basic-</option>
+                        </select>
+
+                    </div>
+                    <div class="input-group-append mt-4">
+                        <i class="fa fa-plus-circle" id="btpayment" style="color:blue;" data-toggle="modal" data-target="#ModalPayment"></i>
+                    </div>
+                </div>
+                <div class="row mt-3 ">
+                    <div class="col-md-2 ">
+                        <label>@Localizer["Credit Limit"]</label>
+                    </div>
+                    <div class="col-md-3" id="">
+                        <input class="input-box-kernel" id="crlimit" />
+                    </div>
+
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-md-12" style="position:relative; display:none;" id="sh_bus">
+            <div id="error_val_bus" class="text-danger"></div>
+        </div>
+    </div>
+    <div class="row"><span class="text-danger">@ViewBag.ErrorCode</span></div>
+
+    <div id="error-summary"></div>
+    <div class="row pull-left btnBotton">
+        <div class="form-group">
+            <div class="col-md-12">
+                <button id="SaveAll" class="btn btn-kernel btn-xs">@Localizer["Add"]</button>
+                <a href="@Url.Action("Vendor", "BusinessPartner")" class="btn btn-kernel btn-xs">@Localizer["Back"]</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="dialog-define-new" hidden>
+        <div class="wrap-table">
+            <table>
+                <tr>
+                    <th>@Localizer["No"].</th>
+                    <th>@Localizer["Name"]</th>
+                    <th hidden>@Localizer["Active"]</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="controlAc-gl-content" style="display:none; height: 400px;">
+        <div class="group-search-boxes float-right mb-2">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearch" autocomplete="off" type="text" placeholder="Search ...">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="list-controlAc-gl" class="table-responsive-sm">
+            <thead>
+                <tr>
+                    <th class="text-center">@Localizer["#"]</th>
+                    <th class="text-center">@Localizer["Code"]</th>
+                    <th class="text-center">@Localizer["Name"]</th>
+                    <th class="text-center">@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="modalPricelist" style="display: none">
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-label">@Localizer["Price List Name"] :</label>
+                    <input type="text" class="input-box-kernel-dialog" id="txtpricelist" />
+                </div>
+                <br />
+                <div class="form-group">
+                    <label class="form-label">@Localizer["Currency"] :</label>
+                    <select type="text" class="input-box-kernel-dialog" id="txtcurrency">
+                        <option value="0" selected disabled>@Localizer["--- Select ---"]</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*modal group 1*@
+    <div id="model-group1" style="display: none">
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-label">@Localizer["Name"] :</label>
+                    <input type="text" class="input-box-kernel-dialog" id="g1name" autocomplete="off" />
+                </div>
+            </div>
+        </div>
+        <div class="group-search-boxes float-left mt-2 mb-2">
+            <div id="text-search" class="wrap-search-box" style=" width: 500px !important;">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearchg1" autocomplete="off" type="text" placeholder="Search ...">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="tbl_group1">
+            <tr>
+                <th>@Localizer["No"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Type"]</th>
+                <th>@Localizer["Action"]</th>
+            </tr>
+        </table>
+    </div>
+    @*modal group 2*@
+    <div id="modal-group2" style="display: none">
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-label">@Localizer["Group1"] :</label>
+                    <select class="input-box-kernel-dialog" asp-items="ViewBag.G1" id="mgoup2">
+                        <option value="0" selected disabled>--- Select ---</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">@Localizer["Name"] :</label>
+                    <input type="text" class="input-box-kernel-dialog" id="txt_group2name" autocomplete="off" />
+                </div>
+            </div>
+        </div>
+
+        <div class="group-search-boxes float-left mt-2 mb-2">
+            <div id="text-search" class="wrap-search-box" style=" width: 500px !important;">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearchg2" autocomplete="off" type="text" placeholder="Search ...">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="tbl_group2">
+            <tr>
+                <th>@Localizer["No"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Type"]</th>
+                <th>@Localizer["Action"]</th>
+            </tr>
+        </table>
+    </div>
+</div>
+@*//==========box emp=========*@
+<div id="cont-em" class="widget-scrollbar" style="display:none; height: 400px;">
+    <div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="txtSearchemp" autocomplete="off" type="text" placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="tbl_emp" class="table-responsive-sm">
+        <tr>
+            <th class="text-center">@Localizer["No"]</th>
+            <th class="text-center">@Localizer["Code"]</th>
+            <th class="text-center">@Localizer["Name"]</th>
+            <th class="text-center">@Localizer["Gender"]</th>
+            <th class="text-center">@Localizer["Address"]</th>
+            <th class="text-center">@Localizer["Phone"]</th>
+            <th class="text-center">@Localizer["Email"]</th>
+            <th class="text-center">@Localizer["Position"]</th>
+            <th class="text-center">@Localizer["Type"]</th>
+            <th class="text-center">@Localizer["Choose"]</th>
+        </tr>
+
+    </table>
+</div>
+
+@*//========================Model box payment term=========*@
+
+@*start model payment box*@
+<div class="modal fade" id="ModalPayment">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#ACA99D ;border-bottom:10px solid #F9E79F;">
+                <p>@Localizer["Payment Terms -SetUp"]</p>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Payment Terms Code"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel input1" id="txtpayment" />
+                    </div>
+
+                </div>
+                @*<div class="row">
+                        <div class="col-md-4">
+                            <span class="text-danger">@ViewBag.Error</span>
+                            <div class="row"><span class="text-danger">@ViewBag.ExistCode</span></div>
+                        </div>
+                    </div>*@
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Due Date Bassed on"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <select class="form-control" style="font-family:'Times New Roman'" id="duedate" asp-items="Model.DueDate">
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Sart From"]</label>
+                    </div>
+                    <div class="col-md-3 mt-2">
+                        <select class="form-control " style="font-family:'Times New Roman';font-size:13px;" id="sartfrom" asp-items="Model.PaymentTerms">
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        @*<span><button id="plus">+</button></span>
+                            <span><input class="input2" type="text" style="width:35px;height:15px;" id="input1"></span>*@
+                        <span>
+                            <span class="plus1 button">
+                                +
+                            </span>
+                            <input type="text" name="qty" maxlength="12" value="0" style="width:35px;height:15px;" id="input1" />
+                        </span>
+                        <span><label style="font-family:'Times New Roman'">Months</label></span>
+                        @*<span><button id="plus">+</button></span>
+                            <span><input class="input3" type="text" style="width:35px;height:15px;" id="input2"></span>*@
+                        <span>
+                            <span class="plus2 button">
+                                +
+                            </span>
+                            <input type="text" name="qty" maxlength="12" value="0" style="width:35px;height:15px;" id="input2" />
+                        </span>
+                        <span><label style="font-family:'Times New Roman'">Days</label></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Tolerence Day"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel input4" value="0" id="input4" />
+                    </div>
+                </div>
+                <!--<div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'"> @Localizer["No.of Instaillment"]</label>
+                    </div>
+                    <div class="col-md-1 " style="margin-top:10px !important" >   <span><i class="far fa-arrow-alt-circle-right "  data-toggle="modal" id="editinstiall" data-target="#ModalInstaillment"></i></span></div>
+                    <div class="col-md-7 mt-2">
+                        <span><input readonly type="text" class=" input-box-kernel input5" id="instaillment" onchange="selectchangevalue()" /></span>-->
+                @*<input id="instaillments" />*@
+                <!--</div>
+                </div>-->
+                <div class="row">
+                    <div class="col-md-5">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Open Incoming Payment"]</label>
+                    </div>
+                    <div class="col-md-7 mt-2">
+                        <select class="form-control" style="font-family:'Times New Roman'" asp-items="Model.OpenIncomingPayment" id="incoming">
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Cash Discount Name"]</label>
+                    </div>
+                    <div class="col-md-1 ">   <span><i class="far fa-arrow-alt-circle-right " style="margin-top:10px;" id="ShowEditcashdis" data-toggle="modal" data-target="#EditModelCashDiscount"></i></span></div>
+                    <div class="col-md-7 mt-2">
+                        <div class="form-group">
+                            <div class="d-flex">
+
+                                <select class="input-box-kernel" asp-items="ViewBag.D" id="discountid" onchange="selectgetdiscountcode()">
+                                    <option value="0"></option>
+                                </select>
+                                @*<input type="text" id="cashdiscountid" hidden />*@
+                                <div class="input-group-append ">
+                                    <i class="fa fa-plus-circle" style="color:blue;margin-top:4px" data-toggle="modal" data-target="#ModelDiscount" id="editdiscount"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-12"><b style="border-bottom:2px solid gray;width:85px; font-family:'Times New Roman'">BP Fields</b></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Total Discount %"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel input4" value="0" id="totaldiscount" />
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Interest % on Receivable"]</label>
+                    </div>
+                    <div class="col-md-7 mt-2">
+                        <input type="text" class=" input-box-kernel input4" value="0" id="interestonrecivables" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Price List"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <select class="input-box-kernel" id="pricelist" asp-items="ViewBag.B">
+                            <option value="0" selected>---select---</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Max. Credit"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel maxcredit" value="0" id="maxcredit" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Comment Limit"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel commitlimit" value="0" id="commitlimit" />
+                    </div>
+                </div>
+                <div id="error-summary-payment"></div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs " style="background-color:#F9E79F" data-dismiss="modal" id="add">@Localizer["Add"]</button>
+                    <button class="btn btn-xs " style="background-color:#F9E79F" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*end model box*@
+@*sart model box of discount*@
+<div class="modal fade" id="ModelDiscount">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b style="font-family:'Times New Roman'">@Localizer["Cash Discount"]</b>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2"><label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Code"]</label></div>
+                    <div class="col-md-10 mt-1"><input type="text" class="col-sm-9 input-box-kernel" id="code" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"><label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Name"]</label></div>
+                    <div class="col-md-10 mt-1"><input type="text" class="col-sm-9 input-box-kernel" id="named" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset>
+                            <input id="bydate" type="checkbox" name="checkbox" class="checkbox1" value="By Date"> <label>By Date</label>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset>
+                            <input id="freight" type="checkbox" name="checkbox" class="checkbox2" value="Freight"> <label> Freight</label>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="wrap-table myt1" id="output">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Localizer["No."]
+                                        </th>
+                                        <th>
+                                            @Localizer["Cash Discount Day"]
+                                        </th>
+                                        <th style="text-align:center!important;">
+                                            @Localizer["Discount %"]
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-xs " id="insertcasdis" style="background-color:#F9E79F" data-dismiss="modal" @*onclick="clickinsertdiscount()"*@>@Localizer["Add"]</button>
+                        <button class="btn btn-xs " style="background-color:#F9E79F" onclick="clickinsertpricelist()">@Localizer["Cencel"]</button>
+                        <button class="btn btn-xs " style="background-color:#F9E79F" onclick="clickinsertpricelist()">@Localizer["Clear Table"]</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-xs " style="background-color:#F9E79F" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*end model box of discount name*@
+
+@*start model box of instaillment*@
+<div class="modal fade" id="ModalInstaillment">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b style="font-family:'Times New Roman'">@Localizer["Instaillment"]</b>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["No. of Instaillment"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel " id="amountofinstall">
+                    </div>
+                    <input id="InstaillmenttID" hidden />
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Credit Method"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <select class="form-control" style="font-family:'Times New Roman'" asp-items="Model.CreditMethod" id="creditmethod">
+                            <option value="0"></option>
+
+
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="checkbox" id="appytax" name="gender" value="Apply Tax First Instaillment">
+                        <label for="male" style="font-family:'Times New Roman'">Apply Tax First Instaillment</label><br>
+                        <input type="checkbox" id="updatetax" name="gender" value="Update Tax Propertionally">
+                        <label for="female" style="font-family:'Times New Roman'">Update Tax Propertionally</label><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="wrap-table myt1 widget-scrollbar" style="overflow: auto; height: 300px;">
+                            <table class="installmentDetailCreate">
+                                <tr>
+                                    <th>
+                                        @Localizer["No."]
+                                    </th>
+                                    <th>
+                                        @Localizer["Month"]
+                                    </th>
+                                    <th style="text-align:center!important;">
+                                        @Localizer["Day"]
+                                    </th>
+                                    <th>
+                                        @Localizer["%"]
+                                    </th>
+
+                                </tr>
+                            </table>
+
+                        </div>
+                        <table>
+
+                            <tbody>
+
+                                <tr>
+                                    <td colspan="4" style="text-align: right;"><input type="text" readonly value="100" /></td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-xs " style="background-color:#F9E79F" id="update">@Localizer["Update"]</button>
+                <button class="btn btn-xs " style="background-color:#F9E79F" id="added" data-dismiss="modal">@Localizer["Add"]</button>
+                <button class="btn btn-xs " style="background-color:#F9E79F" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*end model box of instailment*@
+
+
+@*sart model edit box of discount*@
+
+<div style="z-index:1051">
+    <div class="modal fade" id="EditModelCashDiscount">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <b style="font-family:'Times New Roman'">@Localizer["Cash Discount"]</b>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-2"><label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Code"]</label></div>
+                        <div class="col-md-10 mt-1"><input type="text" class="col-sm-9 input-box-kernel" id="Editcode" /></div>
+                        <input id="cashEditdiscountid" hidden />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Name"]</label></div>
+                        <div class="col-md-10 mt-1"><input type="text" class="col-sm-9 input-box-kernel" id="Editnamed" /></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <input id="Editbydate" type="checkbox" class="bydate" name="checkbox"> <label>By Date</label>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <input id="Editfreight" type="checkbox" class="freight" name="checkbox"> <label> Freight</label>
+                            </fieldset>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="wrap-table myt1" id="output2">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Localizer["No."]
+                                            </th>
+                                            <th>
+                                                @Localizer["Cash Discount Day"]
+                                            </th>
+                                            <th style="text-align:center!important;">
+                                                @Localizer["Discount %"]
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-xs " style="background-color:#F9E79F" id="showButton" data-dismiss="modal">@Localizer["Add"]</button>
+                            <button class="btn btn-xs " style="background-color:#F9E79F" onclick="clickinsertpricelist()">@Localizer["Cencel"]</button>
+                            <button class="btn btn-xs " style="background-color:#F9E79F" onclick="clickinsertpricelist()">@Localizer["Clear Table"]</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs " style="background-color:#F9E79F" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*end edit model box of discount name*@
+
+
+@*start edit model payment box*@
+<div class="modal fade" id="EditModalPayment">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#ACA99D ;border-bottom:10px solid #F9E79F">
+                <p>@Localizer["Payment Terms -SetUp"]</p>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Payment Terms Code"]</label>
+                    </div>
+                    <input id="paymentID" hidden />
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel input1" id="Edittxtpayment" />
+                        <input type="text" id="instaillmentid" hidden />
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Due Date Bassed on"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <select class="form-control" style="font-family:'Times New Roman'" id="Editduedate" asp-items="Model.DueDate">
+                            <option></option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Sart From"]</label>
+                    </div>
+                    <div class="col-md-3 mt-2">
+                        <select class="form-control " style="font-family:'Times New Roman';font-size:13px;" id="Editsartfrom" asp-items="Model.PaymentTerms">
+                            <option> </option>
+
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+
+                        <span>
+                            <span class="plus1 button">
+                                +
+                            </span>
+                            <input type="text" name="qty" maxlength="12" style="width:35px;height:15px;" id="Editinput1" />
+                        </span>
+                        <span><label style="font-family:'Times New Roman'">Months</label></span>
+
+                        <span>
+                            <span class="plus2 button">
+                                +
+                            </span>
+                            <input type="text" name="qty" maxlength="12" style="width:35px;height:15px;" id="Editinput2" />
+                        </span>
+                        <span><label style="font-family:'Times New Roman'">Days</label></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Tolerence Day"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel input4" id="Editinput4" />
+                    </div>
+                </div>
+                @*<div class="row">
+                        <div class="col-md-4">
+                            <label class=" control-label" style="font-family:'Times New Roman'"> @Localizer["No.of Instaillment"]</label>
+                        </div>
+                        <div class="col-md-1">   <span><i class="far fa-arrow-alt-circle-right " style="margin-top:13px !important" id="EditshowInstallmentt" data-toggle="modal" data-target="#EditModalInstaillment"></i></span></div>
+                        <div class="col-md-7 mt-2">
+                            <span><input readonly type="text" class="input-box-kernel input5" id="_editinstaillment" /></span>
+                            <input id="installmentId" hidden />
+                        </div>
+                    </div>*@
+                <div class="row">
+                    <div class="col-md-5">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Open Incoming Payment"]</label>
+                    </div>
+                    <div class="col-md-7 mt-2">
+                        <select class="form-control" style="font-family:'Times New Roman'" asp-items="Model.OpenIncomingPayment" id="Editincoming">
+                            <option></option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Cash Discount Name"]</label>
+                    </div>
+                    <div class="col-md-1 d-flex ">
+                        <i class="far fa-arrow-alt-circle-right " id="editdispay1" style="margin-top:10px;" data-toggle="modal" data-target="#EditModelCashDiscountPay"></i>
+                        <i class="far fa-arrow-alt-circle-right " hidden id="editdispay2" style="margin-top:10px;" data-toggle="modal" data-target="#EditModelCashDiscountPayselect"></i>
+                    </div>
+                    <div class="col-md-7 mt-2">
+                        <div class="form-group">
+                            <div class="d-flex">
+                                <select class="input-box-kernel" asp-items="ViewBag.D" id="Editdiscountid" onchange="selectdiscountcode()">
+                                    <option value="0"></option>
+                                </select>
+                                <input type="text" id="cashdiscountid" hidden />
+                                <div class="input-group-append">
+
+                                    <i class="fa fa-plus-circle" style="color:blue;margin-top:4px" data-toggle="modal" data-target="#ModelAddNewinEditDiscount" id="addnewdiscountpay"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-12"><b style="border-bottom:2px solid gray;width:85px; font-family:'Times New Roman'">BP Fields</b></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Total Discount %"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel input4" id="Edittotaldiscount" />
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Interest % on Receivable"]</label>
+                    </div>
+                    <div class="col-md-7 mt-2">
+                        <input type="text" class=" input-box-kernel input4" id="Editinterestonrecivables" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Price List"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <select class="input-box-kernel" id="Editpricelist" asp-items="ViewBag.B">
+                            <option value="0" selected disabled>---select---</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Max. Credit"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel maxcredit" id="Editmaxcredit" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Comment Limit"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel commitlimit" id="Editcommitlimit" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs " style="background-color:#F9E79F" ; data-dismiss="modal" id="editpaymentt">@Localizer["Add"]</button>
+                    <button class="btn btn-xs " style="background-color:#F9E79F" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*end edit model box*@
+@*start edit model box of instaillment*@
+<div class="modal fade" id="EditModalInstaillment">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b style="font-family:'Times New Roman'">@Localizer["Instaillment"]</b>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["No. of Instaillment"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <input type="text" class=" input-box-kernel " id="Editamountofinstall" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Credit Method"]</label>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <select class="form-control" style="font-family:'Times New Roman'" asp-items="Model.CreditMethod" id="Editcreditmethod">
+                            <option value="0"></option>
+
+
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="checkbox" id="Editappytax" name="gender" value="Apply Tax First Instaillment">
+                        <label for="male" style="font-family:'Times New Roman'">Apply Tax First Instaillment</label><br>
+                        <input type="checkbox" id="Editupdatetax" name="gender" value="Update Tax Propertionally">
+                        <label for="female" style="font-family:'Times New Roman'">Update Tax Propertionally</label><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="wrap-table myt1">
+                            <table class="installmentDetailEdit">
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            @Localizer["No."]
+                                        </th>
+                                        <th>
+                                            @Localizer["Month"]
+                                        </th>
+                                        <th style="text-align:center!important;">
+                                            @Localizer["Day"]
+                                        </th>
+                                        <th>
+                                            @Localizer["%"]
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4"><input type="text" readonly value="100" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-xs " style="background-color:#F9E79F" id="updateEdit">@Localizer["Update"]</button>
+                <button class="btn btn-xs " style="background-color:#F9E79F" id="editinstaillment" data-dismiss="modal">@Localizer["Add"]</button>
+                <button class="btn btn-xs " style="background-color:#F9E79F" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*end edit model box of instailment*@
+
+@*//=======start edit box dis======*@
+<div style="z-index:1051">
+    <div class="modal fade" id="EditModelCashDiscountPay">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <b style="font-family:'Times New Roman'">@Localizer["Cash Discount"]</b>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-2"><label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Code"]</label></div>
+                        <div class="col-md-10 mt-1"><input type="text" class="col-sm-9 input-box-kernel" id="Editcodepay" /></div>
+                        <input id="cashEditdiscountid" hidden />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Name"]</label></div>
+                        <div class="col-md-10 mt-1"><input type="text" class="col-sm-9 input-box-kernel" id="Editnamedpay" /></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <input id="Editbydatepay" type="checkbox" class="bydatepay" name="checkbox"> <label>By Date</label>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <input id="Editfreightpay" type="checkbox" class="freightpay" name="checkbox"> <label> Freight</label>
+                            </fieldset>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="wrap-table myt1" id="tabledis">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Localizer["No."]
+                                            </th>
+                                            <th>
+                                                @Localizer["Cash Discount Day"]
+                                            </th>
+                                            <th style="text-align:center!important;">
+                                                @Localizer["Discount %"]
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-xs " style="background-color:#F9E79F" id="addeditdis" data-dismiss="modal">@Localizer["Add"]</button>
+                            <button class="btn btn-xs " style="background-color:#F9E79F" onclick="clickinsertpricelist()">@Localizer["Cencel"]</button>
+                            <button class="btn btn-xs " style="background-color:#F9E79F" onclick="clickinsertpricelist()">@Localizer["Clear Table"]</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs " style="background-color:#F9E79F" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*//========end edit box dis =======*@
+
+
+@*//=======start edit box dis======*@
+<div style="z-index:1051">
+    <div class="modal fade" id="EditModelCashDiscountPayselect">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <b style="font-family:'Times New Roman'">@Localizer["Cash Discount"]</b>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-2"><label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Code"]</label></div>
+                        <div class="col-md-10 mt-1"><input type="text" class="col-sm-9 input-box-kernel" id="Editcodepay2" /></div>
+                        <input id="cashEditdiscountid" hidden />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Name"]</label></div>
+                        <div class="col-md-10 mt-1"><input type="text" class="col-sm-9 input-box-kernel" id="Editnamedpay2" /></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <input id="Editbydatepay2" type="checkbox" class="bydatepay" name="checkbox"> <label>By Date</label>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <input id="Editfreightpay2" type="checkbox" class="freightpay" name="checkbox"> <label> Freight</label>
+                            </fieldset>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="wrap-table myt1" id="tbeditdispay2">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Localizer["No."]
+                                            </th>
+                                            <th>
+                                                @Localizer["Cash Discount Day"]
+                                            </th>
+                                            <th style="text-align:center!important;">
+                                                @Localizer["Discount %"]
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-xs " style="background-color:#F9E79F" id="addeditdis2" data-dismiss="modal">@Localizer["Add"]</button>
+                            <button class="btn btn-xs " style="background-color:#F9E79F" onclick="clickinsertpricelist()">@Localizer["Cencel"]</button>
+                            <button class="btn btn-xs " style="background-color:#F9E79F" onclick="clickinsertpricelist()">@Localizer["Clear Table"]</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs " style="background-color:#F9E79F" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*//========end edit box dis =======*@
+
+
+@*sart model box of discount*@
+<div class="modal fade" id="ModelAddNewinEditDiscount">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b style="font-family:'Times New Roman'">@Localizer["Cash Discount"]</b>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2"><label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Code"]</label></div>
+                    <div class="col-md-10 mt-1"><input type="text" class="col-sm-9 input-box-kernel" id="addnewcode" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"><label class=" control-label" style="font-family:'Times New Roman'">@Localizer["Name"]</label></div>
+                    <div class="col-md-10 mt-1"><input type="text" class="col-sm-9 input-box-kernel" id="addnewnamed" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset>
+                            <input id="chbydate" type="checkbox" name="checkbox" class="chbox1" value="By Date"> <label>By Date</label>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset>
+                            <input id="chfreight" type="checkbox" name="checkbox" class="chbox2" value="Freight"> <label> Freight</label>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="wrap-table myt1" id="add-output">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Localizer["No."]
+                                        </th>
+                                        <th>
+                                            @Localizer["Cash Discount Day"]
+                                        </th>
+                                        <th style="text-align:center!important;">
+                                            @Localizer["Discount %"]
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-xs " style="background-color:#F9E79F" data-dismiss="modal" onclick="addnewdiscount()">@Localizer["Add"]</button>
+                        <button class="btn btn-xs " style="background-color:#F9E79F" onclick="clickinsertpricelist()">@Localizer["Cencel"]</button>
+                        <button class="btn btn-xs " style="background-color:#F9E79F" onclick="clickinsertpricelist()">@Localizer["Clear Table"]</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-xs " style="background-color:#F9E79F" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="idEdit" hidden />
+<input id="idEditCash" hidden />
+<input id="cashid" hidden />
+<input id="idEditisntaillment" hidden />
+<input id="txtid" hidden />
+<input id="disid" hidden />
+<input id="iddispay" hidden />
+<input id="disidpay" hidden />
+<input id="idintiall" hidden />
+<script src="~/AutoMobile/js/yearpicker.js"></script>
+<script src="~/AutoMobile/js/VehicleModel.js"></script>
+<script src="~/BussinessPartner/js/groupvendor.js"></script>
+<script src="~/BussinessPartner/js/PaymentTerm/PaymentTerms.js"></script>
+<script src="~/BussinessPartner/js/PaymentTerms.js"></script>
+<script src="~/BussinessPartner/js/create_vendor.js"></script>
+
+<script>
+
+    function selectdiscountcode() {
+        var obj = document.getElementById("Editdiscountid");
+        var selValue = obj.value;
+        document.getElementById("Editcode").value = selValue;
+    }
+    function selectgetdiscountcode() {
+        var obj = document.getElementById("discountid");
+        var selValue = obj.value;
+        document.getElementById("code").value = selValue;
+    }
+    function singleSelectChangeValue() {
+        var selObj = document.getElementById("paymentid");
+        var selValue = selObj.value;
+        document.getElementById("txtpayment").value = selValue;
+    }
+</script>
+
+

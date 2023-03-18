@@ -1,0 +1,797 @@
+﻿
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<input type="text" id="txtid" hidden />
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-2">
+            <span>Business Partner</span>
+        </div>
+        <div class="col-md-1">
+            <span>From</span>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-7 input-group">
+
+                    <input type="text" style="margin-left: -140px" id="bpcodefr" disabled />
+                    <div title="List Customer" id="show-list-bp1" class="input-group-append">
+                        <i class="fas fa-plus-circle text-info input-group-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <span>To</span>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-7 input-group">
+
+                    <input type="text" style="margin-left: -140px" id="bpcodeto" disabled />
+                    <div title="List Customer" id="show-list-bp2" class="input-group-append">
+                        <i class="fas fa-plus-circle text-info input-group-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <span>User</span>
+            <input type="checkbox" id="user"/>
+        </div>
+        <div class="col-md-1">
+            <button id="fiterlostdata">Filter</button>
+        </div>
+    </div>
+    <div class="wrap-table myt1">
+        <table id="list-data">
+            <thead>
+                <tr>
+                    <th>
+                        @Localizer["Number"]
+                    </th>
+                    <th style="text-align:center!important;">
+                        @Localizer["Start Date"]
+                    </th>
+                    <th>
+                        @Localizer["Start Time"]
+                    </th>
+                    <th hidden>
+                        @Localizer["Handled By"]
+                    </th>
+                    <th>
+                        @Localizer["Activity"]
+                    </th>
+                    <th>
+                        @Localizer["Recurrence"]
+                    </th>
+
+                    <th>
+                        @Localizer["BP Name"]
+                    </th>
+                    <th>
+                        @Localizer["Contact Person"]
+                    </th>
+                    <th>
+                        @Localizer["Status"]
+                    </th>
+                    <th>
+                        @Localizer["Remark"]
+                    </th>
+                    <th>
+                        @Localizer["Assigned By"]
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@*//======model box of user=======*@
+<div class="user_container doctypeno_containers " style="display: none; height: 250px;">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-user" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="list-user" class="mt-3">
+        <tr>
+            <th>@Localizer["No"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Department"]</th>
+            <th>@Localizer["Branch"]</th>
+            <th>@Localizer["Choose"]</th>
+        </tr>
+    </table>
+</div>
+@*//========model box of bp1===========*@
+<div class="bp_containers" style="display: none;">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-bus" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+
+    <table id="list-bp" class="mt-3">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Type"]</th>
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+<input id="bpid1" hidden/>
+<input id="bpid2" hidden />
+<script>
+    $(document).ready(function () {
+        $("#user").click(function () {
+            $.ajax({
+                url: "/BPAging/GetDataUser",
+                type: "Get",
+                dataType: "Json",
+                success: function (response) {
+                    binduser(response);
+
+                }
+            });
+        });
+
+         var arr_user = [];
+    function binduser(res) {
+        let dialog = new DialogBox({
+            button: {
+                ok: {
+                    text: "OK"
+                }
+            },
+            type: "ok-cancel",
+            content: {
+                selector: ".user_container"
+            },
+            caption: "User"
+        });
+        dialog.reject(function () {
+            arr_user = [];
+            dialog.shutdown();
+        });
+
+        dialog.invoke(function () {
+            const __liststage = ViewTable({
+                keyField: "ID",
+                selector: "#list-user",
+                indexed: true,
+                paging: {
+                    pageSize: 5,
+                    enabled: true
+                },
+                visibleFields: ["UserName", "Position","Branch","Action"],
+                columns: [
+                    {
+                        name: "Action",
+                        template: `<input type="checkbox">`,
+                        on: {
+                            "click": function (e) {
+                           
+                                const __checked = $(this).prop("checked") ? true : false;
+                                __liststage.updateColumn(e.key, "Action", __checked);
+                                if (__checked) {
+                                    arr_user.push({ ID: e.key })
+                                }
+                                if (!__checked) {
+                                    arr_user = arr_user.filter(i => i.ID != e.key);
+                                }
+                            }
+                        },
+                    }
+                ]
+            });
+            __liststage.clearRows();
+            __liststage.bindRows(res)
+        });
+        dialog.confirm(function () {
+      
+           dialog.shutdown();
+        })
+        }
+             $("#show-list-bp1").click(function () {
+            $.ajax({
+                url: "/BPAging/GetBP",
+                type: "Get",
+                dataType: "Json",
+                success: function (response) {
+                    bindBP1(response);
+                }
+            });
+        });
+        function bindBP1(res) {
+            let dialog = new DialogBox({
+                content: {
+                    selector: ".bp_containers"
+                },
+                caption: "Bussines Partner"
+            });
+            dialog.invoke(function () {
+                const __listBussinesPartner = ViewTable({
+                    keyField: "ID",
+                    selector: "#list-bp",
+                    paging: {
+                        pageSize: 10,
+                        enabled: true
+                    },
+                    visibleFields: ["Code", "Name", "Type", "Choose"],
+                    actions: [
+                        {
+                            template: `<i class="fas fa-arrow-circle-down" id="close"  ></i>`,
+                            on: {
+                                "click": function (e) {
+                                    $("#bpid1").val(e.data.ID)
+                                    $("#bpcodefr").val(e.data.Code);
+                                    dialog.shutdown();
+                                }
+                            },
+                        }
+                    ]
+                });
+                __listBussinesPartner.bindRows(res)
+            });
+            dialog.confirm(function () {
+               
+                dialog.shutdown();
+            })
+        }
+
+        $("#show-list-bp2").click(function () {
+            $.ajax({
+                url: "/BPAging/GetBP",
+                type: "Get",
+                dataType: "Json",
+                success: function (response) {
+                    bindBP2(response);
+                }
+            });
+        });
+        function bindBP2(res) {
+            let dialog = new DialogBox({
+                content: {
+                    selector: ".bp_containers"
+                },
+                caption: "Bussines Partner"
+            });
+            dialog.invoke(function () {
+                const __listBussinesPartner = ViewTable({
+                    keyField: "ID",
+                    selector: "#list-bp",
+                    paging: {
+                        pageSize: 10,
+                        enabled: true
+                    },
+                    visibleFields: ["Code", "Name", "Type", "Choose"],
+                    actions: [
+                        {
+                            template: `<i class="fas fa-arrow-circle-down" id="close"  ></i>`,
+                            on: {
+                                "click": function (e) {
+                                    $("#bpid2").val(e.data.ID)
+                                    $("#bpcodeto").val(e.data.Code);
+                                    
+                                    dialog.shutdown();
+                                }
+                            },
+                        }
+                    ]
+                });
+                __listBussinesPartner.bindRows(res)
+            });
+            dialog.confirm(function () {
+                dialog.shutdown();
+            })
+        }
+        const emp = {
+            Employee: new Array()
+        }
+        $("#fiterlostdata").click(function () {
+            let bpid1 = $("#bpid1").val();
+            let bpid2 = $("#bpid2").val();
+            const data = {
+                BpID1: bpid1,
+                BpID2: bpid2,
+                Employee: arr_user
+            }
+            emp.Employee = JSON.stringify(arr_user);
+            $("#tableshow").removeAttr("hidden", "hidden")
+            $.ajax({
+                url: "/BPAging/GetDataFilterReportActivity",
+                type: "Get",
+                data: { strObject: JSON.stringify(data) },
+                success: function (respones) {
+                    BindReports(respones);
+                    arr_user = [];
+                    $("#bpcodefr").val("")
+                    $("#bpcodeto").val("")
+                    $("#bpid1").val(0)
+                    $("#bpid2").val(0)
+                    $("#user").prop("checked", false);
+                }
+            })
+        })
+        $.ajax({
+            url: "/BPAging/GetDataReportActivity",
+            type: "Get",
+            success: function (respones) {
+                BindReports(respones);
+              
+            }
+        })
+        function BindReports(data) {
+
+            const __Listactivity = ViewTable({
+                keyField: "ID",
+                selector: "#list-data",
+                indexed: false,
+                paging: {
+                    pageSize: 5,
+                    enabled: true
+                },
+                visibleFields: [
+                    "Number",
+                    "StartTime",
+                    "StartTimes",
+                    "SetActName",
+                    "EmpName",
+                    "Recurrences",
+                    "BpName",
+                    "Status",
+                    "Remark",
+                    "AssignedBy",
+                ],
+                columns: [
+                    {
+                        name: "StartTime",
+                        dataType: 'date',
+                        dataFormat: 'DD-MM-YYYY',
+                    },
+                ]
+            });
+            __Listactivity.clearRows();
+            __Listactivity.bindRows(data);
+        }
+
+    });
+
+</script>
+<!--<div class="card card-body" hidden id="tableshow">
+
+    <input type="text" id="txtid" hidden />
+    <div class="group-search-boxes">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-activity" autocomplete="off" type="text" placeholder="@Localizer[" Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div class="wrap-table myt1">
+        <table id="list-data">
+            <thead>
+                <tr>
+                    <th>
+                        @Localizer["Number"]
+                    </th>
+                    <th style="text-align:center!important;">
+                        @Localizer["Start Date"]
+                    </th>
+                    <th>
+                        @Localizer["Start Time"]
+                    </th>
+                    <th hidden>
+                        @Localizer["Handled By"]
+                    </th>
+                    <th>
+                        @Localizer["Activity"]
+                    </th>
+                    <th>
+                        @Localizer["Recurrence"]
+                    </th>
+
+                    <th>
+                        @Localizer["BP Name"]
+                    </th>
+                    <th>
+                        @Localizer["Contact Person"]
+                    </th>
+                    <th>
+                        @Localizer["Status"]
+                    </th>
+                    <th>
+                        @Localizer["Remark"]
+                    </th>
+                    <th>
+                        @Localizer["Assigned By"]
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<input id="bpid1" hidden/>
+<input id="bpid2" hidden/>
+<div id="active-percent-content" style="display:none; height: 50px; ">
+    <div class="row">
+        <div class="col-md-2">
+            <span>BP Code</span>
+        </div>
+        <div class="col-md-5">
+            <span>From</span>
+            <span><input type="text" readonly id="bpFrom" /></span>
+            <span> <i class="fas fa-plus-circle text-info input-group-icon" id="show-list-bp1" style="font-size:20px"></i></span>
+        </div>
+        <div class="col-md-5">
+            <span>To</span>
+            <span><input type="text" readonly id="bpTo" /></span>
+            <i class="fas fa-plus-circle text-info input-group-icon" id="show-list-bp2" style="font-size:20px"></i>
+
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-2">
+            <span>Handled By</span>
+        </div>
+        <div class="col-md-5">
+            <span>User</span>
+            <span> <input type="text" value="" readonly /></span>
+            <span> <i class="fas fa-plus-circle text-info input-group-icon" id="clickuser" style="font-size:20px"></i></span>
+        </div>
+
+        <div class="col-md-5">
+
+        </div>
+
+    </div>
+</div>
+
+<div class="bp_containers" style="display: none;">
+
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-bus" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+
+    <table id="list-bp" class="mt-3">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Type"]</th>
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+@*//======model box of user=======*@
+<!--<div class="user_container doctypeno_containers " style="display: none; height: 250px;">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-user" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="list-user" class="mt-3">
+        <tr>
+            <th>@Localizer["No"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Department"]</th>
+            <th>@Localizer["Branch"]</th>
+            <th>@Localizer["Choose"]</th>
+        </tr>
+    </table>
+</div>
+<script>
+
+  /*  $(document).ready(function () {*/
+      //  $("#search-activity").on("keyup", function (e) {
+      //      var value = $(this).val().toLowerCase();
+      //      $("#list-data tr:not(:first-child)").filter(function () {
+      //          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      //      });
+      //  });
+      //  $("#search-user").on("keyup", function (e) {
+      //      var value = $(this).val().toLowerCase();
+      //      $("#list-user tr:not(:first-child)").filter(function () {
+      //          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      //      });
+      //  });
+      //  $("#search-bus").on("keyup", function (e) {
+      //      var value = $(this).val().toLowerCase();
+      //      $("#list-bp tr:not(:first-child)").filter(function () {
+      //          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      //      });
+      //  });
+      ///*  filter();*/
+      //  const obj = {
+
+      //      ActivityViewDatas: new Array()
+      //  }
+
+            //let dialog = new DialogBox({
+            //    button: {
+            //        ok: {
+            //            text: "OK"
+            //        }
+            //    },
+            //    type: "ok-cancel",
+            //    content: {
+            //        selector: "#active-percent-content"
+            //    }
+            //});
+            //dialog.reject(function () {
+
+            //    dialog.shutdown();
+            //});
+            //dialog.confirm(function () {
+
+            //    obj.BpID1 = $("#bpid1").val();
+            //    obj.BpID2 = $("#bpid2").val();
+            //    obj.ActivityViewDatas = JSON.stringify(arr_stage);
+            //    $("#tableshow").removeAttr("hidden","hidden")
+            //    $.ajax({
+            //        url: "/BPAging/GetDataReportActivity",
+            //        type: "Get",
+            //        data: { BpID1: obj.BpID1, BpID2: obj.BpID2, Activities: obj.ActivityViewDatas},
+            //            //dataType: "Json",
+            //            success: function (respones) {
+            //               BindReports(respones);
+            //            }
+            //        })
+
+            //    dialog.shutdown();
+            //});
+            //dialog.invoke(function () { });
+
+    //    $.ajax({
+    //                url: "/BPAging/GetDataReportActivity",
+    //                type: "Get",
+    //                data: { BpID1: obj.BpID1, BpID2: obj.BpID2, Activities: obj.ActivityViewDatas},
+    //                    //dataType: "Json",
+    //                    success: function (respones) {
+    //                       BindReports(respones);
+    //                    }
+    //        })
+    //    function BindReports(data) {
+
+    //        const __Listactivity = ViewTable({
+    //            keyField: "ID",
+    //            selector: "#list-data",
+    //            indexed: false,
+    //            paging: {
+    //                pageSize: 5,
+    //                enabled: true
+    //            },
+    //            visibleFields: [
+    //                "Number",
+    //                "StartTime",
+    //                "StartTimes",
+    //                "SetActName",
+    //                "EmpName",
+    //                "Recurrences",
+    //                "BpName",
+    //                "Status",
+    //                "Remark",
+    //                "AssignedBy",
+    //            ],
+    //            columns: [
+    //                {
+    //                    name: "Number",
+    //                    on: {
+    //                        "dblclick": function (e) {
+    //                            location.href = "/BPAging/Edit?id=" + e.key;
+    //                        }
+    //                    }
+    //                }
+
+    //            ]
+    //        });
+    //        __Listactivity.clearRows();
+    //        __Listactivity.bindRows(data);
+    //    }
+
+    //    $("#show-list-bp1").click(function () {
+    //        $.ajax({
+    //            url: "/BPAging/GetBP",
+    //            type: "Get",
+    //            dataType: "Json",
+    //            success: function (response) {
+    //                bindBP1(response);
+    //            }
+    //        });
+    //    });
+    //    function bindBP1(res) {
+    //        let dialog = new DialogBox({
+    //            content: {
+    //                selector: ".bp_containers"
+    //            },
+    //            caption: "Bussines Partner"
+    //        });
+    //        dialog.invoke(function () {
+    //            const __listBussinesPartner = ViewTable({
+    //                keyField: "ID",
+    //                selector: "#list-bp",
+    //                paging: {
+    //                    pageSize: 10,
+    //                    enabled: true
+    //                },
+    //                visibleFields: ["Code", "Name", "Type", "Choose"],
+    //                actions: [
+    //                    {
+    //                        template: `<i class="fas fa-arrow-circle-down" id="close"  ></i>`,
+    //                        on: {
+    //                            "click": function (e) {
+    //                                $("#bpid1").val(e.data.ID)
+    //                                $("#bpFrom").val(e.data.Code);
+    //                                dialog.shutdown();
+    //                            }
+    //                        },
+    //                    }
+    //                ]
+    //            });
+    //            __listBussinesPartner.bindRows(res)
+    //        });
+    //        dialog.confirm(function () {
+    //            dialog.shutdown();
+    //        })
+    //    }
+
+    //    $("#show-list-bp2").click(function () {
+    //        $.ajax({
+    //            url: "/BPAging/GetBP",
+    //            type: "Get",
+    //            dataType: "Json",
+    //            success: function (response) {
+    //                bindBP2(response);
+    //            }
+    //        });
+    //    });
+    //    function bindBP2(res) {
+    //        let dialog = new DialogBox({
+    //            content: {
+    //                selector: ".bp_containers"
+    //            },
+    //            caption: "Bussines Partner"
+    //        });
+    //        dialog.invoke(function () {
+    //            const __listBussinesPartner = ViewTable({
+    //                keyField: "ID",
+    //                selector: "#list-bp",
+    //                paging: {
+    //                    pageSize: 10,
+    //                    enabled: true
+    //                },
+    //                visibleFields: ["Code", "Name", "Type", "Choose"],
+    //                actions: [
+    //                    {
+    //                        template: `<i class="fas fa-arrow-circle-down" id="close"  ></i>`,
+    //                        on: {
+    //                            "click": function (e) {
+    //                                $("#bpid2").val(e.data.ID)
+    //                                $("#bpTo").val(e.data.Code);
+    //                                dialog.shutdown();
+    //                            }
+    //                        },
+    //                    }
+    //                ]
+    //            });
+    //            __listBussinesPartner.bindRows(res)
+    //        });
+    //        dialog.confirm(function () {
+    //            dialog.shutdown();
+    //        })
+    //    }
+
+    //});
+    //$("#clickuser").click(function () {
+    //    $.ajax({
+    //        url: "/BPAging/GetDataUser",
+    //        type: "Get",
+    //        dataType: "Json",
+    //        success: function (response) {
+    //            bindstage(response);
+
+    //        }
+    //    });
+    //})
+    //var arr_stage = [];
+    //function bindstage(res) {
+    //    let dialog = new DialogBox({
+    //        button: {
+    //            ok: {
+    //                text: "OK"
+    //            }
+    //        },
+    //        type: "ok-cancel",
+    //        content: {
+    //            selector: ".user_container"
+    //        },
+    //        caption: "User"
+    //    });
+    //    dialog.reject(function () {
+    //        arr_stage = [];
+    //        dialog.shutdown();
+    //    });
+
+    //    dialog.invoke(function () {
+    //        const __liststage = ViewTable({
+    //            keyField: "ID",
+    //            selector: "#list-user",
+    //            indexed: true,
+    //            paging: {
+    //                pageSize: 5,
+    //                enabled: true
+    //            },
+    //            visibleFields: ["UserName", "Position","Branch","Action"],
+    //            columns: [
+    //                {
+    //                    name: "Action",
+    //                    template: `<input type="checkbox">`,
+    //                    on: {
+    //                        "click": function (e) {
+    //                            const __checked = $(this).prop("checked") ? true : false;
+    //                            __liststage.updateColumn(e.data.ID, "Action", __checked);
+
+    //                            var id = e.data;
+    //                            if (__checked) {
+    //                                arr_stage.push(id)
+    //                            }
+    //                            if (!__checked) {
+
+    //                                for (var i = 0; i < arr_stage.length; i++) {
+
+    //                                    if (arr_stage[i] === id) {
+
+    //                                        arr_stage.splice(i, 1);
+
+    //                                    }
+    //                                }
+    //                            }
+    //                        }
+    //                    },
+    //                }
+    //            ]
+    //        });
+    //        __liststage.clearRows();
+    //        __liststage.bindRows(res)
+    //    });
+    //    dialog.confirm(function () {
+
+    //       dialog.shutdown();
+    //    })
+    //}
+
+
+</script>-->

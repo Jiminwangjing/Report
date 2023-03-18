@@ -1,0 +1,104 @@
+﻿@model IEnumerable<KEDI.Core.Premise.Models.ServicesClass.FinancialReports.GlSaleARViews>
+@{
+    ViewData["Title"] = "Preview Detail Sale";
+    Layout = "~/Views/Shared/_Layout_Print.cshtml";
+}
+
+<div>
+    <div class="row">
+        <div class="col-xs-4">
+            @*<img src="~/Images/company/@Model.First().Header.Logo" width="150" height="130" style="padding:0px 0px 0px 10px;" />*@
+        </div>
+        <div class="col-xs-4" style="margin-top:70px;">
+            <div class="text-center" style="opacity:0;">.</div>
+            <div class="text-center" style="font-size:30px; margin-top:-20px;">សៀវភៅកត់ត្រាទូទៅ </div>
+            <div class="text-center" style="font-size:30px; margin-top:10px;"> General Ledger </div>
+            <div class="row" style="margin-top:75px;"></div>
+        </div>
+        <div class="col-xs-4"> </div>
+    </div>
+
+    <div class="row" style="margin: 0px -1px 20px -10px">
+        <div class="col-xs-4">
+        </div>
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4" style="padding-left:9%">
+            <table class="tbfontsize">
+                <tr>
+                    <th class="header">@Localizer["Date From"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header"> @Model.First().FromDate </td>
+                </tr>
+                <tr>
+                    <th class="header">@Localizer["Date To"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header"> @Model.First().Todate</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="table">
+        <table class="table">
+            <thead style="background-color:#5F758B;">
+                <tr>
+                    <th class="header" style="color:white;"> @Localizer["Posting Date"] </th>
+                    <th class="header" style="color:white;"> @Localizer["Document Date"] </th>
+                    <th class="header" style="color:white;"> @Localizer["Doc.Type "] </th>
+                    <th class="header" style="color:white;"> @Localizer["Creator"] </th>
+                    <th class="header" style="color:white;"> @Localizer["Series Name"] </th>
+                    <th class="header" style="color:white;"> @Localizer["JE Number"] </th>
+                    <th class="header" style="color:white;"> @Localizer["Trans No"] </th>
+                    <th class="header" style="color:white;"> @Localizer["Account Name"] </th>
+                    <th class="header" style="color:white;"> @Localizer["Debit/Credit "] </th>
+                    <th class="header" style="color:white;"> @Localizer["Cumolativebalance"] </th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var gl in Model)
+                {
+                <tr>
+                    <td>@gl.PostingDate</td>
+                    <td>@gl.DocumentDate</td>
+                    <td>@gl.DocType</td>
+                    <td>@gl.Creator</td>
+                    <td>@gl.SeriesName</td>
+                    <td>@gl.Receiptno</td>
+                    <td>@string.Format("{0:#,0.000}", gl.TransNo)</td>
+                    <td>@(string.Format("{0:#,0.000}", gl.AccountName))</td>
+                    <td style="text-align:right">@string.Format("{0:#,0.000}", gl.DebitCredit)</td>
+                    <td style="text-align:right">@string.Format("{0:#,0.000}", gl.Cumolativebalance)</td>
+                </tr>
+                }
+            </tbody>
+
+
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-xs-4">
+            <label> **@Localizer["Acknowledge"] </label>
+            <hr style="margin-top:-3px; background-color:gray; color:gray; height:1px; width:80%; float:left;" />
+            <div style="margin-top:65px;">
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Published by"] </u></b></div>
+        </div>
+        <div class="col-xs-4" style="margin-top:95px;">
+            <div>
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Reviewed by"] </u></b></div>
+        </div>
+        <div class="col-xs-4" style="margin-top:95px;">
+            <div>
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Approved by"] </u></b></div>
+        </div>
+    </div>
+
+</div>
+
+

@@ -1,0 +1,217 @@
+﻿.cursor {
+    cursor: pointer;
+}
+
+.menu-item-list {
+    list-style: none;
+}
+
+/*Tree Style*/
+.menu-item-group,
+.sub-menu-item-group {
+    list-style: none;
+    position: relative;
+}
+
+.menu-item-list {
+    padding: 0;
+    margin-left: 20px;
+}
+
+/*.menu-item-list div:hover {
+        color: white;
+    }*/
+.menu-title {
+    font-family: 'Montserrat', sans-serif;
+    color: rgb(0, 0, 0);
+    font-size: 12px;
+}
+
+.alive {
+    background-color: #16a085;
+}
+
+.menu-title-group,
+.menu-title {
+    text-align: left;
+}
+
+.menu-title-group {
+    font-size: 12px !important;
+}
+
+.white {
+    color: white !important;
+}
+
+.flex-container,
+.totalAccount,
+.flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.dotBorder {
+    border-top: 1px solid #16a085;
+    border-bottom: 1px dotted #16a085;
+}
+
+.pm,
+.dotBorder {
+    margin-top: 10px;
+    padding: 3px 15px;
+}
+
+.pm,
+.dotBorder {
+    margin-left: -15px;
+    font-size: 12px;
+}
+
+.totalAccount span {
+    color: #16a085;
+}
+
+.header {
+    margin-top: 10px;
+}
+
+.flex-hide-title {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.mt5 {
+    margin-top: 2.5rem;
+}
+
+.glaActive {
+    list-style: none;
+    padding: 10px 0;
+}
+
+.font-size {
+    font-size: 12px;
+}
+
+.mt__2 {
+    margin-top: -5px;
+}
+
+.ml-20 {
+    margin-left: 20px;
+}
+
+#data-QuarterlyReport, #data1-QuarterlyReport, #data2-QuarterlyReport {
+    margin-left: -20px;
+}
+
+.form-group .form-control {
+    height: 24px !important;
+}
+
+.font-size {
+    font-size: 12px;
+}
+
+.mt__2 {
+    margin-top: -5px;
+}
+
+input[type='radio'], input[type='checkbox'] {
+    margin: 1px -15px !important;
+}
+
+.flexName {
+    display: flex;
+}
+
+    .flexName .name1 {
+        flex: 50%;
+    }
+
+    .flexName .name2 {
+        flex: 10%;
+        text-align: center;
+    }
+
+.flexQauater1 {
+    flex: 82%;
+}
+
+.flexQauater2 {
+    flex: 20%;
+}
+
+._1st {
+    flex: 119%;
+    text-align: right;
+    padding-right: 15px;
+}
+
+.flexQauaterTotal1 {
+    flex: 83%;
+}
+
+.flexQauaterTotal2 {
+    flex: 20%;
+}
+
+._2nd, ._3rd, ._4th {
+    flex: 24%;
+    text-align: center;
+}
+
+.flexAn {
+    display: flex;
+    justify-content: space-between;
+}
+
+._1stM {
+    flex: 42%;
+    text-align: right;
+    padding: 0 10px;
+}
+
+._4thM {
+    flex: 7%;
+}
+
+.flexMonthTotal1 {
+    flex: 45%;
+}
+
+.flexMonthTotal2 {
+    flex: 11%;
+}
+
+.flexmonth1 {
+    flex: 40%;
+}
+
+.flexmonth2 {
+    flex: 10%;
+}
+
+@media print {
+    .buttonHidden {
+        display: none;
+    }
+
+    @page {
+        margin: 0.6cm;
+    }
+
+    body {
+        margin: 1.6cm;
+    }
+}
+
+.hr {
+    display: block;
+    height: 1px;
+    background: transparent;
+    width: 100%;
+    border: none;
+    border-top: solid 1px black;
+}

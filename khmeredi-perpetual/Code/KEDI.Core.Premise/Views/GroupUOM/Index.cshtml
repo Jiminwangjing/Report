@@ -1,0 +1,485 @@
+﻿@model Pagination<GroupUOM>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<link href="~/css/Modal.css" rel="stylesheet" />
+<style>
+    .tbncrate {
+        margin-top: 10px;
+
+        color: white;
+        margin-left: 1px;
+    }
+
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+
+    #txtdefine {
+        cursor: pointer;
+        /*color: seagreen;*/
+    }
+
+    #table,
+    tr,
+    th {
+        text-align: center !important;
+    }
+
+    #table,
+    tr,
+    td {
+        text-align: center !important;
+    }
+</style>
+<div class="card card-body">
+    <div class="d-flex justify-content-between">
+        <a asp-action="Create" class="btn btn-xs btn-kernel tbncrate"> @Localizer["Create"]</a>
+
+        <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-groupUOM" autocomplete="off" type="text"
+                        placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="wrap-table list">
+        <table id="listGUOM">
+            <tr>
+                <th>
+                    @Localizer["Code"]
+                </th>
+                <th>
+                    @Localizer["Name"]
+                </th>
+                <th>
+                    @Localizer["Action"]
+                </th>
+            </tr>
+        </table>
+    </div>
+    <input type="text" id="txtID" hidden />
+    <div class="modal fade" id="ClickDelete" style="margin-top:50px;">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:blue;">
+                    <i class="far fa-question-circle"><b>@Localizer["GroupUOM"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <h3>@Localizer["question"]</h3>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-sm" data-dismiss="modal" onclick="ClickYes()"><i
+                            class="far fa-calendar-check" style="margin-right:3px;"></i> @Localizer["Yes"]</button>
+                    <button class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fas fa-exclamation-triangle"
+                            style="margin-right:3px;"></i> @Localizer["No"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="clickdefine">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i>@Localizer["DefineGroupUOM"] </i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p id="btnupdate" hidden>@Localizer["Add"]</p>
+                            <p id="btndsave" hidden>@Localizer["Save"]</p>
+
+                            <input type="text" id="txtDGid" hidden />
+                            <input type="text" id="baseUOM" hidden />
+                            <div class="form-group">
+                                <label>@Localizer["AltUoM"] :</label>
+                                <span>
+                                    <select class="input-box-kernel" onchange="selectAltUOM()" id="txtAltUoM">
+                                        <option value="0"></option>
+                                    </select>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["AltQty"] :</label>
+                                <span>
+                                    <input type="text" class="input-box-kernel text-center" id="txtAltQty" />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>@Localizer["BaseUoM"] :</label>
+                                <span>
+                                    <select class="input-box-kernel" id="txtBaseUoM">
+                                        <option value="0"></option>
+                                    </select>
+                                </span>
+                            </div>
+                            <div class="form-group row">
+                                <label>@Localizer["BasetQty"] :</label>
+                                <span>
+                                    <input type="text" class="input-box-kernel" id="txtxbaseQty" />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+                    <div class="wrap-table list">
+                        <table id="MyTable">
+                            <thead>
+                                <tr>
+                                    <th>@Localizer["Nº"]</th>
+                                    <th>@Localizer["AltQuantity"]</th>
+                                    <th>@Localizer["AltUoM"]</th>
+                                    <th>@Localizer["Defines"]</th>
+                                    <th>@Localizer["BaseQuantity"]</th>
+                                    <th>@Localizer["BaseUoM"]</th>
+                                    <th>@Localizer["Factor"]</th>
+                                    <th>@Localizer["Action"]</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listDGroup"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-kernel btn-xs" onclick="insertDefine()" id="btnadddefine">Add</button>
+                    <button class="btn btn-kernel btn-xs" onclick="insertDefine()" id="btnsavedefine"
+                        hidden>Save</button>
+                    <button class="btn btn-kernel btn-xs" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ClickDeleteDGUOM">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content " style="background-color:rgb(221, 213, 213);">
+                <div class="modal-header" style="background-color:blue;">
+                    <i class="far fa-question-circle"
+                        style="font-size:15px; color:white;"><b>@Localizer["DefinedGroup"]</b></i>
+                </div>
+                <div class="modal-body bodystyle">
+                    <h3>@Localizer["question"]</h3>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-kernel btn-xs" data-dismiss="modal" onclick="ClickYesDGUOM()"><i
+                            class="far fa-calendar-check" style="margin-right:3px;"></i> @Localizer["Yes"]</button>
+                    <button class="btn btn-kernel btn-xs" data-dismiss="modal"><i class="fas fa-exclamation-triangle"
+                            style="margin-right:3px;"></i> @Localizer["No"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        let $listView = ViewTable({
+            keyField: "ID",
+            selector: "#listGUOM",
+            paging: {
+                enabled: false,
+                pageSize: 10
+            },
+            visibleFields: ["Code", "Name"],
+            columns: [
+                {
+                    name: "Code",
+                    on: {
+                        "dblclick": function (e) {
+                            location.href = "/GroupUOM/Edit?id=" + e.key;
+                        }
+                    }
+                }
+            ],
+            actions: [
+                {
+                    template: '<a id="txtdefine" data-toggle="modal" data-target="#clickdefine"><i class="fas fa-code-branch"></i></a>',
+
+                    on: {
+                        "click": function (e) {
+                            //location.href = "/GroupUOM/Index?id=" + e.key;
+                        }
+                    }
+                },
+
+            ],
+            selector: "#listGUOM",
+        });
+        searchGroupUOM($listView);
+        $("#search-groupUOM").on("keyup", function () {
+            searchGroupUOM($listView, this.value);
+        });
+        function searchGroupUOM($listView, keyword = "") {
+            $.get("/GroupUOM/GetGroupUOM", {
+                keyword: keyword
+            },
+                function (groupUOM) {
+                    $listView.clearRows();
+                    $listView.bindRows(groupUOM);
+
+                });
+        }
+
+        $(".modal-header").on("mousedown", function (mousedownEvt) {
+            var $draggable = $(this);
+            var x = mousedownEvt.pageX - $draggable.offset().left,
+                y = mousedownEvt.pageY - $draggable.offset().top;
+            $("body").on("mousemove.draggable", function (mousemoveEvt) {
+                $draggable.closest(".modal-dialog").offset({
+                    "left": mousemoveEvt.pageX - x,
+                    "top": mousemoveEvt.pageY - y
+                });
+            });
+            $("body").one("mouseup", function () {
+                $("body").off("mousemove.draggable");
+            });
+            $draggable.closest(".modal").one("bs.modal.hide", function () {
+                $("body").off("mousemove.draggable");
+            });
+        });
+        $("#listDGroup").on("click", ".editDGUOM", function () {
+            $("#btnadddefine").prop("hidden", true);
+            $("#btnsavedefine").prop("hidden", false);
+            var cut = $(this).closest('tr');
+            var id = cut.find('td:eq(0)').text();
+            var altqty = cut.find('td:eq(4)').text();
+            var altuom = cut.find('td:eq(1)').text();
+            var baseqty = cut.find('td:eq(7)').text();
+            var baseuom = cut.find('td:eq(8)').text();
+            // $("#btndefine").html(btnsave); 
+            document.getElementById("txtDGid").value = id;
+            document.getElementById("txtAltQty").value = altqty;
+            document.getElementById("txtAltUoM").value = altuom;
+            document.getElementById("txtxbaseQty").value = baseqty;
+            document.getElementById("txtBaseUoM").disabled = true;
+            document.getElementById("txtAltUoM").disabled = true;
+            document.getElementById("txtAltQty").disabled = false;
+            document.getElementById("txtxbaseQty").disabled = false;
+        });
+        $("#btnsavedefine").click(function () {
+            $("#btnadddefine").prop("hidden", false);
+            $("#btnsavedefine").prop("hidden", true);
+        })
+        $("#listDGroup").on("click", ".deleteDG", function () {
+            var cut = $(this).closest('tr');
+            var id = cut.find('td:eq(0)').text();
+            document.getElementById("txtDGid").value = id;
+        });
+
+        $("#listGUOM").on("click", "#txtdefine", function () {
+            //$("#btndefine").html(btnupdate);
+            var cut = $(this).closest('tr');
+            var id = cut.find('td:eq(0)').text();
+            var name = cut.find('td:eq(2)').text();
+            $("#getnameGroup").text(name);
+            document.getElementById("baseUOM").value = id;
+            var ID = $("#baseUOM").val();
+            $.ajax({
+                url: "/GroupUOM/GetDataDGroup",
+                type: "Get",
+                dataType: "Json",
+                data: { ID: ID },
+                success: function (respones) {
+                    if (respones == "") {
+                        GetselectboxBaesUOM(Mes);
+                    }
+                    $.each(respones, function (i, item) {
+                        document.getElementById("txtBaseUoM").disabled = true;
+                        document.getElementById("txtAltUoM").disabled = true;
+                        document.getElementById("txtAltQty").disabled = false;
+                        document.getElementById("txtxbaseQty").disabled = false;
+                        Mes = 'N';
+                        baseUoM = item.BaseUOM;
+                        GetselectboxBaesUOM(baseUoM, Mes);
+                        GetselectboxAltUoM();
+                    });
+                    GetDataTable(respones);
+                }
+            });
+        });
+        var btnupdate = $("#btnupdate").text();
+        var btnsave = $("#btndsave").text();
+        var Mes = "";
+        var baseUoM = "";
+        function GetselectboxBaesUOM(GroupUoMID, Mes) {
+            $("#txtBaseUoM option").remove();
+            $.ajax({
+                url: "/UnitofMeasure/GetUOM",
+                type: "Get",
+                dataType: "Json",
+                success: function (respones) {
+                    var data = "";
+                    $.each(respones, function (i, item) {
+                        data +=
+                            '<option value="' + item.ID + '">' + item.Name + '</option>';
+                    });
+                    $("#txtBaseUoM").append(data);
+                    if (Mes == 'N') {
+                        $("#txtBaseUoM").val(GroupUoMID);
+                    }
+                    else {
+                        $("#txtBaseUoM").val("");
+                        document.getElementById("txtBaseUoM").disabled = false;
+                        document.getElementById("txtAltUoM").disabled = false;
+                        document.getElementById("txtAltQty").disabled = true;
+                        document.getElementById("txtxbaseQty").disabled = true;
+                    }
+                }
+
+            });
+        }
+        function GetselectboxAltUoM(BaseUoM) {
+            $("#txtAltUoM option").remove();
+            $.ajax({
+                url: "/UnitofMeasure/GetUOM",
+                type: "Get",
+                dataType: "Json",
+                success: function (respones) {
+                    var data = "";
+                    $("#txtAltUoM option").remove();
+                    $.each(respones, function (i, item) {
+                        data +=
+                            '<option value="' + item.ID + '">' + item.Name + '</option>';
+                    });
+                    $("#txtAltUoM").append(data);
+                    $("#txtAltUoM").val(BaseUoM);
+                }
+            });
+        }
+        function ClickYesDGUOM() {
+            var id = $("#txtDGid").val();
+            var IDg = $("#baseUOM").val();
+            $.ajax({
+                url: "/GroupUOM/DeleteDefined",
+                type: "Delete",
+                dataType: "Json",
+                data: { ID: id, IDGroup: IDg },
+                success: function (respones) {
+                    $("#txtDGid").val("");
+                    GetDataTable(respones);
+                }
+            });
+        }
+        function selectAltUOM() {
+            document.getElementById("txtAltQty").disabled = false;
+            document.getElementById("txtxbaseQty").disabled = false;
+        }
+        $("#txtBaseUoM").change(function () {
+            var BaseUoM = $("#txtBaseUoM").val();
+            $("#txtAltQty").val("1");
+            $("#txtxbaseQty").val("1");
+            GetselectboxAltUoM(BaseUoM);
+            document.getElementById("txtAltQty").disabled = false;
+            document.getElementById("txtxbaseQty").disabled = false;
+            document.getElementById("txtAltUoM").disabled = false;
+        });
+
+    });
+    function insertDefine() {
+        var id = $("#txtDGid").val();
+        var Gid = $("#baseUOM").val();
+        var altuom = $("#txtAltUoM").val();
+        var altqty = $("#txtAltQty").val();
+        var baseuom = $("#txtBaseUoM").val();
+        var baseqty = $("#txtxbaseQty").val();
+        var factor = "";
+        factor = baseqty / altqty;
+        var count = "";
+        if (altuom == null) {
+            count++;
+            $("#txtAltUoM").css("border-color", "red");
+        }
+        else {
+            $("#txtAltUoM").css("border-color", "lightgrey");
+            count = 0;
+        }
+        if (altqty == 0) {
+            count++;
+            $("#txtAltQty").css("border-color", "red");
+        }
+        else {
+            $("#txtAltQty").css("border-color", "lightgrey");
+            count = 0;
+        }
+        if (baseqty == 0) {
+            count++;
+            $("#txtxbaseQty").css("border-color", "red");
+        }
+        else {
+            $("#txtxbaseQty").css("border-color", "lightgrey");
+            count = 0;
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+        var data = {
+            ID: id,
+            GroupUoMID: Gid,
+            AltUOM: altuom,
+            BaseUOM: baseuom,
+            AltQty: altqty,
+            BaseQty: baseqty,
+            UoMID: altuom,
+            Factor: factor
+        }
+        $.ajax({
+            url: "/GroupUOM/InsertDGroupUOM",
+            type: "post",
+            dataType: "json",
+            data: { groupDUoM: data, ID: Gid },
+            success: function (respones) {
+                $("#txtDGid").val("");
+                GetDataTable(respones);
+            }
+        });
+        //$("#btndefine").html(btnupdate);
+    }
+    $("#selectpage").on('change', function () {
+        submitForm();
+    })
+    function submitForm() {
+        document.getElementById("form-id").submit();
+    }
+    function GetDataTable(respones) {
+        var data = "";
+        var d = 1;
+        $.each(respones, function (i, value) {
+            data +=
+                '<tr>' +
+                '<td hidden>' + value.ID + '</td>' +
+                '<td hidden>' + value.UoMID + '</td>' +
+                '<td hidden>' + value.GroupUoMID + '</td>' +
+                '<td class="text-center">' + d + '</td>' +
+                '<td class="text-center">' + value.AltQty + '</td>' +
+                '<td class="text-center">' + value.UnitofMeasure.AltUomName + '</td>' +
+                '<td class="text-center">' + value.Defined + '</td>' +
+                '<td class="text-center">' + value.BaseQty + '</td>' +
+                '<td class="text-center">' + value.UnitofMeasure.Name + '</td>' +
+                '<td class="text-center">' + value.Factor + '</td>' +
+                '<td class="text-center">' + '<i class="fa fa-edit editDGUOM"></i>' + '</td>' +//. <i class="fa fa-trash deleteDG" data-toggle="modal"  data-target="#ClickDeleteDGUOM"></i>
+                '<tr>';
+            document.getElementById("txtBaseUoM").disabled = true;
+            document.getElementById("txtAltUoM").disabled = false;
+            document.getElementById("txtAltQty").disabled = false;
+            document.getElementById("txtxbaseQty").disabled = false;
+            $("#txtAltUoM").val("");
+            $("#txtAltQty").val("");
+            $("#txtxbaseQty").val("");
+            d++;
+        });
+        $("#listDGroup").html(data);
+    }
+</script>

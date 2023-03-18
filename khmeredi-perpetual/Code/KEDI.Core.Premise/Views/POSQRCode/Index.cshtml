@@ -1,0 +1,273 @@
+﻿@{
+    Layout = "_POSQROrder";
+}
+<style>
+    .disabled{
+        pointer-events: none;
+    }
+   
+</style>
+<link href="~/pos/output/core/core.css" rel="stylesheet" />
+<div dialog-container></div>
+<div class="panel" style="top: 0px; height: 100%;">
+    <div id="panel-group-tables" class="full-panel show bg-dark-purple">
+        <nav class="nav-toolbar flexbox space-between" style="height: auto; margin-top: 5px;">
+            <ul id="group-tables" class="item widget-stackcrumb table-group" style="height: auto;">
+                <li id="all-table" data-group-id="0">@Localizer["All"]</li>
+            </ul>
+
+            <div class="item group-search-boxes">
+                <div id="text-search" class="search-box">
+                    <div class="input-box">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input id="search-tables" class="ignore" type="text" autocomplete="off" placeholder="@Localizer["Text search ..."]">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+        </nav>
+        <div id="table-item-gridview" class="gridview item-gridview time-table full-desktop">
+            <!--gridview-->
+            <div class="wrap-grid widget-scrollbar" id="tableBind"></div>
+        </div><!--end-gridview-->
+
+        <svg class="svg-footer-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#5B6F9D" fill-opacity="1" d="M0,320L1440,0L1440,320L0,320Z"></path></svg>
+        <div class="nav-toolbar bottom">
+            <div id="datetime" class="item datetime">@DateTime.Now.ToString("M/d/yyyy h:m:ss tt")</div>
+        </div>
+    </div><!--End panel-group-tables-->
+
+    <div id="panel-group-items" class="full-panel flexbox">
+        <div class="left-panel flexbox column flex-1">
+            <nav class="nav-toolbar top">
+                <div class="item flexbox">
+                    <div class="back-to-gridview tag-border csr-pointer hover-resize">
+                        <i class="csr-pointer fas fa-th-large" style="font-size: 25px"></i>
+                    </div>
+                </div>
+                <div class="item ml-3">
+                    @{ await Html.RenderPartialAsync("_ChangeLanguage");}
+                </div>
+                <div class="item grow"></div>
+
+                <div class="item">
+                    <div id="list-order-receipt" class="dropbox down crumb list">
+                        <div class="dropbox-btn">
+                        </div>
+                        <div class="wrap-dropbox-content">
+                            <div class="dropbox-navigator">
+                                <div class="i-close far fa-window-close"></div>
+                            </div>
+                            <i id="add-new-order" class="add-option fas fa-plus-circle add-new-order"></i>
+                            <div id="dropbox-order" class="dropbox-content widget-scrollbar scroll-y" style="max-height: 250px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="wrap-list" class="grid-box widget-scrollbar flex-1">
+                <table id="item-listview">
+                    <thead>
+                        <tr>
+                            <th style="width: 0.5%;">@Localizer["Code"]</th>
+                            <th>@Localizer["Name"]</th>                          
+                            <th style="width: 0.25%; text-align: center;">@Localizer["Qty"]</th>
+                            <th style="width: 0.05%;">@Localizer["UoM"]</th>
+                            <th style="width: 0.5%;">@Localizer["Price"]</th>
+                            <th style="width: 0.05%;">@Localizer["Dis.(%)"]</th>
+                            <th>@Localizer["Amount"]</th>
+                            <th style="width: 0.05%;"></th>
+                        </tr>
+                    </thead>
+
+                </table>
+            </div>
+
+            <div class="wrap-table summary widget-scrollbar">
+                <table>
+                    <tr>
+                        <th colspan="2">@Localizer["Sub-Total"]</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2" id="summary-sub-total">0.000</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="group-buttons" class="group-btns">
+                <div id="send" class="wrap-btn flex-1">
+                    <div class="btn bg-sky"><i class="far fa-money-bill-alt fa-fw"></i></div>
+                    <label class="label">@Localizer["Send"]</label>
+                </div>
+                <div class="wrap-btn flex-1" id="bill">
+                    <div class="btn bg-light-green"><i class="fas fa-print fa-fw"></i></div>
+                    <label class="label" id="bill-pro">@Localizer["Bill"]</label>
+                </div>
+            </div>
+            <!-- <div class="collapser v-collapser arrow-left"></div> -->
+        </div><!--end left-panel-->
+
+        <div class="right-panel">
+            <nav class="nav-toolbar top">
+                <div class="item toggle-panel-mobile" id="isOrderByQr">
+                    <div class="back-to-listview tag-border csr-pointer hover-resize">
+                        <i class="fas fa-cart-arrow-down" style="font-size: 20px"></i>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="widget-stackcrumb nav-toolbar desktop group-item-steps">
+                        <div class="all-groups active">@Localizer["All"]</div>
+                    </div>
+                </div>
+                @*<div class="item" id="lang-right-panel">
+                    @{ await Html.RenderPartialAsync("_ChangeLanguage");}
+                </div>*@
+                <span class="item grow"></span>
+            </nav>
+            <nav class="nav-toolbar responsive" id="hide-all">
+                <div class="item widget-stackcrumb group-item-steps">
+                    <div class="all-groups active">@Localizer["All"]</div>
+                </div>
+            </nav>
+            <div class="group-item-views">
+                <div id="group-item-gridview" class="gridview item-gridview">
+                    <!--gridview-->
+                    <div class="wrap-grid widget-scrollbar copper-lite" id="bindGroup">
+                        @*Grid object here*@
+                    </div>
+                </div><!--end-gridview-->
+                <div id="group-item-listview" class="item-listview widget-scrollbar" style="display:none;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Code"]</th>
+                                <th>@Localizer["Khmer name"]</th>
+                                <th>@Localizer["Unit price"]</th>
+                                <th>@Localizer["UoM"]</th>
+                                <th>@Localizer["Choose"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                <div id="image-not-found" class="not-found hide">
+                    <img src="~/pos/images/no-products.png" />
+                </div>
+                <svg class="svg-header-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#7C555C" fill-opacity="1" d="M0,0L120,16C240,32,480,64,720,106.7C960,149,1200,203,
+                                1320,229.3L1440,256L1440,0L1320,0C1200,0,960,0,720,0C480,0,240,0,120,0L0,0Z">
+                    </path>
+                </svg>
+                <svg class="svg-footer-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#7C555C" fill-opacity="1"
+                          d="M0,32L120,64C240,96,480,160,720,208C960,256,1200,288,1320,304L1440,320L1440,320L1320,
+                                    320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z">
+                    </path>
+                </svg>
+            </div>
+
+            <nav class="nav-toolbar bottom">
+                <div class="item" id="pagination-list" style="z-index: 1;"></div>
+                <span class="grow"></span>
+                <div class="item">
+                    <div id="datetime" class="datetime">@DateTime.Now.ToString("M/d/yyyy h:m:ss tt")</div>
+                </div>
+            </nav>
+
+        </div><!--End right-panel-->
+    </div><!--End panel-group-items-->
+    <i id="panel-resizer" class="icon-panel-resizer fas fa-compress hidden"></i>
+</div>
+
+@*--------------------List Item Comment---------------------*@
+<div id="comment-item-content" style="display: none; width: 800px;">
+    <div class='wrap-block col-two' style="height: 100%;">
+        <div class='left-block m0'>
+            <fieldset class="shadow wrap-table widget-scrollbar" style="height: 100%;">
+                <legend class="title">@Localizer["Available Comments"]</legend>
+                <nav class='nav-toolbar'>
+                    <div class="item group-search-boxes">
+                        <div id="text-search" class="search-box show">
+                            <div class="input-box" style="max-width:270px;">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input id="search-item-comment" class="ignore" autocomplete="off" type="text" value="" placeholder=@Localizer["Search ..."]>
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="error-message"></div>
+                <table id="listview-item-comments">
+                    <tr>
+                        <th>
+                            <i id="add-new-comment" title="@Localizer["Add new comment"]"
+                               class="fas fa-plus-circle fa-lg fn-sky csr-pointer fn-white" style="line-height: normal;"></i>
+                        </th>
+                        <th>@Localizer["Comment"]</th>
+                        <th>@Localizer["Choose"]</th>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+        <div class='right-block m0'>
+            <fieldset class="shadow wrap-table widget-scrollbar" style="height: 100%;">
+                <legend class="title">@Localizer["Commented"]</legend>
+                <h3 style="margin-bottom: 5px;">@Localizer["Item Name: "] <span id="detail-item-comment"></span></h3>
+                <table id="listview-choosed-item-comments">
+                    <tr>
+                        <th>@Localizer["#"]</th>
+                        <th>@Localizer["Descripton"]</th>
+                        <th>@Localizer["Remove"]</th>
+                    </tr>
+                </table>
+            </fieldset>
+
+        </div>
+
+    </div>
+</div>
+<!--Items not enough stock-->
+<div id="item-stock-info" class='wrap-table widget-scrollbar' hidden>
+    <table id="item-stock-info-listview">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["In Stock"]</th>
+            <th>@Localizer["Ordered Qty"]</th>
+            <th>@Localizer["Committed Qty"]</th>
+        </tr>
+    </table>
+</div>
+<!--Item comment-->
+<div id="item-comment" class='wrap-table list widget-scrollbar' style="display: none; height: 355px;">
+    <table id="item-comment-listview">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Uom"]</th>
+            <th>@Localizer["Qty"]</th>
+            <th>@Localizer["Comment"]</th>
+        </tr>
+
+    </table>
+</div>
+
+<!--Edit order number-->
+<div id="edit-orderno-content" style="width: 350px;" hidden>
+    <div class="block">
+        <label style="margin-bottom: 5px;">@Localizer["Order No. "]</label>
+        <input class="order-number full-width" type="search">
+        <span class="order-number-erorr fn-red"></span>
+    </div>
+</div>
+
+<!--Scripts embeded-->
+<script src="~/pos/output/core/core.js"></script>
+<script src="~/pos/js/pos-core.js"></script>
+<script src="~/pos/js/pos-utils.js"></script>
+<script src="~/pos/POSQRTable/start-posqr-table.js"></script>

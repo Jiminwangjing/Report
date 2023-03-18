@@ -1,0 +1,152 @@
+﻿@using KEDI.Core.Premise.Models.Files;
+@using KEDI.Core.Premise.Models.SlideShow;
+@model FileCollection<SlideImage>;
+<style>
+    .gridview .wrap-grid .grid .grid-caption > .icon-plus {
+        position: relative;
+        float: left;
+        top: 10px;
+        margin-right: 5px;
+    }
+
+    .disabled {
+        pointer-events: none !important;
+    }
+</style>
+<div class="card card-body">
+    <form id="form-images" asp-action="UploadImages" asp-controller="SlideShow" enctype="multipart/form-data">  
+        <div class="gridview item-gridview" style="height: 495px;">    
+            <div id="img-grids" class="wrap-grid widget-scrollbar">
+                @for(int i = 0; i < Model.Items.Length; i++){
+                    <div class="grid" data-value="@Model.Items[i].Name" data-reset="false">
+                        <div class="grid-caption">@Model.Items[i].Name</div>
+                        <div class="grid-image">
+                            <img src="/Images/slides/@Model.Items[i].Name"/> 
+                        </div>
+                        <div class="grid-subtitle auto-fill">
+                            <input name="Items[@i].Name" value="@Model.Items[i].Name" type="hidden">
+                            <input class="item-selected" name="Items[@i].Selected" checked="@Model.Items[@i].Selected" value="true" type="checkbox">                           
+                            <span>Size: @Model.Items[i].Size</span>
+                        </div>
+                    </div>
+                }
+               
+            </div>
+        </div><hr />
+        <input id="input-file" name="Files" class="form-control" accept="image/*" type="file" multiple/>
+        <div class="flexbox mt-2">                
+            <button type="submit" class="btn btn-kernel mr-1">@Localizer["SAVE FILES"]</button>
+            <a class="btn btn-kernel" asp-action="UploadImages">@Localizer["CANCEL"]</a>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function(){  
+        $('#input-file').change(function(){
+            let input = this;
+            var $images = $(".grid[data-reset=true]", "#img-grids");
+            $images.remove();        
+            readMultiFiles(input.files, function(dataUrl, file, index){
+                buildGrid("#img-grids", dataUrl, file, index, onCheckChanged);             
+            });      
+        }); 
+
+        var inputFile = document.getElementById("input-file");
+        $(".item-selected", "#img-grids").on("change", onCheckChanged);
+        function onCheckChanged(){
+            $(this).parents(".grid").attr("data-reset", !this.checked);        
+            var delGrids = $(".grid[data-reset=true]");
+            let images = $(delGrids).find(".grid-image img");
+            convertImagesToFiles(images, inputFile);
+        }
+        
+        $("#form-images").submit(function(e){
+            e.preventDefault();
+            var inputFile = document.getElementById("input-file");
+            if(inputFile.files.length <= 0){ return; }
+            $.ajax({
+                url: "/slideShow/uploadImages",
+                type: "POST",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: new FormData(this),
+                success: function(items){
+                   location.reload();
+                }
+            });  
+        });   
+    });
+
+    function getBase64StringFromDataURL(dataURL){
+        return dataURL.replace('data:', '').replace(/^.+,/, '');
+    }
+
+    function convertImagesToFiles(images, input){     
+        var dataTransfer = new DataTransfer();
+        for(let i = 0; i < images.length; i++){
+            if(!images[i]){ continue; }
+            var _blob = convertImageToBlob(images[i]);
+            _blob.then(function(blob){     
+                var imgName = images[i].src.split("/").pop();
+                let imgFile = new File([blob], imgName);
+                dataTransfer.items.add(imgFile); 
+                input.files = dataTransfer.files;                              
+            });
+        }
+        return dataTransfer;
+    }
+
+    function dataURLtoBlob(dataurl) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type:mime});
+    }
+
+    function convertImageToBlob(image){
+        return fetch(image.src)
+        .then((res) => res.blob())
+        .then((blob) => {                      
+            return blob;
+        });    
+    }
+
+    function readMultiFiles(files, loadCallback) {
+        var reader = new FileReader();  
+        function readFile(index) {
+            if( index >= files.length ) return;
+            var file = files[index];
+            reader.onload = function(e) {  
+                var dataUrl = e.target.result;
+                if(typeof loadCallback === "function"){
+                    loadCallback.call(reader, dataUrl, file, index);                  
+                }
+                
+                readFile(index + 1);
+            }
+            reader.readAsDataURL(file);
+        }
+        readFile(0);
+    }
+
+    function buildGrid(container, imgDataUrl, file, index){
+        if(container == undefined){ return; }
+        if(typeof imgDataUrl === "string" && imgDataUrl.startsWith("data:image")){
+            let $grid = $("<div class='grid' data-value='"+ file.name +"' data-reset='true'></div>"),
+            $gridTitle = $("<div class='grid-caption'><i class='fas fa-plus-circle icon-plus fn-green'></i> "+ file.name +"</div>"),
+            $subtitle = $("<div class='grid-subtitle auto-fill'></div>"),
+            $gridImg = $("<div class='grid-image'></div>"),
+            $img = $("<img src='"+ imgDataUrl +"' />"),
+            $checkbox = $("<input name='Items["+ index +"].Selected' value='true' class='item-selected disabled mr-2' checked='checked' type='checkbox'>");
+            $subtitle.append($checkbox);
+            $subtitle.append("<span>"+ "Size: "+ parseInt(file.size / Math.pow(2, 10)) + " KB ("+ file.size +" bytes)</span>");
+            $gridImg.html($img);
+            $grid.append($gridTitle).append($gridImg).append($subtitle);
+            $grid.append($("<input name='Items["+ index +"].Name' type='hidden' value='"+ file.name +"'>"));
+            $(container).append($grid);
+        } 
+    }
+</script>

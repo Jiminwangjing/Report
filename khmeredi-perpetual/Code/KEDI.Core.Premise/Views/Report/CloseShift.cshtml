@@ -1,0 +1,362 @@
+﻿<script src="~/js/warehouse.js"></script>
+<script src="~/js/table.js" defer></script>
+<style>
+    .input_datefrom, .input_dateto, .input_user, .input_branch {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 100%;
+        min-width: 100%;
+        height: 28px;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size: 12px;
+        border-radius: 3px;
+    }
+
+    .lable_branch, .lable_datefrom, .lable_dateto, .lable_user {
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .btn-success {
+        margin-top: 22px;
+        font-size: 12px;
+        font-family: Arial;
+        height: 28px;
+    }
+
+    .wrap-table {
+        margin-top: 20px;
+    }
+
+    .grandtotal {
+        margin-left: 15px;
+    }
+
+    .subtotaltd {
+        border-bottom: 1px solid gray;
+        font-weight: 700;
+    }
+
+    .hidden {
+        visibility: collapse !important;
+    }
+
+    .styletr {
+        font-weight: 800;
+    }
+
+    .list_detail {
+        float: right;
+        min-width: 1000px;
+    }
+
+    #list_summarysale {
+        margin-top: 10px;
+    }
+</style>
+<link href="~/css/Modal.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-md-3">
+        <label class="lable_datefrom">@Localizer["Date From"]</label>
+        <input type="date" class="input_datefrom" id="datefrom" />
+        <label class="lable_branch">@Localizer["By Branch"]</label>
+        <select type="text" class="input_branch" id="bybranch">
+            <option value="0"></option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="lable_dateto">@Localizer["Date To"]</label>
+        <input type="date" class="input_dateto" id="dateto" />
+        <label class="lable_user">@Localizer["User Name"] </label>
+        <select type="text" class="input_user" id="byuser">
+            <option value="0"></option>
+        </select>
+    </div>
+    <div class="col-md-6">
+        <button class="btn btn-xs btn-success" id="filter">@Localizer["Filter"]</button>
+    </div>
+    @*<div class="col-md-3 text-right" style="margin-top:19px;">
+        <button onclick="fnExcelReport()" class="btn btn-sm btn-primary">@Localizer["Export"]</button>
+    </div>*@
+</div>
+<div class="wrap-table list">
+    <table id="list_summarysale">
+        <tr style="background:#5F758B;color:white;">
+            <th width="50">@Localizer["Detail"]</th>
+            <th style="min-width:150px;">@Localizer["User"]</th>
+            <th style="min-width:90px;">@Localizer["Date In"]</th>
+            <th style="min-width:90px;">@Localizer["Time In"]</th>
+            <th style="min-width:90px;">@Localizer["Date Out"]</th>
+            <th style="min-width:90px;">@Localizer["Time Out"]</th>
+            <th style="min-width:90px;">@Localizer["Cash In"]</th>
+            <th style="min-width:90px;">@Localizer["Cash Out"]</th>
+            <th style="min-width:120px;">@Localizer["Total"]</th>
+            <th style="text-align:center !important">@Localizer["Print"]</th>
+        </tr>
+    </table>
+</div>
+<div class="row" style="margin-top:30px;">
+    <div class="col-md-12">
+        <div>
+            <span>@Localizer["Total (SYS)"]</span>
+            <span>:</span>
+            <span id="gratotal_sys"></span>
+        </div>
+    </div>
+</div>
+<i class="fa fa-arrows-circle-down"></i>
+<script src="~/pos/scripts/krms/numeral.min.js"></script>
+<script>
+    var db = new Warehouse();
+    $(document).ready(function () {
+        $("#gratotal_sys").text("0.00");
+         $('#list_summarysale').append('<tr><td class="text-center" colspan="10">@Localizer["No Data"]</td></tr>');
+        //Get branch
+        $.ajax({
+            url: "/Report/GetBranch",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bybranch").append(data);
+            }
+        });
+    });
+    $("#bybranch").on('change', function () {
+        var branchid = $(this).val();
+        // Get Employee
+        $.ajax({
+            url: "/Report/GetEmployee",
+            type: "Get",
+            dataType: "Json",
+            data: {BranchID:branchid},
+            success: function (respones) {
+                var data = '';
+                $("#byuser option:not(:first-child)").remove();
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Employee.Name + '</option>';
+                });
+                $("#byuser").append(data);
+            }
+        })
+    });
+    $("#filter").on('click', function () {
+        var datefrom = $("#datefrom").val();
+        var dateto = $("#dateto").val();
+        var branch = $("#bybranch").val();
+        var user = $("#byuser").val();
+        let listSummary = $.ajax({
+            url: "/Report/GetSummaryCloseShift",
+            type: "Get",
+            dataType: "Json",
+            async: false,
+            data: { DateFrom: datefrom, DateTo: dateto, BranchID: branch, UserID: user },
+            success: function (respones) {
+
+            }
+        }).responseJSON; 
+  
+        db.table("tb_summary").clear();
+         if (listSummary.length !== 0) {
+             
+             $("#list_summarysale tr:not(:first-child)").remove();
+             db.insert("tb_summary", listSummary, "ID");  
+        }
+         else {
+            
+             $("#list_summarysale tr:not(:first-child)").remove();
+             $('#list_summarysale').append('<tr><td class="text-center" colspan="10">@Localizer["No Data"]</td></tr>');
+        }
+        var sale_amount_local = 0;
+        var sale_amount_sys = 0;
+        var local = '';
+        var sys = '';
+        if (db.from("tb_summary") !== 0) {
+            db.from("tb_summary").where(function (item) {
+                sale_amount_local += parseFloat(item.SaleAmount_Local);
+                sale_amount_sys += parseFloat(item.SaleAmount_Sys);
+                local = item.LocalCurrency;
+                sys = item.SysCurrency;
+                GetDataBindTable(item);
+            });
+        }
+        $(".tabelshow").addClass("fa-plus-circle");
+        if (local == "KHR" || local == '៛') {
+           sale_amount_local= numeral(sale_amount_local).format('0,0');
+        }
+        if (sys == "KHR" || sys == '៛') {
+           sale_amount_sys= numeral(sale_amount_sys).format('0,0');
+        }
+        $("#gratotal_local").text(local +' '+sale_amount_local);
+        $("#gratotal_sys").text(sys+ ' ' + sale_amount_sys);
+
+
+    });
+    function GetDataBindTable(item) {
+        var data = '';
+        var sale_amount = '';
+        var cashin = '';
+        var cashout = '';
+        if (item.SysCurrency == 'KHR' || item.SysCurrency == '៛') {
+            sale_amount = '<td>' + '<span style="margin-right:15px;">' + item.SysCurrency + '</span>' + '<span>' + numeral(item.SaleAmount_Sys).format('0,0') + '</span>' + '</td>';
+        } else {
+            sale_amount = '<td>' + '<span style="margin-right:15px;">' + item.SysCurrency + '</span>' + '<span>' + item.SaleAmount_Sys.toFixed(2) + '</span>' + '</td>';
+        }
+        if (item.SysCurrency == "KHR" || item.SysCurrency == '៛') {
+            cashin = '<td>' + '<span style="margin-right:15px;">' + item.SysCurrency + '</span>' + '<span>' + numeral(item.CashInAmount).format('0,0') + '</span>' + '</td>';
+            cashout = '<td>' + '<span style="margin-right:15px;">' + item.SysCurrency + '</span>' + '<span>' + numeral(item.CashOutAmount).format('0,0') + '</span>' + '</td>';
+        }
+        else {
+            cashin = '<td>' + '<span style="margin-right:15px;">' + item.SysCurrency + '</span>' + '<span>' + item.CashInAmount.toFixed(2) + '</span>' + '</td>';
+            cashout = '<td>' + '<span style="margin-right:15px;">' + item.SysCurrency + '</span>' + '<span>' + item.CashOutAmount.toFixed(2) + '</span>' + '</td>';
+        }
+        data +=
+        '<tr style="border-bottom:3px solid #e0e0d1;">' +
+            '<td>' + '<i class="fa  tabelshow" style="color:#008000;" data-id='+item.ID+'></i>' +'<input hidden type="checkbox" class="check_box" checked/>'+ '</td>' +
+            '<td hidden id="order_id">' + item.ID + '</td>' +
+            '<td hidden>' + item.Branch + '</td>' +
+            '<td>' + item.User + '</td>' +
+            '<td >' + item.DateIn + '</td>' +
+            '<td>' + item.TimeIn + '</td>' +
+            '<td>' + item.DateOut + '</td>' +
+            '<td>' + item.TimeOut + '</td>' +
+             cashin+
+             cashout+
+             sale_amount +
+            '<td hidden>' + item.SysCurrency + '</td>' +
+            '<td hidden>' + item.LocalCurrency + '</td>' +
+            '<td hidden>' + item.UserID + '</td>' +
+            '<td hidden>' + item.Tran_From + '</td>' +
+            '<td hidden>' + item.Tran_To + '</td>' +
+            '<td hidden>' + item.SaleAmount_Local.toFixed(2) + '</td>' +
+            '<td><button class="btn btn-sm" onClick="printCashout(' + item.Tran_From + ',' + item.Tran_To + ',' + item.UserID + ')"><i class="fa fa-print" data-id='+item.ID+' aria-hidden="true"></i></button></td>' +
+            '</tr>' +
+            '<tr class="nestedtable hidden">' +
+                '<td colspan="12">' +
+                    '<table id='+item.ID+' class="table-hover list_detail">'+
+                       
+                    '</table>' +
+           '</td>' +
+            '<tr>' ;
+        $("#list_summarysale").append(data);
+    }
+
+   
+    var click = 0;
+    $("#list_summarysale").on('click', '.tabelshow', function () {
+        var table = $(this).data("id");
+        var cut = $(this).closest('tr');
+        var sale_amount = cut.find('td:eq(16)').text();
+        var tran_from = cut.find('td:eq(14)').text();
+        var tran_to = cut.find('td:eq(15)').text();
+        var local = ''; //= cut.find('td:eq(11)').text();
+        var userid = cut.find('td:eq(13)').text()
+        if ($(this).parent().find(".check_box").is(':checked')) {
+            $(this).parent().find(".check_box").prop('checked',false);
+            $(this).parent().parent().next().toggleClass("hidden");
+            $(this).removeClass("fa-plus-circle");
+            $(this).addClass("fa-minus-circle");
+            $(this).css("color", "red");
+            $.ajax({
+                    url: "/Report/GetDetailCloseShift",
+                    type: "Get",
+                    dataType: "Json",
+                    data: { UserID:parseInt(userid),Tran_From:parseInt(tran_from),Tran_To:parseInt(tran_to)},
+                    success: function (e) {
+                        let data =  '<tr class="styletr">'+
+                                '<td class="text-left">@Localizer["Receipt"]</td>' +
+                                '<td class="text-right">@Localizer["Date In"]</td>' +
+                                '<td class="text-right">@Localizer["Date Out"]</td>' +
+                                '<td class="text-right">@Localizer["Time Out"]</td>' +
+                                '<td class="text-right">@Localizer["GrandTotal"]</td>' +    
+                                '</tr>';
+                       
+                        $.each(e, function (i, item) {
+                            local = item.LocalCurrency;
+                            let grand_total = '';
+                            let grand_total_sys = '';
+                            if (local == 'KHR' || local == '៛') {
+                                grand_total = '<td class="text-right">' + item.LocalCurrency + " " + numeral(item.GrandTotal).format('0,0') + '</td>'
+                                grand_total_sys = '<td hidden>' + numeral(item.GrandTotal_Sys).format('0,0') + '</td>'
+                                sale_amount = numeral(sale_amount).format('0,0');
+                            }
+                            else
+                            {
+                                grand_total = '<td class="text-right">' + item.LocalCurrency + " " + item.GrandTotal.toFixed(2) + '</td>';
+                                grand_total_sys = '<td hidden>' + item.GrandTotal_Sys.toFixed(2) + '</td>';
+                                sale_amount = sale_amount.toFixed(2);
+                            }
+                             data +=
+                            '<tr>' +
+                            '<td class="text-left">' + item.Receipt + '</td>' +
+                            '<td class="text-right">' + item.DateIn + '</td>' +
+                            '<td class="text-right">' + item.DateOut + '</td>' +
+                            '<td class="text-right">' + item.TimeOut + '</td>' +
+                             grand_total +
+                             grand_total_sys +
+                            '<td hidden>' + item.SysCurrency + '</td>' +
+                            '<td hidden>' + item.LocalCurrency + '</td>' +
+                            '</tr>';
+                          });
+                        data += '<tr><td></td><td></td><td></td><td class="text-right" style="font-weight:800;">@Localizer["Sub Total"]</td><td class="text-right" style="font-weight:800;">' + sale_amount+'</td></tr>'
+                        //data += '<tr>'+ '<td></td>' + '<td class="text-right" style="font-weight:800;">@Localizer["Sub Total"]</td>' + '<td class="text-right" style="font-weight:800;">'+' <span> '+local+'</span> '+' <span style="margin-left:5px;">'+sale_amount+'</span>'+ '<td>'+'</tr>';
+                        $('#' + table).html(data);
+                    }
+            });
+        }
+        else {
+            //$(".list_detail").remove();
+            $(this).parent().find(".check_box").prop('checked', true);
+            $(this).parent().parent().next().toggleClass("hidden");
+            $(this).removeClass("fa-minus-circle");
+            $(this).addClass("fa-plus-circle");
+            $(this).css("color", "#008000");
+        }
+    });
+
+    function printCashout(tran_f, tran_t, userid) {
+        var datefrom = $("#datefrom").val();
+        var dateto = $("#dateto").val();
+        window.open("/Print/PrintCashout?Tran_F=" + tran_f + "&Tran_T=" + tran_t + "&UserID=" + userid + "&DateFrom=" + datefrom + "&DateTo=" + dateto +"", "_blank");  
+    }
+    function fnExcelReport() {
+        //$("td:hidden").remove();
+        var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+        var textRange; var j = 0;
+        tab = document.getElementById('list_summarysale'); // id of table
+        for (j = 0; j < tab.rows.length; j++) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+        }
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+        {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+        }
+        else
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+        return (sa);
+    }
+</script>   

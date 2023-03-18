@@ -1,0 +1,186 @@
+.wrap-block {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  
+  -webkit-flex-wrap: wrap;
+     -moz-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+    width: 100%;
+}
+
+.wrap-block > * {
+    box-sizing: border-box;
+    min-height: 100%;
+}
+
+.wrap-block > .full-block {
+    width: 100%;
+    margin-top: .5rem;
+}
+
+.wrap-block.col-two > .left-block {
+    width: 50%;
+    padding-right: 0.5rem;
+    margin-top: .5rem;
+}
+
+.wrap-block.col-two > .right-block {
+    width: 50%;
+    padding-left: 0.5rem;
+    margin-top: .5rem;
+}
+
+.wrap-block.col-three > .left-block {
+    width: 33.333%;
+    padding-right: 0.5rem;
+    margin-top: .5rem;
+}
+
+.wrap-block.col-three > .middle-block {
+    width: 33.333%;
+    padding: 0rem 0.5rem;
+    margin-top: .5rem;
+}
+
+.wrap-block.col-three > .right-block {
+    width: 33.333%;
+    padding-left: 0.5rem;
+    margin-top: .5rem;
+}
+
+.wrap-block.col-four > .left-block {
+    width: 25%;
+    padding-right: 0.5rem;
+    margin-top: .5rem;
+}
+
+.wrap-block.col-four > .middle-block {
+    width: 25%;
+    padding: 0rem 0.5rem;
+    margin-top: .5rem;
+}
+
+.wrap-block.col-four > .right-block {
+    width: 25%;
+    padding-left: 0.5rem;
+    margin-top: 1rem;
+}
+
+
+/********************************************/
+/* Merge blocks in three columns            */
+/********************************************/
+.wrap-block.col-three > .left-block.fuse,
+.wrap-block.col-three > .right-block.fuse {
+    width: calc(100% - 33.333%);
+}
+
+/********************************************/
+/* Merge blocks in four columns            */
+/********************************************/
+.wrap-block.col-four > .left-block.fuse,
+.wrap-block.col-four > .middle-block.fuse,
+.wrap-block.col-four > .right-block.fuse {
+    width: calc(100% - 50%);
+}
+
+.wrap-block .block input,
+.wrap-block .block select,
+.wrap-block .block textarea {
+  width: 100%;
+}
+
+.wrap-block > * > .block, .wrap-block > * > fieldset {
+    height: calc(100% - 10px);
+}
+
+.block {
+    position: relative;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 1.1em;
+}
+
+.block .title {
+  line-height: normal;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: .5rem;
+  padding: 0 5px;
+  text-transform: uppercase;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.block .description {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+}
+
+.block.border {
+  background: #EEE;
+  padding: 3rem 1rem 1rem 1rem;
+  border: .5px solid #CCC;
+}
+
+.block.border .title {
+  padding: 0.25rem 1rem;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  border-radius: 3px 3px 0px 0px;
+  border-bottom: 1px solid #707070;
+  background: #757C85;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #FFF;
+
+}
+
+.submit {
+  background: #EEE;
+  margin: 2rem 0rem;
+  text-align: center;
+  border-radius: 2px;
+  border: 1px solid #707070;
+}
+
+.submit .btn {
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+}
+
+@media (max-width: 699px) {
+  .wrap-block.col-two > .left-block,
+  .wrap-block.col-three > .left-block,
+  .wrap-block.col-four > .left-block {
+    width: 100%;
+    padding-right: 0rem;
+  }
+  .wrap-block.col-two > .middle-block,
+  .wrap-block.col-three > .middle-block,
+  .wrap-block.col-four > .middle-block {
+    width: 100%;
+    padding: 0rem;
+  }
+  .wrap-block.col-two > .right-block,
+  .wrap-block.col-three > .right-block,
+  .wrap-block.col-four > .right-block {
+    width: 100%;
+    padding-left: 0rem;
+  }
+
+  .wrap-block.col-three > .left-block.fuse,
+  .wrap-block.col-three > .right-block.fuse {
+      width: 100%;
+      padding-right: 0;
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": false,
+    "iis": {
+      "applicationUrl": "http://localhost/CKBS",
+      "sslPort": 0
+    },
+    "iisExpress": {
+      "applicationUrl": "http://localhost:6790/",
+      "sslPort": 44310
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "sqlDebugging": false,
+      "nativeDebugging": false
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true
+    },
+    "KEDI.Core.Premise": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "http://192.168.0.181:5012"
+    }
+  }
+}

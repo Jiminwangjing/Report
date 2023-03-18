@@ -1,0 +1,245 @@
+﻿@model IEnumerable<KEDI.Core.Premise.Models.Sale.Print.PrintSaleHistory>
+@{
+    ViewData["Title"] = "SaleDeliveryHistory";
+    Layout = "_Layout_print";
+    var num = 0;
+    double sub_Total = 0;
+    //double DisValue = 0;
+    //double Vatvalue = 0;
+    //double Totalamount = 0;
+
+}
+<style>
+    body {
+        font-family: 'Khmer OS Battambang';
+        font-size: 14px;
+    }
+
+    .tbfontsize {
+        font-size: 16px;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+</style>
+<br />
+<h3 style="text-align:center;"><u>Delivery Order</u></h3><br />
+<div class="row">
+    <div class="col-xs-7">
+        <div style="position:relative;">
+            <p>អតិថិជន :</p>
+            <p class="res" style="float:left; position:absolute;top:0px; left:18%;"> @Model.FirstOrDefault().CusName</p>
+        </div>
+        <div style="position:relative;">
+            <p>Customer :</p>
+            <p class="res" style="float:left; position:absolute;top:0px; left:18%;"></p>
+        </div>
+        <div style="position:relative;">
+            <p>Attentione :</p>
+            <p class="res" style="float:left; position:absolute; top:0px;left:18%;"> @Model.FirstOrDefault().CusName</p>
+        </div>
+        <div style="position:relative;">
+            <p>Contact :</p>
+            <p class="res" style="float:left; position:absolute; top:0px;left:18%;">@Model.FirstOrDefault().Phone</p>
+        </div>
+       
+        <div style="position:relative;">
+            <p>Addrees :</p>
+            <p class="res" style="float:left; position:absolute;top:0px; left:18%;">@Model.FirstOrDefault().Address</p>
+        </div>
+
+    </div>
+    <div class="col-xs-5" style="padding-left:15%">
+
+        <div style="position:relative;">
+            <p>លេខបញ្ជូនទំនិញ៖ </p>
+            <p>Delivery Note No:</p>
+            <p class="res" style="float:left; position:absolute; top:0;left:50%;"> @Model.FirstOrDefault().RefNo</p>
+        </div>
+        <div style="position:relative;">
+            <p>កាលបរិច្ឆេទ៖ :</p>
+            <p>Date:</p>
+            <p class="res" style="float:left; position:absolute; top:0;left:50%;"> @Model.FirstOrDefault().PostingDate</p>
+        </div>
+        <div style="position:relative;">
+            <p>លេខរៀងវិក្កយបត្រ​៖    </p>
+            <p>Invoice No:  </p>
+            <p class="res" style="float:left; position:absolute; top:0;left:50%;"> @Model.FirstOrDefault().Invoice</p>
+        </div>
+      
+    </div>
+</div>
+
+@*<div class="col-xs-3">
+        <table class="tbfontsize" style="margin-top:10px">
+            <tr>
+                <td style="padding-bottom:10px">លេខឯកសារ</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:10px">Document Number:</td>
+            </tr>
+            <tr>
+                <th>@Model.First().PreFix-@Model.FirstOrDefault().Invoice</th>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-2" style="padding-left:5px;margin-top:10px">
+        <table class="tbfontsize">
+            <tr>
+                <td style="padding-bottom:10px">កាលបរិច្ឆេទ</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:10px">Date:</td>
+            </tr>
+            <tr>
+                <th>@Model.FirstOrDefault().PostingDate</th>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-2" style="padding-left:5px;margin-top:10px">
+        <table class="tbfontsize">
+            <tr>
+                <td style="padding-bottom:10px">លេខសំគាល់អតិថិជន</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom:10px">Customer ID:</td>
+            </tr>
+            <tr>
+                <th>@Model.FirstOrDefault().CusNo</th>
+            </tr>
+        </table>
+    </div>*@
+
+@*<div class="col-xs-5" style="margin-bottom:10px;min-height:275px">
+    <h2>Delivery Order</h2>
+    <h2 style="color:blue;font-weight:bold">SALES DELIVERY</h2>
+    <table class="tbfontsize" style="padding-top:20px;">
+        <tr>
+            <td style="padding-top:10px;color:#2980B9">@Model.First().Tel1 / @Model.FirstOrDefault().Tel2</td>
+        </tr>
+        <tr>
+            <td style="padding-top:10px;line-height:35px">@Model.FirstOrDefault().Addresskh</td>
+        </tr>
+        <tr>
+            <td style="padding-top:10px;line-height:25px">@Model.FirstOrDefault().AddressEng</td>
+        </tr>
+    </table>
+</div>
+
+<div class="col-xs-7" style="margin-top:25px">
+    <table class="tbfontsize">
+        <tr>
+            <td>ជូនចំពោះ / Attention :</td>
+            <th style="padding: 0 0 0 5px">@Model.FirstOrDefault().CusName</th>
+        </tr>
+        <tr>
+            <td style="padding-top:20px">ក្រុមហ៊ុន / Company :</td>
+            <th style="padding: 20px 0px 0 5px"></th>
+        </tr>
+    </table>
+</div>
+
+<div class="col-xs-7">
+    <table class="tbfontsize">
+        <tr>
+            <td style="padding-top:20px">លេខទូរស័ព្ទ / Tel :</td>
+            <th style="padding:  20px 0 0 5px">@Model.FirstOrDefault().Phone</th>
+        </tr>
+    </table>
+</div>
+
+<div class="col-xs-7">
+    <table class="tbfontsize">
+        <tr>
+            <td style="padding-top:20px">អាស័យដ្ឋាន / Address :</td>
+            <th style="padding:20px 0px 0 5px">@Model.FirstOrDefault().Address</th>
+        </tr>
+    </table>
+</div>
+
+<div class="col-xs-7">
+    <table class="tbfontsize">
+        <tr>
+            <td style="padding-top:20px">សុពលភាពដល់ / Valid till :</td>
+            <th style="padding:20px 0px 0 5px">@Model.FirstOrDefault().DueDate</th>
+        </tr>
+    </table>
+</div>
+
+<div class="col-xs-7">
+    <table class="tbfontsize" style="margin-bottom:10px">
+        <tr>
+            <td style="padding-top:20px">លេខយោង / Reference number :</td>
+            <th style="padding:20px 0px 0 5px">@Model.FirstOrDefault().RefNo</th>
+        </tr>
+    </table>
+</div>*@
+
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr style="background:#2874A6;color:white; text-align:center!important;">
+                <th class="text-center" width="10%">ល.រ<br />No.</th>
+                <th class="text-center" width="60%">បិរយាយមុខទំនិញ<br />Description</th>
+                <th class="text-center" width="30%">បរិមាណ<br />Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                num++;
+                sub_Total += item.Amount;
+                
+                <tr style="border: 1px dashed #c2c2c2">
+                    <td style="text-align:center">@num</td>
+                    <td>@item.ItemNameKh</td>
+                    <td style="text-align:center">@item.Qty</td>
+             
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <table width="100%">
+        <tr>
+           
+            <td colspan="3" style="padding-bottom:10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            * សូមទូទាត់លុយអោយបានមុនថ្ងៃ </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                Delivery Note based on the listed items above <br />
+                ***Please note that items delivery are new free from defects <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;Receiver accepts that the conditions of the delivered items are new   <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;Receiver will be liable for any damages here after the delivery  <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;Aquatek Solution Co., Ltd must be informed about defective products and returned within 24 hours of delivery  <br />
+
+            </td>
+        </tr>
+        <tr>
+
+            <td style="text-align:center;">
+                <br/><br/><br/><br/> ____________________________<br/>
+                ហត្ថលេខា និងឈ្នោះអ្នកទិញ <br />
+                Customer's Signature & Name <br /><br />
+
+            </td>
+            <td></td>
+            <td style="text-align:center;">
+                <br /><br /><br />
+                ____________________________<br />
+                ហត្ថលេខា និងត្រាក្រុមហ៊ុន  <br />
+                Company's Signature & Stamp
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+
+
+

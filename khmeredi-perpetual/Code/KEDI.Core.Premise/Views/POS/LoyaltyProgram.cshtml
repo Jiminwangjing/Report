@@ -1,0 +1,28 @@
+﻿<div class="widget-combobox menubox  down-right">
+    <div id="loyalty-program" class="combobox-trigger">
+        <i class="fas fa-gift fa-lg csr-pointer icon-tab"></i>
+    </div>
+    <div class="combobox-content" style="width: 80vw;">
+        <div class="combobox-header">
+            <h4 class="title">@Localizer["Loyalty Program"]</h4>
+            <i class="i-close"></i>
+        </div>
+        <div class="combobox-body widget-scrollbar">
+            <div class="widget-tab" style="height: 75vh;">
+                <div class="tab-sheet active">
+                    <div id="tab-buyxgetx" class="tab-title">@Localizer["Buy One Get One"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <partial name="LoyaltyProgram/BuyXGetX"/>                  
+                    </div>
+                </div>
+                <div class="tab-sheet">
+                    <div id="tab-saleCombo" class="tab-title">@Localizer["Combo Sale"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <partial name="LoyaltyProgram/_ListComboSale"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+   

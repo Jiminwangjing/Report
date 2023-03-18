@@ -1,0 +1,324 @@
+
+.ck-widget-container .widget-combobox {
+    position: relative;
+    width: auto;
+    height: 35px;
+    line-height: 35px;    
+}
+
+.ck-widget-container .widget-combobox * {
+    box-sizing: border-box;
+}
+
+.ck-widget-container .widget-combobox .combobox-trigger {
+    position: relative;
+    display: block;
+    width: auto;
+    height: 100%;
+    cursor: pointer;
+    text-align: center;
+    color: #333;
+    -webkit-user-select: none; /* Chrome/Safari */        
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+ */
+            user-select: none;
+    
+}
+
+.ck-widget-container .widget-combobox.with-crumb .combobox-trigger::after {
+    position: absolute;
+    z-index: 0;
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    visibility: collapse;
+    -webkit-transition: all .2s;
+    -o-transition: all .2s;
+    transition: all .2s;
+}
+
+.ck-widget-container .widget-combobox.with-crumb .combobox-trigger.show::after {
+    visibility: visible;
+    z-index: 1;
+}
+
+.ck-widget-container .widget-combobox.slide-down.with-crumb .combobox-trigger::after {
+    top: calc(100% - 2.5px);
+    left: calc(100%/4 - 5.5px);
+    border-bottom: 12.5px solid #AAA;
+}
+
+.ck-widget-container .widget-combobox.slide-up.with-crumb .combobox-trigger::after {
+    top: -10px;
+    left: 7px;
+    border-top: 10px solid #AAA;
+}
+
+.ck-widget-container .widget-combobox .combobox-trigger.full {
+    width: 100%;
+}
+
+.ck-widget-container .widget-combobox .combobox-trigger img.img-circle {
+    border-radius: 50%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.ck-widget-container .widget-combobox .combobox-content {
+    position: absolute;
+    display: block;
+    border-radius: 5px;
+    visibility: collapse;
+    z-index: 1;
+    background: #EAEAEA;
+    left: auto;
+    /* left: calc(-100% - 100%/2.25); */
+    right: 0;
+    width: 300px;
+    color: #444;
+    font-size: .9em;
+    -webkit-box-shadow: 0px 0px 2.5px 1.5px rgba(0, 25, 100, 0.5);
+    -moz-box-shadow: 0px 0px 2.5px 1.5px rgba(0, 25, 100, 0.5);
+    box-shadow: 0px 0px 2.5px 1.5px rgba(0, 25, 100, 0.5);
+    -webkit-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    transition: all .2s ease;
+}
+
+.ck-widget-container .widget-combobox.menubox .combobox-content {
+    /*min-width: 700px;*/
+    width: auto;
+}
+
+.ck-widget-container .widget-combobox .combobox-content > * {
+    /*display: block;*/
+    list-style: none;
+    width: 100%;
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-header {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 40px;
+    line-height: 40px;
+    color: #F3F6F9;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    background-color: #7A778A;
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-header .i-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 7px;
+    border: .5px solid #F3F6F9;
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-header .title {
+    font-size: 1rem;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    width: calc(100% - 60px);
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-header .i-close {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin: 7px;
+    border: .5px solid #F3F6F9;
+    border-radius: 3px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-header .i-close::after {
+    content: "\00D7";
+    font-size: 1.35rem;
+    font-style: normal;
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-footer {
+    position: relative;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    min-height: 40px;
+    background-color: #A5A5BA;
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-body {
+    min-height: 200px;
+    background-color: rgba(187, 204, 204, 0.5);
+    padding: 10px;   
+}
+
+.ck-widget-container .widget-combobox.menubox .combobox-content .combobox-body {
+    height: 50vh;
+    overflow: auto;
+}
+
+.ck-widget-container .widget-combobox.slide-down .combobox-content {
+    top: 100%;
+}
+
+.ck-widget-container .widget-combobox.slide-up .combobox-content {
+    left: 5px;
+    bottom: 125%;
+    -webkit-transform: translateY(10px);
+        -ms-transform: translateY(10px);
+            transform: translateY(10px);
+}
+
+.ck-widget-container .widget-combobox .combobox-content.show {
+    top: calc(100% + 10px);
+    visibility: visible;
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-body .user-info {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 10px;
+    border-bottom: .5px solid #BBB;
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-body .user-info img.logo {
+    width: 60px;
+    height: 60px;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-body .user-info .title {
+    width: calc(100% - 50px);
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-body .user-info .title > * {
+    display: block;
+    text-align: center;
+}
+
+.ck-widget-container .widget-combobox .combobox-content .combobox-body .option {
+    display: block;
+    line-height: 35px;
+    color: #444;
+    text-decoration: none;
+    min-width: calc(100% - 10px);
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 10px;
+    text-align: left;
+}
+
+/****************************************/
+/* combobox for profile                 */
+/****************************************/
+.ck-widget-container .widget-combobox.slide-down.with-crumb.profile .combobox-header.show::after {
+    border-bottom: 9px solid #707070;
+}
+
+.ck-widget-container .widget-combobox.profile .combobox-content {
+    background: #707070;
+}
+
+.ck-widget-container .widget-combobox.profile .combobox-content .combobox-body .option {
+    border-top: 1px solid #CCC;
+    background: #707070;
+    color: #EEE;
+}
+
+/**********************************************/
+/* combobox for general list                  */
+/**********************************************/
+
+.ck-widget-container .widget-combobox.list .combobox-trigger .icon {
+   font-size: 2em;
+   line-height: normal;
+}
+
+.ck-widget-container .widget-combobox.list .combobox-trigger .badge {
+    position: absolute;
+    top: -2.5px;
+    right: -2.5px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 50%;
+    background-color: #f5050F;
+    color: white;
+    font-size: .8em;
+}
+
+.ck-widget-container .widget-combobox.list .combobox-content .combobox-body .wrap-option.scroll-y {
+    max-height: 245px;
+    overflow-y: auto;
+}
+
+.ck-widget-container .widget-combobox.list .combobox-content .combobox-body .add-option {
+    width: 100%;
+    margin: .25rem 0;
+    padding: 0rem 1rem;
+	box-sizing: border-box;
+	outline: none;
+	font-size: 1.5em;
+	display: inline-block;
+	background: #6996C9;
+    border: none;
+	color: #eee;
+	cursor: pointer;
+	text-decoration: none;
+	text-align: center;
+    height: 36px;
+    line-height: 36px;
+}
+
+.ck-widget-container .widget-combobox.list .combobox-content .combobox-body .option {
+    background: #ccc;
+    border-top: 1px solid #AAA;
+}
+
+.ck-widget-container .widget-combobox.list .combobox-content .combobox-body .option:hover {
+    transform: translateX(10px);
+    width: calc(100% - 10px);
+    transition: all ease-in-out .3s;
+}
+
+@media(max-width: 768px) {
+    .ck-widget-container .widget-combobox .combobox-content {
+        width: calc(100vw - 25px);
+    }
+}
+
+@media(max-width: 415px){
+    .ck-widget-container .widget-combobox .combobox-content {
+        width: calc(100vw - 25px);
+    }
+
+    .ck-widget-container .widget-combobox.menubox .combobox-content {
+        min-width: 300px;
+    }
+}
+

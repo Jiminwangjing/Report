@@ -1,0 +1,98 @@
+﻿@model IEnumerable<CKBS.Models.Services.ReportInventory.PrintStockinWarehouse>
+@*@using CKBS.Models.Services.ReportInventory;*@
+@{
+    ViewData["Title"] = "PrintStockinWarehouse";
+    Layout = "~/Views/Shared/_Layout_Print.cshtml";
+    var num = 0;
+    //var data = @Model.Count() > 0 ? Model.FirstOrDefault() : new
+    @* PrintStockinWarehouse(); *@
+}
+<style>
+    body {
+        font-family: 'Khmer OS Battambang';
+        font-size: 15px;
+    }
+</style>
+<hr style="border: 2px solid #2874A6;margin-bottom:0px">
+<div class="row">
+    <div class="col-xs-3" style="margin-left: 0px;">
+        <img src="~/Images/company/@Model.FirstOrDefault().Logo" style="width:
+            140px; height: 140px;margin-top:2px;"/>
+    </div>
+    <div class="col-xs-7" style="margin-top:35px;">
+        <h1 style="color: blue; font-weight: bold; padding-left: 18.60rem">STOCK
+            REPORT</h1>
+    </div>
+    <div class="col-xs-2"></div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <b style="color: #2874A6">@Model.FirstOrDefault().Brand</b>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-5">
+        <p>@Model.FirstOrDefault().Addresskh</p>
+        <p>@Model.FirstOrDefault().AddressEng</p>
+    </div>
+    <div class="col-xs-5" style="text-align:left">
+        <p>លេខឃ្លាំង / Warehouse No : @Model.FirstOrDefault().WhCode</p>
+        <p>កាលបរិច្ឆេទ / Date : @DateTime.Now.ToString("dd-MM-yyyy")</p>
+    </div>
+</div>
+
+<div>
+    <table class="table table-bordered">
+        <thead style="background: #2874A6;border:solid">
+            <tr style="color:white;">
+                <th class="text-center">No.</th>
+                <th class="text-center" width="40%">Description</th>
+                <th class="text-center" width="15%">Brand</th>
+                <th class="text-center" width="15%">Code</th>
+                <th class="text-center" width="15%">Unit</th>
+                <th class="text-center" width="20%">In Stock</th>
+                <th class="text-center" width="15%">Ordered</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count() > 0)
+            {
+                @foreach (var item in Model)
+                {
+                    num++;
+
+                    <tr style="border:solid">
+                        <td style="text-align:center">@num</td>
+                        <td>@item.itemName</td>
+                        <td style="text-align:center">@item.Brand</td>
+                        <td style="text-align:center">@item.ItemCode</td>
+                        <td style="text-align:center">@item.Price</td>
+                        <td style="text-align:center">@item.StockIn</td>
+                        <td style="text-align:center">@item.Orderedin</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-xs-4">
+        <p>រាប់ដោយ / Count by:</p>
+        <p style="margin-top:40px">ឈ្មោះ / Name:</p>
+    </div>
+    <div class="col-xs-4">
+        <p>ពិនិត្យដោយ / Checked by:</p>
+        <p style="margin-top:40px">ឈ្មោះ / Name:</p>
+    </div>
+    <div class="col-xs-4">
+        <p>ទទួលស្គាល់ដោយ / Recognized by:</p>
+        <p style="margin-top:40px">ឈ្មោះ / Name:</p>
+    </div>
+</div>
+
+
+
+

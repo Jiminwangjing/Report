@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Counter>
+
+@{
+    ViewData["Title"] = "Counter Name";
+}
+<link href="~/pos/css/core.css" rel="stylesheet" />
+<style>
+    ul.nav > *, ul.navbar-nav > * {
+        padding: 0;
+        background: transparent;
+    }
+
+    .gridview.item-gridview .wrap-grid .grid {
+        flex-basis: calc(16.66% - 10px);
+        height: calc(4 * 40.25px);
+    }
+
+        .gridview.item-gridview .wrap-grid .grid .grid-caption {
+            max-width: 130px;
+            font-size: .8em;
+        }
+
+    .gridview .wrap-grid .grid .grid-image .wrap-scale {
+        height: 40px;
+        width: 40px;
+        line-height: 40px;
+        font-size: 1.1em;
+    }
+
+        .gridview .wrap-grid .grid .grid-image .wrap-scale .scale-up,
+        .gridview .wrap-grid .grid .grid-image .wrap-scale .scale-down {
+            height: 25px;
+            line-height: 25px;
+        }
+
+    .gridview .wrap-grid .grid .grid-image .price {
+        font-size: .8em;
+    }
+
+    .gridview .wrap-grid .grid:hover .price {
+        font-size: .9em;
+        height: 30px;
+        line-height: 30px;
+    }
+</style>
+<div class="gridview item-gridview">
+    <!--gridview-->
+    <div class="wrap-grid">
+        @foreach (var count in Model)
+        {
+            <div class="grid" onclick="setCounterName('@count.Name')">
+                <div class="grid-caption">@count.Name</div>
+                <div class="grid-image">
+
+                    <img src="~/Images/employee/101581327d7e4f91acccb862a7de609a.png" />
+                </div>
+            </div>
+
+        }
+    </div>
+</div><!--end-gridview-->
+
+<script>
+    function setCounterName(val) {
+        @User.FindFirst("Counter").Value=val;
+        location.href('/POS/KRMS');
+    }
+</script>

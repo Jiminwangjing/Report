@@ -1,0 +1,163 @@
+﻿
+@model KEDI.Core.Models.ControlCenter.ApiManagement.ClientForm
+<div class="card card-body">
+    <h4>@Localizer["API Key Generation"]</h4>  
+    <form id="form-api-key" method="post" asp-action="NewApiKey">    
+        <div class="row">
+            <div class="col-md-4">
+                <input asp-for="Id" type="hidden" />
+                <div class="form-group">
+                    <label>@Localizer["Client Code"]</label>
+                    <input class="form-control" asp-for="ClientCode" autocomplete="off" />                  
+                    <span asp-validation-for="ClientCode"></span>
+                </div>
+                <div class="form-group">
+                    <label>@Localizer["Client Name"]</label>
+                    <input class="form-control" asp-for="ClientName" autocomplete="off" />                  
+                    <span asp-validation-for="ClientName"></span> 
+                </div>
+                                     
+            </div>
+            <div class="col-md-4">
+                <div class="kedi-flex mt-4">
+                    <input type="checkbox" asp-for="StrictIpAddress"/>     
+                    <label>@Localizer["Strict IP Address"]</label>
+                </div>
+                <span asp-validation-for="StrictIpAddress"></span>
+            </div>
+        </div><hr />
+
+        <label>@Localizer["API Key"]</label>
+        <textarea class="form-text" asp-for="ApiKey" style="height: 50px !important; width: 100%;" readonly></textarea>
+        <label>@Localizer["Secret Key"]</label>
+        <textarea class="form-text" asp-for="SecretKey" style="height: 50px !important; width: 100%;" readonly></textarea>
+
+        <button class="mt-2 btn btn-kernel" type="submit">@Localizer["Generate"]</button>
+        @* <button id="copy-api-key" class="mt-2 btn btn-kernel" type="button">@Localizer["Copy to clipboard"]</button> *@
+    </form>
+    <div id="dialog-credentials" style="display:none; width: 350px; height: 100px;">
+        <form id="form-credentials" class="mt-3">
+            <label>@Localizer["Username"]</label>
+            <input id="username" name="Username" class="form-control" />    
+            <label>@Localizer["Password"]</label>
+            <input id="password" name="Password" type="password" class="form-control"/> 
+        </form>         
+        <div id="error-message" class="text-danger"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){       
+        $("#form-api-key").submit(function(e){
+            e.preventDefault();
+            let __form = this;
+            let jwtToken = getJwtToken();
+            if(isEmpty(jwtToken)){
+               login(function(){
+                   newApiKey(__form, getJwtToken());
+               });
+            } else {
+                newApiKey(__form, jwtToken);
+            }
+        });
+
+        $("#copy-api-key").on("click", function(){
+            copyToClipboard();
+        });
+
+        function login(onSuccess){
+            let $dialog = new DialogBox({
+                content: {
+                    selector: "#dialog-credentials"
+                },
+                button:{
+                    ok:{
+                        text: "Login"
+                    }
+                }
+            });
+         
+            $dialog.confirm(function(){
+                let $credForm = $dialog.content.find("#form-credentials");
+                let cred = {
+                    Username: $credForm.find("#username").val(),
+                    Password: $credForm.find("#password").val()
+                };
+
+                $.ajax({
+                    url: "/api/v1/account/login",
+                    headers: { 
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(cred),
+                    type: "POST", 
+                    success: function(resp){
+                        setJwtToken(resp.AccessToken);
+                        let $error = $dialog.content.find("#error-message");
+                        $error.text("");
+                        for(let i = 0; i < resp.Messages.length; i++){
+                            $error.append(resp.Messages[i]);
+                        }
+
+                        if(typeof onSuccess === "function"){
+                            onSuccess.call(this, getJwtToken());
+                        }
+
+                        $dialog.shutdown();
+                    }
+                });
+            });               
+        }
+       
+        function newApiKey(form, jwtToken){
+            $.ajax({
+                url: "/clientApi/newApiKey",
+                type: "POST",
+                headers: {
+                    'Authorization': "Bearer " + jwtToken
+                },
+                data: $(form).serialize(),
+                success: function(message){    
+                    ViewMessage({}, message);
+                    let client = message.Items["Client"];
+                    $("#Id").val(client["Id"]);
+                    $("#ApiKey").val(client["ApiKey"]);
+                    $("#SecretKey").val(client["SecretKey"]);
+                },
+                error: function(err){
+                    if(err.status == 401){
+                        login(function(){
+                            newApiKey(form, getJwtToken());
+                        });
+                    }
+                }
+            });
+        }
+
+        function setJwtToken(token){
+            if(!isEmpty(token)){
+                localStorage.setItem("__USER_TOKEN__", token);
+            }         
+        }
+
+        function getJwtToken(){
+            return localStorage.getItem("__USER_TOKEN__");
+        }
+
+        function isEmpty(value){
+            return value === undefined || value === null || value === "";
+        }
+
+        function copyToClipboard() {
+            /* Get the text field */
+            var copyText = document.getElementById("ApiKey");
+
+            /* Select the text field */
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+            /* Copy the text inside the text field */
+            navigator.clipboard.writeText(copyText.value.trim());
+        }
+    });
+</script>

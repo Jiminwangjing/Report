@@ -1,0 +1,121 @@
+﻿@using CKBS.Models.Services.AlertManagement;
+<style>
+    .cursor {
+        cursor: pointer;
+    }
+
+    .maxHeighttb {
+        height: 200px;
+    }
+</style>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-3">
+            <a asp-action="Create" style="padding-top: 4px;" class="btn btn-kernel" asp-controller="ControlAlert">@Localizer["Create"]</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-11">
+            <table id="alertMaster">
+                <tr>
+                    <th>@Localizer["#"]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Function Name"]</th>
+                    <th>@Localizer["Active"]</th>
+                    <th>@Localizer["Setting"]</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="container-setting" class="wrap-table" style="height: 250px; display: none">
+    <div style="overflow-x: hidden">
+        <div class="row" id="setting">
+            <div class="col-md-2"></div>
+            <div class="col-md-4" id="timesbeforeAppointment">
+                <label class="labelHead">@Localizer["Times before Alert"]</label>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <input id="bf-app-input" type="number" class="form-control form-control-sm inputNumber" style="height: 27px !important;" />
+                        <select id="bf-app-select" class="form-control form-control-sm ml-2 typeFrequently" style="height: 27px !important;" asp-items="@Html.GetEnumSelectList<TypeFrequently>()"></select>
+                    </div>
+                </div>
+            </div>
+
+            @* Frequently *@
+            <div class="col-md-4">
+                <label class="labelHead">@Localizer["Frequently"]</label>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <input id="fq-app-input" type="number" class="form-control form-control-sm inputNumber" style="height: 27px !important;" />
+                        <select id="fq-app-select" class="form-control form-control-sm ml-2 typeFrequently" style="height: 27px !important;" asp-items="@Html.GetEnumSelectList<TypeFrequently>()"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="noSetting">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <br />
+                <br />
+                <br />
+                <p><b>@Localizer["No Setting Setup Needed!"]</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+@*details*@
+<div id="container-detail" class="wrap-table" style="height: auto; display: none">
+    <div style="background-color:#bcc; overflow: hidden;">
+        <div class="detail-message"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>@Localizer["Code"]</label>
+                            <input class="input-box-kernel" id="d-code" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>@Localizer["Name"]</label>
+                            <input class="input-box-kernel" id="d-name" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6" id="warehouse">
+                <p>@Localizer["Warehouses"]</p>
+                <div class="maxHeighttb">
+                    <table id="d-wh">
+                        <tr>
+                            <th>@Localizer["#"]</th>
+                            <th>@Localizer["Name"]</th>
+                            <th>@Localizer["Code"]</th>
+                            <th>@Localizer["Location"]</th>
+                            <th>@Localizer["All"] <input type="checkbox" id="checkAllWh" /></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="maxHeighttb">
+                    <p>@Localizer["Users"]</p>
+                    <table id="d-user">
+                        <tr>
+                            <th>@Localizer["#"]</th>
+                            <th>@Localizer["User name"]</th>
+                            <th>@Localizer["Telegram UserID"]</th>
+                            <th>@Localizer["All"] <input type="checkbox" id="checkAllUser" /></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Admin/ControlAlert/index.js"></script>

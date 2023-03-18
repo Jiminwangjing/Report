@@ -1,0 +1,975 @@
+﻿@using CKBS.Models.ServicesClass.InterestRange
+@model preditedclosingViewModel
+@{
+    ViewData["Title"] = "Opportunity";
+}
+<link href="~/BussinessPartner/css/create.css" rel="stylesheet" />
+
+<style>
+    .closingpercent-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .closingpercent {
+        position: absolute;
+        border-radius: 3px;
+        opacity: 0.8;
+        z-index: 3;
+        color: white;
+        text-align: right;
+        height: 90%;
+        top: 1.15px;
+        padding-right: 5px;
+    }
+</style>
+<div class="card card-body mt-3">
+    <input type="text" id="txtid" hidden />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Business Partner Code"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <div class="input-group">
+                            <input type="text" class="input-box-kernel" id="code" disabled />
+                            <div class="input-group-append">
+                                <span class="input-group-text cursor" id="show-list-itemster">
+                                    <i class="fa fa-plus-circle mll_2"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Business Partner Name"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input class="form-control" id="name" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Contact Person"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <select id="contact" class="form-control">
+                            @*<option value=0 id="conid" selected disabled></option>*@
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Telephone"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <select id="tel" class="form-control">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Customer Sources"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" readonly id="cussource">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Business Partner Territory"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" readonly id="territory">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Sale Employee"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <select id="empid" class="form-control" asp-items="ViewBag.B">
+                            <option value=0 id="saleempid" selected disabled>@Localizer["--- No Sale Employee ---"]
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Owner"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <div class="input-group">
+                            <input type="text" class="input-box-kernel" id="empowner" disabled />
+                            <div class="input-group-append">
+                                <span class="input-group-text cursor" id="show-list-employee">
+                                    <i class="fa fa-plus-circle mll_2"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="row mb-2">
+                <div class="col-md-2"></div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-3">
+                            <a id="btn-createnew" href="/Opportunity/Opportunity" class="btn btn-kernel btn-xs"
+                                hidden><i class="fas fa-plus-circle"></i> @Localizer["Create New"]</a>
+                        </div>
+                        <div class="col-md-2">
+                            <button id="btn-find" class="btn btn-kernel btn-xs">@Localizer["Find"]</button>
+                        </div>
+                        <div class="col-md-3">
+                            <button id="choose" class="btn btn-kernel btn-xs">@Localizer["History"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Opportunity Name"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" id="opportunityname" class="form-control" autocomplete="off" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Opportunity No."]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" value=0 id="next_number" readonly class="form-control" autocomplete="off" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Status"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" disabled value="Open" id="status" class="form-control" autocomplete="off" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Start Date"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input data-date="dd/mm/yyyy" class="form-control" data-date-format="DD/MM/YYYY" type="date"
+                            id="startdate" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Closing Date"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="date" data-date="dd/mm/yyyy" class="form-control" id="closingdate"
+                            data-date-format="DD/MM/YYYY">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="font-size">@Localizer["Closing %"]</label>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="closingpercent-container">
+                            <div class="closingpercent"></div>
+                            <input type="text" readonly id="closingid" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-inline" id="formchk" style="display:none;" mt-3>
+        <label class="switch mb-1" style="margin-top:22px;">
+            <input type="checkbox" class="input-box-kernel" id="chkbox" onclick="Chkform()">
+            <span class="slider round"></span>
+        </label>
+        <span>Vehicle</span>
+    </div>
+
+    <ul class="widget-tab mt-3" style="height: 400px;">
+        <li class="tab-sheet active" id="potential">
+            <div class="tab-title" id="potentails">@Localizer["Potential"]</div>
+            <div class="tab-content widget-scrollbar">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="font-size">@Localizer["Predicted Closing in"]</label>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <input type="text" value=0 id="predictedclosingnum" autocomplete="off"
+                                        class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <select id="predictedclosingtime" class="form-control">
+                                        <option value="Days">@Localizer["Days"]</option>
+                                        <option value="Months">@Localizer["Months"]</option>
+                                        <option value="Years">@Localizer["Years"]</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="font-size">@Localizer["Predicted Closing Date"]</label>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <input type="date" data-date="dd/mm/yyyy" data-date-format="DD/MM/YYYY"
+                                        class="form-control" id="predictedclosingdate">
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="font-size">@Localizer["Potential Amount"]</label>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" value=0 autocomplete="off"
+                                        id="potentailamount" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="font-size">@Localizer["Weighted Amount"]</label>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" value=0 autocomplete="off" id="weightamount"
+                                        disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="font-size">@Localizer["Gross Profit %"]</label>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" value=0 autocomplete="off"
+                                        id="profitpercent" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="font-size">@Localizer["Gross Profit Total"]</label>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" value=0 autocomplete="off"
+                                        id="profittotal" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="font-size">@Localizer["Interest Level"]</label>
+                            </div>
+
+                            <div class="col-md-7">
+                                <from class="mr-5">
+                                    <input hidden id="levelid" />
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <select id="levelID" class="input-box-kernel" asp-items="ViewBag.Level">
+                                                <option value=0 selected>@Localizer["No Interest Level"]</option>
+                                            </select>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text cursor" id="modelinterest">
+                                                    <i class="fa fa-plus-circle mll_2"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </from>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mt-3 ">
+                        <div class="wrap-table">
+                            <table id="description" class="table-responsive-sm">
+                                <thead>
+                                    <tr>
+                                        <th><i id="add-new-description" class="fas fa-plus-square"
+                                                style="color:sandybrown"></i></th>
+                                        <th style="width:70px">@Localizer["Description"]</th>
+                                        <th>@Localizer["Action"]</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="tab-sheet" id="stagesid">
+            <div class="tab-title " id="stage">@Localizer["Stages"]</div>
+            <div class="tab-content  widget-scrollbar">
+                <div class="row  mt-4">
+                    <div class="col-md-12 col-sm-12">
+                        <table class="data-stage">
+                            <thead>
+                                <tr>
+
+                                    <th class="text-center">@Localizer["Start Date"]</th>
+                                    <th class="text-center">@Localizer["Close Date"]</th>
+                                    <th class="text-center">@Localizer["Sale Employee"]</th>
+                                    <th class="text-center">@Localizer["Stage"]</th>
+                                    <th class="text-center">@Localizer["SetUpStage"]</th>
+                                    <th class="text-center">@Localizer["Percent"]</th>
+                                    <th class="text-center">@Localizer["Potentail Amount"]</th>
+                                    <th class="text-center">@Localizer["Weight Amount"]</th>
+                                    <th class="text-center">@Localizer["Show Bps Doc"]</th>
+                                    <th class="text-center">@Localizer["Document Type"]</th>
+                                    <th class="text-center">@Localizer["DocNo"]</th>
+                                    <th class="text-center">@Localizer["Activity"]</th>
+                                    <th class="text-center">@Localizer["Owner"]</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </li>
+        @*//tap partner*@
+        <li class="tab-sheet" id="partner">
+            <div class="tab-title">@Localizer["Partner"]</div>
+            <div class="tab-content " style="overflow:hidden">
+                <div class="row mt-4">
+                    <div class="col-sm-12">
+                        <table class="data-partner">
+                            <tr>
+                                <th><i id="add-new-tbpartner" class="fas fa-plus-square" style="color:darksalmon"></i>
+                                </th>
+                                <th class="text-center" style="width:200px">@Localizer["Name"]</th>
+                                <th>SetUp Partner</th>
+
+                                <th class="text-center" style="width:200px">@Localizer["Relationship"]</th>
+                                <th>SetUp Relationship</th>
+                                <th class="text-center">@Localizer["Related Bp"]</th>
+                                <th class="text-center">@Localizer["Remark"]</th>
+
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </li>
+        @*//tap competitor*@
+        <li class="tab-sheet " id="competitor">
+            <div class="tab-title">@Localizer["Competitor"]</div>
+            <div class="tab-content" style="overflow:hidden">
+                <div class="row  mt-4">
+                    <div class="col-sm-12">
+                        <table class="data-competitor">
+                            <thead>
+                                <tr>
+                                    <th><i id="add-new-tbcompetitor" class="fas fa-plus-square"
+                                            style="color:darksalmon"></i></th>
+                                    <th class="text-center" style="width:900px">@Localizer["Name"]</th>
+                                    <th style="width:300px">@Localizer["Setup Competitor"]</th>
+                                    <th class="text-center" style="width:900px">@Localizer["Threa Level"]</th>
+                                    <th class="text-center" style="width:900px">@Localizer["Remark"]</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </li>
+        @*//summary*@
+        <li class="tab-sheet " id="Sumarry">
+            <div class="tab-title">@Localizer["Sumary"]</div>
+            <div class="tab-content" style="overflow:hidden">
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="font-size">@Localizer["Opportunity Status"]</span>
+                                <span><input type="checkbox" id="open" /> </span>
+                                <span class="font-size">@Localizer["Open"]</span>
+                                <label for="chkPassport">
+                                    <input type="checkbox" id="won">
+                                </label>
+                                <span class="font-size">@Localizer["Won"]</span>
+                                <span style="margin-top: 10px;"><input type="checkbox" id="lost" /> </span>
+                                <span class="font-size">@Localizer["Lost"]</span>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="font-size">@Localizer["Document Type"]</label>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <select class="form-control" asp-items="ViewBag.D" id="doctypeId"
+                                        disabled="disabled">
+                                        <option value="0" selected> </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="font-size">@Localizer["Document No"]</label>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group ">
+                                    <div class="input-group">
+                                        <input type="text" id="docNoid" value=0 readonly class="input-box-kernel">
+                                        <div class="input-group-append" id="buttonlist">
+                                            <span class="input-group-text cursor" id="showing-list-doctypeNo">
+                                                <i class="fa fa-plus-circle mll_2"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="wrap-table">
+                            <table id="description-summary" class="table-responsive-sm">
+                                <thead>
+                                    <tr>
+                                        <th><i id="add-new-description-summary" class="fas fa-plus-square  "
+                                                style="color:sandybrown"></i></th>
+                                        <th style="width:70px">@Localizer["Description"]</th>
+                                        <th>@Localizer["Action"]</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div id="error-summary"></div>
+            <button id="submit-data" class="btn btn-kernel increanum" btn-xs">@Localizer["Add"]</button>
+            <button id="update-data" class="btn btn-kernel btn-xs" hidden>@Localizer["Update"]</button>
+            <a href="" class="btn btn-kernel btn-xs">@Localizer["Cancel"]</a>
+        </div>
+    </div>
+</div>
+
+@*//MODEL BOX BP*@
+<div class="bp_containers" style="display: none;">
+
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-bus" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+
+    <table id="list-bp" class="mt-3">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+@*//=======*@
+<div class="opporutnity" style="display: none; height:343px;">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-opp" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+
+    <table id="list-opp" class="mt-3">
+        <tr>
+
+
+            <th>@Localizer["Opportunity No"]</th>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Choose"]</th>
+        </tr>
+    </table>
+</div>
+@*//========*@
+@*//Model box of Employee*@
+<div class="em_containers" style="display: none; ">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-emp" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="list-em" class="mt-2">
+        <tr>
+            <th>@Localizer["ID"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Positon"]</th>
+            <th>@Localizer["Choose"]</th>
+        </tr>
+    </table>
+</div>
+@*//model box of doctypeno*@
+<div class="doctypeno_containers widget-scrollbar" style="display: none; overflow: auto">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-doctype" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="list-doctypeno">
+        <tr>
+            <th>@Localizer["#"]</th>
+            <th>@Localizer["Date"]</th>
+            <th>@Localizer["Dudate"]</th>
+            <th>@Localizer["Customer"]</th>
+            <th>@Localizer["Remark"]</th>
+            <th>@Localizer["Choose"]</th>
+        </tr>
+    </table>
+</div>
+@*//model box of interest level*@
+<div id="active-level-content" style="display:none; height: 250px; ">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-levelinterest" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="level-interest">
+            <thead>
+                <tr>
+                    <th><i id="create-level-description" class="fas fa-plus-square" style="color:sandybrown;"></i></th>
+                    <th style="width:70px">Description</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    <div style="display:flex;justify-content:flex-end">
+        <p id="sms_level"></p>
+    </div>
+
+</div>
+@*//model box of set up interest range*@
+<div id="active-setuprange-content" style="display:none; height: 250px; ">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-setuprange" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="setup-range">
+            <thead>
+                <tr>
+                    <th><i id="create-range-description" class="fas fa-plus-square" style="color:sandybrown"></i></th>
+                    <th style="width:70px">Description</th>
+                    <th hidden>Action</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:-50px">
+        <p id="sms_range"></p>
+    </div>
+</div>
+@*//model box of setup reasons in summary*@
+<div id="active-setupreason-content" style="display:none; height: 250px; ">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-setupreason" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="setup-reasons">
+            <thead>
+                <tr>
+                    <th><i id="add-new-reason" class="fas fa-plus-square" style="color:sandybrown"></i></th>
+                    <th style="width:70px">Description</th>
+                    <th hidden>Action</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:-50px">
+        <p id="sms_reason"></p>
+    </div>
+</div>
+@*//model box of setup stage*@
+<div id="active-setupstage-content" style="display:none; height: 250px; ">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-setupstage" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="setup-stage">
+            <thead>
+                <tr>
+                    <th><i id="add-new-stage" class="fas fa-plus-square" style="color:sandybrown"></i></th>
+                    <th>Name</th>
+                    <th>Closing Percentage</th>
+                    <th>Stage No</th>
+
+                </tr>
+            </thead>
+
+        </table>
+    </div><br />
+    <div style="display:flex;justify-content:flex-end;margin-top:-50px">
+        <p id="sms_stage"></p>
+    </div>
+
+</div>
+@*//model box of setup partner*@
+<div id="active-setuppartner-content" style="display:none; height: 250px; ">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-setuppartner" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="setup-partner">
+            <thead>
+                <tr>
+                    <th><i id="add-new-setuppartner" class="fas fa-plus-square" style="color:sandybrown"></i></th>
+                    <th>Name</th>
+                    <th>Default Relationsion</th>
+                    <th>Related Bp</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:-50px">
+        <p id="sms-partner"></p>
+    </div>
+
+</div>
+@*//mel box of setup competitor*@
+<div id="active-setupcompetitor-content" style="display:none; height: 250px; ">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-setupcompeitior" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="setup-competitor">
+            <thead>
+                <tr>
+                    <th><i id="add-new-setupcompetitor" class="fas fa-plus-square" style="color:sandybrown"></i></th>
+                    <th style="width:50px">Name</th>
+                    <th style="width:50px">ThreaLevel</th>
+                    <th style="width:50px">Detail</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:-50px">
+        <p id="sms-competitor"></p>
+    </div>
+</div>
+@*//model box of setup relationship*@
+<div id="active-setuprelationship-content" style="display:none; height: 250px; ">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-setuprelationship" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="setup-relationship">
+            <thead>
+                <tr>
+                    <th><i id="add-new-setuprelationship" class="fas fa-plus-square" style="color:sandybrown"></i></th>
+                    <th style="width:70px">Relationship Descripton</th>
+                    <th hidden style="width:70px">Relationship Descripton</th>
+
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:-50px">
+        <p id="sms-relationship"></p>
+    </div>
+</div>
+@*//model box of edit bussiness partner*@
+<div id="active-edit-content" style="display:none; height: 100px; ">
+    <input id="editbpid" hidden />
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <span>Sale Employee</span>
+        </div>
+        <div class="col-md-6 " style="margin-top:-10px">
+
+            <span>
+                <select id="saleemployee" asp-items="ViewBag.Emp">
+                    <option>-No Sale Employee-</option>
+                </select>
+            </span>
+            <span>
+                <i class="fas fa-plus-circle text-info input-group-icon mt-1 " style="font-size:20px;" id="setupEm"></i>
+            </span>
+        </div>
+    </div>
+</div>
+@*//model box of set up employee*@
+<div id="active-setupem-content" style="display:none; height: 250px; ">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-setupemp" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="setup-emp">
+            <tr>
+                <th>No</th>
+                @*<th><i id="create-saleem-description" class="fas fa-plus-square" style="color:sandybrown"></i></th>*@
+                <th style="width:70px">Sale Employee</th>
+                <th hidden>Action</th>
+            </tr>
+
+        </table>
+    </div>
+    <div style="display:flex;justify-content:flex-end">
+        <p id="sms-emp"></p>
+    </div>
+</div>
+@*//model box of employee*@
+<div class="dataemp_container" style="display: none; ">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-dataemp" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+
+    <div style="overflow: auto">
+        <table id="list-dataemp" class="mt-2">
+            <tr>
+                <th>@Localizer["No."]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Position"]</th>
+                <th>@Localizer["Choose"]</th>
+
+            </tr>
+        </table>
+    </div>
+</div>
+@*//=========model of activity=======*@
+<div class="activity_containers" style="display: none; ">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-dataemp" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div style="overflow: auto">
+        <table id="list-activity" class="mt-2">
+            <tr>
+                <th>@Localizer["Code."]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Type"]</th>
+                <th>@Localizer["Start Time"]</th>
+                <th>@Localizer["End Time"]</th>
+                <th>@Localizer["Choose"]</th>
+
+            </tr>
+        </table>
+    </div>
+</div>
+
+@*//model box of sale order*@
+<div class="saleorder_container" style="display: none;">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-saleorder" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-start">
+        <a id="add-newqutoe" href="/Sale/SaleQuote" class="btn btn-kernel btn-xs" style="margin-top:-20px"><i
+                class="fas fa-plus-circle"></i> @Localizer["Create New"]</a>
+        <a id="add-neworder" href="/Sale/SaleOrder" class="btn btn-kernel btn-xs" style="margin-top:-20px"><i
+                class="fas fa-plus-circle"></i> @Localizer["Create New"]</a>
+        <a id="add-newdelivery" href="/Sale/SaleDelivery" class="btn btn-kernel btn-xs" style="margin-top:-20px"><i
+                class="fas fa-plus-circle"></i> @Localizer["Create New"]</a>
+        <a id="add-newar" href="/Sale/SaleAR" class="btn btn-kernel btn-xs" style="margin-top:-20px"><i
+                class="fas fa-plus-circle"></i> @Localizer["Create New"]</a>
+        <a id="add-newmemo" href="/Sale/SaleCreditMemo" class="btn btn-kernel btn-xs" style="margin-top:-20px"><i
+                class="fas fa-plus-circle"></i> @Localizer["Create New"]</a>
+    </div>
+    <div style="overflow: auto" class="mt-2">
+        <table id="list-saleorder">
+            <tr>
+                <th>@Localizer["No."]</th>
+                <th>@Localizer["Invoice"]</th>
+                <th>@Localizer["Date"]</th>
+                <th>@Localizer["Customer"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </table>
+    </div>
+</div>
+<input id="bpid" hidden />
+<input id="idlevel" hidden />
+<input id="saleempid" hidden />
+<input id="masterid" hidden />
+<input id="potentialid" hidden />
+<input id="ownerid" hidden />
+<input id="docID" hidden />
+<input id="selectempid" hidden />
+<input id="donoid" hidden />
+<input id="stageid" hidden />
+<input id="checkedID" hidden>
+<input id="seriID" hidden />
+<input id="saleempidd" hidden />
+<input id="ownerid" hidden />
+<input id="doctypid" hidden />
+<input id="summarydetailid" hidden />
+<input id="interestid" hidden />
+<input id="summarydetailid" hidden />
+<input id="doctypeidofsummary" hidden />
+<input id="doctypeidd" hidden />
+<input id="dd" hidden />
+<input id="acid" hidden />
+<input id="cday" hidden />
+<input id="sday" hidden />
+<div hidden id="model-data">@Json.Serialize(Model)</div>
+<script src="~/Admin/opportunity/opportunity.js"></script>

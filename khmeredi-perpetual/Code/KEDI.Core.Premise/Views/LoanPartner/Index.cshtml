@@ -1,0 +1,120 @@
+
+
+@{
+    ViewData["Title"] = "Vendor";
+}
+
+<style>
+    .tbncrate {
+        margin-top: 10px;
+        background-color: #00bfff;
+        color: white;
+    }
+
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+
+    .fa-copy {
+        color: blue;
+    }
+
+    #table, tr, th {
+        text-align: center !important;
+    }
+
+   
+</style>
+<div class="card card-body">
+    <div class="d-flex justify-content-between">
+        <a asp-action="CreateLoanPartner" asp-controller="LoanPartner" class="btn btn-xs btn-kernel tbncrate"> @Localizer["Create"]</a>
+
+
+        <input type="text" id="txtid" hidden />
+        <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-loanpartner" autocomplete="off" type="text" placeholder='@Localizer["Search ..."]' />
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <input type="hidden" id="txtid" />
+    <div class="wrap-table">
+        <table class="business" id="list">
+            <tr>
+                <th>@Localizer["#"]</th>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Name1"]</th>
+                <th>@Localizer["Name2"]</th>
+                <th>@Localizer["EmployeeName"]</th>
+                <th>@Localizer["Phone"]</th>
+                <th>@Localizer["Email"]</th>
+                <th>@Localizer["Address"]</th>
+            </tr>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var listloanpartner=[];
+        let $listView = ViewTable({
+            keyField: "ID",
+            selector: "#list",
+            indexed: true,
+            paging: {
+                enabled: true,
+                pageSize: 25
+            },
+            visibleFields: ["Code", "Name1", "Name2","EmloyeeName", "Phone", "Email", "Address"],
+            columns: [
+                {
+                    name: "Code",
+                    on: {
+                        "dblclick": function (e) {
+                            location.href = "/LoanPartner/UpdateLoanPartner?id=" + e.key;
+                        }
+                    }
+                }
+            ]
+        });
+        SearchLoanPartner();
+        $("#search-loanpartner").on("keyup", function (e) 
+        {
+                        let __value = this.value.toLowerCase().replace(/\s/g, "");
+                        let rex = new RegExp(__value, "i");
+                        let __loanpartner = $.grep(listloanpartner, function (person) {
+                            //let phone = isEmpty(person.Phone) ? "" : person.Phone;
+                            return person.Code.match(rex) 
+                                    || person.Name1.replace(/\s/g, "").match(rex)
+                                    || person.Name2.replace(/\s/g, "").match(rex)
+                                    || person.Phone.replace(/\s/g, "").match(rex);
+                              
+                        });
+                        $listView.bindRows(__loanpartner);
+        });
+         
+        function SearchLoanPartner() {
+            $.get("/LoanPartner/GetLoanPartner",function (res) {
+               if(res.length>0)
+                {
+                    $listView.clearRows();
+                    $listView.bindRows(res);
+                    res.forEach(i=>{
+                        listloanpartner.push(i);
+                    })
+                }
+
+                });
+        }
+    });
+    
+</script>

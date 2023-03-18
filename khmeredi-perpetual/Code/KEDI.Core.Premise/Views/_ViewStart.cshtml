@@ -1,0 +1,11 @@
+﻿@{
+    switch (User.Identity.IsAuthenticated)
+    {
+        case true:
+            Layout = "_AdminLayout";
+            break;
+        default:
+            Layout = "_LoginLayout";
+            break;
+    }
+}

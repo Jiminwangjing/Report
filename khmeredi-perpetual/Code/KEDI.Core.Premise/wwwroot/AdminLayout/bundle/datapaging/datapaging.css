@@ -1,0 +1,91 @@
+ul.ck-pagination {
+    margin: 0;
+    padding: 0 5px;
+    line-height: 50px;
+    height: 50px;
+    font-size: 1em;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+ul.ck-pagination li {
+    display: inline-block;
+    list-style: none;
+    text-align: center;
+    box-sizing: border-box;
+    width: auto;
+    min-width: 30px;
+    height: 30px;
+    line-height: 30px;
+    color: #555; 
+    margin: auto 2.5px;
+    padding: 0 5px;
+    border-radius: 2px;
+    cursor: pointer;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+ul.ck-pagination.border li {
+    -webkit-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.75);
+       -moz-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.75);
+            box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.75);
+}
+
+ul.ck-pagination.square li {
+    border-radius: 2px;
+}
+
+ul.ck-pagination.circle li {
+    border-radius: 50%;
+}
+
+ul.ck-pagination li.active {
+    background: linear-gradient(0deg, rgba(170,220,170,1) 0%, rgba(150,200,235,1) 100%);
+}
+
+ul.ck-pagination li.hidden {
+    display: none;
+}
+
+.ck-data-loading {
+    position: absolute;
+    z-index: 1;
+    display: block;
+    width: 35px;
+    height: 35px;
+    border: 1.5px solid #a0c0e9;
+    padding: 1.5px;
+    border-bottom-color: transparent;
+    border-top-color: transparent;
+    background: 0 0;
+    border-radius: 50%;
+    -webkit-animation: 1.5s spin linear infinite alternate-reverse;
+    animation: 1.5s spin linear infinite alternate-reverse;
+}
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}

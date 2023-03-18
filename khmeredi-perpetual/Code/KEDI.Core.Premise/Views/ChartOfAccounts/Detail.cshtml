@@ -1,0 +1,326 @@
+﻿@model CKBS.Models.Services.ChartOfAccounts.GLAccountViewModel;
+<link href="~/ChartsOfAccount/css/chartOfAccount.css" rel="stylesheet" />
+<div class="card card-body">
+    <div class="glaccount-container flexbox space-between">
+        <form id="glaccount-form" asp-controller="ChartOfAccounts"
+            asp-action="UpdateGLAccount" method="post">
+            <input id="mainParentID" asp-for="GLAccount.MainParentId" hidden />
+            @*<div hidden
+            id="glaccount-data">@Json.Serialize(@Model.GLAccount)</div>*@
+            <fieldset class="side-detail">
+                <legend class="title">@Localizer["G/L Account"]</legend>
+                @Html.AntiForgeryToken()
+                @*<button id="add-glaccount" class="btn btn-xs btn-success
+                float-right" disabled>
+                <i class="fas fa-plus-circle fa-lg"></i> @Localizer["Add"]
+                </button>*@
+                <div class="flexbox space-between">
+                    <div>
+                        <input name="IsTitle" type="radio"
+                            checked="@Model.GLAccount.IsTitle" value="true"
+                            id="istitle" />
+                        <span>@Localizer["Title"]</span>
+                    </div>
+                    <div>
+                        <input name="IsTitle" type="radio"
+                            checked="@Model.GLAccount.IsActive" value="false"
+                            id="isactive" />
+                        <span>@Localizer["Active Account"]</span>
+                    </div>
+                </div>
+                <div class="block">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>@Localizer["Code"]</label>
+                            <label>@Localizer["Name"]</label>
+                            <label>@Localizer["External Code"]</label>
+                            <label>@Localizer["Level"]</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input id="parent-id" hidden asp-for="GLAccount.ID"
+                                />
+                            <div>
+                                <input asp-for="GLAccount.Code"
+                                    autocomplete="off" class="form-control"
+                                    readonly id="code" />
+                                @*<span asp-validation-for="GLAccount.Code"
+                                class="text-danger valHidden"></span>*@
+                            </div>
+                            <div>
+                                <input asp-for="GLAccount.Name"
+                                    autocomplete="off" class="form-control"
+                                    id="name" />
+                                @*<span asp-validation-for="GLAccount.Name"
+                                class="text-danger valHidden"></span>*@
+                            </div>
+                            <div>
+                                <input asp-for="GLAccount.ExternalCode"
+                                    autocomplete="off" class="form-control"
+                                    id="externalCode" />
+                            </div>
+                            <div>
+                                <input asp-for="GLAccount.Level"
+                                    class="form-control" readonly id="level" />
+                            </div>
+                            <input hidden asp-for="GLAccount.ParentId"
+                                class="form-control" readonly id="parentId" />
+                        </div>
+                    </div>
+                    <div class="section-not-title" id="hide-balance">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>@Localizer["Balance"]</label>
+                            </div>
+                            <div class="col-md-8 input-group myb1">
+                                @*<input asp-for="GLAccount.Balance"
+                                class="form-control" style="width: 100px;"
+                                id="balance" readonly>*@
+                                <input asp-for="GLAccount.Balance"
+                                    class="form-control" style="width: 100px;"
+                                    id="balance" readonly>
+                                <i class="fas fa-long-arrow-alt-right fa-1x pl-1
+                                    pt-1" style="cursor: pointer;"></i>
+                            </div>
+                        </div>
+                        <input asp-for="GLAccount.IsConfidential"
+                            type="checkbox" id="isConfidential" />
+                        <span id="isConfidentialSpan">@Localizer["Confidential"]</span>
+                    </div>
+                </div>
+                <div class="block section-not-title" id="hide-detail">
+                    <div class="row" hidden id="subtypehidden">
+                        <div class="col-md-4">
+                            <label>@Localizer["Sub Type Acount"]</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group ">
+
+                                <div class="input-group">
+                                    <select asp-for="GLAccount.SubTypeAccountID"
+                                        class="input-box-kernel cursor"
+                                        id="subtypeacount" style="width: 10% ;">
+                                        <option value="0"></option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-plus-circle mt-2"
+                                                id="dialog-subtype"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>@Localizer["Account Type"]</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select asp-for="GLAccount.AccountType"
+                                class="form-control" id="accountType">
+                                <option value="1">@Localizer["Sales"]</option>
+                                <option value="2">@Localizer["Expenditure"]</option>
+                                <option selected value="0">@Localizer["Other"]</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <input asp-for="GLAccount.IsControlAccount"
+                            type="checkbox" id="isControlAccount">
+                        <span>@Localizer["Control Account"]</span>
+                    </div>
+                    <div>
+                        <input asp-for="GLAccount.IsIndexed" type="checkbox"
+                            id="isIndexed">
+                        <span>@Localizer["Indexed"]</span>
+                    </div>
+                    <div>
+                        <input asp-for="GLAccount.IsCashAccount" type="checkbox"
+                            id="isCashAccount">
+                        <span>@Localizer["Cash Account"]</span>
+                    </div>
+                    <div>
+                        <input asp-for="GLAccount.BlockManualPosting"
+                            type="checkbox" id="blockManualPosting">
+                        <span>@Localizer["Block Manual Posting"]</span>
+                    </div>
+                    <div>
+                        <input asp-for="GLAccount.CashFlowRelavant"
+                            type="checkbox" id="cashFlowRelavant">
+                        <span>@Localizer["Cash Flow Relevant"]</span>
+                    </div>
+                </div>
+                <div class="my-2">
+                    @*<span><div asp-validation-summary="All"
+                    class="text-danger"></div></span>*@
+                    <div><span asp-validation-for="GLAccount.Code"
+                            class="text-danger valHidden"></span></div>
+                    <div><span asp-validation-for="GLAccount.Name"
+                            class="text-danger valHidden"></span></div>
+                    <div><span class="text-danger">@ViewBag.Code</span></div>
+                    <button id="save" type="submit" class="btn btn-xs
+                        btn-kernel" hidden>
+                        @Localizer["Save"]
+                    </button>
+                    <button id="add-glaccount" type="button" class="btn btn-xs
+                        btn-kernel" disabled>
+                        @Localizer["Add"]
+                    </button>
+                    @*<a asp-controller="ChartOfAccounts" asp-action="Detail"
+                    class="btn btn-xs btn-info">
+                    <i class="fas fa-window-close"></i> @Localizer["Cancel"]
+                    </a>*@
+                    <button id="update" type="submit" class="btn btn-xs
+                        btn-kernel" disabled>
+                        @Localizer["Update"]
+                    </button>
+                    <button id="cancel" class="btn btn-xs btn-kernel" hidden>
+                        @Localizer["Cancel"]
+                    </button>
+                </div>
+                <div class="mt-4" id="Account_Location" style="display: none">
+                    <fieldset class="side-detail">
+                        <legend class="title">@Localizer["G/L Account Location"]</legend>
+                    </fieldset>
+                    <div class="mt-5">
+                        <div class="row">
+                            <div class="col-md-4">Parent Article</div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="glcode">
+                                    <option value="0">@Localizer["---Select---"]</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </fieldset>
+        </form>
+
+        @*Tree View*@
+        <div class='treeview-container widget-scrollbar'>
+            <ul class='treeview'></ul>
+        </div>
+
+        <input hidden id="idParent" />
+        <div class="v-menu-box">
+            <ul class="menu-group widget-default-scrollbar">
+                @foreach (var sc in Model.Categories)
+                {
+                    <li data-id="@sc.ID" class="menu-item">
+                        <span class="item-title">@Localizer[sc.Name]</span>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div id="active-gl-content" style="display:none;">
+        <form>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>@Localizer["Date From"] :</label>
+                        <input type="date" id="dateFrom" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>@Localizer["Date To"] :</label>
+                        <input type="date" id="dateTo" class="form-control" />
+                    </div>
+                </div>
+                @*<div class="col-md-4 mt-4">
+                <div class="row">
+                <div class="col-md-4 col-sm-2">
+                <div class="form-group">
+                <button class="btn btn-primary" type="button"
+                id="btnFilter">@Localizer["Filter"]</button>
+                </div>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                <div class="form-group">
+                <button class="btn btn-danger" type="button"
+                id="btnClear">@Localizer["Clear"]</button>
+                </div>
+                </div>
+                </div>
+                </div>*@
+            </div>
+        </form>
+
+        <div id="container-list-gl" class="wrap-table myt1 widget-scrollbar"
+            style="height: 350px">
+            <table class="allw-gl">
+                <thead>
+                    <tr>
+                        <th class="text-center">@Localizer["#"]</th>
+                        <th class="text-center">@Localizer["Posting Date"]</th>
+                        <th class="text-center">@Localizer["Origin"]</th>
+                        <th class="text-center">@Localizer["Origin No."]</th>
+                        <th class="text-center">@Localizer["Offset Account"]</th>
+                        <th class="text-center">@Localizer["Details"]</th>
+                        <th class="text-center">@Localizer["Cumulative Balance"]</th>
+                        <th class="text-center">@Localizer["Debit"]</th>
+                        <th class="text-center">@Localizer["Credit"]</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="container-lis-Subtype" class="wrap-table myt1 widget-scrollbar"
+            style="height: 650px">
+            <div class="group-search-boxes mb-3">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="find-list" autocomplete="off"
+                            type="text" placeholder='@Localizer["Search ..."]'>
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display:
+                        none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+            <div class="wrap-table list widget-scrollbar" style="height:600px">
+                <table class="subtype">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width:5%">@Localizer["#"]</th>
+                            <th class="text-center" style="width:90%">@Localizer["Type"]</th>
+                            <th class="text-center" style="width:5%">@Localizer["Default"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="container ">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="error-summary">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-glAcc" style="display:none;">
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <p id="text-delete-glAcc-content" class="text-center"
+                    style="font-size: 22px"></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-8">
+                <div id="text-delete-glAcc"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="GLAccID" hidden />
+<input id="mainParentIDNoASP" hidden />
+<script src="~/ChartsOfAccount/js/chartOfAccount.js"></script>

@@ -1,0 +1,298 @@
+﻿<script src="~/js/warehouse.js"></script>
+<script src="~/js/table.js" defer></script>
+<style>
+    .input_branch, .input_warehouse {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 100%;
+        min-width: 100%;
+        height: 28px;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size: 12px;
+        border-radius: 3px;
+    }
+
+    .lable_branch, .lable_warehouse {
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .btn-warning {
+        margin-top: 22px;
+        font-size: 13px;
+        font-family: Arial;
+        height: 28px;
+    }
+
+    .wrap-table {
+        margin-top: 20px;
+    }
+
+    .grandtotal {
+        margin-left: 15px;
+    }
+
+    .subtotaltd {
+        border-bottom: 1px solid gray;
+        font-weight: 700;
+    }
+
+    .hidden {
+        visibility: collapse !important;
+    }
+
+    .styletr {
+        font-weight: 800;
+    }
+
+    .list_detail {
+        float: right;
+        min-width: 1000px;
+    }
+
+    #list_stockinwarehouse {
+        margin-top: 10px;
+    }
+
+    .styleImagesItem {
+        width: 80px;
+        height: 70px;
+        border-radius:10px;
+    }
+
+    .constant_datafrom, .constant_dataTo, .content_currency, .content_warehouse, .content_item {
+        height: 25px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 55%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 2px;
+        border: 1px solid #c6c1c1;
+    }
+
+    .label_datafrom, .label_dataTo, .label_currency, .label_item, .label_warehouse {
+        min-width: 35%;
+        font-size: 13px;
+        font-family: Arial;
+    }
+
+    .constant_datafrom:focus, .constant_dataTo:focus, .content_currency:focus, .content_warehouse:focus, .content_item:focus {
+        box-shadow: 0 0 5px rgba(27, 93, 185,0.4);
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid rgb(120, 172, 245);
+        border-radius: 3px;
+        font-family: Arial;
+        font-size: 13px;
+    }
+
+    #tb_inventoryAudit {
+        height: 400px;
+    }
+</style>
+<link href="~/css/Modal.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12" style="margin-top:5px;">
+        <div class="input-group btnsearch">
+            <input class="form-control btn-sm" type="text" autocomplete="off" name="SearchString" value="@ViewData["currentFilter"]" placeholder="@Localizer["Search"]" id="txtsearch" autofocus />
+            <div class="input-group-append">
+                <button class="btn btn-sm btnsearch"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrap-table list">
+    <table id="list_stockinwarehouse">
+        <tr style="background:#5F758B;color:white;">
+
+            <th style="min-width:50px;">@Localizer["Code"]</th>
+            <th style="min-width:150px; ">@Localizer["Name(KH)"]</th>
+            <th style="min-width:140px; ">@Localizer["Name(EN)"]</th>
+            <th style="min-width:100px;">@Localizer["In Stock"]</th>
+            <th style="min-width:80px;">@Localizer["Committed"]</th>
+            <th style="min-width:80px;">@Localizer["Ordered"]</th>
+            <th style="min-width:70px;">@Localizer["Uom"]</th>
+            <th style="min-width:90px;">@Localizer["Barcode"]</th>
+            <th style="min-width:70px;">@Localizer["Image"]</th>
+            <th style="min-width:100px;">@Localizer["Expire Date"]</th>
+
+        </tr>
+    </table>
+</div>
+
+<div class="row" style="margin-top:30px;">
+    <div class="col-md-12">
+        <div>
+            <span>@Localizer["Total In Stock"]</span>
+            <span>:</span>
+            <span id="totalinstock"></span>
+        </div>
+        <div>
+            <span>@Localizer["Total Ordered"]</span>
+            <span>:</span>
+            <span id="totalordered"></span>
+        </div>
+        <div>
+            <span>@Localizer["Total Committed"]</span>
+            <span>:</span>
+            <span id="totalcommitted"></span>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalAuditReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-adjust "><b class="icone_adjust">@Localizer["Inventory Audit"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="label_datafrom">@Localizer["Date From"]</label>
+                                <input type="date" class="constant_datafrom" onchange="changDateFrom()" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="label_dataTo">@Localizer["Date To"]</label>
+                                <input type="date" class="constant_dataTo" onchange="changeDateTo()" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="label_currency">@Localizer["Currency"]</label>
+                                <input type="text" class="content_currency" readonly />
+                            </div>
+                            <div class="col-md6"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3"> </div>
+                    <div class="col-md-3">
+                        <label class="label_item">@Localizer["Item"]</label>
+                        <input type="text" class="content_item" readonly />
+                        <label class="label_warehouse">@Localizer["Warehouse"]</label>
+                        <select class="content_warehouse" id="txtwarehousefilter">
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="wrap-table list" id="tb_inventoryAudit">
+                    <table id="item-list">
+                        <tr>
+                            <th style="min-width:200px;">@Localizer["Name(KH)"]</th>
+                            <th style="min-width:200px;">@Localizer["Name(EN)"]</th>
+                            <th>@Localizer["User"]</th>
+                            <th>@Localizer["System Date"]</th>
+                            <th>@Localizer["Time In"]</th>
+                            <th style="min-width:150px;">@Localizer["Warehouse"]</th>
+                            <th style="min-width:110px;"> @Localizer["Tarns Type"]</th>
+                            <th>@Localizer["Qty"]</th>
+                            <th>@Localizer["Uom"]</th>
+                            <th>@Localizer["Cost"]</th>
+                            <th style="min-width:110px;">@Localizer["Trans Value"]</th>
+                            <th style="min-width:120px;">@Localizer["Cumulative Qty"]</th>
+                            <th style="min-width:125px;">@Localizer["Cumulative Value"]</th>
+                            <th>@Localizer["Process"]</th>
+                            <th>@Localizer["ExpireDate"]</th>
+                        </tr>
+                        <tbody class="list_audit"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="padding:5px;">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var db = new Warehouse();
+    $(document).ready(function () {
+     
+        let listSummary = $.ajax({
+            url: "/Report/GetStockAudit",
+            type: "Get",
+            dataType: "Json",
+            async: false,
+            success: function (respones) {
+
+            }
+        }).responseJSON;
+        var instock = 0;
+        var order = 0;
+        var commit = 0;
+         db.table("tb_summary").clear();
+         if (listSummary.length !== 0) {
+             $("#list_stockinwarehouse tr:not(:first-child)").remove();
+             db.insert("tb_summary", listSummary, "ID");
+        }
+         else {
+             $("#list_stockinwarehouse tr:not(:first-child)").remove();
+             $('#list_stockinwarehouse').append('<tr><td class="text-center" colspan="11">@Localizer["No Data"]</td></tr>');
+        }
+        if (db.from("tb_summary") !== 0) {
+            db.from("tb_summary").where(function (item) {
+                instock = parseFloat(instock) + parseFloat(item.InStock);
+                order = parseFloat(order) + parseFloat(item.Ordered);
+                commit = parseFloat(commit) + parseFloat(item.Committed);
+                GetDataBindTable(item);
+            });
+        }
+        if (order == 0) {
+            $("#totalordered").text(0);
+        }
+        if (instock == 0) {
+            $("#totalinstock").text(0);
+        }
+        if (commit == 0) {
+            $("#totalcommitted").text(0);
+        }
+        $("#totalinstock").text(instock);
+        $("#totalordered").text(order);
+        $("#totalcommitted").text(commit);
+    });
+    function GetDataBindTable(item) {
+        var data = "";
+        data +=
+        '<tr style="border-bottom:3px solid #e0e0d1;">' +
+            //'<td>' + '<i class="fa  tabelshow" style="color:#008000;" data-id='+item.ID+'></i>' +'<input hidden type="checkbox" class="check_box" checked/>'+ '</td>' +
+            '<td hidden id="order_id">' + item.ID + '</td>' +
+            '<td hidden>' + item.ItemID + '</td>' +
+            '<td >' + item.Code + '</td>' +
+            '<td>' + item.KhmerName + '</td>' +
+            '<td >' + item.EnglishName + '</td>' +
+            '<td>' + item.InStock + '</td>' +
+            '<td>' + item.Committed + '</td>' +
+            '<td>' + item.Ordered + '</td>' +
+            '<td >' + item.Uom + '</td>' +
+            '<td>' + item.Barcode + '</td>' +
+            '<td>' + '<img src="../../Images/' + item.Image + '" class="styleImagesItem">' + '</td>' +
+            '<td>' + item.ExpireDate + '</td>' 
+        
+        $("#list_stockinwarehouse").append(data);
+    }
+    $('#txtsearch').keyup(function () {
+        var query = ($(this).val()).toLowerCase();
+        $('#list_stockinwarehouse tr:not(:first-child)').each(function () {
+
+            var $this = $(this);
+            if ($this.text().toLowerCase().indexOf(query) === -1)
+                $this.closest('tr').hide();
+            else $this.closest('tr').show();
+        });
+    });
+</script>

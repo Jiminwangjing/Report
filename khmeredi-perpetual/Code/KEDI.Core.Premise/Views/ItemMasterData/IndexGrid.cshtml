@@ -1,0 +1,525 @@
+﻿@model IEnumerable<ItemMasterData>
+<style>
+    a {
+        color: black;
+    }
+
+    #Fillter {
+        margin: 5px 10px;
+    }
+
+    .styleimage {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+    .styleitem {
+        height: 150px;
+        width: 150px;
+        box-shadow: 0px 0px 1px;
+        display: inline-block;
+        margin: 5px;
+        padding: 5px;
+        text-align: center;
+        border: 1px solid lightskyblue;
+    }
+    .styleitem:hover {
+         background-color: rgb(203, 245, 241);
+         opacity: 1;
+         box-shadow: 0px 0px 1px;
+     }
+    .control-label {
+        font-size: 13px;
+        font-family: Arial;
+        margin-left: 10px;
+        margin-bottom: 5px;
+    }
+
+    .styledropdow {
+        margin-left: 100px;
+        cursor: pointer;
+    }
+
+    .listdropdoum {
+        width: 50px;
+        height: 40px;
+        text-align: center;
+        box-shadow: 0px 0px 1px white;
+    }
+    ul li a {
+        float: left;
+        margin-right: 8px;
+        margin-left: 5px;
+        cursor: pointer;
+        color: black;
+    }
+
+    .modal-header {
+        background-color: blue;
+    }
+
+    .styleb {
+        margin-left: 10px;
+        font-family: Arial;
+    }
+
+    .styleImagesItem {
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+    }
+    
+    #controllable {
+        font-weight: bold;
+    }
+   .fa {
+       margin-right:3px;
+      
+   }
+    .content_item1,.content_item2,.content_item3{
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+ }
+  .content_item1:focus,.content_item2:focus,.content_item3:focus{
+      box-shadow: 0 0 5px rgba(27, 93, 185,0.4);
+      padding: 3px 3px 3px 3px;
+      margin: 5px 1px 3px 0px;
+      border: 1px solid rgb(120, 172, 245);
+      border-radius: 3px;
+      font-family: Arial;
+      font-size: 13px;
+ }
+  .content_search:focus{
+       box-shadow: 0 0 5px rgba(27, 93, 185,0.4);
+      padding: 3px 3px 3px 3px;
+      margin: 5px 1px 3px 0px;
+      border: 1px solid rgb(120, 172, 245);
+      border-radius: 3px;
+      font-family: Arial;
+      font-size: 13px;
+      margin-top:22px;
+  }
+ .content_search{
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+        position:relative;
+        margin-top:22px;
+ }
+ .icoe_search{
+     position:absolute;
+     right:15px;
+     top:30px;
+ }
+ .label_item1,.label_item2,.label_item3{
+     font-family:Arial;
+     font-size:13px;
+ }
+ .stylekhmernam {
+        max-width: 150px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        margin-top:5px;
+   }
+        
+</style>
+<form asp-action="IndexGrid" method="get" id="form-id">
+    <div class="row">
+        <div class="col-md-2">
+            <label class="label_item1">@Localizer["ItemGroup(1)"]</label>
+            <select class="content_item1" id="selectpage" name="Filergroup" onchange="FilterItemGrorp1()">
+                <option value="0" selected disabled>--- Select ---</option>
+                <option value="0">All Item</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label_item2">@Localizer["ItemGroup(2)"]</label>
+            <select class="content_item2" id="txtItemgroup2" name="Filergroup" onchange="FilterItemGrorp2()">
+                <option value="0" selected disabled>--- Select ---</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label_item3">@Localizer["ItemGroup(3)"]</label>
+            <select class="content_item3" id="txtItemgroup3" name="Filergroup" onchange="FilterItemGrorp3()">
+                <option value="0" selected disabled>--- Select ---</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <input class="content_search" type="text" name="SearchString" value="@ViewData["currentFilter"]" placeholder="@Localizer["Search"]" id="txtseaerch" onkeyup="ShowSearch()" />
+            <i class="fa fa-search icoe_search"></i>
+        </div>
+    </div>
+</form>
+
+<div class="nav nav-tabs" style="margin-top:10px;margin-bottom:10px;">
+    <span class="nav-item" style="margin-right:5px;">
+        <a asp-action="Index" asp-controller="ItemMasterData" class="btn btn-xs"><i class="fa fa-list" aria-hidden="true" title="List" style="font-size:15px;"></i></a>
+    </span>
+    <span>
+        <a asp-action="IndexGrid" asp-controller="ItemMasterData" class="btn btn-xs "><i class="fa fa-th" aria-hidden="true" title="Grid" style="font-size:15px;"></i></a>
+    </span>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12" id="ShowResult">
+
+    </div>
+</div>
+<div class="modal fade" id="ModalDetail">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-info-circle" aria-hidden="true" style="margin-right:4px; color:white;"><b class="styleb">@Localizer["ItemMasterData"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-sm-6" id="listDetail_II"></div>
+                    <div class="col-sm-6" id="listDetail_I"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-ban" style="font-size:10px;"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="txtID" />
+<div class="modal fade" id="ModalDelete">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-question" aria-hidden="true" style="margin-right:4px; color:white;"><b class="styleb">@Localizer["ItemMasterData"]</b></i>
+            </div>
+            <div class="modal-body">
+                <h3>@Localizer["Question"]</h3>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm" data-dismiss="modal" onclick="ClickDelelet()">@Localizer["Yes"]</button>
+                <button class="btn btn-danger btn-sm" data-dismiss="modal">@Localizer["No"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var Getitem;
+    var GetItemGeoup1;
+    var GetItemGroup2;
+    var GetItemGroup3;
+    var itemGroup1 = 1, itemGrop2 = 2, itemGroup3 = 3, item = 4;
+    var FilterItemGroup1 = [];
+    var FilterItemGroup2 = [];
+    var FilterItemGroup3 = [];
+    var FilterItem = [];
+    var Iditem1 = 0;
+    var Iditem2 = 0;
+    $(document).ready(function () {
+        $("#txtseaerch").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#ShowResult > div").fadeIn(450).filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $.ajax({
+            url: "/ItemMasterData/GetMaster",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+
+                ShowDataRespones(respones);
+            }
+        });
+        $.ajax({
+            url: "/ItemMasterData/GetItemGroupI",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = "";
+                $.each(respones, function (i, item) {
+                    data +=
+                        "<option value='" + item.ItemG1ID + "'>" + item.Name + "</option>";
+                });
+                $("#selectpage").append(data);
+            }
+        });
+        $.ajax({
+            url: "/ItemMasterData/GetItemGroupII",
+            type: "Get",
+            dataType: "Json",
+            data: { ID: Iditem1 },
+            success: function (respones) {
+                var data = "";
+                $.each(respones, function (i, item) {
+                    data +=
+                        "<option value='" + item.ItemG2ID + "'>" + item.Name + "</option>";
+                });
+                $("#txtItemgroup2").append(data);
+            }
+        });
+        $.ajax({
+            url: "/ItemMasterData/GetItemGroupIII",
+            type: "Get",
+            dataType: "Json",
+            data: { ID: Iditem2 },
+            success: function (respones) {
+                var out = "";
+                $.each(respones, function (i, item) {
+                    '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#txtItemgroup3").append();
+            }
+        });
+    });
+    function ShowDataRespones(respones) {
+        $("#ShowResult").empty();
+        $.each(respones, function (i, item) {
+            var data = '';
+            if (item.KhmerName == item.EnglishName) {
+                data +=
+                     "<div class='stylekhmernam'>" + '....' + "</div>"+
+                     "<div class='stylekhmernam'>" + item.EnglishName + "</div>";
+            }
+            else {
+                data +=
+                     "<div class='stylekhmernam'>" + item.KhmerName + "</div>"+
+                     "<div class='stylekhmernam'>" + item.EnglishName + "</div>";
+            }
+            var out = "<div class='styleitem'>"+
+                 "<div hidden>" + item.ID + "</div>"+
+                 "<div >" + item.Code + "</div>"+
+                 "<div class='hoveclass'><img src='../../Images/" + item.Image + "' class='styleimage'/></div>"+
+                 data+
+                "<div class='dropdown'><h2 data-toggle='dropdown' class='styledropdow'>...</h2><ul class='dropdown-menu' id='listdropdoum'><li><a href='/ItemMasterData/EditGrid/" + item.ID + "'  class='viewsedit'>@Localizer["Edit"]</a></li><li><a data-id_delete=" + item.ID + " data-toggle='modal' data-target='#ModalDelete' class='viesDelete' >@Localizer["Delete"]</a></li><li><a class='viewdetail' data-toggle='modal' data-target='#ModalDetail' data-id=" + item.ID + ">@Localizer["Detail"]</a></li></ul> <div>"+
+                "</div>";
+            $("#ShowResult").append(out);
+        });
+    }
+
+    function FilterItemGrorp1() {
+        var id = $("#selectpage").val();
+        Iditem1 = id;
+        $.ajax({
+            url: "/ItemMasterData/GetItemMasterByGroup1",
+            type: "Get",
+            dataType: "Json",
+            data: {ID:id},
+            success: function (respones) {
+                $("#listAllItemMasterData").hide();
+                ShowDataRespones(respones);
+                $("#txtItemgroup2 option").remove();
+                $.ajax({
+                    url: "/ItemMasterData/GetItemGroupII",
+                    type: "Get",
+                    dataType: "Json",
+                    data: { ID: Iditem1 },
+                    success: function (respones) {
+                        var data = "";
+                        $.each(respones, function (i, item) {
+                            data +=
+                                "<option value='" + item.ItemG2ID + "'>" + item.Name + "</option>";
+                        });
+
+                        $("#txtItemgroup2").append(data);
+                        $("#txtItemgroup2").val(0);
+                    }
+                });
+            }
+        });
+    }
+    function FilterItemGrorp2() {
+        var id = $("#txtItemgroup2").val();
+        Iditem2 = id;
+        $.ajax({
+            url: "/ItemMasterData/GetItemMasterByGroup2",
+            type: "Get",
+            dataType: "Json",
+            data: { ID: id },
+            success: function (respones) {
+                ShowDataRespones(respones);
+                $("#txtItemgroup3 option").remove();
+                $.ajax({
+                    url: "/ItemMasterData/GetItemGroupIII",
+                    type: "Get",
+                    dataType: "Json",
+                    data: { ID: Iditem2, Group1ID:Iditem1 },
+                    success: function (respones) {
+                        var out = "";
+                        $.each(respones, function (i, item) {
+                            out +=
+                                "<option value='" + item.ID + "'>" + item.Name + "</option>";
+                        });
+                        $("#txtItemgroup3").append(out);
+                        $("#txtItemgroup3").val(0);
+                    }
+                });
+            }
+        });
+    }
+    function FilterItemGrorp3() {
+        var id = $("#txtItemgroup3").val();
+        $.ajax({
+            url: "/ItemMasterData/GetItemMasterByGroup3",
+            type: "Get",
+            dataType: "Json",
+            data: { ID: id },
+            success: function (respones) {
+                $("#listAllItemMasterData").hide();
+                ShowDataRespones(respones);
+            }
+        });
+    }
+    function ClickDelelet() {
+        var id = $("#txtID").val();
+        $.ajax({
+            url: "/ItemMasterData/DeletItemViewGrid",
+            type: "POST",
+            dataType: "Json",
+            data: { ID: id },
+            success: function (respones) {
+
+                ShowDataRespones(respones);
+            },
+            complete: function () {
+                $.ajax({
+                    url: "/ItemMasterData/GetMaster",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (respones) {
+                        $("#listAllItemMasterData").hide();
+                        ShowDataRespones(respones);
+                    }
+                });
+            }
+        });
+    }
+    $("#ShowResult").on('click', ".viesDelete", function () {
+        var id = $(this).attr("data-id_delete");
+        document.getElementById("txtID").value = id;
+
+    });
+
+    $("#ShowResult").on('click', '.viewdetail', function () {
+        var id = $(this).attr("data-id");
+        $.ajax({
+            url: "/ItemMasterData/DetailItemMasterData",
+            type: "GET",
+            dataType: "JSON",
+            data: { ID: id },
+            success: function (respones) {
+                var data1 = "";
+                var data2 = "";
+                var data3 = "";
+                $("#listDetail_I").empty();
+                $("#listDetail_II").empty();
+
+                $.each(respones, function (i, item) {
+                    data1 +=
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["PirceList"] : </label > ' +
+                        '<label class="col-sm-7">'+ item.PriceList.Name +'</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["ItemGroup(1)"] : </label > ' +
+                        '<label  class="col-sm-7 ">' + item.ItemGroup1.Name + '</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["ItemGroup(2)"] : </label > ' +
+                       '<label class="col-sm-7 ">' + item.ItemGroup2.Name + '</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["ItemGroup(3)"] : </label > ' +
+                        '<label class="col-sm-7 ">' + item.ItemGroup3.Name + '</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["Barcode"] : </label > ' +
+                        '<label class="col-sm-7 ">' + item.Barcode + '</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["Type"] : </label > ' +
+                        '<label class="col-sm-7 ">' + item.Type + '</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["Process"] :</label > ' +
+                       '<label class="col-sm-7 ">' + item.Process + '</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["Description"] : </label > ' +
+                        '<textarea class="col-sm-7 from-control">' + item.Description + '</textarea>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["PrintTo"] : </label > ' +
+                        '<label class="col-sm-7">' + item.PrinterName.Name + '</label>' +
+                        '</div>';
+                    data2 +=
+                        '<div>' + '<img src="../../Images/' + item.Image + '" class="styleImagesItem">' + '</div>'+
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["Code"] : </label > ' +
+                         '<label class="col-sm-7">' + item.Code + '</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["Khmer"] : </label > ' +
+                        '<label class="col-sm-7">' + item.KhmerName + '</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["English"]</label > ' +
+                        '<label class="col-sm-7">' + item.EnglishName + '</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["UnitPirce"] : </label > ' +
+                        '<label class="col-sm-7 ">' + item.UnitPrice + '</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["StandardCost"] : </label > ' +
+                        '<label class="col-sm-7">' + item.Cost + '</label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["StockIn"] : </label > ' +
+                        '<label class="col-sm-7">' + item.StockIn + '<label>' +
+                        '</div>' +
+                        '<div class="form-group row">' +
+                        '<label class="col-sm-5" id="controllable">@Localizer["UoM"] :</label > ' +
+                       '<label class="col-sm-7 ">' + item.UnitofMeasureInv.Name + '<label>' +
+                        '</div>'
+                        ;
+                    @*'<table>'+
+                        '<tr>' +
+                            '<th>' + '<img src="../../Images/' + item.Image + '" class="styleImagesItem">' +'</td>' +
+                            '<td>' + ':' + '</td>'
+                            '<td>' + item.Code+ '</td>'
+                       '</tr>' +
+                       '<tr>' +
+                        '<th>@Localizer["Code"]</td>' +
+                            '<td>' + ':' + '</td>'
+                            '<td>' + item.Code + '</td>'
+                      '</tr>' +
+                   '</table>';*@
+
+                });
+                $("#listDetail_I").append(data1);
+                $("#listDetail_II").append(data2);
+            }
+        })
+    });
+
+</script>

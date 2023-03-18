@@ -1,0 +1,245 @@
+﻿@model Table
+
+@{
+
+
+
+
+
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    .fa {
+        margin-right: 4px;
+    }
+
+    .stylei {
+        color: green;
+    }
+
+    #GroupTableAdd {
+        margin-top: 50px;
+    }
+
+    b {
+        margin-left: 10px;
+        font-family: Arial;
+        color: white;
+    }
+
+    .istyle {
+        color: white;
+    }
+
+    .modal-header {
+        background-color: blue;
+    }
+
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 50px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        cursor: inherit;
+        display: block;
+    }
+
+    #imagestyle {
+        border-radius: 50px;
+        margin-left: 45px;
+        margin-top: 10px;
+        box-shadow: 0px 0px 4px;
+        color: blue;
+    }
+
+    .form-group {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .StyleImge {
+        height: 150px;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        width: 150px;
+    }
+</style>
+<div class="card card-body">
+    <form asp-action="Create" enctype="multipart/form-data" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Name"] :</label>
+                    <input asp-for="Name" class="input-box-kernel" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["GroupTable"] :</label>
+
+                    <select asp-for="GroupTableID" class="input-box-kernel" id="txtselectgroup"
+                        asp-items="ViewBag.GroupTableID">
+                        <option value="0" selected disabled>@Localizer["--- Select ---"]</option>
+                    </select>
+                    <div class="text-danger">@ViewBag.required</div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Price List"] :</label>
+
+                    <select asp-for="PriceListID" class="input-box-kernel" id="txtselectgroup"
+                        asp-items="ViewBag.PriceLists">
+                        <option value="0" selected disabled>@Localizer["--- Select ---"]</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Type"] :</label>
+                    <select asp-for="Type" class="input-box-kernel"
+                        asp-items="@new SelectList(Enum.GetNames(typeof(TableType)))">
+                    </select>
+                </div>
+                <div class="form-group mb-1">
+                    <input type="checkbox" asp-for="IsTablePriceList">
+                    <span>@Localizer["Table Price List"]</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div>
+                        <img src="~/Images/default/no-image.jpg" id="logo" class="StyleImge" />
+                        <input id="img" asp-for="Image" hidden />
+                    </div>
+                    <div class="btn btn-sm btn-file" id="imagestyle">
+                        Browse <input type="file" asp-for="Image" name="Image" id="txtlogo" onchange="show(this)"
+                            value="" accept=".ico, .png, .jpg, .jpeg, .gif" style="margin-top:10px;">
+                        <span asp-validation-for="Image" class="text-danger"></span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row pull-left">
+            <div class="col-md-12 stylebutton">
+                <button class="btn btn-kernel btn-xs" type="submit">@Localizer["Add"]</button>
+                <a class="btn btn-xs btn-kernel" asp-action="Index"> @Localizer["Back"]</a>
+            </div>
+        </div>
+    </form>
+    <div class="modal fade" id="GroupTableAdd">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-plus-circle istyle"><b>@Localizer["GroupTable"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label">@Localizer["GroupName"] :</label>
+                                <input type="text" class="col-sm-9 form-control" id="txtName" />
+                            </div><br />
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label">@Localizer["Type"] :</label>
+                                <select class="col-sm-9 form-control" id="txttype">
+                                    <option selected value="Normal">Normal</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-xs" onclick="AddGroupTable()"><i
+                            class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                    <button class="btn btn-danger btn-xs" data-dismiss="modal"><i
+                            class="fa fa-ban"></i>@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.min.css" />
+<script src="js/jquery.datetimepicker.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    function show(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+
+            filerdr.onload = function (e) {
+                $('#logo').attr('src', e.target.result);
+                $('#img').val(input.files[0].name)
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+    function AddGroupTable() {
+        var name = $("#txtName").val();
+        var type = $("#txttype").val();
+
+        var count = 0;
+        if (name == 0) {
+            count++;
+            $("#txtName").css("border-color", "red");
+        }
+        else {
+            count = 0;
+            $("#txtName").css("border-color", "lightgrey");
+        }
+        if (type == 0 || type == null) {
+            count++;
+            $("#txttype").css("border-color", "red");
+        }
+        else {
+            count = 0;
+            $("#txttype").css("border-color", "lightgrey");
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+        var data = {
+            Name: name,
+            Types: type
+        }
+        $.ajax({
+
+            url: "/GroupTable/QuickAdd",
+            type: "Post",
+            dataType: "JSON",
+            data: { groupTable: data },
+            complete: function (respones) {
+                $("#txtName").val("");
+                $("#txttype").val("");
+                $.ajax({
+                    url: "/GroupTable/GetDataGroupTable",
+                    type: "Get",
+                    dataType: "JSON",
+
+                    success: function (respones) {
+                        var sata = "";
+
+                        $.each(respones, function (i, item) {
+                            sata +=
+                                '<option value="' + item.ID + '">' + item.Name + '</option>';
+                        });
+                        $("#txtselectgroup").html(sata);
+                    }
+                });
+            }
+        });
+
+    }
+</script>

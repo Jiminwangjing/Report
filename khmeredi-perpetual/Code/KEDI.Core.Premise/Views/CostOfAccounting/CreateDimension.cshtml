@@ -1,0 +1,75 @@
+﻿<div class="card card-body">
+    <form>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Dimension Name"] :</label>
+                    <input class="input-box-kernel" id="name"/>
+                    <span id="error" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-xs btn-kernel" id="save">@Localizer["Save"]</button>
+                    <button type="button" id="cancel" class="btn btn-xs btn-kernel">@Localizer["Cancel"]</button>
+                    <button type="button" id="createDefaltDimension" class="btn btn-xs btn-kernel">@Localizer["Create Defalt Dimension"]</button>
+                </div>
+            </div>
+            <div class="col-md-6" id="dimension">
+                <label>@Localizer["Dimensions"]</label>
+            </div>
+        </div>
+        
+    </form>
+</div>
+<div hidden id="data">@Json.Serialize(Model)</div>
+<script>
+    $(document).ready(function () {
+        let data = JSON.parse($("#data").text());
+        // cancel //
+        $("#cancel").click(function () {
+            location.reload();
+        })
+        // save dimension //
+        $("#save").click(function () {
+            
+            let name = $("#name").val();
+            let count = 0;
+            if (name === '') {
+                count++;
+                $("#error").text("Dimension Name are require!");
+            } else {
+                $("#error").text("");
+            }
+            if (count > 0) {
+                count = 0;
+                return;
+            }
+            data.Name = name;
+            data.IsDimension = true;
+            data.ActiveDimension = true;
+            data.EffectiveFrom = new Date().now;
+            data.EffectiveTo = new Date().now;
+            data.MainParentID = 0;
+            data.OwnerEmpID = 0;
+            data.CostOfAccountingTypeID = 0;
+            $.post("/CostOfAccounting/CreateDimension", { data }, function (res) {
+                location.reload();
+            })
+        })
+
+        $("#createDefaltDimension").click(function () {
+            $.post("/CostOfAccounting/CreateCategoryByDefault");
+        })
+
+        $.get("/CostOfAccounting/GetDimensions", function (res) {
+            res.forEach((i, d) => {
+                let dimen = $(`<div>Dimension${d+1} => ${i.Name}</div>`);
+
+                $("#dimension").append(dimen);
+                dimen.click(function () {
+                    dimen.addClass("bg-primary");
+                    data.ParentID = i.ID;
+                })
+            })
+        })
+    })
+</script>

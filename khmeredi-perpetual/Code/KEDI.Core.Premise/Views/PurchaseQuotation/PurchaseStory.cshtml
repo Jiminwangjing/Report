@@ -1,0 +1,337 @@
+﻿@model ReportPurchaseQuotation
+<script src="~/js/table.js" defer></script>
+<script src="~/js/warehouse.js"></script>
+<style>
+    .select_warehouse, .input_postingdate, .input_documentdate, .input_requrieddate, .select_showpage, .input_search {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+    }
+
+        .select_warehouse:focus, .input_postingdate:focus, .input_documentdate:focus, .input_requrieddate:focus, .select_showpage:focus, input_search:focus {
+            box-shadow: 0 0 5px rgba(27, 93, 185,0.4);
+            padding: 3px 3px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border: 1px solid rgb(120, 172, 245);
+            border-radius: 3px;
+            font-family: Arial;
+            font-size: 13px;
+        }
+
+    .lable_barnch, .lable_warehouse, .label_Postingdate, .label_Documentdate, .lable_requried, .label_showpage {
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .BTNROW {
+        margin-bottom: 10px;
+    }
+
+    .input_postingdate, .input_documentdate, .input_requrieddate {
+        position: relative;
+    }
+
+    .calender_postting, .calender_Documete, .calender_required {
+        position: absolute;
+        bottom: 13px;
+        right: 20px;
+        color: #0e8cc3;
+    }
+
+    #ui-datepicker-div {
+        width: 185px;
+    }
+
+    .input_search {
+        top: 17px;
+        position: relative;
+    }
+
+    .calender_search {
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        color: #0e8cc3;
+        border: none;
+        background-color: white;
+    }
+
+    .checkAllItem {
+        margin-top: 25px;
+        font-size: 15px;
+    }
+
+    input[type=checkbox] {
+        height: 18px;
+        width: 18px;
+    }
+
+    .list {
+        margin-bottom: 20px;
+    }
+</style>
+<div class="row BTNROW">
+    <div class="col-md-2">
+        <label class="lable_warehouse">@Localizer["Warehouse"]</label>
+        <select class="select_warehouse" onchange="selectChangeWarehouse()" id="txtwarehouse">
+            <option value="0" selected disabled>--- select ---</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="label_Postingdate">@Localizer["PostingDate"]</label>
+        <div>
+            <input type="date" class="input_postingdate" onchange="ChangePostingDate()" id="txtpostingdate" />
+            @*<i class="fa fa-calendar-alt calender_postting"></i>*@
+        </div>
+    </div>
+    <div class="col-md-2">
+        <label class="label_Documentdate">@Localizer["DocumentDate"]</label>
+        <div>
+            <input type="date" class="input_documentdate" onchange="ChangeDocumentDate()" id="txtDocumentDate" />
+            @*<i class="fa fa-calendar-alt calender_Documete"></i>*@
+        </div>
+    </div>
+    <div class="col-md-2">
+        <label class="lable_requried">@Localizer["RequierdDate"]</label>
+        <div>
+            <input type="date" class="input_requrieddate" onchange="ChangeRequriedDate()" id="txtDelivery" />
+            @*<i class="fa fa-calendar-alt calender_required"></i>*@
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div>
+            <input class="input_search" type="text" name="SearchString" value="@ViewData["currentFilter"]" placeholder="@Localizer["SearchInvoice"]" id="txtSearch" />
+            <button class="calender_search"><i class="fa fa-search "></i></button>
+        </div>
+    </div>
+    <div class="col-md-2 checkAllItem">
+        <label>@Localizer["AllInvoice"]</label>
+        <input type="checkbox" id="checkAllItem" onclick="ChangeCheckBox()" />
+    </div>
+</div>
+<div class="wrap-table list">
+    <table cellspacing="0">
+        <colgroup><col><col><col></colgroup>
+        <thead>
+            <tr>
+                <th>@Localizer["InvoiceP/Q"]</th>
+                <th>@Localizer["Vendor"]</th>
+                <th>@Localizer["Creator"]</th>
+                <th>@Localizer["BalanceDue(LC)"]</th>
+                <th>@Localizer["BalanceDue(SYS)"]</th>
+                <th>@Localizer["ExchangeRate"]</th>
+                <th>@Localizer["Status"]</th>
+                <th class="text-center">@Localizer["Print"]</th>
+            </tr>
+        </thead>
+        <tbody class="list_quotation"></tbody>
+    </table>
+</div>
+
+<div id="pager">
+    <ul id="pagination" class="pagination-sm"></ul>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-sm btn-danger" asp-action="PurchaseQuotation" asp-controller="Purchasequotation"><i class="fa fa-reply" style="margin-right:3px;"></i>@Localizer["Back"]</a>
+    </div>
+</div>
+<script src="~/js/jquery.twbsPagination.min.js"></script>
+<script>
+    var db = new Warehouse();
+
+    var $pagination = $('#pagination'),
+        totalRecords = 0,
+        records = [],
+        displayRecords = [],
+        recPerPage =10,
+        page = 1,
+        totalPages = 0;
+    $(document).ready(function () {
+       var item=$.ajax({
+            url: "/PurchaseQuotation/GetPurchaseQuotationReport",
+            type: "GET",
+            dataType: "JSON",
+            async:false,
+           data: { BranchID:@User.FindFirst("BranchID").Value, WarehouseID: 0, PostingDate: "2015-05-05", DocumentDate:"2015-05-05", RequierdDate:"2015-05-05",Check:'true'},
+             success: function (e) {
+                 records = e;
+                 totalRecords = records.length;
+                 totalPages = Math.ceil(totalRecords / recPerPage);
+                 apply_pagination();
+            }
+        }).responseJSON;
+        db.addTable("tb_master", item, "ID");
+
+        //get warehouse by branch
+        $.ajax({
+            url: "/PurchaseQuotation/GetWarehouses",
+            type: "GET",
+            dataType: "JSON",
+            data: { ID:@User.FindFirst("BranchID").Value},
+            success: function (e) {
+                var data = "";
+                $.each(e, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                })
+                $(".select_warehouse").append(data);
+            }
+        });
+    });
+    //select filter warehouse
+    function selectChangeWarehouse() {
+        var wareID = $("#txtwarehouse").val();
+        $.ajax({
+            url: "/PurchaseQuotation/GetPurchaseQuotationByWarehouse",
+            type: "GET",
+            dataType: "JSON",
+            data: { BranchID:@User.FindFirst("BranchID").Value, WarehouseID: wareID, PostingDate: "2015-05-05", DocumentDate:"2015-05-05", RequierdDate:"2015-05-05",Check:'false'},
+            success: function (e) {
+                records = e;
+                totalRecords = records.length;
+                totalPages = Math.ceil(totalRecords / recPerPage);
+                apply_pagination();
+            }
+        })
+    }
+    //General databl
+    function generat_tatal() {
+        var tr;
+        $('.list_quotation').children().remove();
+        for (var i = 0; i < displayRecords.length; i++) {
+            tr = $('<tr/>');
+            tr.append("<td hidden data-id="+displayRecords[i].ID+">" + displayRecords[i].ID + "</td>");
+            tr.append("<td>" + displayRecords[i].InvoiceNo + "</td>");
+            tr.append("<td>" + displayRecords[i].BusinessName + "</td>");
+            tr.append("<td>" + displayRecords[i].UserName + "</td>");
+            tr.append("<td>" + displayRecords[i].LocalCurrency + " " + displayRecords[i].Balance_due + "</td>");
+            tr.append("<td>" + displayRecords[i].SystemCurrency + " " + displayRecords[i].Balance_due_sys  +"</td>");
+            tr.append("<td>" + displayRecords[i].ExchangeRate + "</td>");
+            tr.append("<td>" + displayRecords[i].Status + "</td>");
+            $(tr.append("<button style='margin-left:50px; color:whithe;' class='btn btn-sm btn-primary'><i  class='fa fa-print'></i></button>")).on('click', clickedPrint);
+            $('.list_quotation').append(tr);
+        }
+    }
+
+    function clickedPrint() {
+        var purchaseid = $(this).children().data('id');
+        $.ajax({
+            url: "/Window/PrintPurchaseQuotation",
+            type: "Get",
+            dataType: "json",
+            data: { PurchaseID: parseInt(purchaseid) },
+            success: function () {
+
+            }
+        });
+    }
+    //appy pagination
+    function apply_pagination() {
+        displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
+        endRec = (displayRecordsIndex) + recPerPage;
+        displayRecords = records.slice(displayRecordsIndex, endRec);
+        generat_tatal();
+
+        $pagination.twbsPagination({
+            totalPages: totalPages,
+            visiblePages: 5,
+            onPageClick: function (e, page) {
+                displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
+                endRec = (displayRecordsIndex) + recPerPage;
+                displayRecords = records.slice(displayRecordsIndex, endRec);
+                generat_tatal();
+            }
+        });
+    }
+    // filter Posting date
+    function ChangePostingDate() {
+        var date = $("#txtpostingdate").val();
+        $.ajax({
+            url: "/PurchaseQuotation/GetPurchaseQuotationByPostingDate",
+            type: "GET",
+            dataType: "JSON",
+            data: { BranchID: @User.FindFirst("BranchID").Value, WarehouseID: 0, PostingDate: date, DocumentDate:"2015-05-05", RequierdDate:"2015-05-05",Check:'false'},
+            success: function (e) {
+                records = e;
+                totalRecords = records.length;
+                totalPages = Math.ceil(totalRecords / recPerPage);
+                apply_pagination();
+            }
+        })
+    }
+    // filter Document Date
+    function ChangeDocumentDate() {
+        var date = $("#txtDocumentDate").val();
+
+        $.ajax({
+            url: "/PurchaseQuotation/GetPurchaseQuotationDocumentDate",
+            type: "GET",
+            dataType: "JSON",
+            data: { BranchID:@User.FindFirst("BranchID").Value, PostingDate: "2015-05-05", RequierdDate: "2015-05-05", DocumentDate:date, WarehouseID: 0 ,Check:'false'},
+            success: function (e) {
+                records = e;
+                totalRecords = records.length;
+                totalPages = Math.ceil(totalRecords / recPerPage);
+                apply_pagination();
+            }
+        })
+    }//Change Required date
+    function ChangeRequriedDate() {
+        var date = $("#txtDelivery").val();
+        $.ajax({
+            url: "/PurchaseQuotation/GetPurchaseQuotationRequierdDatedDate",
+            type: "GET",
+            dataType: "JSON",
+            async: false,
+            data: { BranchID:@User.FindFirst("BranchID").Value, PostingDate: "2015-05-05", DocumentDate:"2015-05-05", RequierdDate:date, WarehouseID: 0,Check:'false' },
+            success: function (e) {
+                records = e;
+                totalRecords = records.length;
+                totalPages = Math.ceil(totalRecords / recPerPage);
+                apply_pagination();
+            }
+        })
+    }
+    // show all item
+    function ChangeCheckBox() {
+        var check = $('#checkAllItem').prop('checked');
+       $.ajax({
+           url: "/PurchaseQuotation/GetPurchaseQuotationAllItem",
+            type: "GET",
+            dataType: "JSON",
+            async: false,
+           data: { BranchID:@User.FindFirst("BranchID").Value, PostingDate: "2015-05-05", DocumentDate:"2015-05-05", RequierdDate:"2015-05-05", WarehouseID: 0,Check:check },
+            success: function (e) {
+                records = e;
+                totalRecords = records.length;
+                totalPages = Math.ceil(totalRecords / recPerPage);
+                apply_pagination();
+            }
+        })
+    }
+    //search
+    $("#txtSearch").on('keyup', function (e) {
+            var search = $("#txtSearch").val().toLowerCase();
+            records = db.from("tb_master").where(w => {
+                return w.InvoiceNo.toString().toLowerCase().includes(search) || w.BusinessName.toString().toLowerCase().includes(search)
+                    || w.UserName.toString().toLowerCase().includes(search);
+            })
+            totalRecords = records.length;
+            totalPages = Math.ceil(totalRecords / recPerPage);
+            apply_pagination();
+
+    });
+    // find detail
+    function DetailQuotation(e) {}
+</script>

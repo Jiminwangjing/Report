@@ -1,0 +1,254 @@
+﻿
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="control-label">@Localizer["Name"]</label>
+                </div>
+                <div class="col-md-8">
+                    <input id="name" disabled class="form-control" />
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4">
+                    <label class="control-label">@Localizer["Parent Territries"]</label>
+                </div>
+                <div class="col-md-8">
+                    <select class="form-control" id="parentid" asp-items="ViewBag.ParentId" disabled>
+                        <option value="0" >---select----</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4">
+                    <label class="control-label">@Localizer["Location Order"]</label>
+                </div>
+                <div class="col-md-8">
+                    <select class="form-control"  id="locationid" disabled>
+                        <option value="-2" >---select----</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" >
+            <div id="territories-tree" style="width:100% !important"></div>
+        </div>
+    </div>
+    <div class="row" style="margin-top:50px;">
+        <div class="col-md-12 ">
+            <button class="btn btn-kernel" id="submitdatasub">@Localizer["Update"]</button>
+            <button class="btn btn-kernel" id="submitdatasame" hidden>@Localizer["Update"]</button>
+            <span  id="add_same_level1" class="btn btn-kernel increanum">@Localizer["Add Same-Level"]</span>
+            <span class="btn btn-kernel" id="add_sub_level1">@Localizer["Add Sub-Level"]</span>
+        </div>
+        @*<button id="toggle-node">togle node</button>*@
+    </div>
+</div>
+<input id="level" hidden/>
+<input id="ParentChildId" hidden/>
+<input id="id" hidden/>
+<input id="showafter" hidden />
+<input id="idoflocation" hidden />
+<script>
+    $(document).ready(function () {
+        const treeView = ViewTable({
+            container: "#territories-tree",
+            keyField: "ID",
+            paging: {
+                enabled: true,
+                pageSize: 20
+            },
+            treeView: {
+                keyName: "ID",
+                parentKeyName: "ParentId",
+                displayFields: ["Name"],
+                collapsed: false,
+                on: {
+                    "click": function (e) {
+                        if (e.data.ParentId == 0) {
+                            $.ajax({
+                                url: "/Territory/GetParent",
+                                type: "POST",
+                                dataType: "JSON",
+                                success: function (respones) {
+                                    $("#locationid").find('option').remove();
+                                    var data = "<option  value='-2' selected>---select---</option>";
+                                    respones.forEach(i => {
+                                        data +=
+                                            '<option value="' + i.ID + '">' + 'After ' + i.Name + '</option>';
+                                    })
+                                    $("#locationid").html(data);
+                                }
+
+                            });
+                        }
+                        $("#name").prop("disabled", false)
+                        $("#parentid").prop("disabled", false)
+                        $("#locationid").prop("disabled", false);
+                        $("#idoflocation").val(e.data.ID);
+                        $("#level").val(e.nodeLevel);
+                        $("#name").val(e.data.Name);
+                        $("#ParentChildId").val(e.data.ID);
+                        $("#parentid").val(e.data.ParentId);
+                        $("#id").val(e.data.ID);
+                        $.ajax({
+                            url: "/Territory/GetListSub",
+                            type: "POST",
+                            dataType: "JSON",
+                            data: { parentId: e.data.ParentId, id: e.data.ID },
+                            success: function (respones) {
+                                $("#locationid").find('option').remove();
+                                var data = "<option  value='-2' selected>---select---</option>";
+                                respones.forEach(i => {
+                                    let name = i.ID == 0 || i.ID == -1 ? i.Name : `After ${i.Name}`
+                                    data +=
+                                        `<option value="${i.ID}">${name}</option>`;
+                                })
+                                $("#locationid").html(data);
+                                $("#locationid").val(e.data.LoationId);
+                            }
+                        });
+
+
+                    }
+                }
+            }
+        });
+      
+        $.ajax({
+            url: "/Territory/GetdataBind",
+            type: "get",
+            dataType: "JSON",
+            success: function (responses) {
+                let levels = [];
+                for (let i = 0; i < responses.length; i++) {
+                    levels.push(responses[i].Level);
+                }
+                let rootLvl = Math.min.apply(null, levels);
+                treeView.bindNodes(responses, rootLvl);
+                //treeView.expandNode(1);
+                //treeView.collapseNode(3);
+       
+            }
+        });
+        //$("#toggle-node").click(function () {
+        //    treeView.toggleNode(treeView.getActiveNodeInfo().data.ID);
+        //});
+        $("#parentid").change(function () {
+            $.ajax({
+                url: "/Territory/GetDataParentTer",
+                type: "get",
+                dataType: "JSON",
+                data: {id:this.value},
+                success: function (respones) {
+                    var data = "<option value='0' selected>---select---</option>";
+                    respones.forEach(i => {
+                        data +=
+                            '<option value="' + i.ParentId + '">' + 'After ' + i.Name + '</option>';
+                    })
+                    $("#locationid").html(data);
+                }
+            });
+        })   
+        $("#add_sub_level1").click(function () {
+            $("#add_sub_level2").prop("hidden", false);
+            $("#name").val("");
+            $("#id").val(0);
+            $("#name").focus();
+           
+        })
+        $("#add_same_level1").click(function () {
+            $("#submitdatasame").prop("hidden",false)
+            $("#submitdatasub").prop("hidden", true)
+            $("#name").prop("disabled",false);
+            $("#parentid").prop("disabled",false);
+            $("#locationid").prop("disabled",false);
+            $("#name").val("");
+            $("#id").val(0);
+            $("#name").focus();
+        })
+        var territory = {
+            ID: 0,
+            Name: "",
+            LoationId: 0,
+            ParentTerID: 0,
+            ParentId: 0,
+            Level: 0,
+        }
+        let master = [];
+        master.push(territory);
+        $("#submitdatasub").click(function () {
+            $("#submitdatasame").prop("hidden", true)
+            $("#submitdatasub").prop("hidden", false)
+            const territory = master[0];
+            if (territory.ID = $("#id").val() == 0) {
+                territory.ParentId = $("#ParentChildId").val();
+            }
+            else if (territory.ID = $("#id").val() !== 0) {
+                territory.ParentId = $("#parentid").val();
+            }
+          
+            territory.ID = $("#id").val();
+            territory.Name = $("#name").val();
+            territory.Level = $("#level").val();
+            territory.ParentTerID = $("#parentterid").val();
+            territory.LoationId = $("#idoflocation").val();
+            $.ajax({
+                url: "/Territory/SubmmitData",
+                type: "POST",
+                dataType: "JSON",
+                data: $.antiForgeryToken({ _data: JSON.stringify(territory)}),
+                success: function (respones) {
+                    new ViewMessage({
+                        summary: {
+                            selector: "#error-summary"
+                        },
+                    }, respones)
+                    if (respones.IsApproved) {
+                        location.reload();
+                    }
+                }
+            });
+        });
+
+        $("#submitdatasame").click(function () {
+       
+            $("#submitdatasame").prop("hidden",false)
+            $("#submitdatasub").prop("hidden",true)
+            const territory = master[0];
+            if (territory.ID = $("#id").val() == 0) {
+                territory.ParentId = $("#parentid").val();
+            }
+            else if (territory.ID = $("#id").val() !== 0) {
+                territory.ParentId = $("#parentid").val();
+            }
+
+            territory.ID = $("#id").val();
+            territory.Name = $("#name").val();
+            territory.Level = $("#level").val();
+            territory.ParentTerID = $("#parentterid").val();
+            territory.LoationId = $("#locationid").val();
+            
+            $.ajax({
+                url: "/Territory/SubmmitData",
+                type: "POST",
+                dataType: "JSON",
+                data: $.antiForgeryToken({ _data: JSON.stringify(territory) }),
+                success: function (respones) {
+                    new ViewMessage({
+                        summary: {
+                            selector: "#error-summary"
+                        },
+                    }, respones)
+                    if (respones.IsApproved) {
+                        location.reload();
+                    }
+                }
+            });
+        });
+      
+      
+
+    })
+</script>

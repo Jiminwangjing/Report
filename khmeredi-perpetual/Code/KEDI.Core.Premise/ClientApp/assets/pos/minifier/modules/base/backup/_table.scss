@@ -1,0 +1,182 @@
+.wrap-table.fit-scroll-y {
+    width: 103.333%;
+}
+
+.wrap-table {
+    overflow-y: auto;
+    width: 100%;
+}
+
+.wrap-table table {
+  position: relative;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.wrap-table table tr {
+  color: #333;
+  opacity: 1;
+  line-height: 35px;
+  transition: all .2s ease-out;
+}
+
+.wrap-table table tr.collapse {
+    opacity: 0;
+    visibility: collapse;
+    transition: all .2s ease-in;
+}
+
+.wrap-table table tr.summary {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.wrap-table table tr th:nth-child(2),
+.wrap-table table tr:not(:first-child) td:nth-child(2){
+    text-align: left;
+}
+
+.wrap-table table th, .wrap-table table td {
+    position: relative;
+    text-align: center;
+	padding: 0 0.5rem;
+    min-width: 60px;
+    overflow: hidden;
+	text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 250px;
+}
+
+.wrap-table table th.ta-left, .wrap-table table td.ta-left {
+    text-align: left;
+}
+
+.wrap-table table th.ta-center, .wrap-table table td.ta-center {
+    text-align: center;
+}
+
+.wrap-table table th.ta-right, .wrap-table table td.ta-right {
+    text-align: right;
+}
+
+.wrap-table table th {
+  background: #5F758B;
+  color: #EEE;
+}
+
+/***********************/
+/* Table for list      */
+/***********************/
+.wrap-table.list table tr:not(:first-child){
+    border-bottom: .5px solid rgba(0, 0, 0, .15);
+}
+
+.wrap-table table tr:not(:first-child).highlight,
+.wrap-table.list table tr:not(:first-child):hover {
+    background: #ABC9;
+    color: #333;
+}
+
+.wrap-table table tr:not(:first-child) td .wrap-scale {
+    position: relative;
+    background: transparent;
+    width: 25px;
+    height: 25px;
+    margin: 0 auto;
+    border: none;
+    transition: all .3s ease-out;
+}
+
+.wrap-table table tr:not(:first-child) td .wrap-scale .scale {
+    font-size: inherit;
+    font-weight: bold;
+    color: #333;
+}
+
+.wrap-table table tr td .wrap-scale .scale-down {
+    transition: all .2s ease-out;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    right: 50%;
+    border: 1px solid rgba(255, 255, 255, .5);
+    font-weight: bold;
+}
+
+.wrap-table table tr td .wrap-scale .scale-up {
+    transition: all .2s ease-out;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    left: 50%;
+    border: 1px solid rgba(255, 255, 255, .5);
+    font-weight: bold;
+}
+
+.wrap-table.list table tr:not(:first-child):hover td .wrap-scale,
+.wrap-table.list table tr:not(:first-child) td .wrap-scale.show {
+    border: 1px solid rgba(255, 255, 255, .5);
+}
+
+.wrap-table.list table tr:not(:first-child):hover td .wrap-scale .scale-down,
+.wrap-table.list table tr:not(:first-child) td .wrap-scale.show .scale-down {
+    visibility: visible;
+    transition: all ease .3s;
+    right: 100%;
+    background: transparent;
+}
+
+.wrap-table table tr:not(:first-child):hover td .wrap-scale .scale-up,
+.wrap-table table tr:not(:first-child) td .wrap-scale.show .scale-up {
+    visibility: visible;
+    transition: all linear .3s;
+    left: 100%;
+    background: transparent;
+}
+
+.icon-option.fas.fa-ellipsis-v {
+    position: absolute;
+    width: 100%;   
+    left: 5px;
+    height: 100%;
+    line-height: 35px;
+    text-align: left;
+    visibility: hidden;
+}
+
+.icon-option.fas.fa-ellipsis-v::before {
+    margin: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+table tr:hover .icon-option.fas.fa-ellipsis-v{
+    visibility: visible;
+}
+
+/*******************************/
+/* Table for summary info      */
+/*******************************/
+.wrap-table.summary table th {
+  background: #CCC;
+  color: #333;
+}
+
+.wrap-table.summary table td {
+  background: transparent;
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+@media (max-width: 999px){
+    .wrap-table {
+        width: 100%;
+    }
+}
+
+@media (max-width: 415px){
+    .wrap-table table tr {
+        line-height: 33px;
+    }
+}

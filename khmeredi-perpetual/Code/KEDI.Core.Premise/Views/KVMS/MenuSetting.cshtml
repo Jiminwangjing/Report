@@ -1,0 +1,141 @@
+﻿<div id="main-menu-message" style="display: none;"></div>
+<div class="widget-combobox menubox slide-down with-crumb">
+    <div class="combobox-trigger"> <i class="fas fa-bars fa-fw fa-lg" title="Setting"></i></div>
+    <div class="combobox-content">
+        <div class="combobox-header">
+            <img class="i-image" src="/AdminLayout/images/setting.gif">
+            <h4 class="title">@Localizer["POS Menu"]</h4>
+            <i class="i-close"></i>
+        </div>
+        <div class="combobox-body widget-default-scrollbar" style="height: 60vh;">
+            <div class="widget-tab">
+                <div class="tab-sheet active">
+                    <div class="tab-title">@Localizer["General"]</div>
+                    <div class="tab-content">
+                        <div class="group-btns">
+                            <div id="goto-setting" class="wrap-btn">
+                                <div class="btn"><i class="fas fa-cogs"></i></div>
+                                <label class="label">@Localizer["Setting"]</label>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="widget-tab">
+                <div class="tab-sheet active">
+                    <div class="tab-title">@Localizer["Currency"]</div>
+                    <div class="tab-content">
+                        <div class="group-btns">
+                            @*<div class="wrap-btn" id="open-shift">
+                                <div class="btn"><i class="fa fa-funnel-dollar" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Open Shift"]</label>
+                            </div>
+
+                            <div class="wrap-btn" id="close-shift">
+                                <div class="btn"><i class="fa fa-money-check-alt" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Close Shift"]</label>
+                            </div>*@
+                            <div class="wrap-btn" id="change-rate">
+                                <div class="btn"><i class="fas fa-exchange-alt" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Change Rate"]</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-sheet">
+                    <div class="tab-title">@Localizer["Receipt"]</div>
+                    <div class="tab-content">
+                        <div class="group-btns">
+                            <div id="goto-reprint" class="wrap-btn">
+                                <div class="btn"><i class="fa fa-print" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Reprint"]</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    
+            <div class="widget-tab">
+                <div class="tab-sheet active">
+                    <div class="tab-title">@Localizer["Vehicle"]</div>
+                    <div class="tab-content">
+                        <div class="group-btns">
+                            <div class="wrap-btn" id="create-customer">
+                                <div class="btn"><i class="fa fa-user-plus" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["Create Customer"]</label>
+                            </div>
+                            <div class="wrap-btn" id="list-customer">
+                                <div class="btn"><i class="fa fa-users" aria-hidden="true"></i></div>
+                                <label class="label">@Localizer["List Customers"]</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-sheet">
+                    <div class="tab-title">@Localizer["New Vehicle"]</div>
+                    <div class="tab-content" style="overflow:hidden; padding:0;">
+                        <div class="group-btns">
+                            <div class="wrap-btn">
+                                <div class="btn"><i class="fas fa-car" aria-hidden="true"></i></div>
+                                <label class="label" style="margin-bottom:-5px; margin-top:-5px;">@Localizer["Type"]</label>
+                                <select id="typeid_add" class="form-control" style="width:-webkit-fill-available">
+                                    <option selected disabled value="0">@Localizer["Add new types"]</option>
+                                    <option value="-1" class="font-weight-bold">@Localizer["Define New"]</option>
+                                </select>
+                            </div>
+
+                            <div class="wrap-btn">
+                                <div class="btn"><i class="fas fa-car" aria-hidden="true"></i></div>
+                                <label class="label" style="margin-bottom:-5px; margin-top:-5px;">@Localizer["Brand"]</label>
+                                <select id="brandid_add" class="form-control" style="width:-webkit-fill-available">
+                                    <option selected disabled value="0">@Localizer["Add new brands"]</option>
+                                    <option value="-1" class="font-weight-bold">@Localizer["Define New"]</option>
+                                </select>
+                            </div>
+
+                            <div class="wrap-btn">
+                                <div class="btn"><i class="fas fa-car" aria-hidden="true"></i></div>
+                                <label class="label" style="margin-bottom:-5px; margin-top:-5px;">@Localizer["Model"]</label>
+                                <select id="modelid_add" class="form-control" style="width:-webkit-fill-available">
+                                    <option selected disabled value="0">@Localizer["Add new models"]</option>
+                                    <option value="-1" class="font-weight-bold">@Localizer["Define New"]</option>
+                                </select>
+                            </div>
+
+                            <div class="wrap-btn">
+                                <div class="btn"><i class="fas fa-car" aria-hidden="true"></i></div>
+                                <label class="label" style="margin-bottom:-5px; margin-top:-5px;">@Localizer["Color"]</label>
+                                <select id="colorid_add" class="form-control" style="width:-webkit-fill-available">
+                                    <option selected disabled value="0">@Localizer["Add new colors"]</option>
+                                    <option value="-1" class="font-weight-bold">@Localizer["Define New"]</option>
+                                </select>
+                            </div>
+                        </div>
+                        @*Add Vehicles in POS*@
+                        <div id="dialog-define-new" style="height:75vh; width:50vw;" class="widget-scrollbar" hidden>
+                            <div class="wrap-table">
+                                <table>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th class="text-center">Name</th>
+                                        <th hidden class="text-center">Active</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+   
+           
+            <partial name="Menu/Shift" />
+            <partial name="Menu/Reprint" />
+            <partial name="Menu/ChangeRate" />
+            <partial name="Menu/Setting" />
+        </div>
+        <div class="combobox-footer"></div>
+    </div>
+</div>

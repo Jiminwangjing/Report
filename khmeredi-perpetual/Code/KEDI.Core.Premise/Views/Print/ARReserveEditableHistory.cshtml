@@ -1,0 +1,122 @@
+@model IEnumerable<KEDI.Core.Premise.Models.Sale.Print.PrintSaleHistory>
+@{
+    ViewData["Title"] = "SaleARHistory";
+    Layout = "_Layout_print";
+    var num = 0;
+    double sub_Total = 0;
+    decimal TotalVat = 0;
+}
+
+<style>
+    body {
+        font-family: 'Khmer OS Battambang';
+        font-size: 19px;
+    }
+
+    #th1 {
+        border: solid;
+        border-right: hidden;
+        border-bottom: hidden
+    }
+
+    #th2 {
+        text-align: right;
+        border: solid;
+        border-bottom: hidden
+    }
+
+    #th3 {
+        border: solid;
+        border-right: hidden
+    }
+
+    #th4 {
+        border: solid;
+        text-align: right
+    }
+</style>
+<hr style="border: 2px solid #2874A6;">
+<div class="row">
+    <div class="col-xs-2">
+        <img src="~/Images/company/@Model.First().Logo" width="150" height="150" />
+    </div>
+    <div class="col-xs-8" style="text-align:center">
+        <h1>@Model.FirstOrDefault().Branch</h1>
+        <h2>ANGUS PARK MEAT STORE</h2>
+        <h3>@Model.FirstOrDefault().EnglishDesc</h3>
+        <h3>@Model.First().Tel1 @Model.FirstOrDefault().Tel2</h3>
+    </div>
+    <div class="col-xs-2"></div>
+</div>
+<div class="row" style="text-align:center">
+    <div class="col-xs-12">
+        <h3>RECEIPT</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-6">
+        <p>Cashier : @Model.FirstOrDefault().UserName</p>
+        <p>Customer : @Model.FirstOrDefault().CusName</p>
+    </div>
+    <div class="col-xs-6" style="padding-left:25%">
+        <p>Receipt No : @Model.FirstOrDefault().Invoice</p>
+        <p>PostingDate : @Model.FirstOrDefault().PostingDate</p>
+    </div>
+</div>
+
+<div style="min-height:950px">
+    <table class="table table-bordered">
+        <thead style="background-color:#2874A6;border:solid">
+            <tr style="color:white">
+                <th class="text-center">No.</th>
+                <th class="text-center" width="40%">Description</th>
+                <th class="text-center"width="15%">Qty</th>
+                <th class="text-center"width="15%">Price</th>
+                <th class="text-center"width="10%">Vat</th>
+                <th class="text-center"width="20%">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                num++;
+                sub_Total += item.Amount;
+                TotalVat += item.TaxValue;
+
+                <tr style="border:solid">
+                    <td class="text-center">@num</td>
+                    <td>@item.ItemNameKh <br />@item.Barcode</td>
+                    <td class="text-center">@(string.Format("{0:n2}",item.Qty))</td>
+                    <td class="text-center">@(string.Format("{0:n2}",item.Price))</td>
+                    <td class="text-center">@(string.Format("{0:n0}", item.TaxRate))%</td>
+                    <td class="text-center">@(string.Format("{0:n2}",item.Amount))</td>
+                </tr>
+            }
+        </tbody>
+        <tr style="background-color: #2874A6;border:solid">
+            <th colspan="6" style="color:white">**Summary</th>
+        </tr>
+        <tr>
+            <th colspan="3" id="th1">Sub Total :</th>
+            <th colspan="3" id="th2">@(Model.FirstOrDefault().SysCurrency + " " + string.Format("{0:n2}", sub_Total))</th>
+        </tr>
+        <tr>
+            <th colspan="3" id="th1">Grand Total SSC :</th>
+            <th colspan="3" id="th2">@(Model.FirstOrDefault().SysCurrency + " " + string.Format("{0:n2}", Model.FirstOrDefault().TotalAmount))</th>
+        </tr>
+        <tr>
+            <th colspan="3" id="th1">Grand TotalSys LCC :</th>
+            <th colspan="3" id="th2">@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n2}", Model.FirstOrDefault().TotalAmountSys))</th>
+        </tr>
+        <tr>
+            <th colspan="3" id="th3">TotalVat :</th>
+            <th colspan="3" id="th4">@(Model.FirstOrDefault().SysCurrency + " " + TotalVat)</th>
+        </tr>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-xs-12" style="text-align:center">
+        <p>@Model.FirstOrDefault().KhmerDesc</p>
+    </div>
+</div>

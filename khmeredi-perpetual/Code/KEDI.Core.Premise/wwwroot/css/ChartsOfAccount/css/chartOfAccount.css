@@ -1,0 +1,195 @@
+﻿.glaccount-container input.form-control,
+.glaccount-container select.form-control,
+.glaccount-container label,
+.glaccount-container span {
+    font-size: .8em;
+    margin: 0;
+    height: 25px !important;
+    line-height: 25px;
+    width: 100%;
+}
+
+.glaccount-container .section-not-title {    
+    display: block;
+}
+#isConfidential, #isConfidentialSpan {
+    margin-top: -10px;
+}
+.mt-4 {
+    margin-top: 1.8rem !important;
+}
+.treeview-container {
+    width: 40vw !important;
+    background: #fcfaf4;
+    height: 80vh;
+    overflow: auto;
+}
+
+.glaccount-container .v-menu-box {
+    margin-top: 0px;
+    width: 150px !important;
+    border-radius: 3px;
+    background: #fcfaf4 !important;
+}
+
+    .glaccount-container .v-menu-box .menu-group {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-radius: 3px;
+        background: #fcfaf4 !important;
+    }
+
+.glaccount-container .v-menu-box .menu-group .menu-item {
+    width: 100%;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+    .glaccount-container .v-menu-box .menu-group .menu-item .item-title {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        background-color: #beeffe;
+        height: 60px !important;
+        line-height: 1.25;
+        margin: 5px 0;
+        word-break: break-word;
+        text-align: center;
+        color: black;
+        width: 100%;
+        border-radius: 3px;
+    }
+
+        .glaccount-container .v-menu-box .menu-group .menu-item .item-title.active,
+        .active {
+            background-color: #f2e8c5;
+            border-radius: 3px;
+            padding: 0 10px;
+        }
+
+.text__primary {
+    color: rgb(90, 186, 192) !important;
+}
+
+.glaccount-container.flexbox > :first-child {
+    min-width: 225px;
+    width: 30%;
+}
+
+.glaccount-container.flexbox > :nth-child(2) {
+    width: 50%;
+    margin: 0;
+}
+
+.glaccount-container.flexbox > :last-child {
+    width: 10%;
+    min-width: 100px;
+}
+
+.treeview-container .treeview.root {
+    padding: 0 5px;
+    border: none;
+}
+
+.treeview-container .treeview {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid #f2e8c5;
+}
+
+    .treeview-container .treeview .item {
+        position: relative;
+        background-color: #f2e8c5;
+        border-radius: 3px;
+        margin: 1.5px 0;
+        padding: 0 5px;
+        cursor: pointer;
+    }
+
+        .treeview-container .treeview .item .title {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .treeview-container .treeview .item.active {
+            background-color: #f2e8c5;
+            color: black;
+        }
+
+/*Tree Style*/
+.menu-item-group,
+.sub-menu-item-group {
+    list-style: none;
+    position: relative;
+}
+
+.menu-item-list {
+    padding: 0;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+/*.menu-item-list div:hover {
+        color: white;
+    }*/
+.menu-title {
+    font-family: 'Montserrat';
+    color: rgb(0, 0, 0);
+    width: 100%;
+    /*font-size: 0.7em;*/
+    position: relative;
+}
+
+.fm-1 {
+    font-size: 16px;
+}
+
+.spam-a-name {
+    font-size: 0.8em;
+    letter-spacing: 0.1em;
+}
+
+.ml {
+    margin-left: -25px;
+}
+
+.ml-2:not( :first-child) {
+    margin-left: 10px;
+}
+
+.alive {
+    background-color: #f2e8c5;
+}
+
+.menu-title-group,
+.menu-title {
+    text-align: left;
+}
+/*.menu-title-group {
+    font-size: 14px !important;
+}*/
+.treeview ul {
+    list-style: none;
+    margin-left: -20px;
+}
+.menu-item {
+    padding-left: -100px;
+    width: 100%;
+}
+.fieldset {
+    padding: 15px 0;    
+}
+fieldset legend.title {
+    background: #f2e8c5 !important;
+    color: black !important;
+}

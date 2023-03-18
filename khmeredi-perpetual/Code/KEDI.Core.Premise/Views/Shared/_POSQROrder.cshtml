@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@Localizer["POSQROrder"]</title>
+    <link rel="icon" href="~/Images/icon/edc.png" type="image/gif" sizes="16x16">
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/AdminLayout/bundle/admin/_admin.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/easytimer.min.js"></script>
+    <!--Signal R-->
+    <script src="~/lib/aspnet/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/System/system.js"></script>
+</head>
+<body>
+    <style>
+        .dialog-box.startup {
+            top: 35px;
+        }
+    </style>
+    <div class="ck-widget-container">
+        <div id="loadscreen" class="widget-loadscreen">
+            <img src="~/AdminLayout/images/loading.gif" />
+        </div>
+
+        @RenderBody()
+    </div>
+    <script>
+        $(".number").asNumber();
+    </script>
+</body>
+</html>
+

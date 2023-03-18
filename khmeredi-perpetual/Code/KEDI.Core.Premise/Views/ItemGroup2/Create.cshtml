@@ -1,0 +1,537 @@
+﻿@model ItemGroup2
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    .StyleImge {
+        height: 150px;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        width: 150px;
+    }
+    #styleheader {
+        color: white;
+    }
+    .form-group {
+        padding: 0px;
+        margin: 0px;
+    }
+    b {
+        color: white;
+        margin-left: 10px;
+    }
+
+    .modal-header {
+        background-color: blue;
+    }
+
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 50px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            cursor: inherit;
+            display: block;
+        }
+
+    #imagestyle {
+        border-radius: 50px;
+        margin-left: 45px;
+        margin-top: 10px;
+        box-shadow: 0px 0px 4px;
+        color: blue;
+    }
+    .modal-header{
+        cursor:move;
+    }
+    .Right_input_item2 input[type=text] {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 35px;
+        font-family: Arial;
+        font-size: 15px;
+        border-radius: 3px;
+        min-width: 100%;
+        width: 100%;
+    }
+    .Right_input_item2_sibling input[type=text] {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 35px;
+        font-family: Arial;
+        font-size: 15px;
+        border-radius: 3px;
+        min-width: 70%%;
+        width: 70%;
+    }
+    .Right_input_item2 input[type=text]:focus, .Right_input_item2_sibling input[type=text]:focus {
+        box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid rgba(81, 203, 238, 1);
+        border-radius: 2px;
+        font-family: Arial;
+        font-size: 15px;
+    }
+    .Right_input_item2 select {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 35px;
+        font-family: Arial;
+        font-size: 15px;
+        border-radius: 3px;
+        min-width: 100%;
+    }
+    .Right_input_item2_sibling select {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        height: 35px;
+        font-family: Arial;
+        font-size: 15px;
+        border-radius: 3px;
+        min-width: 70%;
+    }
+    .Right_input_item2 select:focus,.Right_input_item2_sibling input[type=text]:focus {
+        box-shadow: 0 0 7px rgba(79, 110, 230,1);
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid rgba(106, 164, 213,1);
+        border-radius: 3px;
+        font-family: Arial;
+        font-size: 15px;
+    }
+    .select_link{
+        position:relative;
+    }
+    .btn_link{
+        position:absolute;
+        right:-21px;
+        bottom:12px;
+        font-size:15px;
+        color:blue;
+    }
+    label.control-label{
+        font-size:16px;
+        font-family:Arial;
+        font-weight:500;
+    }
+    .fa-plus-circle{
+        margin-right:4px;
+    }
+    .control-label_sibling{
+        min-width:25%;
+    }
+    .fa-ban{
+        margin-right:4px; 
+    }
+</style>
+<div class="card card-body">
+<form asp-action="Create" enctype="multipart/form-data" method="post">
+    <div class="row Right_input_item2" >
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="">
+                <label class="control-label">@Localizer["Name1"] </label> 
+                <div class="select_link">
+                    <select asp-for="ItemG1ID" id="txtItemGroup1" asp-items="ViewBag.ItemG1ID">
+                        <option value="0" selected disabled> --- Select ---</option>
+                    </select>
+                    <span asp-validation-for="ItemG1ID" class="text-danger"></span>
+                    <i class="fas fa-plus-circle btn_link" data-toggle="modal" data-target="#Additem1"></i>
+                </div>    
+                <div class="text-danger">@ViewBag.Error </div>
+            </div>
+            <div class="">
+                <label class="control-label">@Localizer["Name2"] </label>
+                <input asp-for="Name"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            
+        </div>
+        <div class="col-md-6" style="margin-top:10px;">
+            <div class="form-group">
+                <div>
+                    <img src="~/Images/default/no-image.jpg" id="logo" class="StyleImge" />
+                    <input id="img" asp-for="Images" hidden />
+                </div>
+                <div class="btn btn-sm btn-file" id="imagestyle">
+                   @Localizer["Browse"] <input type="file" asp-for="Images" name="Image" id="txtlogo" onchange="show(this)" value="" accept=".ico, .png, .jpg, .jpeg, .gif" style="margin-top:10px;">
+                    <span asp-validation-for="Images" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-left:5px; margin-top:10px;">
+        <div class="form-group pull-left">
+            <button type="submit" class="btn btn-kernel btn-sm">@Localizer["Add"]</button>
+            <a asp-action="Index" class="btn btn-kernel btn-sm"> @Localizer["Back"]</a>
+        </div>
+    </div>
+</form>
+<div class="modal fade" id="Additem1" style="margin-top:10px;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:blue;">
+                <i class="fa fa-plus-circle" style="color:white;"><b style="margin-left:8px;font-family:Arial;font-size:15px;">@Localizer["CreateItemGroup(1)"]</b></i>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="fom-horizontal">
+                        <div class="row Right_input_item2_sibling">
+                            <div class="col-md-12">
+                                @*<div class="form-group" style="text-align:center;">
+                                        <img src="~/Images/150x150.gif" name="logoitem" id="logoitem" class="StyleImge" />
+                                        <input type="file" name="Photo" class="form-control" id="Photo" onchange="showItem1(this)" value="" accept=".ico, .png, .jpg, .jpeg, .gif" style="margin-top:10px; text-align:center;" />
+                                    </div>*@
+                                <div class="">
+                                    <label class="control-label_sibling">@Localizer["Name1_1"] </label>
+                                    <input type="text" id="txtName" />
+                                </div>
+                                <div class="">
+                                    <label class="control-label_sibling">@Localizer["Color"] </label>
+                                    <select id="txtcolors">
+                                         <option value="0" selected disabled> --- Select ---</option>
+                                    </select>
+                                </div>
+                                <div class="">
+                                    <label class="control-label_sibling">@Localizer["Background"] </label>
+                                   <select id="txtBacks">
+                                      <option value="0" selected disabled>--- Select ---</option>
+                                   </select>
+                                </div>
+                                <div class="form-group pull-right" style="margin-right:17px;margin-top:8px;">
+                                    <button type="button" class="btn btn-success btn-xs" onclick="QuickInsert()"><i class="fa fa-plus-circle" style="margin-right:3px;"></i>@Localizer["Add"]</button>
+                                    <button class="btn btn-danger btn-xs" data-dismiss="modal"><i class="fa fa-ban" style="margin-right:4px;"></i>@Localizer["Close"]</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalColor">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["Color"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row Right_input_item2_sibling">
+                    <div class="col-md-12">
+                        <div class="">
+                            <label class="control-label_sibling">@Localizer["NameColor"]</label>
+                            <input type="text" id="colorName" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-right:17px;margin-top:8px;">
+                <button class="btn btn-success btn-xs" onclick="AddColor()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-danger btn-xs" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalBackground">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" id="styleheader"><b>@Localizer["Background"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row Right_input_item2_sibling">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="control-label_sibling">@Localizer["BackName"]</label>
+                            <input type="text" id="backName" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-right:17px;margin-top:8px;">
+                <button class="btn btn-success btn-xs" onclick="AddBack()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+                <button class="btn btn-danger btn-xs" data-dismiss="modal"><i class="fa fa-ban"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+   
+    $(document).ready(function () {
+        $(".modal-header").on("mousedown", function (mousedownEvt) {
+            var $draggable = $(this);
+            var x = mousedownEvt.pageX - $draggable.offset().left,
+                y = mousedownEvt.pageY - $draggable.offset().top;
+            $("body").on("mousemove.draggable", function (mousemoveEvt) {
+                $draggable.closest(".modal-dialog").offset({
+                    "left": mousemoveEvt.pageX - x,
+                    "top": mousemoveEvt.pageY - y
+                });
+            });
+            $("body").one("mouseup", function () {
+                $("body").off("mousemove.draggable");
+            });
+            $draggable.closest(".modal").one("bs.modal.hide", function () {
+                $("body").off("mousemove.draggable");
+            });
+        });
+        $.ajax({
+            url: "/ItemGroup1/SelecrColor",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = "";
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ColorID + '">' + item.Name + '</option>';
+                });
+               
+                $("#txtcolors").append(data);
+            }
+        });
+        $.ajax({
+            url: "/ItemGroup1/SelectBackground",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = "";
+
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.BackID + '">' + item.Name + '</option>';
+                });
+               
+                $("#txtBacks").append(data);
+            }
+        });
+    });
+    function show(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+
+            filerdr.onload = function (e) {
+                $('#logo').attr('src', e.target.result);
+                $('#img').val(input.files[0].name);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function showItem1(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+
+            filerdr.onload = function (e) {
+                $('#logoitem').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+            $("#LogoCopy").val("");
+        }
+    }
+
+    function SelectColor() {
+        var iD = $("#txtcolor").val();
+        $.ajax({
+            url: "/ItemGroup2/GetColor",
+            type: "Get",
+            dataType: "Json",
+            data: { id: iD },
+            success: function (respones) {
+                $.each(respones, function (i, item) {
+
+                    document.getElementById("txtcolorChang").innerHTML = item.Name;
+                    document.getElementById("txtcolorChang").style.color = "" + item.Name;
+                });
+            }
+        });
+    }
+    function SelectBack() {
+        var iD = $("#txtBack").val();
+        $.ajax({
+            url: "/ItemGroup2/GetBackground",
+            type: "Get",
+            dataType: "Json",
+            data: { id: iD },
+            success: function (respones) {
+                $.each(respones, function (i, item) {
+                    $("#txtcolorChangback").val(item.Name);
+                    document.getElementById("txtcolorChangback").style.background = "" + item.Name;
+                });
+            }
+        });
+    }
+
+
+   
+
+    function QuickInsert() {
+        var image = $("#Photo").val();
+        var name = $("#txtName").val();
+        var col = $("#txtcolors").val();
+        var bak = $("#txtBacks").val();
+
+        var data = {
+            Name: name,
+            BackID: bak,
+            ColorID: col,
+            Images: image
+        }
+        var cout = 0;
+        if (name == 0) {
+            cout++;
+            $("#txtName").css("border-color", "red");
+        }
+        else {
+            $("#txtName").css("border-color", "lightgrey");
+        }
+        if (cout > 0) {
+            cout = 0;
+            return;
+        }
+        $.ajax({
+            url: "/ItemGroup1/QuickCreate",
+            type: "POST",
+            dataType: "JSON",
+            data: { itemGroup1: data },
+            complete: function (respones) {
+                $("#Photo").val("");
+                $("#txtName").val("");
+                $("#txtcolors").val("");
+                $("#txtBacks").val("");
+                $.ajax({
+                    url: "/ItemGroup1/GetItemGroup",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (respones) {
+                        var data = "";
+                        $("#txtItemGroup1 option").remove();
+                        $.each(respones, function (i, item) {
+                            data +=
+                                '<option value="' + item.ItemG1ID + '">' + item.Name + '</option>';
+                        });
+                        $("#txtItemGroup1").append(data);
+                    }
+                });
+            }
+        });
+    }
+    function AddColor() {
+        var name = $("#colorName").val();
+        var cout = "";
+        if (name == 0) {
+            cout++;
+            $("#colorName").css("border-color", "red");
+        } else {
+           
+            $("#colorName").css("border-color", "lightgrey");
+        }
+        if (cout > 0) {
+            cout = 0;
+            return;
+        }
+        $.ajax({
+            url: "/ItemGroup1/AddColors",
+            type: "POST",
+            dataType: "Json",
+            data: { Name: name },
+            complete: function (respones) {
+                $("#colorName").val("");
+                $("#txtcolor option").remove();
+                $("#txtcolors option").remove();
+                $.ajax({
+                    url: "/ItemGroup1/SelecrColor",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (respones) {
+                        var data = "";
+                        $.each(respones, function (i, item) {
+                            data +=
+                                '<option value="' + item.ColorID + '">' + item.Name + '</option>';
+                        });
+                        $("#txtcolor").append(data);
+                        $("#txtcolors").append(data);
+                    }
+                });
+            }
+        });
+    }
+    function AddBack() {
+        var name = $("#backName").val();
+        var cout = "";
+        if (name == 0) {
+            cout++;
+            $("#backName").css("border-color", "red");
+        } else {
+            
+            $("#backName").css("border-color", "lightgrey");
+        }
+        if (cout > 0) {
+            cout = 0;
+            return;
+        }
+        $.ajax({
+            url: "/ItemGroup1/AddBackground",
+            type: "POST",
+            dataType: "Json",
+            data: { Name: name },
+            complete: function (respones) {
+                $("#backName").val("");
+                $("#txtBack option").remove();
+                $("#txtBacks option").remove();
+                $.ajax({
+                    url: "/ItemGroup1/SelectBackground",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (respones) {
+                        var data = "";
+
+                        $.each(respones, function (i, item) {
+                            data +=
+                                '<option value="' + item.BackID + '">' + item.Name + '</option>';
+                        });
+                        $("#txtBack").append(data);
+                        $("#txtBacks").append(data);
+                    }
+                });
+            }
+        });
+    }
+</script>

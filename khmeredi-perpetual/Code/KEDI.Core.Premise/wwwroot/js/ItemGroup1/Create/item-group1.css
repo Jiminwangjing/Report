@@ -1,0 +1,140 @@
+﻿.StyleImge {
+    height: 150px;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    width: 150px;
+}
+
+.modal-header {
+    cursor: move;
+}
+
+#styleheader {
+    color: white;
+}
+
+b {
+    color: white;
+    margin-left: 10px;
+}
+
+.modal-header {
+    background-color: blue;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 50px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        cursor: inherit;
+        display: block;
+    }
+
+#imagestyle {
+    border-radius: 50px;
+    margin-left: 45px;
+    margin-top: 10px;
+    box-shadow: 0px 0px 4px;
+    color: blue;
+}
+
+.form-group {
+    padding: 0px;
+    margin: 0px;
+}
+
+.Right_input_item1 input[type=text] {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid #DDDDDD;
+    height: 35px;
+    font-family: Arial;
+    font-size: 15px;
+    border-radius: 3px;
+    min-width: 100%;
+    width: 100%;
+}
+
+    .Right_input_item1 input[type=text]:focus, .style_Currency input[type=text]:focus {
+        box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid rgba(81, 203, 238, 1);
+        border-radius: 2px;
+        font-family: Arial;
+        font-size: 15px;
+    }
+
+.Right_input_item1 select {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid #DDDDDD;
+    height: 35px;
+    font-family: Arial;
+    font-size: 15px;
+    border-radius: 3px;
+    min-width: 100%;
+}
+
+    .Right_input_item1 select:focus, .style_Currency select:focus {
+        box-shadow: 0 0 7px rgba(79, 110, 230,1);
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid rgba(106, 164, 213,1);
+        border-radius: 3px;
+        font-family: Arial;
+        font-size: 15px;
+    }
+
+.btn_link {
+    position: absolute;
+    right: -20px;
+    bottom: 12px;
+    color: blue;
+    font-size: 15px;
+}
+
+.select_color {
+    position: relative;
+}
+
+label.control-label {
+    font-family: Arial;
+    font-weight: 500;
+}
+
+.fa {
+    margin-right: 4px;
+}
+
+.icon {
+    margin-top: 5px;
+    margin-left: -30px;
+    z-index: 5;
+    cursor: pointer;
+}
+
+#allw-gl tr td {
+    padding: 0 !important;
+}

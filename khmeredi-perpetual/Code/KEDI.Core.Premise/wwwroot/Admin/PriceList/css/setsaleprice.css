@@ -1,0 +1,111 @@
+﻿.label {
+    font-size: 15px;
+    font-family: Arial;
+}
+
+.selectbox {
+    height: 30px;
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 3px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    width: 100%;
+    font-family: Arial;
+    font-size: 13px;
+    border-radius: 3px;
+    border: 1px solid #c6c1c1;
+}
+
+.content_sreach {
+    height: 30px;
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 3px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    width: 100%;
+    font-family: Arial;
+    font-size: 13px;
+    border-radius: 3px;
+    border: 1px solid #c6c1c1;
+    position: relative;
+    margin-top: 21px;
+}
+
+    .content_sreach:focus {
+        box-shadow: 0 0 5px rgba(27, 93, 185,0.4);
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid rgb(120, 172, 245);
+        border-radius: 3px;
+        font-family: Arial;
+        font-size: 13px;
+        margin-top: 21px;
+    }
+
+.icon_search {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+}
+
+.wrap-table {
+    margin-top: 10px;
+}
+
+.filter, input {
+    height: 30px;
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 3px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    width: auto;
+    font-family: Arial;
+    font-size: 13px;
+    border-radius: 3px;
+    border: 1px solid #c6c1c1;
+    background-color: aqua;
+}
+
+.wrap-table table th, .wrap-table table td {
+    min-width: 0px;
+}
+
+    .wrap-table table th input[type=checkbox] {
+        vertical-align: text-bottom;
+    }
+
+    .wrap-table table td input[type=checkbox] {
+        vertical-align: middle;
+    }
+
+input {
+    height: 30px;
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 3px 3px 3px;
+    margin: 0px 1px 3px 0px;
+    width: 100%;
+    font-family: Arial;
+    font-size: 13px;
+    border-radius: 3px;
+    border: 1px solid #c6c1c1;
+    background-color: #ffffff;
+}
+
+.is-null {
+    border: 1px solid #ff0000;
+}
+
+.seaerch {
+    position: absolute;
+    right: 30px;
+    top: 100px;
+}

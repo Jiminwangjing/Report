@@ -1,0 +1,433 @@
+﻿@model CKBS.Models.ServicesClass.KAMSService.AppointmentServiceClass
+@{
+    ViewData["Title"] = "Appointment";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="~/AutoMobile/css/Appointment.css" rel="stylesheet" />
+<link href="~/AutoMobile/css/_search.css" rel="stylesheet" />
+
+<div hidden id="masterApp">@Json.Serialize(Model.Appointment)</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <fieldset class="shadow mb-3">
+            <legend class="title"> Appointment </legend>
+            <div class="row vmcbody">
+                <div class="col-md-4">
+                    <label class="vmcHeadLabel"> @Localizer["Customer"] </label>
+                    <div class="input-group mb-3">
+                        <input id="txtcus" class="form-control" readonly>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="show-list-cus"><i class="fa fa-plus-circle ml-2 mt-sm-1" style="cursor:pointer"></i></span>
+                        </div>
+                    </div>
+
+                    <div hidden id="list-vehicle-sh">
+                        <label class="vmcHeadLabel"> @Localizer["Plate"] </label>
+                        <div class="input-group mb-3">
+                            <input id="txtvehicle" class="form-control" readonly>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="show-list-vehicles"><i class="fa fa-plus-circle ml-2 mt-sm-1" style="cursor:pointer"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </fieldset>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-label"> Resource of Service </label>
+                    <select class="form-control" id="select-resource">
+                        <option value="0" disabled selected>-- Select --</option>
+                        <option value="1"> From Quotation </option>
+                        <option value="2"> From Invoice </option>
+                        <option value="3"> From Item MasterData </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="wrap-table widget-scrollbar">
+                    <table id="list-service-appointment">
+                        <thead>
+                            <tr>
+                                <th class="text-center">@Localizer["Nº"]</th>
+                                <th>@Localizer["Service Name"]</th>
+                                <th>@Localizer["Service Uom"]</th>
+                                <th>@Localizer["Appointment Date"]</th>
+                                <th class="text-center">@Localizer["Action"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="validation-summary" class="validationSummary mt-2"></div>
+
+        <div class="row mt-3">
+            <div class="col-md-12 form-inline">
+                <div id="sh-save" hidden>
+                    <button class="btn btn-success" id="save-app"><i class="fa fa-save mt-1"></i> @Localizer["Save"]</button>
+                </div>
+                <div class="text-left ml-1">
+                    <a asp-action="AppointmentList" asp-controller="Appointment" class="btn btn-sm btn-danger"><i class="fa fa-chevron-circle-left mt-1"></i> @Localizer["Back"]</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="Modal-Customer">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="height:40px;">
+                <h3><b><i class="fa fa-user"> </i> List Customer</b></h3>
+            </div>
+            <div class="modal-body" style="padding-bottom:0">
+                @*Search box*@
+                <div class="item group-search-boxes mb-1">
+                    <div id="text-search" class="search-box show">
+                        <div class="input-box" style="max-width: 300px;">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="search-app-cus" autocomplete="off" name="search-member" type="text" value="" placeholder="@Localizer["Name,Phone search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+
+                <div class="wrap-table list" style="height:200px;">
+                    <table id="list-customer">
+                        <tr>
+                            <th>Nº</th>
+                            <th>@Localizer["Code"]</th>
+                            <th>@Localizer["Name"]</th>
+                            <th>@Localizer["Phone"]</th>
+                        </tr>
+                    </table>
+                </div>
+                <div id="paging-cus"></div>
+            </div>
+            @*<div class="modal-footer" style="padding:3px;">
+                    <button class="btn btn-primary" id="cus-choose" data-dismiss="modal">@Localizer["Choose"]</button>
+                    <button class="btn btn-primary" id="cus-cancel" data-dismiss="modal">@Localizer["Cancel"]</button>
+                </div>*@
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Modal-Vehicle">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="height:40px;">
+                <h3><b><i class="fa fa-user"> </i> List Vehicle</b></h3>
+            </div>
+            <div class="modal-body" style="padding-bottom:0">
+
+                @*Search box*@
+                <div class="item group-search-boxes mb-1">
+                    <div id="text-search" class="search-box show">
+                        <div class="input-box" style="max-width: 370px;">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="search-app-vehicle" autocomplete="off" name="search-member" type="text" value="" placeholder="@Localizer["Plate,Engine search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+
+                <div class="wrap-table list" style="height:200px;">
+                    <table id="list-vehicle">
+                        <tr>
+                            <th>Nº</th>
+                            <th> @Localizer["Plate"] </th>
+                            <th> @Localizer["Engine"] </th>
+                            <th> @Localizer["Frame"] </th>
+                            <th> @Localizer["Type"] </th>
+                            <th> @Localizer["Brand"] </th>
+                            <th> @Localizer["Model"] </th>
+                            <th> @Localizer["Color"] </th>
+                            <th> @Localizer["Year"] </th>
+                        </tr>
+                    </table>
+                </div>
+                <div id="paging-vehicle"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Warning Model*@
+<div class="modal fade" style="margin-top:10px;" id="modal-warning" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="overflow:auto;">
+            <div class="modal-header p-1" style="background-color:#ccc">
+                <span><i style="font-size:x-large" class="fa fa-warning fn-red"></i></span>
+                <div style="font-size:20px; font-weight:bold; color:black; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["Warning"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-red" data-dismiss="modal"></i></span>
+            </div>
+            <div class="modal-body p-2 pt-4 pb-4" style="background-color:#bcc; text-align:center">
+                <label id="txt-warning"></label>
+            </div>
+        </div>
+    </div>
+</div>
+@*Warning Model Delete*@
+<div class="modal fade" style="margin-top:10px;" id="modal-warning-delete" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="overflow:auto;">
+            <div class="modal-header p-1" style="background-color:#ccc">
+                <span><i style="font-size:x-large" class="fa fa-warning fn-red"></i></span>
+                <div style="font-size:20px; font-weight:bold; color:black; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["Warning"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-red" data-dismiss="modal"></i></span>
+            </div>
+            <div class="modal-body p-2 pt-4 pb-4" style="background-color:#bcc; text-align:center">
+                <label id="txt-warning-delete"></label>
+            </div>
+            <div class="modal-footer">
+                <button> Delete </button>
+                <button> Cancel </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*List of Quote Model*@
+<div class="modal fade" style="margin-top:10px;" id="modal-of-list-quote" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="overflow:auto;">
+            @* Header *@
+            <div class="modal-header pt-2 pl-2 pr-2 pb-1 sticky" style="background-color:#ccc">
+                <div style="font-size:23px; font-weight:bold; color:black; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;">@Localizer["List of Quotation"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky clearSelect" data-dismiss="modal"></i></span>
+            </div>
+
+            @* Body *@
+            <div class="modal-body p-0" style="background-color:#bcc">
+                @*Search box*@
+                <div class="item group-search-boxes mb-2 mt-2">
+                    <div id="text-search" class="search-box show">
+                        <div class="input-box" style="max-width: 326px;">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="search-app-list-quote" name="search-member" type="text" value="" placeholder="@Localizer["Quote Nº search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+
+                <div class="wrap-table">
+                    <table id="list-of-quote" style="position:relative">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">@Localizer["Quote Nº"]</th>
+                                <th class="text-center">@Localizer["Action"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer p-1 pt-2" style="background-color:#ccc;">
+                <button class="btn btn-sm btn-danger vmcbtnClose clearSelect" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*List of Invoice Model*@
+<div class="modal fade" style="margin-top:10px;" id="modal-of-list-invoice" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="overflow:auto;">
+            @* Header *@
+            <div class="modal-header pt-2 pl-2 pr-2 pb-1 sticky" style="background-color:#ccc">
+                <div style="font-size:23px; font-weight:bold; color:black; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["List of Invoice"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky clearSelect" data-dismiss="modal"></i></span>
+            </div>
+
+            @* Body *@
+            <div class="modal-body p-0" style="background-color:#bcc">
+
+                @*Search box*@
+                <div class="item group-search-boxes mb-2 mt-2">
+                    <div id="text-search" class="search-box show">
+                        <div class="input-box" style="max-width: 326px;">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="search-app-list-invoice" name="search-member" type="text" value="" placeholder="@Localizer["Invoice Nº search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+
+                <div class="wrap-table">
+                    <table id="list-of-invoice" style="position:relative">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">@Localizer["Invoice Nº"]</th>
+                                <th class="text-center">@Localizer["Action"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer p-1 pt-2" style="background-color:#ccc;">
+                <button class="btn btn-sm btn-danger vmcbtnClose clearSelect" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*List Resource from Quote Model*@
+<div class="modal fade" style="margin-top:10px;" id="modal-resource-quote" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="overflow:auto;">
+            @* Header *@
+            <div class="modal-header pt-2 pl-2 pr-2 pb-1 sticky" style="background-color:#ccc">
+                <div style="font-size:23px; font-weight:bold; color:black; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"><label id="title-service-quote"></label></div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky clearSelect" data-dismiss="modal"></i></span>
+            </div>
+
+            @*Warning*@
+            <div class="row ml-0 pt-1" hidden style="height:35px;background-color:#ff4d4d;" id="validation-quote">
+                <div class="col-md-12">
+                    <i class="fa fa-exclamation-triangle" style="color:white; font-size:x-large;"></i>
+                    <span class="validationDate">Please select appointment date</span>
+                </div>
+            </div>
+
+
+            @* Body *@
+            <div class="modal-body p-0" style="background-color:#bcc">
+                @* Search *@
+                <div class="block">
+                    @*<div class="item group-search-boxes mt-1 mb-1">
+                            <div id="text-search" class="search-box">
+                                <div class="input-box">
+                                    <i id="i-search" class="i-search fas fa-search"></i>
+                                    <input class="ignore" id="search-resource-quote" type="text" autocomplete="off" value="" placeholder=@Localizer["Q.Nº,Name,Phone..."]>
+                                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                                </div>
+                                <div id="btn-search" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                            </div>
+                        </div>*@
+                </div>
+
+                <div class="wrap-table">
+                    <table id="list-resource-quote" style="position:relative">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>@Localizer["Item Name"]</th>
+                                <th class="text-center">@Localizer["Uom"]</th>
+                                <th class="text-center">@Localizer["Action"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer p-1 pt-2" style="background-color:#ccc;">
+                <button class="btn btn-sm btn-danger vmcbtnClose" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*List Resource from Invoice Model*@
+<div class="modal fade" style="margin-top:10px;" id="modal-resource-invoice" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="overflow:auto;">
+            @* Header *@
+            <div class="modal-header pt-2 pl-2 pr-2 pb-1 sticky" style="background-color:#ccc">
+                <div style="font-size:23px; font-weight:bold; color:black; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"><label id="title-service-invoice"></label></div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky clearSelect" data-dismiss="modal"></i></span>
+            </div>
+
+            @* Body *@
+            <div class="modal-body p-0" style="background-color:#bcc">
+                @* Search *@
+                <div class="block">
+                    @*<div class="item group-search-boxes mt-1 mb-1">
+                            <div id="text-search" class="search-box">
+                                <div class="input-box">
+                                    <i id="i-search" class="i-search fas fa-search"></i>
+                                    <input class="ignore" id="search-resource-quote" type="text" autocomplete="off" value="" placeholder=@Localizer["Q.Nº,Name,Phone..."]>
+                                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                                </div>
+                                <div id="btn-search" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                            </div>
+                        </div>*@
+                </div>
+
+                <div class="wrap-table">
+                    <table id="list-resource-invoice" style="position:relative">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>@Localizer["Item Name"]</th>
+                                <th class="text-center">@Localizer["Uom"]</th>
+                                <th class="text-center">@Localizer["Action"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer p-1 pt-2" style="background-color:#ccc;">
+                <button class="btn btn-sm btn-danger vmcbtnClose" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*List Resource from Item Master Data Model*@
+<div class="modal fade" style="margin-top:10px;" id="modal-resource-itemMaster" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="overflow:auto;">
+            @* Header *@
+            <div class="modal-header pt-2 pl-2 pr-2 pb-1 sticky" style="background-color:#ccc">
+                <div style="font-size:23px; font-weight:bold; color:black; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["List of Item Master Data"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky clearSelect" data-dismiss="modal"></i></span>
+            </div>
+
+            @* Body *@
+            <div class="modal-body p-0" style="background-color:#bcc">
+                @*Search box*@
+                <div class="item group-search-boxes mb-2 mt-2">
+                    <div id="text-search" class="search-box show">
+                        <div class="input-box" style="max-width: 370px;">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="search-resource-itemMaster" autocomplete="off" name="search-member" type="text" value="" placeholder="@Localizer["Item name search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+
+                <div class="wrap-table">
+                    <table id="list-resource-itemMaster" style="position:relative">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>@Localizer["Item Name"]</th>
+                                <th class="text-center">@Localizer["Uom"]</th>
+                                <th class="text-center">@Localizer["Action"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div id="paging-itemMaster"></div>
+            </div>
+            <div class="modal-footer p-1 pt-2" style="background-color:#ccc;">
+                <button class="btn btn-sm btn-danger vmcbtnClose clearSelect" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/AutoMobile/js/_search.js"></script>
+<script src="~/AutoMobile/js/Appointment.js"></script>

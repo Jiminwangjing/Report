@@ -1,0 +1,362 @@
+.wrap-input.breadcrumb {
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    height: 35px;
+    margin-bottom: 10px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, .15);
+     -webkit-justify-content: space-between;
+     -moz-justify-content: space-between;
+      -ms-justify-content: space-between;
+          justify-content: space-between;
+            -ms-flex-pack: space-between;
+    align-items: center;
+}
+
+.wrap-input.breadcrumb.wrap-free {
+    height: 45px;
+    align-items: center;
+    border-top: 1px solid rgba(0, 0, 0, .15);
+}
+
+.wrap-input.breadcrumb .step {
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    align-items: center;
+    padding: 0;
+    height: 35px;
+    line-height: 35px;
+    min-width: 70px;
+}
+
+
+.wrap-input.breadcrumb .step::before {
+    height: 100%;
+    border-left-color: #999;
+}
+
+.wrap-input.breadcrumb .step.slope-left {
+    min-width: 25px;
+    margin: 0;
+    padding: 0 15px 0 0;
+}
+
+.wrap-input.breadcrumb .step.slope-left::before {
+    top: 0;
+    right: 100%;
+    content: '';
+    background-color: #999;
+    border: 15px solid transparent;
+    border-left-width: 0;
+    border-bottom: 0;
+    border-top-color: #D2B48C;
+}
+
+.wrap-input.breadcrumb .step.slope-left::after {
+    border:none;
+}
+
+.wrap-input.breadcrumb .step::after {
+    border: 17.5px solid transparent;
+    border-left-color: #999;
+}
+
+.wrap-input.breadcrumb input {
+    width: 250px;
+    height: 36px;
+    border-bottom: 1.5px solid #2ECC70;
+    margin: 0;
+    background: inherit;
+    font-size: 1.5em;
+}
+
+.wrap-input input:read-only {
+    border: none;
+    cursor: default;
+}
+
+.wrap-input.breadcrumb .step select {
+    margin: 5px;
+    height: 30px;
+    border: none;
+    background: #EEE;
+}
+
+.wrap-input.breadcrumb .step select > * {
+    background: #FFF;
+}
+
+.full {
+	width: 100% !important;
+}
+
+.tiny {
+	width: 50px;
+}
+
+label {
+	line-height: normal;
+	display: block;
+}
+ 
+input, textarea, select {
+	vertical-align: top;
+	outline: none;
+    border: none;
+    transition: .2s all ease;
+    display: inline-block;
+    padding: 0rem 0.5rem;
+    width: 250px;
+    max-width: 100%;
+    font-size: inherit;
+    height: 36px;
+    margin-bottom: 0.5rem;
+}
+
+input, input::before, input::after {
+    -webkit-user-select: initial;
+    -khtml-user-select: initial;
+    -moz-user-select: initial;
+    -ms-user-select: initial;
+    user-select: initial;
+}
+
+input.uppercase {
+	text-transform: uppercase;
+}
+
+input.lowercase {
+	text-transform: lowercase;
+}
+
+input:disabled, textarea:disabled, select:disabled {
+	background: #EEE;
+	cursor: not-allowed;
+}
+
+input:not(:read-only):focus, textarea:not(:read-only):focus, select:focus {
+	-webkit-box-shadow: inset 0px -1px 0px 0px $sky;
+  -moz-box-shadow: inset 0px -1px 0px 0px $sky;
+  box-shadow: inset 0px -1px 0px 0px $sky;
+}
+
+input.ignore:focus, textarea.ignore:focus, select.ignore:focus {
+	-webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: inset none;
+}
+
+select {
+	cursor: pointer;
+}
+
+input[type="file"] {
+  padding: 0rem;
+	-webkit-padding-before: 0.40rem;
+  -webkit-padding-after: 0.40rem;
+}
+
+input[type="submit"] {
+	width: auto;
+  margin-bottom: 0rem;
+}
+
+textarea {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid $dark-gray;
+	resize: vertical;
+  border-radius: 2px;
+}
+
+textarea:focus {
+  border: 1px solid $blue;
+	-webkit-box-shadow: inset 0px 0px 0px 1px $blue;
+  -moz-box-shadow: inset 0px 0px 0px 1px $blue;
+  box-shadow: inset 0px 0px 0px 1px $blue;
+}
+
+input[type="file"].full, input[type="text"].full, input[type="password"].full, textarea.full {
+    width: 100%;
+}
+@media (max-width: 669px) {
+    input[type="file"].full, input[type="text"].full, input[type="password"].full, textarea.full {
+            width: 100%;
+    }        
+}
+
+input[type="file"].tiny, input[type="text"].tiny, input[type="password"].tiny, textarea.tiny {
+    width: 50px;
+}
+
+/*
+========================
+Checkbox, Radio
+========================
+*/
+/* The rc-container */
+.rc-container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+	line-height: 25px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.rc-container input {
+  position: absolute;
+  width: 0!important;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: $white;
+  border: 1px solid $dark-gray;
+}
+
+/* Create a custom radio */
+.radiomark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: $white;
+  border: 1px solid $dark-gray;
+	border-radius: 50%;
+}
+
+/* On mouse-over, add a dark-grey background color */
+.rc-container:hover input ~ .checkmark, .rc-container:hover input ~ .radiomark {
+  background-color: $dark-gray;
+}
+
+/* On disabled, add a light-grey background color and stop pointer*/
+.rc-container input:disabled ~ .checkmark, .rc-container input:disabled ~ .radiomark {
+  background-color: $light-gray;
+  cursor: not-allowed;
+}
+
+/* When the (checkmark,radiomark) is checked, add a blue background */
+.rc-container input:checked ~ .checkmark, .rc-container input:checked ~ .radiomark {
+  background-color: $blue;
+}
+
+/* Create the (checkmark,radiomark)/indicator (hidden when not checked) */
+.checkmark:after, .radiomark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the (checkmark,radiomark) when checked */
+.rc-container input:checked ~ .checkmark:after, .rc-container input:checked ~ .radiomark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.rc-container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* Style the radiomark/indicator */
+.rc-container .radiomark:after {
+	top: 8px;
+	left: 8px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
+
+/*
+========================
+Input icon left-right
+========================
+*/
+.input-icon-right {
+		position: relative;
+		display: block;
+	}
+
+
+.input-icon-right input {
+    display:block;
+    border: 0;
+    outline: none;
+    border: 1px solid #bdc3c7;
+    padding: 10px;
+    display: block;
+    padding-right: 30px;
+    font-size: 25px;
+    width: 100%;
+}
+
+.input-icon-right input:focus {
+    border: 1px solid #1abc9c;
+}
+
+.input-icon-right .fa {
+    position: absolute;
+    z-index: 10;
+    right: 10px;
+    top: 45%;
+    font-size: 24px;
+    margin-top: -10px;
+}
+.input-icon-left {
+    position: relative;
+    display: block;
+}
+
+.input-icon-left input {
+    display:block;
+    border: 0;
+    outline: none;
+    border: 1px solid #bdc3c7;
+    padding: 10px;
+    display: block;   
+    font-size: 20px;
+    width: 100%;
+    padding-right: 30px;
+    padding-left: 40px;
+}
+
+.input-icon-left input:focus {
+    border: 1px solid #1abc9c;
+}
+
+.input-icon-left .fa {
+    position: absolute;
+    z-index: 10;
+    left: 10px;
+    top: 45%;
+    font-size: 24px;
+    margin-top: -10px;
+}

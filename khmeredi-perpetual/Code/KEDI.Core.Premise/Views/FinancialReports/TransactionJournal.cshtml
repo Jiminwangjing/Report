@@ -1,0 +1,55 @@
+﻿<link href="~/Admin/FinancialReports/sale-gross-profit.css" rel="stylesheet" />
+<div class="card card-body">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="flex">
+                    <label>@Localizer["Original Journal"]:</label>
+                    <select id="date-select" style="width:100%;">
+                    </select>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="flex">
+                            <label>@Localizer["Date From"]</label>
+                            <input type="date" id="date_from" style="width:100%;" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="flex">
+
+                            <label>@Localizer["Date To"]</label>
+                            <input type="date" id="date_to" style="width:100%;" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"><button type="button" class="btn btn-kernel font-size mt-4" id="btn-ok">Filter</button></div>
+        </div>
+    </div>
+
+
+    <div class="wrap-table mt-4">
+        <table id="list_transaction_journal"></table>
+        <div class="options" id="option">
+            <div class="option">
+                <div id="autoExpand"></div>
+            </div>
+        </div>
+
+        <div class="row" id="loading-view" hidden style="overflow: hidden; width: 90%;">
+            <div class="col-md-5"></div>
+            <div class="col-md-3">
+                <img src="~/Images/ajaxloader/loading.gif" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Admin/FinancialReports/transaction-journal-report.js"></script>

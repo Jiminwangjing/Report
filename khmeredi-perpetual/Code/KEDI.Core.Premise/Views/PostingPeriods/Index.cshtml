@@ -1,0 +1,43 @@
+﻿
+<div class="card card-body">
+<div class="row">
+    <div class="col-md-2">
+        <a asp-action="Create" class="btn btn-xs btn-kernel">@Localizer["Create"]</a>
+    </div>
+    <div class="col-md-6">
+    </div>
+    <div class="col-md-4">
+        <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearch" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrap-table myt1" style="height: 65vh">
+    <table id="allw-gl">
+        <thead>
+            <tr id="hidetr">
+                <th colspan="3" class="text-center">@Localizer["General"]</th>
+                <th colspan="2" class="text-center">@Localizer["PostingDate"]</th>
+                <th colspan="2" class="text-center">@Localizer["DueDate"]</th>
+            </tr>
+            <tr id="showtr">
+                <th class="text-center">@Localizer["PeriodCode"]</th>
+                <th class="text-center">@Localizer["PeriodName"]</th>
+                <th class="text-center">@Localizer["PeriodStatus"]</th>
+                <th class="text-center">@Localizer["From"]</th>
+                <th class="text-center">@Localizer["To"]</th>
+                <th class="text-center">@Localizer["From"]</th>
+                <th class="text-center">@Localizer["To"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+</div>
+<script src="~/Admin/SystemInitialization/PostingPeriod/js/index.js"></script>

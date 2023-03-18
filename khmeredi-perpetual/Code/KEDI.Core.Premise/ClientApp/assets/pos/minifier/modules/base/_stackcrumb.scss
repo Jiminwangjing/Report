@@ -1,0 +1,106 @@
+.widget-stackcrumb {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    height: 40px;
+    box-sizing: border-box;
+    font-size: 10pt;
+}
+
+.widget-stackcrumb *{
+    box-sizing: border-box;
+}
+
+.widget-stackcrumb.hide {
+  transform: scaleX(0);
+  transition: all .3s;
+  width: 0;
+}
+
+.widget-stackcrumb > * {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    background-color: $grey;
+    padding: 0 7px 0 7px;
+    margin-right: 20px;
+    color: #F3F6F9;
+    cursor: pointer;
+    height: 32px;
+    line-height: 32px;
+    list-style: none;
+}
+
+.widget-stackcrumb > *::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 100%;
+    border: 16px solid $grey;
+    border-right-width: 0px;
+    border-left-color: transparent;
+}
+
+.widget-stackcrumb > *::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    border: 16px solid transparent;
+    border-right-width: 0px;
+    border-left-color: $grey;
+}
+
+.widget-stackcrumb > *:first-child {
+    border-radius: 3px 0 0 3px;
+}
+
+.widget-stackcrumb > *:first-child::before {
+    border-left-color: $grey;
+    border-left-width: 0;
+}
+
+.widget-stackcrumb > *.active {
+    background-color: #6C96C9;
+}
+
+.widget-stackcrumb > *:not(:first-child).active::before {
+    /*border: 15px solid darken(#999, 7%);*/
+    border: 16px solid #6C96C9;
+    border-right-width: 0px;
+    border-left-color: transparent;
+}
+
+.widget-stackcrumb > *:first-child.active::before {
+    border-left-color: #6C96C9;
+    /*border-left-color: darken(#999, 7%);*/
+}
+
+.widget-stackcrumb > *.active::after {
+    border: 16px solid transparent;
+    border-left-color: #6C96C9;
+    /*border-left-color: darken(#999, 7%);*/
+}
+
+
+@media(max-width: 320px){
+    .widget-stackcrumb.column-stack > * {
+        margin-top: 0.5px;
+    }
+
+    .widget-stackcrumb.column-stack {
+        flex-direction: column ;
+    }
+
+    .widget-stackcrumb.column-stack > *::before {
+        border-left-color: $grey;
+    }
+}

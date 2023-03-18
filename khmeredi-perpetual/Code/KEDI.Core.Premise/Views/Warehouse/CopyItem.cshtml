@@ -1,0 +1,388 @@
+﻿
+<style>
+
+    .label {
+        font-size: 15px;
+        font-family: Arial;
+    }
+
+    .selectbox {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+    }
+
+    .content_sreach {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+        position: relative;
+        margin-top: 21px;
+    }
+
+        .content_sreach:focus {
+            box-shadow: 0 0 5px rgba(27, 93, 185,0.4);
+            padding: 3px 3px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border: 1px solid rgb(120, 172, 245);
+            border-radius: 3px;
+            font-family: Arial;
+            font-size: 13px;
+            margin-top: 21px;
+        }
+
+    .icon_search {
+        position: absolute;
+        top: 30px;
+        right: 20px;
+    }
+
+    .wrap-table {
+        margin-top: 10px;
+    }
+
+    .filter {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+        background-color: aqua;
+    }
+
+    .checkbox {
+        height: 50px;
+        width: 50px;
+    }
+
+    .wrap-table table th, .wrap-table table td {
+        min-width: 0px;
+    }
+
+    .wrap-table table th input[type=checkbox] {
+        vertical-align: text-bottom;
+    }
+
+    .wrap-table table td input[type=checkbox] {
+        vertical-align: middle;
+    }
+
+    input[type=checkbox] {
+        width: 20px;
+        height: 20px;
+    }
+</style>
+<div class="card card-body">
+<div class="row">
+    <input hidden id="wh-baseid" value="@ViewBag.WHFromID" />
+    <div class="col-md-2">
+        <label class="label">@Localizer["To Warehouse"]</label>
+        <select class="selectbox" id="wh-toid">
+            <option value="0" selected disabled>--- Select ---</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="label">@Localizer["Item Group(1)"]</label>
+        <select class="selectbox" id="item-group1">
+            <option value="0" selected disabled>--- Select ---</option>
+
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="label">@Localizer["Item Group(2)"]</label>
+        <select class="selectbox" id="item-group2">
+            <option value="0" selected disabled>--- Select ---</option>
+
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="label">@Localizer["Item Group(3)"]</label>
+        <select class="selectbox" id="item-group3">
+            <option value="0" selected disabled>--- Select ---</option>
+
+        </select>
+    </div>
+    @*<div class="col-md-2">
+        <input class="content_sreach" type="text" name="SearchString" value="@ViewData["currentFilter"]" placeholder="@Localizer["Search"]" id="txtseaerch" />
+        <i class="fa fa-search icon_search"></i>
+    </div>*@
+    <div class="col-md-2">
+        <label class="label"></label>
+        <button class="btn btn-info filter" id="filter-item">​@Localizer["Filter"]</button>
+    </div>
+
+</div>
+
+<div class="wrap-table list">
+    <table>
+        <thead>
+            <tr>
+                <th>@Localizer["No."]</th>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["KhmerName"]</th>
+                <th>@Localizer["EnglishName"]</th>
+                <th>@Localizer["UoM"]</th>
+                <th>@Localizer["Barcode"]</th>
+                <th>@Localizer["Process"]</th>
+                <th>@Localizer["All Item"]<input style="margin-top:10px" id="select-all" type="checkbox" /></th>
+            </tr>
+        </thead>
+        <tbody id="item-list"></tbody>
+    </table>
+</div>
+
+<div class="row" id="pager" style="margin-top:10px;">
+    <div class="col-sm-10">
+        <ul id="pagination" class="pagination-sm"></ul>
+    </div>
+    <div class="col-sm-2 text-right">
+        <span><button id="add-item" class="btn btn-success btn-sm">@Localizer["Add"]</button></span>
+        <a asp-action="Index" class="btn btn-sm btn-success">@Localizer["Cancel"]</a>
+    </div>
+</div>
+</div>
+@*<link href="~/pos/css/core.css" rel="stylesheet" />*@
+<script src="~/js/warehouse.js"></script>
+<script src="~/js/table.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/jquery.twbsPagination.min.js"></script>
+<script>
+    var db = new Warehouse();
+     tr = $('<tr/>');
+     tr.append("<td colspan='11' class='text-center'>@Localizer["NoData"]</td>");
+     $('#item-list').html(tr);
+    $.ajax({
+        url: '/Warehouse/GetWarehouseTo',
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (warehouses) {
+            $.each(warehouses, function (i, warehouse) {
+                $("#wh-toid").append(" <option value=" + warehouse.ID + ">" + warehouse.Name + "</option>");
+                let wh_baseid = parseInt($('#wh-baseid').val());
+                //$("#wh-toid").val(wh_baseid);
+            })
+        }
+
+    });
+    $.ajax({
+        url: '/Warehouse/GetGroup1',
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (group1s) {
+            $.each(group1s, function (i, group1) {
+                $("#item-group1").append(" <option value=" + group1.ItemG1ID + ">" + group1.Name + "</option>");
+            })
+        }
+
+    });
+    $('#item-group1').change(function (e) {
+        let group1 = $(this).val();
+        $.ajax({
+            url: '/Warehouse/GetGroup2',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {
+                group1: parseInt(group1)
+            },
+            success: function (group2s) {
+                $('#item-group2 option:not(:first)').remove();
+                $('#item-group3 option:not(:first)').remove();
+                $.each(group2s, function (i, group2) {
+                    $("#item-group2").append(" <option value=" + group2.ItemG2ID + ">" + group2.Name + "</option>");
+                })
+            }
+
+        });
+    });
+    $('#item-group2').change(function (e) {
+        let group2 = $(this).val();
+        let group1 = $('#item-group1').val();
+        $.ajax({
+            url: '/Warehouse/GetGroup3',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {
+                group1: parseInt(group1),
+                group2: parseInt(group2)
+            },
+            success: function (group3s) {
+                $('#item-group3 option:not(:first)').remove();
+                $.each(group3s, function (i, group3) {
+                    $("#item-group3").append(" <option value=" + group3.ID + ">" + group3.Name + "</option>");
+                })
+            }
+
+        });
+    });
+    $('#add-item').click(function () {
+        let ItemCopyToWH = {
+            ID: 0,
+            FromWHID: parseInt($('#wh-baseid').val()),
+            ToWHID: parseInt($('#wh-toid').val()),
+            ItemCopyToWHDetail: db.from("tb_item_checked")
+        };
+
+        $.ajax({
+            url: '/Warehouse/ItemCopyToWH',
+            type: 'POST',
+            dataType:'JSON',
+            data: {
+                ItemCopyToWH: ItemCopyToWH
+            },
+            success: function (response) {
+              
+                window.location.href = "/Warehouse/Index";
+            }
+        })
+    })
+    var $pagination = $('#pagination'),
+        totalRecords = 0,
+        records = [],
+        displayRecords = [],
+        recPerPage = 10,
+        page = 1,
+        totalPages = 0;
+    $("#select-all").change(function (e) {
+        db.table("tb_item_checked").clear();
+        //let checked = $('#select-all').is(':checked');
+        $(".check").prop("checked", false);
+        
+    })
+    $("#filter-item").click(function (e) {
+     
+        let from_whid = parseInt($('#wh-baseid').val());
+        let to_whid = parseInt($('#wh-toid').val());
+        let group1 = parseInt($('#item-group1').val());
+        let group2 = parseInt($('#item-group2').val());
+        let group3 = parseInt($('#item-group3').val());
+        $.ajax({
+            url: '/Warehouse/GetItemMasterToCopy',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {
+                from_whid: from_whid,
+                to_whid: to_whid,
+                group1: group1,
+                group2: group2,
+                group3: group3
+            },
+            success: function (items) {
+
+                if (items.length <= 0) {
+                    tr = $('<tr/>');
+                    tr.append("<td colspan='11' class='text-center'>@Localizer["NoData"]</td>");
+                    $('#item-list').html(tr);
+                }
+                else {
+                    items.checked = false;
+                    items_arr = items;
+                    apply_pagination(items_arr);
+                }
+            }
+
+        });
+    })
+    //appy pagination
+    function apply_pagination(items) {
+
+        records = items;
+        totalRecords = records.length;
+        totalPages = Math.ceil(totalRecords / recPerPage);
+        displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
+        endRec = (displayRecordsIndex) + recPerPage;
+        displayRecords = records.slice(displayRecordsIndex, endRec);
+        displayData();
+
+        $pagination.twbsPagination({
+            totalPages: totalPages,
+            visiblePages: 5,
+            onPageClick: function (e, page) {
+                displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
+                endRec = (displayRecordsIndex) + recPerPage;
+                displayRecords = records.slice(displayRecordsIndex, endRec);
+                displayData();
+            }
+        });
+    }
+    function displayData() {
+        var tr;
+        $('#item-list').children().remove();
+        for (var i = 0; i < displayRecords.length; i++) {
+            tr = $('<tr/>');
+            displayRecords.checked = false;
+            if (displayRecords.length == 0) {
+                tr = $('<tr/>');
+                tr.append("<td colspan='11' class='text-center'>@Localizer["NoData"]</td>");
+                $('#item-list').append(tr);
+            }
+            else {
+                let j = i + 1;
+                tr = $('<tr/>');
+                tr.append("<td width=10px>" + j + "</td>");
+                //tr.append("<td hidden>" + displayRecords[i].ID + "</td>");
+                tr.append("<td hidden>" + displayRecords[i].ItemID + "</td>");
+                tr.append("<td>" + displayRecords[i].Code + "</td>");
+                tr.append("<td>" + displayRecords[i].KhmerName + "</td>");
+                tr.append("<td>" + displayRecords[i].EnglishName + "</td>");
+                tr.append("<td>" + displayRecords[i].UoM + "</td>");
+                tr.append("<td>" + displayRecords[i].Barcode + "</td>");
+                tr.append("<td>" + displayRecords[i].Process + "</td>");
+                let td = $("<td class='text-center'>");
+                let items = db.table("tb_item_checked").get(displayRecords[i].ItemID);
+
+                if (items != undefined) {
+            
+                    td.append("<input checked class='check' data-id=" + displayRecords[i].ItemID + " type='checkbox'>"
+                        + "</td>");
+                }
+                else {
+                    td.append("<input class='check' data-id=" + displayRecords[i].ItemID + " type='checkbox'>"
+                        + "</td>");
+                }
+
+                tr.append($(td).on('click', function () {
+                    $('#select-all').prop('checked', false);
+                   
+                    let item_id = parseInt($(this).children().data('id'));
+                    if ($(this).children().is(':checked')) {
+                        let items = {};
+                        items.ItemID = item_id;
+                        db.insert("tb_item_checked", items, 'ItemID');
+                    }
+                    else {
+                        let items = db.table("tb_item_checked").delete(item_id);
+                        db.insert("tb_item_checked", items, 'ItemID');
+                    }
+                 
+                }));
+                $('#item-list').append(tr);
+            }
+        }
+        
+    }
+</script>

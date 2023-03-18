@@ -1,0 +1,218 @@
+﻿@model CKBS.Models.Services.ExcelFile.ExcelFormFile;
+<style>
+    .wrap-table {
+        width: 100%;
+    }
+
+    table tr th:first-child,
+    table tr td:first-child {
+        width: 20px;
+    }
+
+    .block .wrap-table {
+        min-height: 150px;
+    }
+</style>
+<script src="~/Admin/ItemMasterData/js/import-item-master.js" defer></script>
+<div class="card card-body">
+    @*<h3>@Localizer["Import Item Master"]</h3>*@
+    <div asp-validation-summary="All"></div>
+    <ul id="nav-import-list" class="nav nav-tabs">
+        <li id="tab-new-upload" class="active"><i class="fas fa-plus-circle fa-lg fn-sky"></i> @Localizer["Upload"]</li>
+        <li id="tab-preview"><i class="fas fa-search fa-lg fn-sky"></i> @Localizer["Item Master References"]</li>
+    </ul>
+
+    <div class="block" id="tab-content-customer">
+        <div id="content-new-upload">
+            <div class="wrap-block col-three">
+                <div class="left-block">
+                    <div class="block border">
+                        <div class="title">@Localizer["Upload File"]</div>
+                        <form id="item-master-formfile" class="mt-2" method="post" enctype="multipart/form-data">
+                            <div class="ck-file-container">
+                                <img src="~/Images/default/file.jpg" />
+                                <input asp-for="FormFile" type="file" accept=".xls, .xlsx" />
+                                <select id="filename-list" name="SheetIndex" class="form-control"></select>
+                            </div>
+                            <span asp-validation-for="FormFile" class="text-danger"></span>
+                            <button asp-action="Download" asp-controller="ItemMasterData" class="btn btn-kernel mt-2"><i
+                                    class="far fa-file-excel"></i> @Localizer["Template"]</button>
+                            <button id="preview-item-master-data" class="btn btn-kernel mt-2" type="button" disabled><i
+                                    class="fas fa-search"></i> @Localizer["Preview"]</button>
+                            <button id="submit-item-master-data" class="btn btn-kernel mt-2" type="button" disabled><i
+                                    class="fas fa-file-upload"></i> @Localizer["Upload"]</button>
+                        </form>
+                        <form style="text-align: left;" hidden>
+                            @Html.AntiForgeryToken()
+                            <div model-validation-success></div>
+                            <label class="form-label">@Localizer["File Type"] <span class="fn-red">*</span></label>
+                            <select class="form-control" name="FileType">
+                                <option value=".xlsx">XLSX (Excel 2007 / Higher)</option>
+                                <option value=".xls">XLS (Excel 2003 / Lower)</option>
+                            </select>
+
+                            <label class="form-label">@Localizer["File Name"]</label>
+                            <input class="form-control" name="FileName" />
+                        </form>
+                    </div>
+                </div>
+                <div class="right-block fuse">
+                    <div model-validation-for="itemMasterData.Barcode"></div>
+                </div>
+            </div>
+
+            <div class="wrap-table list myt1 widget-scrollbar" style="min-height:400px;">
+                <table id="preview-item-master-data-list">
+                    <tr>
+                        <th>@Localizer["No."]</th>
+                        <th>@Localizer["Code"]</th>
+                        <th>@Localizer["Khmer Name"]</th>
+                        <th>@Localizer["English Name"]</th>
+                        <th>@Localizer["Cost"]</th>
+                        <th>@Localizer["Unit Price"]</th>
+                        <th>@Localizer["PriceListID"]</th>
+                        <th>@Localizer["GroupUomID"]</th>
+                        <th>@Localizer["InventoryUoMID"]</th>
+                        <th>@Localizer["SaleUomID"]</th>
+                        <th>@Localizer["PurchaseUomID"]</th>
+                        <th>@Localizer["WarehouseID"]</th>
+                        <th>@Localizer["Type"]</th>
+                        <th>@Localizer["ItemGroup1ID"]</th>
+                        <th>@Localizer["ItemGroup2ID"]</th>
+                        <th>@Localizer["ItemGroup3ID"]</th>
+                        <th>@Localizer["Inventory"]</th>
+                        <th>@Localizer["Sale"]</th>
+                        <th>@Localizer["Purchase"]</th>
+                        <th>@Localizer["Barcode"]</th>
+                        <th>@Localizer["PrintToID"]</th>
+                        <th>@Localizer["Image"]</th>
+                        <th>@Localizer["Process"]</th>
+                    </tr>
+
+                </table>
+                <div id="preview-loader" class="ck-ajaxloader">
+                    <img src="~/Images/ajaxloader/timefilter.gif" />
+                </div>
+            </div>
+            <div id="item-master-data-paging"></div>
+        </div>
+
+        <div id="content-item-master-data" hidden>
+            <ul class="widget-tab" style="height: 70vh;">
+                <li class="tab-sheet active">
+                    <div class="tab-title">@Localizer["Pricelist"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table id="im-table-pricelist">
+                                    <tr>
+                                        <th>@Localizer["PriceListID"]</th>
+                                        <th>@Localizer["Name"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </li>
+                <li class="tab-sheet">
+                    <div class="tab-title">@Localizer["Warehouse"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table id="im-table-warehouse">
+                                    <tr>
+                                        <th>@Localizer["WarehouseID"]</th>
+                                        <th>@Localizer["BranchID"]</th>
+                                        <th>@Localizer["Code"]</th>
+                                        <th>@Localizer["Name"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="tab-sheet">
+                    <div class="tab-title">@Localizer["Printer"]</div>
+                    <div class="tab-content">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table id="im-table-printer">
+                                    <tr>
+                                        <th>@Localizer["PrintToID"]</th>
+                                        <th>@Localizer["Name"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="tab-sheet">
+                    <div class="tab-title">@Localizer["UoM"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="title">@Localizer["Group UoM"]</div>
+                                <table id="im-table-group-uom">
+                                    <tr>
+                                        <th>@Localizer["GroupUoMID"]</th>
+                                        <th>@Localizer["Code"]</th>
+                                        <th>@Localizer["Name"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="title">@Localizer["Group Defined UoM"]</div>
+                                <table id="im-table-group-defined-uom">
+                                    <tr>
+                                        <th>@Localizer["GroupUoMID"]</th>
+                                        <th>@Localizer["AltUOM"]</th>
+                                        <th>@Localizer["Name"]</th>
+                                        <th>@Localizer["Factor"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="tab-sheet">
+                    <div class="tab-title">@Localizer["Item Groups"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="title">@Localizer["Item Group 1"]</div>
+                                <table id="im-table-item-group1">
+                                    <tr>
+                                        <th>@Localizer["ItemG1ID"]</th>
+                                        <th>@Localizer["Name"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="title">@Localizer["Item Group 2"]</div>
+                                <table id="im-table-item-group2">
+                                    <tr>
+                                        <th>@Localizer["ItemG2ID"]</th>
+                                        <th>@Localizer["Name"]</th>
+                                        <th>@Localizer["ItemG1ID"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="title">@Localizer["Item Group 3"]</div>
+                                <table id="im-table-item-group3">
+                                    <tr>
+                                        <th>@Localizer["ItemG3ID"]</th>
+                                        <th>@Localizer["Name"]</th>
+                                        <th>@Localizer["ItemG1ID"]</th>
+                                        <th>@Localizer["ItemG2ID"]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

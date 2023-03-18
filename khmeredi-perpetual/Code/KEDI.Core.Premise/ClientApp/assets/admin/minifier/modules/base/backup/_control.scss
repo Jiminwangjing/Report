@@ -1,0 +1,155 @@
+
+label, .form-group {
+    display: block;
+    margin-top: 10px;
+}
+
+fieldset {
+    padding: 15px;
+    border: 1px solid #B7BDCE;
+    border-radius: 3px;
+}
+
+fieldset legend {
+    margin: 0;
+}
+
+fieldset legend.title {
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    border-radius: 3px;
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+fieldset.user-login {
+    background: #808A9A;
+    color: #F3F6F9;
+    font-family: monospace;
+    font-size: 1.1em;
+    width: 350px;
+    height: auto;
+    border-radius: 4px;
+    border: none;
+}
+
+fieldset.user-login .company-logo {
+    padding: 10px;
+    text-align: center;
+}
+
+fieldset.user-login .company-logo img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+fieldset.user-login legend.title {
+    background: #8E9AB0;
+    color: #F3F6F9;
+    height: 45px;
+    line-height: 45px;
+    font-size: 1.25em;
+    text-align: center;
+    width: calc(100% - 25px);
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,.15);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,.15);
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0,.15);
+}
+
+input, select, textarea {
+    position: relative;
+    border-radius: 3px;
+    flex: 1 1 auto;
+    outline: 0;
+    border: .5px solid #EEE;
+}
+
+button, input[type=button], input[type=submit], .btn {
+    position: relative;
+    display: block;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 3px;
+    text-align: center;
+    background-color: #007bff;
+    color: #F3F6F9;
+}
+
+button:hover, input[type=button]:hover, input[type=submit]:hover, .btn:hover {
+    background-color: #337CBE;
+    cursor: pointer;
+}
+
+input.form-control[type=checkbox] {
+    width: 25px;
+}
+
+.box-inline {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-shadow: 0px 0px 0px 1px #CCC;
+    -moz-box-shadow: 0px 0px 0px 1px #CCC;
+    box-shadow: 0px 0px 0px .5px #CCC;
+    border-radius: 3px;
+    padding: 0;
+}
+
+.box-inline > * {
+    height: 30px;
+    border-radius: 2px;
+    border: 0;
+    padding: 5px;
+}
+
+.box-inline:focus-within {
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 0px 0px 1.7px #85FFC0;
+    -moz-box-shadow: 0px 0px 0px 1.7px #85FFC0;
+    box-shadow: 0px 0px 0px 1.7px #85FFC0;
+    -webkit-transition: all .25s;
+    -o-transition: all .25s;
+    transition: all .25s;
+}
+
+.box-inline > :first-child, .box-inline > :first-child > * {
+    border-right: none;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    min-width: 55px;
+}
+
+.box-inline > :last-child {
+    border-left: none;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.box-inline .box-inline-text, .box-inline select, .box-inline input {
+    min-width: 60px;
+}
+
+.box-inline .box-inline-icon {
+    right: 15px;
+    width: 20px;
+    padding: 0 2px;
+    cursor: pointer;
+    border: .5px solid #CCC;
+    border-left: none;
+}
+
+

@@ -1,0 +1,298 @@
+﻿@model Pagination<PromotionPrice>
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .stylerow {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .fa {
+        margin-right: 4px;
+    }
+
+    a {
+        color: white;
+    }
+    a:hover {
+        color: white;
+    }
+
+    h5 {
+        margin: 10px 5px;
+    }
+
+    .tbncrate {
+        margin-top: 10px;
+        background-color: #00bfff;
+        color: white;
+        margin-left: 1px;
+    }
+
+    .fa-sort-amount-down {
+        margin-left: 10px;
+        font-size: 10px;
+        color: white;
+    }
+
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+
+    i {
+        color: black;
+    }
+
+    b {
+        margin-left: 10px;
+    }
+
+    .tbncrate i {
+        color: white;
+    }
+
+    .stylei i {
+        color: white;
+    }
+     .content_select{
+        height: 25px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+ }
+ .content_select:focus{
+      box-shadow: 0 0 5px rgba(27, 93, 185,0.4);
+      padding: 3px 3px 3px 3px;
+      margin: 5px 1px 3px 0px;
+      border: 1px solid rgb(120, 172, 245);
+      border-radius: 3px;
+      font-family: Arial;
+      font-size: 13px;
+ }
+ .list{
+     margin-bottom:15px;
+ }
+</style>
+
+
+<a asp-action="Create" class="btn btn-xs tbncrate"><i class="fa fa-plus-circle"></i> @Localizer["Create"]</a>
+<form asp-action="Index" method="get" id="form-id">
+    <div class="row stylerow">
+        <div class="col-md-6" style="margin-top:5px;">
+            <div class="input-group">
+                <h5>@Localizer["Showpage"] :</h5>
+                <div class="input-group-append">
+                    <select class="content_select" id="selectpage" name="minpage">
+                        <option selected="@ViewBag.sizepage1">5</option>
+                        <option selected="@ViewBag.sizepage2">10</option>
+                        <option selected="@ViewBag.sizepage3">15</option>
+                        <option selected="@ViewBag.sizepage4">20</option>
+                        <option selected="@ViewBag.sizepage5">All</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" style="margin-top:5px;">
+            <div class="input-group btnsearch">
+                <input class="form-control btn-sm" type="text" autocomplete="off" name="SearchString" value="@ViewData["currentFilter"]" placeholder="@Localizer["Search"]" id="txtseaerch" />
+                <div class="input-group-append">
+                    <button class="btn btn-sm btnsearch"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<input type="text" id="txtid" hidden />
+<div class="wrap-table list">
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" class="sortcode"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                        @Localizer["Name"]<i class="fa fa-sort-amount-down"></i>
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" class="sortcode"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                        @Localizer["Amount"]<i class="fa fa-sort-amount-down"></i>
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" class="sortcode"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                        @Localizer["Discount"]<i class="fa fa-sort-amount-down"></i>
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" class="sortcode"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                        @Localizer["Type_Discount"]<i class="fa fa-sort-amount-down"></i>
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" class="sortcode"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                        @Localizer["Currency"]<i class="fa fa-sort-amount-down"></i>
+                    </a>
+                </th>
+                <th>
+                    @Localizer["Action"]
+                </th>
+            </tr>
+        </thead>
+        <tbody class="myTable">
+            @if (Model.Count() == 0)
+            {
+                <tr>
+                    <td colspan="6" class="text-center">@Localizer["NoData"]</td>
+                </tr>
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td hidden>
+                        @Html.DisplayFor(modelItem => item.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Amount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Discount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TypeDis)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Currency.Description)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-edit"></i></a>.
+                        <a asp-action="Delete" asp-route-id="@item.ID" class="deleteGuom" data-toggle="modal" data-target="#ClickDelete" id="DeletePP"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<div class="modal fade" id="ClickDelete" style="margin-top:50px;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header stylei" style="background-color:blue;">
+                <i class="far fa-question-circle"><b>@Localizer["Promotion_Price"]</b></i>
+            </div>
+            <div class="modal-body">
+                <h3>@Localizer["question"]</h3>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm stylei" data-dismiss="modal" onclick="ClickYes()"><i class="far fa-calendar-check"></i> @Localizer["Yes"]</button>
+                <button class="btn btn-danger btn-sm stylei" data-dismiss="modal"><i class="fas fa-exclamation-triangle"></i> @Localizer["No"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item">
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-page="1"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link btn @prevDisabled ">
+                <i class="fa fa-angle-double-left" style="color:blue;"></i>
+            </a>
+        </li>
+        <li class="page-item">
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-page="@(Model.PageIndex - 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link btn @prevDisabled">
+                <i class="fa fa-angle-left" style="color:blue;"></i>
+            </a>
+        </li>
+
+        <li class="page-item">
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-page="@(Model.PageIndex + 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link btn @nextDisabled">
+                <i class="fa fa-angle-right" style="color:blue;"></i>
+            </a>
+        </li>
+        <li class="page-item">
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-page="@Model.TotalPages"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link btn @nextDisabled">
+                <i class="fa fa-angle-double-right" style="color:blue;"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<script>
+    $("#selectpage").on('change', function () {
+        submitForm();
+    })
+    function submitForm() {
+        document.getElementById("form-id").submit();
+    }
+
+    $(document).ready(function () {
+
+        $("#txtseaerch").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
+    $(".myTable").on("click", "#DeletePP", function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        document.getElementById("txtid").value = id;
+    });
+    function ClickYes() {
+        var id = $("#txtid").val();
+        $.ajax({
+            url: "/PromotionPrices/Delete",
+            type: "Delete",
+            dataType: "Json",
+            data: { id: id },
+            complete: function (respones) {
+                location.reload();
+            }
+        });
+    }
+</script>

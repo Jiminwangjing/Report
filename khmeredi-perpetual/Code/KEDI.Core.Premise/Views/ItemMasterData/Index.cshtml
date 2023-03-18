@@ -1,0 +1,133 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+<script src="~/js/warehouse.js"></script>
+<script src="~/js/jquery.twbsPagination.min.js"></script>
+<style>
+    .wrap-table table th {
+        text-align: center !important;
+    }
+
+    .input-file {
+        height: 35px;
+        width: 35px;
+        background: #FFF;
+        border-radius: 50%;
+        margin: 0 auto;
+    }
+
+        .input-file img {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .input-file input[type=file] {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            opacity: 0;
+        }
+</style>
+<div class="card card-body">
+    <div message-summary></div>
+    <div class="flexbox">
+        <a asp-action="Create" class="btn btn-kernel btn-xs">@Localizer["Create"]</a>
+        <a asp-action="Import" asp-controller="ItemMasterData" class="btn btn-kernel btn-xs"> @Localizer["Import"]</a>
+        <a asp-action="Export" asp-controller="ItemMasterData" class="btn btn-sm"><i class="fa fa-file-export"></i> @Localizer["Export"]</a>
+    </div>
+    <fieldset>
+        <div asp-action="Index" class="mb-lg-1" method="get" id="form-id">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <label class="input-group-text" style="background-color:#f2e8c5">@Localizer["Select Page"]</label>
+                        <div class="input-group-append">
+                            <select id="selectpage" name="minpage" class="form-control" style="background-color:#f2e8c5">
+                                <option selected value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 pull-right">
+                    <div class="item group-search-boxes">
+                        <div id="text-search" class="wrap-search-box">
+                            <div class="wrap-input show">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input class="ignore" id="search-item-masters" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div  class="wrap-table myt1 widget-scrollbar" style="height: 57vh;">
+            <table id="item-list">
+                <tr>
+                    <th>@Localizer["No."]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Item Name 1"]</th>
+                    <th>@Localizer["Item Name 2"]</th>
+                    <th>@Localizer["UoM"]</th>
+                    <th>@Localizer["Item Group 1"]</th>
+                    <th>@Localizer["Barcode"]</th>
+                    <th>@Localizer["Type"]</th>
+                    <th>@Localizer["Unit Price"]</th>
+                    <th>@Localizer["Stock"]</th>
+                    <th>@Localizer["Image"]</th>
+                    <th>@Localizer["Action"]</th>
+                </tr>
+            </table>
+        </div>
+
+        <div id="table-content-loading" style="position: absolute; right: 50%; top: 50%; display: none;">
+            <img class="widget-data-loading" src="~/AdminLayout/images/loading.gif" />
+        </div>
+        <div class="flexbox space-between">
+            <div id="data-paging-item-master" style="width:1500px"></div>
+            <div class="input-group">
+                <label class="input-group-text" style="background-color:#f2e8c5">@Localizer["Total items"]:</label>
+                <span id="total-items" class="input-group-text" style="background-color:#f2e8c5"></span>
+            </div>
+
+            <div class="form-group form-inline">
+                <input type="checkbox" class="form-check-input" id="ch-show-inactive" />
+                @Localizer["Inactive"]
+            </div>
+        </div>
+    </fieldset>
+    <form enctype='multipart/form-data'></form>
+    <input type="text" id="txtid" hidden />
+    <div class="modal fade" id="ClickDelete" style="margin-top:50px;">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header stylei" style="background-color:blue;">
+                    <i class="far fa-question-circle"><b>@Localizer["ItemMasterData"]</b></i>
+                </div>
+                <div class="modal-body stylei">
+                    <h3>@Localizer["question"]</h3>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-sm stylei" data-dismiss="modal" onclick="ClickYes()"><i class="far fa-calendar-check"></i> @Localizer["Yes"]</button>
+                    <button class="btn btn-danger btn-sm stylei" data-dismiss="modal"><i class="fas fa-exclamation-triangle"></i> @Localizer["No"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input hidden id="page-remember" value="@ViewBag.PageRemeber" />
+</div>
+
+<script src="~/Admin/ItemMasterData/js/index.js"></script>

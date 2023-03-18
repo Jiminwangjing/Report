@@ -1,0 +1,133 @@
+﻿<style>
+    .smallText {
+        position: absolute !important;
+        left: 14px;
+    }
+
+    .isNotRead, .isRead {
+        height: 65px;
+        border-radius: 10px;
+    }
+
+    .isRead {
+        background: hsl(47, 64%, 95%);
+    }
+
+    .isNotRead {
+        background: hsl(47, 64%, 86%);
+    }
+
+    .font-size {
+        font-size: 12px;
+    }
+
+    .mt-1, .my-1 {
+        margin-top: 1.25rem !important;
+    }
+
+    .textDiv {
+        margin-left: -20px;
+        line-height: 1.2;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+
+    .img-area {
+        margin-top: 5px;
+        margin-left: 20px;
+    }
+
+    .img-areaExpire {
+        margin-top: 3px;
+    }
+
+    .img {
+        border-radius: 7px;
+        width: 79px;
+        height: 55px;
+    }
+
+    .imgExpire {
+        margin-left:-20px;
+        border-radius: 10px;
+        width: 110px;
+        height: 82px;
+    }
+
+    .countTypeOfAlert {
+        color: red;
+    }
+</style>
+<audio id="sound-alert">
+    <source src="~/Images/SoundAlert/soundAlert.mp3" type="audio/mpeg">
+    <source src="~/Images/SoundAlert/soundAlert.wav" type="audio/vnd.wave">
+    <source src="~/Images/SoundAlert/soundAlert.ogg" type="audio/ogg">
+    Your browser does not support the audio element.
+</audio>
+<div class="combobox-content widget-scrollbar" style="height: 70vh; width: auto; overflow: auto">
+    <ul class="widget-tab" style="height: 100%">
+        <li class="tab-sheet active" style="width: 150px">
+            <div class="tab-title text-nowrap">
+                <i id="stockfilter" class="fas fa-filter"></i> @Localizer["Stock"]
+                <span class="countTypeOfAlert" id="stockAlertcount"></span>
+            </div>
+            <div class="tab-content widget-scrollbar" style="overflow-x: hidden">
+                <div id="notification"></div>
+            </div>
+        </li>
+        <li class="tab-sheet" style="width: 150px">
+            <div class="tab-title text-nowrap">
+                <i id="expireItemfilter" class="fas fa-filter"></i>
+                @Localizer["Expire Item"]
+                <span class="countTypeOfAlert" id="expireItemAlertcount"></span>
+            </div>
+            <div class="tab-content widget-scrollbar" style="overflow-x: hidden">
+                <div id="notificationExpireItem"></div>
+            </div>
+        </li>
+        <li class="tab-sheet" style="width: 150px">
+            <div class="tab-title text-nowrap">
+                <i id="duedatefilter" class="fas fa-filter"></i>
+                @Localizer["Due Date"]
+                <span class="countTypeOfAlert" id="dueDateAlertcount"></span>
+            </div>
+            <div class="tab-content widget-scrollbar" style="overflow-x: hidden">
+                <div id="notificationDueDate"></div>
+            </div>
+        </li>
+        <li class="tab-sheet" style="width: 150px">
+            <div class="tab-title text-nowrap">
+                <i id="cashoutfilter" class="fas fa-filter"></i>
+                @Localizer["Cash Out"]
+                <span class="countTypeOfAlert" id="cashoutAlertcount"></span>
+            </div>
+            <div class="tab-content widget-scrollbar" style="overflow-x: hidden">
+                <div id="notificationcashout"></div>
+            </div>
+        </li>
+    </ul>
+</div>
+<div id="container-notification-filter" class="wrap-table myt1 widget-scrollbar" style="height: 200px; overflow-x: hidden; display: none">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Option read"]</label>
+                <select class="form-control" id="readOption">
+                    <option value="read">@Localizer["Read"]</option>
+                    <option value="unread">@Localizer["Unread"]</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>@Localizer["Option Order"]</label>
+                <select class="form-control" id="orderOption">
+                    <option value="asorder">@Localizer["Ascending Order"]</option>
+                    <option value="deasorder">@Localizer["Descending Order"]</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,80 @@
+.dialog-box-background {
+    top: 55px !important;
+    left: 7%;
+}
+
+.dialog-box-background.top-right {
+    padding-right: 13.33px;
+}
+
+.dialog-box-background .dialog-box {
+    -webkit-user-select: none;
+    /* Chrome/Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE10+ */
+    user-select: none;
+}
+
+.dialog-box-background .dialog-box .content {
+    font-size: 1.1em;
+}
+
+.dialog-box-background .dialog-box .outer-content .wrap-table {
+    height: 330px;
+    overflow-y: auto;
+}
+
+.dialog-box-background .dialog-box .outer-content .wrap-table.fit-scroll-y {
+    width: 100%;
+}
+
+.dialog-box-background .dialog-box .outer-content table tr td input.form-control {
+    height: 30px;
+    padding: 5px !important;
+}
+
+.dialog-box-background .dialog-box .outer-content table tr td:nth-child(1) {
+    width: 15px;
+}
+
+.dialog-box-background .dialog-box .outer-content table tr th:last-child,
+.dialog-box-background .dialog-box .outer-content table tr td:last-child {
+    text-align: center !important;
+}
+
+.dialog-box-background .dialog-box .outer-content table tr td input[readonly].form-control {
+    background-color: transparent !important;
+    border: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.dialog-box-background .dialog-box .outer-content table tr td input[type=checkbox] {
+    width: 100%;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.dialog-box-background .dialog-box .outer-content .group-search-boxes .wrap-input.show {
+    width: 300px;
+}
+
+.dialog-box-background .dialog-box .outer-content table tr td input {
+    border: none;
+    height: 30px;
+    border-radius: 3px;
+    width: 100%;
+    padding: 5px;
+}
+
+.dialog-box-background .dialog-box .outer-content table tr td {
+    color: #333;
+}
+
+.dialog-box-background .dialog-box .outer-content table tr td>* {
+    vertical-align: middle;
+}

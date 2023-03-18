@@ -1,0 +1,187 @@
+﻿<style>
+    .loading {
+        width: 100vw;
+        height: 90%;
+        z-index: 9999999999999999999999999;
+        position: absolute;
+    }
+
+    .img-loading {
+        position: absolute;
+        top: 70%;
+        left: 38%;
+    }
+
+    .loadingitem {
+        position: absolute;
+        top: 46%;
+        left: 46%;
+    }
+
+</style>
+<div class="loading" id="loading" hidden>
+    <img class="img-loading" src="~/ajaxloader/loading.gif" />
+</div>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Mfr Serial No."]</label>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control font-size" id="mfr-serial-no" />
+        </div>
+        @*<div class="col-md-3">
+            <label class="font-size">@Localizer["Status"]</label>
+            </div>
+            <div class="col-md-3">
+            <select class="form-control font-size" id="status"></select>
+            </div>*@
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Serial Number"]</label>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control font-size" autocomplete="off" id="serial-number" />
+        </div>
+        @*<div class="col-md-3">
+            <label class="font-size">@Localizer["Previous SN"]</label>
+            </div>
+            <div class="col-md-3">
+            <input class="form-control font-size" id="previous-sn" />
+            </div>*@
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Plate Number"]</label>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control font-size" autocomplete="off" id="plate-number" />
+        </div>
+        @*<div class="col-md-3">
+        <label class="font-size">@Localizer["Previous SN"]</label>
+        </div>
+        <div class="col-md-3">
+        <input class="form-control font-size" id="previous-sn" />
+        </div>*@
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Item Code"]</label>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control font-size" id="item-code" />
+        </div>
+        @*<div class="col-md-3">
+            <label class="font-size">@Localizer["New SN"]</label>
+            </div>
+            <div class="col-md-3">
+            <input class="form-control font-size" id="new-sn" />
+            </div>*@
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Business Partner Code"]</label>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control font-size" id="bp-code" />
+        </div>
+        @*<div class="col-md-3">
+            <label class="font-size">@Localizer["Technician"]</label>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control font-size" id="technician" disabled />
+        </div>*@
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Business Partner Name"]</label>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control font-size" id="bp-name" />
+        </div>
+       @* <div class="col-md-3">
+            <label class="font-size">@Localizer["Territory"]</label>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control font-size" id="territory" disabled />
+        </div>*@
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Telephone No."]</label>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control font-size" id="telephone-no" />
+        </div>
+    </div>
+
+    <div class="row ">
+        <div class="col-md-12">
+            <ul class="widget-tab" style="height: 250px;">
+                <li class="tab-sheet active">
+                    <div class="tab-title">@Localizer["Service Calls"]</div>
+                    <div class="tab-content widget-scrollbar" style="overflow: auto">
+                        <div id="container-list-Service-calls" class="wrap-table myt1" style="height: 60vh">
+                            <table class="list-Service-calls">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center font-size">@Localizer["#"]</th>
+                                      @*  <th class="text-center font-size">@Localizer["Call Name"]</th>*@
+                                        <th class="text-center font-size">@Localizer["Creation Date"]</th>
+                                        <th class="text-center font-size">@Localizer["Object"]</th>
+                                        <th class="text-center font-size">@Localizer["Item Name"]</th>
+                                        <th class="text-center font-size">@Localizer["Item Code"]</th>
+                                        <th class="text-center font-size">@Localizer["Customer Name"]</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </li>
+                <li class="tab-sheet">
+                    <div class="tab-title">@Localizer["Service Contracts"]</div>
+                    <div class="tab-content widget-scrollbar" style="overflow: auto">
+                        <div id="container-list-Service-contracts" class="wrap-table myt1" style="height: 60vh">
+                            <table class="list-Service-contracts">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center font-size">@Localizer["#"]</th>
+                                        <th class="text-center font-size">@Localizer["Contract Name"]</th>
+                                        <th class="text-center font-size">@Localizer["State Date"]</th>
+                                        <th class="text-center font-size">@Localizer["End Date"]</th>
+                                        <th class="text-center font-size">@Localizer["Termination Date"]</th>
+                                        <th class="text-center font-size">@Localizer["Service Type"]</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </li>
+                <li class="tab-sheet">
+                    <div class="tab-title">@Localizer["Transactions"]</div>
+                    <div class="tab-content widget-scrollbar" style="overflow: auto">
+                        <div id="container-list-Service-transaction" class="wrap-table myt1" style="height: 60vh">
+                            <table class="list-Service-transaction">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center font-size">@Localizer["#"]</th>
+                                        <th class="text-center font-size">@Localizer["Source"]</th>
+                                        <th class="text-center font-size">@Localizer["Document No."]</th>
+                                        <th class="text-center font-size">@Localizer["Date"]</th>
+                                        <th class="text-center font-size">@Localizer["Warehouse Name"]</th>
+                                        <th class="text-center font-size">@Localizer["G/L Acct/BP Code"]</th>
+                                        <th class="text-center font-size">@Localizer["G/L Acct/BP Name"]</th>
+                                        <th class="text-center font-size">@Localizer["Direction"]</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="~/Admin/EquipmentCard/index.js"></script>

@@ -1,0 +1,139 @@
+﻿@model PriceLists
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<style>
+    .fa {
+        margin-right: 4px;
+    }
+
+    #stylei {
+        color: blue;
+    }
+
+    .modal-header {
+        background-color: blue;
+    }
+
+    .stylemodal {
+        color: white;
+    }
+
+    b {
+        color: white;
+        font-family: Arial;
+        margin-left: 10px;
+    }
+</style>
+<div class="card card-body">
+    <form asp-action="Edit">
+        <div class="row">
+            <div class="col-md-12">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ID" />
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Name"] :</label>
+                    <input asp-for="Name" class="input-box-kernel" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">@Localizer["Currency"] :</label>
+                    <select asp-for="CurrencyID" class="input-box-kernel" asp-items="ViewBag.CurrencyID" id="txtcurrency">
+                        <option value="0" selected disabled>--- Select ---</option>
+                    </select>
+                    <div class="text-danger">@ViewBag.Error</div>
+                </div>
+            </div>
+        </div>
+        <div class="row pull-left">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-kernel btn-xs">@Localizer["Save"]</button>
+                    <a asp-action="Index" class="btn btn-xs btn-kernel">@Localizer["Back"]</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="modal fade" id="ModalCurrency">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-plus-circle stylemodal"><b>@Localizer["Currency"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label">@Localizer["Symbol"] :</label>
+                                <input type="text" class="col-sm-9 form-control" id="txtsymbol" />
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 control-label">@Localizer["description"] :</label>
+                                <input type="text" class="col-sm-9 form-control" id="txtdescription" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs btn-kernel" onclick="AddCurrency()">@Localizer["Add"]</button>
+                    <button class="btn btn-xs btn-kernel" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function AddCurrency() {
+        var name = $("#txtsymbol").val();
+        var des = $("#txtdescription").val();
+        var cout = "";
+        if (name == 0) {
+            cout++;
+            $("#txtsymbol").css("border-color", "red");
+        } else {
+
+            $("#txtsymbol").css("border-color", "lightgrey");
+        }
+        if (des == 0) {
+            cout++;
+            $("#txtdescription").css("border-color", "red");
+        }
+        else {
+
+            $("#txtdescription").css("border-color", "lightgrey");
+        }
+        if (cout > 0) {
+            cout = 0;
+            return;
+        }
+        $.ajax({
+            url: "/Currency/AddCurrency",
+            type: "POST",
+            dataType: "Json",
+            data: { Symbol: name, Description: des },
+            complete: function (respones) {
+                $("#txtsymbol").val("");
+                $("#txtdescription").val("");
+                $("#txtcurrency option").remove();
+                $.ajax({
+                    url: "/Currency/GetCurrency",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var data = "";
+
+                        $.each(respones, function (i, item) {
+                            data +=
+                                '<option value="' + item.ID + '">' + item.Symbol + '</option>';
+                        });
+                        $("#txtcurrency").append(data);
+                    }
+                });
+            }
+        });
+    }
+</script>
+
+

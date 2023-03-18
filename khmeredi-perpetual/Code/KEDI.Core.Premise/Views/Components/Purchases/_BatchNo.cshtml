@@ -1,0 +1,259 @@
+﻿<style>
+    .__mt-1 {
+        margin-top: 0.25rem !important;
+    }
+
+    .batch-detail-container {
+        height: 25vh;
+        overflow: auto;
+        width: 100%;
+    }
+</style>
+@*Model Batches*@
+<div id="container-list-batch-pur" class="wrap-table widget-scrollbar" style="height: 430px; display: none; overflow: hidden">
+    <div style="overflow: auto; height: 40%;" class="widget-scrollbar">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="batch-lists-pur">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["No"]</th>
+                            <th>@Localizer["Doc. No."]</th>
+                            <th>@Localizer["Item Number"]</th>
+                            <th>@Localizer["Item Description"]</th>
+                            <th>@Localizer["Whse Code"]</th>
+                            <th>@Localizer["Whse Name"]</th>
+                            <th>@Localizer["Total Needed"]</th>
+                            <th>@Localizer["Total Created"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div style="overflow:auto; height: 40%;" class="widget-scrollbar">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="batch-detail-lists-pur">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["No"]</th>
+                            <th>@Localizer["Batch"]</th>
+                            <th>@Localizer["Qty"]</th>
+                            <th>@Localizer["Batch Attribute 1"]</th>
+                            <th>@Localizer["Batch Attribute 2"]</th>
+                            <th>@Localizer["Expiration Date"]</th>
+                            <th>@Localizer["Mfr Date"]</th>
+                            <th>@Localizer["Admission Date"]</th>
+                            <th>@Localizer["Location"]</th>
+                            <th>@Localizer["Details"]</th>
+                            <th>@Localizer["Unit Price"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="batchErrorMessage-pur"></div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <input class="btn btn-xs btn-kernel form-control"
+                       id="optionCreateBatch-pur"
+                       disabled
+                       value="@Localizer["Automatic Creation"]" />
+            </div>
+        </div>
+    </div>
+</div>
+@*Create Serial Option*@
+<div id="container-batch-option-pur"
+     class="wrap-table widget-scrollbar"
+     style="height: 430px; display: none; overflow: hidden">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-11">
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Item Code"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" readonly class="form-control" id="itemNumber-pur">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Item Name"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" readonly class="form-control" id="itemName-pur">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Warehouse"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" readonly class="form-control" id="whsCode-pur">
+                </div>
+            </div>
+            <br />
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Quantity"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" readonly class="form-control" id="qty-pur">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["No. of Batches"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="noOfqty-pur">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Batch"]</label>
+                </div>
+                <div class="col-md-4 __mt-1">
+                    <input type="text" readonly class="form-control" id="batch-pur">
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-xs btn-kernel ml-2" id="dialog-batch-pur">
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Batch Attribute 1"]</label>
+                </div>
+                <div class="col-md-4 __mt-1">
+                    <input type="text" readonly class="form-control" id="batchAttr2-pur">
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-xs btn-kernel ml-2" id="dialog-batchAttr2-pur">
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Batch Attribute 1"]</label>
+                </div>
+                <div class="col-md-4 __mt-1">
+                    <input type="text" readonly class="form-control" id="batchAttr1-pur">
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-xs btn-kernel ml-2" id="dialog-batchAttr1-pur">
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row batch-detail-container widget-scrollbar mt-1">
+        <div class="col-md-1"></div>
+        <div class="col-md-11" style="padding-left: 2.5rem !important;">
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["System No."]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" readonly class="form-control" id="sysno-pur">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Admission Date"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="admiddiondate-pur">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Manufacturing Date"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="mfrDate-pur">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Expiration Date"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="expDate-pur">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Location"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="location-pur">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Details"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="details-pur">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["System Number"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" readonly id="sysNum-pur">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-4">
+                    <label>@Localizer["Cost"]</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" readonly id="cost-pur">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Serial String Creation*@
+<div id="container-batch-string-option-pur"
+     class="wrap-table widget-scrollbar"
+     style="height: 430px; display: none; overflow: hidden">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="batch-option-pur">
+                <thead>
+                    <tr>
+                        <th>@Localizer["No"]</th>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["Type"]</th>
+                        <th>@Localizer["Operation"]</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <label>@Localizer["Final String"]</label>
+                <input class="form-control" readonly id="finalString-pur" />
+            </div>
+        </div>
+    </div>
+    <div class="autoStringCreationMessage-pur"></div>
+</div>
+<script src="~/Admin/Components/SerialsBatches/batchNo.js"></script>

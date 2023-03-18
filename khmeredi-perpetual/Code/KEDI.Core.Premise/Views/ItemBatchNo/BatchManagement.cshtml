@@ -1,0 +1,236 @@
+﻿@using KEDI.Core.Premise.Models.ServicesClass.SerialBatches.SerialNumbersManagement;
+
+<style>
+    .mtk-1 {
+        margin-top: 5px;
+    }
+
+    .font-size {
+        font-size: 13px;
+    }
+
+    .height-100 {
+        height: 80vh;
+    }
+
+    table thead tr th {
+        font-size: 12px;
+    }
+
+    .choose-item {
+        height: 10px !important;
+        line-height: 2 !important;
+        margin-top: -1px !important;
+    }
+</style>
+
+<div class="card body-card height-100 pl-1 pr-1">
+    <div class="row ml-3 mt-3">
+        <div class="col-md-3">
+            <button class="btn btn-xs btn-kernel" id="optionbtn">@Localizer["Options"]</button>
+        </div>
+    </div>
+
+    <br />
+
+    <div style="overflow: auto; height: 40%;" class="widget-scrollbar">
+        <div class="row">
+            <div class="col-md-12">
+                <u class="mb-1">@Localizer["Rows from Documents"]</u>
+                <table class="batch-no-doc">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["#"]</th>
+                            <th>@Localizer["Doc. No."]</th>
+                            <th>@Localizer["Item Name 1"]</th>
+                            <th>@Localizer["Item Name 2"]</th>
+                            <th>@Localizer["Item Code"]</th>
+                            <th>@Localizer["Whs Code"]</th>
+                            <th>@Localizer["Whs Name"]</th>
+                            @*<th>@Localizer["Qty"]</th>
+                                <th>@Localizer["Total Created"]</th>
+                                <th>@Localizer["Open Qty"]</th>*@
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div style="overflow:auto; height: 40%;" class="widget-scrollbar">
+        <div class="row">
+            <div class="col-md-12">
+                <u class="mb-1">@Localizer["Created Batch No"]</u>
+                <table class="created-batch-no">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["#"]</th>
+                            <th>@Localizer["Batch"]</th>
+                            <th>@Localizer["Batch Attribute 1"]</th>
+                            <th>@Localizer["Batch Attribute 2"]</th>
+                            <th>@Localizer["Expiration Date"]</th>
+                            <th>@Localizer["Admission Date"]</th>
+                            <th>@Localizer["Mfr Date"]</th>
+                            <th>@Localizer["Location"]</th>
+                            <th>@Localizer["Details"]</th>
+                            <th>@Localizer["UnitCost"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="batch-message"></div>
+    <div class="row">
+        <div class="col-md-1 ml-1">
+            <button class="btn btn-xs btn-kernel" id="save-data">@Localizer["Save"]</button>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-xs btn-kernel" id="cancel-data">@Localizer["Cancel"]</button>
+        </div>
+    </div>
+</div>
+<div id="optionfilter" style="display:none; height: 400px;">
+    <div class="row ml-2">
+        <div class="col-md-2 pl-2">
+            <label class="font-size">@Localizer["Operation"]</label>
+        </div>
+        <div class="col-md-4 mtk-1">
+            @*<div class="form-group">  *@
+            <select class="form-control font-size" id="operation" asp-items="Html.GetEnumSelectList<Operation>()"></select>
+            @*</div>*@
+        </div>
+        @*<div class="col-md-4">
+                <label id="desOp" class="font-size">@Localizer["Operation"]</label>
+            </div>*@
+    </div>
+    <div class="row ml-2">
+        <div class="col-md-2 pl-2">
+            <label class="font-size">@Localizer["Item Code"]</label>
+        </div>
+        <div class="col-md-4 mtk-1">
+            <input type="text" class="font-size form-control" id="itemCode" />
+        </div>
+        <div class="col-md-4 mtk-1">
+            <div class="btn btn-xs btn-kernel choose-item">
+                <i class="fas fa-arrow-circle-down fa-lg"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ml-1 mt-1">
+        <div class="col-md-12">
+            <ul class="widget-tab" style="height: 230px;">
+                <li class="tab-sheet active">
+                    <div class="tab-title">@Localizer["Purchasing - A/P"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="grpo">
+                            <label class="form-check-label font-size" for="grpo">
+                                @Localizer["Goods Receipt PO"]
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="apinvoice">
+                            <label class="form-check-label font-size" for="apinvoice">
+                                @Localizer["A/P Invoices"]
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="apcreditmemo">
+                            <label class="form-check-label font-size" for="apcreditmemo">
+                                @Localizer["A/P Credit Memos"]
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li class="tab-sheet">
+                    <div class="tab-title">@Localizer["Sales - A/R"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="tab-content widget-scrollbar">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="delivery">
+                                <label class="form-check-label font-size" for="delivery">
+                                    @Localizer["Deliveries"]
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="returndeliveries">
+                                <label class="form-check-label font-size" for="returndeliveries">
+                                    @Localizer["Return Deliveries"]
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="arinvoice">
+                                <label class="form-check-label font-size" for="arinvoice">
+                                    @Localizer["A/R Invoices"]
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="arcreditmemo">
+                                <label class="form-check-label font-size" for="arcreditmemo">
+                                    @Localizer["A/R Credit Memo"]
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="tab-sheet">
+                    <div class="tab-title">@Localizer["Inventory Posting"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="goodsIssue">
+                            <label class="form-check-label font-size" for="goodsIssue">
+                                @Localizer["Goods Issue"]
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="goodsReceipt">
+                            <label class="form-check-label font-size" for="goodsReceipt">
+                                @Localizer["Goods Receipt"]
+                            </label>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    @*<div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 pl-5">
+                        <label class="font-size">@Localizer["Date from"]</label>
+                    </div>
+                    <div class="col-md-5 mtk-1">
+                        <input type="date" id="date-from" class="font-size form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 pl-5">
+                        <label class="font-size">@Localizer["Date to"]</label>
+                    </div>
+                    <div class="col-md-5 mtk-1">
+                        <input type="date" id="date-to" class="font-size form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    <div class="err-succ-message"></div>
+</div>
+<div class="item-lists" style="display: none">
+    <table class="item-table">
+        <thead>
+            <tr>
+                <th>@Localizer["#"]</th>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Barcode"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script src="~/Admin/ItemManagement/ItemBatchNo/item-batch-no.js"></script>

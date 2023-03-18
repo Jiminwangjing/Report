@@ -1,0 +1,314 @@
+﻿@model CKBS.Models.ServicesClass.FinancailReportPrint.PrintTrialBalance
+@{
+    ViewData["Title"] = "Trial Balance";
+    Layout = "_Layout_Print";
+}
+<style>
+    .mt4 {
+        margin-top: 1.6rem !important;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+
+    .form-group .form-control {
+        height: 24px !important;
+    }
+
+    .mine-btn {
+        min-height: 18px;
+        min-width: 50px;
+        line-height: 5px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+        .mine-btn:focus {
+            outline: none;
+        }
+
+    .to-sh-posting-period {
+        pointer-events: none;
+    }
+
+    .flex {
+        display: flex;
+        justify-content: space-evenly;
+        margin-left: 13px;
+    }
+
+    .divFlex {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+        .divFlex > span:not(:first-child), .flex > h6:not(:first-child) {
+            text-align: center;
+        }
+
+    .flex0 {
+        flex: 45%;
+    }
+
+    .flex2 {
+        flex: 21.33%;
+    }
+
+    .flex1 {
+        flex: 25%;
+    }
+
+    .flex3 {
+        flex: 23.3%;
+    }
+
+    .flex4 {
+        flex: 19%;
+    }
+
+    .flextotal {
+        flex: 45%;
+    }
+
+    .flexTitleTotal {
+        flex: 40%;
+    }
+
+    .cus-gp, .ven-gp {
+        margin-left: -10px;
+        margin-top: -9px;
+    }
+
+    .mt__2 {
+        margin-top: -5px;
+    }
+
+    ul li {
+        list-style: none;
+    }
+
+    .title {
+        color: #B53471;
+        /*padding: 10px;*/
+    }
+
+    .group {
+        color: #12CBC4;
+        padding: 5px 0;
+    }
+
+    .groupTotal {
+        color: #12CBC4;
+        border-top: 1px solid #12CBC4;
+    }
+
+    .titleTotal {
+        padding-top: 10px;
+        color: #B53471;
+        border-top: 1px solid #B53471;
+    }
+
+    .form-group {
+        margin-top: -13px !important;
+    }
+
+    .font-size {
+        font-size: 12px;
+    }
+    .ml-20 {
+        margin-left: 20px;
+    }
+
+    @@media print {
+        .buttonHidden {
+            display: none;
+        }
+
+        @@page {
+            margin: 0.6cm;
+        }
+
+        body {
+            margin: 1.6cm;
+        }
+        .flexbp {
+            display: flex;
+            justify-content: space-between;
+            margin-left: 30px;
+        }
+    }
+
+    .hr {
+        display: block;
+        height: 1px;
+        background: transparent;
+        width: 100%;
+        border: none;
+        border-top: solid 1px black;
+    }
+    .flexbp{
+        display: flex;
+        justify-content: space-between;
+        margin-left: 22px;
+    }
+    .flexcom{
+        display: flex;
+    }
+    .companylogo{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+</style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+<div id="printtopdf" class="ml-20">
+    <div class="row">
+        <div class="col-md-4 mt5 buttonHidden">
+            <button class="btn btn-outline-primary" id="pdf">@Localizer["Generate To PDF"]</button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-6 col-sm-6">
+            <div class="flexcom">
+                <img class="companylogo" src="~/Images/icon/logo.png"/>
+                <h3 class="company">@Model.CompanyName</h3>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <h3 class="company">Trial Balance</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <hr class="hr" />
+            <div class="row">
+                <div class="col-md-4 col-sm-12">
+                    <div class="flexbp">
+                        <h4>Business Partner : </h4>
+                        <h3><b>From</b></h3>
+                        <h3><b>@Model.FromID</b></h3>
+                        <h3><b>To</b></h3>
+                        <h3><b>@Model.ToID</b></h3>
+                    </div>
+                </div>
+            </div>
+            <hr class="hr" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <hr class="hr" />
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="flexbp">
+                        <h4>Posting Date : </h4>
+                        <h3><b>From</b></h3>
+                        <h3><b>@Model.DateFrom</b></h3>
+                        <h3><b>To</b></h3>
+                        <h3><b>@Model.DateTo</b></h3>
+                        <h4>Currency : </h4>
+                        <h3><b>@Model.CurrencyName</b></h3>
+                    </div>
+                </div>
+            </div>
+            <hr class="hr" />
+        </div>
+    </div>
+    <div class="row m-0 bg-white">
+        <div id="tree-view" class="col-md-8 m-0 col-sm-12">
+            <div class="flex">
+                <h6 class="header flex0 font-size">@Localizer["Name"]</h6>
+                <h6 class="header flex2 font-size">@Localizer["Debit"]</h6>
+                <h6 class="header flex2 font-size">@Localizer["Credit"]</h6>
+                <h6 class="header flex2 font-size">@Localizer["Balance"]</h6>
+            </div>
+            <hr class="mt__2 hr" />
+            <div class="cus-gp"></div>
+            <div class="ven-gp"></div>
+        </div>
+    </div>
+</div>
+<div hidden id="datamodel">@Json.Serialize(Model.Model)</div>
+<script>
+    $(document).ready(function () {
+        const model = JSON.parse($("#datamodel").text());
+        let __CUSDATA = [];
+        let __VENDATA = [];
+        model.forEach(i => {
+            if (i.Type === "Customer")
+                __CUSDATA.push(i);
+            if (i.Type === "Vendor")
+                __VENDATA.push(i);
+        })
+        bindCusVen(".cus-gp", "Customer", "General Customer", __CUSDATA);
+        bindCusVen(".ven-gp", "Vendor", "Vendor", __VENDATA);
+        $("#pdf").click(function () {
+            window.print();
+        })
+        //format currency
+        function curFormat(value) {
+            return value.toFixed(3).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+        //Util functions
+        function isValidArray(values) {
+            return Array.isArray(values) && values.length > 0;
+        }
+        function bindCusVen(container, title, group, data) {
+            $(`${container} ul`).remove();
+            let curname = "";
+            let sumDebit = 0;
+            let sumCredit = 0;
+            let sumBalance = 0;
+            let _ul = $(`<ul></ul>`);
+            let _li = $(`<ul><li class='group font-size'>${group}</li><ul>`);
+            let _childUl = $(`<ul></ul>`);
+            if (isValidArray(data)) {
+                data.forEach(i => {
+                    curname = i.CurrencyName;
+                    let _div = $(`<div class='divFlex'></div>`);
+                    let _liChild = $(`<li></li>`)
+                    _div.append(`
+                        <span class='flex0 font-size'>${i.CurrencyName} ${i.Code}-${i.Name}</span> 
+                        <span class='flex1 font-size'>${i.CurrencyName} ${curFormat(i.Debit)}</span> 
+                        <span class='flex1 font-size'>${i.CurrencyName} ${curFormat(i.Credit)}</span> 
+                        <span class='flex1 font-size'>${i.CurrencyName} ${curFormat(i.Debit - i.Credit)}</span>
+                    `);
+                    sumCredit += i.Credit;
+                    sumBalance += (i.Debit - i.Credit);
+                    sumDebit += i.Debit;
+                    _liChild.append(_div);
+                    _childUl.append(_liChild);
+                });
+            }
+            let divTotal = $(`<div class='divFlex'> </div>`);
+            let divTotalTitle = $(`<div class='divFlex'> </div>`);
+            let liTotal = $(`<li> </li>`);
+            let liTotalTitle = $(`<li> </li>`);
+            divTotal.append(`
+            <span class='flextotal group font-size'>Total ${group}</span> 
+            <span class='flex3 sumDebit-${title} groupTotal font-size' data-sum='${sumDebit}'>${curname} ${curFormat(sumDebit)}</span> 
+            <span class='flex3 sumCredit-${title} groupTotal font-size' data-sum='${sumCredit}'>${curname} ${curFormat(sumCredit)}</span> 
+            <span class='flex3 sumBalance-${title} groupTotal font-size' data-sum='${sumBalance}'>${curname} ${curFormat(sumBalance)}</span>
+        `);
+            liTotal.append(divTotal)
+            _li.append(_childUl).append(liTotal);
+            _ul.append(`<li class='title font-size'>${title}</li>`).append(_li);
+            $(container).append(_ul);
+            // Total Title
+            let sumTitleDebit = parseFloat($(`.sumDebit-${title}`).data("sum"));
+            let sumTitleCredit = parseFloat($(`.sumCredit-${title}`).data("sum"));
+            let sumTitleBalance = parseFloat($(`.sumBalance-${title}`).data("sum"));
+            /*const sumTitleDebitEl = $()*/
+            divTotalTitle.append(`
+            <span class='flexTitleTotal title font-size'>Total ${title}</span> 
+            <span class='flex4 titleTotal font-size'>${curname} ${curFormat(sumTitleDebit)}</span> 
+            <span class='flex4 titleTotal font-size'>${curname} ${curFormat(sumTitleCredit)}</span> 
+            <span class='flex4 titleTotal font-size'>${curname} ${curFormat(sumTitleBalance)}</span>
+        `);
+            liTotalTitle.append(divTotalTitle)
+            _ul.append(liTotalTitle)
+        }
+    });
+</script>

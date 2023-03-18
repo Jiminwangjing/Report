@@ -1,0 +1,150 @@
+﻿@using KEDI.Core.Premise.Models.Services.CardMembers; 
+
+<style>
+    .form-group .form-control {
+        height: 25px !important;
+        z-index: 1;
+    }
+
+    .loading {
+        width: 100vw;
+        height: 76vh;
+        z-index: 9999999999999999999999999;
+        position: absolute;
+    }
+
+    .img-loading {
+        position: absolute;
+        top: 46%;
+        left: 38%;
+    }
+
+
+    .loadingitem {
+        position: absolute;
+        top: 46%;
+        left: 46%;
+    }
+</style>
+<div class="loading" id="loading" hidden>
+    <img class="img-loading" src="~/ajaxloader/loading.gif" />
+</div>
+<div class="card card-body">
+    <div class="row" hidden id="filter-block">
+        <div class="col-md-4">
+            <div class="form-group">
+                <select class="form-control" id="optionCreateCode">
+                    <option value="1" selected>@Localizer["Manual"]</option>
+                    <option value="2">@Localizer["Auto"]</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Name"]</label>
+                <input type="text" class="form-control" id="name" autocomplete="off" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Card Number"]</label>
+                <input type="text" class="form-control" id="code" autocomplete="off" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Card Type"]</label>
+                <select class="form-control" id="card-type" asp-items="@ViewBag.CardTypes">
+                    <option value="0" selected disabled>@Localizer["---Select---"]</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Valid Period"]</label>
+                <select class="form-control" id="card-expiry-period" asp-items="@Html.GetEnumSelectList<LengthExpireCard>()">
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Valid Date From"]</label>
+                <input type="date" class="form-control" id="exp-date-from" autocomplete="off" disabled/>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>@Localizer["Valid Date To"]</label>
+                <input type="date" class="form-control" id="exp-date-to" autocomplete="off" disabled/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>@Localizer["Discription"]</label>
+                <textarea type="text" class="form-control" style="height: 45px !important;" id="description" autocomplete="off"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group">
+                <label>@Localizer["Active"]</label>
+                <input type="checkbox" class="form-control" id="active" />
+            </div>
+        </div>
+        <div class="col-md-8"> </div>
+        <div class="col-md-2 mt-3">
+            <button class="btn btn-kernel btn-xs" type="button" id="choose-cus">@Localizer["Choose Customer"]</button>
+        </div>
+    </div>
+
+    <div class="wrap-table detail mt-2 widget-scrollbar bTable">
+        <table id="customer">
+            <tr>
+                <th>@Localizer["#"]</th>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Phone"]</th>
+                <th>@Localizer["Address"]</th>
+            </tr>
+        </table>
+    </div>
+    <div class="error"></div>
+    <div class="flex">
+        <button class="btn btn-kernel btn-xs" type="button" id="save">@Localizer["Save"]</button>
+        <a class="btn btn-kernel btn-xs" asp-action="Index" asp-controller="CardMember">@Localizer["Cancel"]</a>
+    </div>
+</div>
+
+<div class="customer-dlg" style="display: none">
+    <div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore font-size" id="txtSearch-cus" autocomplete="off" type="text" placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="customer-dlg">
+        <tr>
+            <th>@Localizer["#"]</th>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Phone"]</th>
+            <th>@Localizer["Address"]</th>
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+
+<input id="id" value="@Model" hidden />
+<script src="~/Admin/CardMember/registe-member.js"></script>

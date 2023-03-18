@@ -1,0 +1,237 @@
+﻿@using KEDI.Core.Premise.Models.ServicesClass.PrintBarcode;
+@model PrinterNameModel
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-2">
+            <div>@Localizer["Price List"]</div>
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" id="plId"
+                asp-items="@ViewBag.PriceList"></select>
+        </div>
+        <div class="col-md-2">
+            <div>@Localizer["Printer Name"]</div>
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" id="printer"
+                asp-items="@ViewBag.Printer"></select>
+        </div>
+        <div class="col-md-2">
+            <select id="setting">
+                <option value="1">Size:20 X 25</option>
+                <option value="2">Size:25 X 35</option>
+                <option value="3">Size:30 X 40</option>
+                <option value="4">Size PM:30 X 40</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-xs btn-kernel"
+                id="choose-items">@Localizer["Choose Item"]</button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-2"><div>Count</div></div>
+        <div class="col-md-2"><input type="number" value="1" id="count"
+                style="width:100%"></div>
+    </div>
+
+</div>
+
+<div class="item-lists" style="display: none">
+    <form asp-controller="BarcodeToService" asp-action="Index" method="post">
+        <input asp-for="Printername" id="printNameValue" hidden/>
+        <div class="flexbox space-between">
+            <div class="item group-search-boxes">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="search-barcode-items"
+                            autocomplete="off" type="text" placeholder="Search
+                            ...">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display:
+                        none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+            <button class="btn btn-kernel float-right m-2" type="submit">@Localizer["Apply"]</button>
+        </div>
+        <div class="wrap-table" style="display: none;">
+            <table id="list-barcode-items">
+                <thead>
+                    <tr>
+                        <th>@Localizer["#"]</th>
+                        <th>@Localizer["Code"]</th>
+                        <th>@Localizer["Barcode"]</th>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["UnitPrice"]</th>
+                        <th>@Localizer["Count"]</th>
+                        <th>@Localizer["Choose"]</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+    </form>
+    <div class="wrap-table widget-scrollbar" style="height: 70vh;">
+        <table class="item-table">
+            <thead>
+                <tr>
+                    <th>@Localizer["#"]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Barcode"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["UnitPrice"]</th>
+                    <th>@Localizer["Choose"]</th>
+                    <th id="col-to-append-after-detail">@Localizer["Count"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#printNameValue").val($("#printer").val());
+        $("#printer").change(function () {
+            $("#printNameValue").val(this.value);
+        })
+        $("#choose-items").click(function () {
+            const itemDialog = new DialogBox({
+                content: {
+                    selector: ".item-lists"
+                },
+                caption: "Item Master Data",
+                type: "ok",
+                button: {
+                    ok: { text: "Close" }
+                }
+            });
+
+            itemDialog.invoke(function () {
+                let $chosenItems = ViewTable({
+                    keyField: "LineID",
+                    selector: "#list-barcode-items",
+                    model: {
+                        ItemPrintBarcodes: [],
+                        Printname: "",
+                    },
+                    paging: {
+                        enabled: false
+                    },
+                });
+
+                let itemTable = ViewTable({
+                    keyField: "LineID",
+                    selector: ".item-table",
+                    dataSynced: false,
+                    indexed: true,
+                    paging: {
+                        pageSize: 20,
+                        enabled: true
+                    },
+                    dynamicCol: {
+                        afterAction: true,
+                        headerContainer: "#col-to-append-after-detail",
+                    },
+                    visibleFields: ["ItemCode", "ItemBarcode", "ItemName", "UnitPrice", "Count", "IsSelected"],
+                    columns: [
+                        {
+                            name: "IsSelected",
+                            template: "<input type='checkbox' />",
+                            on: {
+                                "change": function (e) {
+                                    const active = $(this).prop("checked") ? true : false;
+                                    updateData(itemTable.yield(), "LineID", e.key, "IsSelected", active);
+                                    var chosens = $.grep(itemTable.yield(), function (item) {
+                                        return item.IsSelected;
+                                    });
+                                    $chosenItems.bindRows(chosens);
+                                }
+                            }
+                        },
+                        {
+
+                            name: "Count",
+                            template: "<input type='text'>",
+                            on: {
+                                "keyup": function (e) {
+                                    $(this).asNumber();
+                                    updateData($chosenItems.yield(), "LineID", e.key, "Count", this.value);
+                                    $chosenItems.updateColumn(e.key, "Count", this.value);
+                                }
+                            }
+                        },
+                        {
+                            name: "AddictionProps",
+                            valueDynamicProp: "ValueName",
+                            dynamicCol: true,
+                        }
+                    ]
+                });
+                const plId = $("#plId").val();
+                const count = $("#count").val();
+                const setting = $("#setting").val();
+                $.get(
+                    "/Printbarcode/GetItemMasterData",
+                    { plId, count, setting },
+                    function (res) {
+                        itemTable.clearHeaderDynamic(res[0].AddictionProps)
+                        itemTable.createHeaderDynamic(res[0].AddictionProps)
+                        itemTable.bindRows(res);
+                        searchBarcodeItems(itemTable, $chosenItems, res);
+                    });
+            });
+        })
+        function updateData(data, key, keyValue, prop, propValue) {
+            if (data.length > 0) {
+                data.forEach(i => {
+                    if (i[key] == keyValue) {
+                        i[prop] = propValue;
+                    }
+                })
+            }
+        }
+
+        function searchBarcodeItems($listview, $chosenListview, items) {
+            $("#search-barcode-items").on("keyup", function () {
+                var _items = [];
+                _items = searchItems(items, this.value);
+                $listview.clearRows();
+                $listview.bindRows(_items);
+
+                var chosens = $.grep(_items, function (item) {
+                    return item.IsSelected;
+                });
+                $chosenListview.clearRows();
+                $chosenListview.bindRows(chosens);
+            });
+        }
+
+        function loadScreen(enabled = true) {
+            if (enabled) {
+                $(".widget-loadscreen").show();
+            } else {
+                $(".widget-loadscreen").hide();
+            }
+        }
+
+        function searchItems(items, keyword = "") {
+            let input = keyword.replace(/\s+/g, '');
+            let regex = new RegExp(input, "ig");
+            var filtereds = $.grep(items, function (item, i) {
+                var nameEn = isEmpty(item.ItemName2) ? "" : item.ItemName2.replace(/\s+/g, '');
+                return regex.test(item.ItemName.replace(/\s+/g, ''))
+                    || regex.test(nameEn)
+                    || regex.test(item.ItemCode.replace(/\s+/g, ''))
+                    || regex.test(item.UnitPrice.toString().replace(/\s+/g, ''))
+                    || regex.test(item.ItemBarcode);
+            });
+            return filtereds;
+        }
+
+        function isEmpty(value) {
+            return value == undefined || value == null || value == "";
+        }
+    });
+</script>

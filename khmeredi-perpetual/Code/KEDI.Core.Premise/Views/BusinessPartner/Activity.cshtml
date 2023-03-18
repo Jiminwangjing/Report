@@ -1,0 +1,2001 @@
+﻿@using KEDI.Core.Premise.Models.Services.Activity;
+<style>
+    .loading {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+        position: absolute;
+    }
+
+
+</style>
+<div id="data-invoice" hidden>@Json.Serialize(Model)</div>
+<div class="loading" id="loading" hidden>
+    <img class="img-loading" src="~/ajaxloader/loading.gif" />
+</div>
+<div class="card card-body">
+    <div class="row" style="display:flex;justify-content:flex-end">
+        <div class="col-md-6 " style="display:flex;justify-content:flex-end">
+            <a id="btn-createnew" href="/BusinessPartner/Activity" class="btn btn-kernel btn-xs mb-2 mr-2 " hidden><i class="fas fa-plus-circle"></i> @Localizer["Create New"]</a>
+            @*<a href="/BusinessPartner/Calandar" id="datacalandar">
+                    <img style="width:36px" src="~/Images/icon/calandar-img.png" />
+                </a>*@
+            <button id="btn-find" class="btn btn-kernel btn-xs mb-2 ">@Localizer["Find"]</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-4">
+                    <label>@Localizer["Activity Type"]</label>
+
+                </div>
+                <div class="col-md-8 cursor d-flex" id="show-list-cus">
+                    <select class="form-control" id="listofactivity" asp-items="@Html.GetEnumSelectList<KEDI.Core.Premise.Models.Services.Activity.Activities>()">
+                        <option value=0 disabled selected>---select----</option>
+
+                    </select>
+
+                </div>
+                <div class="col-md-4">
+                    <label>@Localizer["Activity"]</label>
+                </div>
+                <div class="col-md-8 d-flex">
+                    <select id="listoftype" class="form-control font-size" asp-items="ViewBag.Types">
+                        <option value="0" selected></option>
+                    </select>
+                    <div title="List Customer" id="add-new-list-type" class="input-group-append">
+                        <i class="fas fa-plus-circle text-info input-group-icon" style="font-size:20px"></i>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label>@Localizer["Subject"]</label>
+                </div>
+                <div class="col-md-8 d-flex">
+                    <select id="listofsubject" class="form-control font-size" asp-items="ViewBag.Subject">
+                        <option value="0" disabled selected></option>
+                    </select>
+                    <div title="List Customer" id="add-new-list-subject" class="input-group-append">
+                        <i class="fas fa-plus-circle text-info input-group-icon" style="font-size:20px"></i>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label>@Localizer["Assigned To"]</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="empassigned" class=" font-size" style="width:140px" asp-items="@Html.GetEnumSelectList<AssignedTo>()">
+                        <option value=0>@Localizer["---select---"]</option>
+                    </select>
+
+                </div>
+                <div class="col-md-4 ">
+                    <select id="listdataassigned" asp-items="ViewBag.Emp" style="width:80%" class=" font-size">
+                        <option value=0></option>
+                    </select>
+
+                </div>
+                <div class="col-md-4">
+                    <label>@Localizer["Assigned By"]</label>
+                </div>
+                <div class="col-md-8">
+                    <select id="assbyto" style="width:100%" asp-items="ViewBag.Emp">
+                        <option value=0>@Localizer["---select---"]</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label><input type="checkbox" id="personal" /></label>
+                    <label>@Localizer["Personal"]</label>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <label>@Localizer["Number."]</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" id="next_number" class="form-control" autocomplete="off" readonly />
+                </div>
+                <div class="col-md-4">
+                    <label>@Localizer["BPCode"]</label>
+                </div>
+                <div class="col-md-8 d-flex">
+                    <input type="text" readonly id="bpcode" class="form-control font-size" />
+                    <div title="List Customer" id="show-list-bp" class="input-group-append">
+                        <i class="fas fa-plus-circle text-info input-group-icon " style="font-size:17px;margin-top:2px"></i>
+                    </div>
+                    <input type="text" id="bptype" readonly class="form-control font-size" />
+
+                </div>
+                <div class="col-md-4">
+                    <label>@Localizer["BPName"]</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" readonly id="bpname" class="form-control font-size" />
+                </div>
+
+                <div class="col-md-4">
+                    <label>@Localizer["Contact Person"]</label>
+                </div>
+                <div class="col-md-8" style="position:relative;">
+                    @*<input class="form-control font-size" id="contactperson" readonly/>*@
+                    <select id="contactperson" style="width:100%"></select>
+
+                </div>
+                <div class="col-md-4">
+                    <label>@Localizer["TelePhone No."]</label>
+                </div>
+                <div class="col-md-8" style="position:relative;">
+                    <select id="telno" style="width:100%"></select>
+
+                    @*<input type="text" id="telno" class="form-control" />*@
+                    @* <input type="text" id="telno" class="form-control" readonly  onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" />*@
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class=" mt-2 col-md-12">
+            <ul class="widget-tab">
+                @*//tap partner*@
+                <li class="tab-sheet active">
+                    <div class="tab-title">@Localizer["General"]</div>
+                    <div class="tab-content " style="height:auto;overflow:hidden">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row d-flex  ">
+                                    <div class="col-md-4">
+                                        <label>@Localizer["Remark."]</label>
+                                    </div>
+                                    <div class="col-md-8 " style="position:relative;">
+                                        <input type="text" id="remark" class="form-control " />
+                                    </div>
+
+                                </div>
+                                @*<div class="row d-flex  ">
+                                        <div class="col-md-4">
+                                            <label>@Localizer["Start Time"]</label>
+                                        </div>
+                                        <div class="col-md-4 " style="position:relative;">
+                                            <input type="date" id="starttime" class="form-control " style="width:160px" />
+
+                                        </div>
+                                        <div class="col-md-4 " style="position:relative;">
+                                            <input type="time" id="startclock" class="form-control " />
+                                        </div>
+                                    </div>*@
+                                <div class="row d-flex  ">
+                                    <div class="col-md-4">
+                                        <label>@Localizer["Start Time"]</label>
+                                    </div>
+                                    <div class="col-md-8 " style="position:relative;">
+                                        <input type="datetime-local" style="width:100%" id="starttime" name="meeting-time">
+
+                                    </div>
+                                </div>
+                                <div class="row d-flex  ">
+                                    <div class="col-md-4">
+                                        <label>@Localizer["End Time"]</label>
+                                    </div>
+                                    <div class="col-md-8 " style="position:relative;">
+                                        <input style="width:100%" type="datetime-local" id="endtime" name="meeting-time">
+                                    </div>
+
+                                </div>
+
+                                @*<div class="row d-flex  ">
+                                        <div class="col-md-4">
+                                            <label>@Localizer["End Time"]</label>
+                                        </div>
+                                        <div class="col-md-4 ">
+                                            <input type="date" class="form-control " id="endtime" style="width:160px" />
+                                        </div>
+                                        <div class="col-md-4 " style="position:relative;">
+                                            <input type="time" id="endclock" class="form-control " />
+                                        </div>
+                                    </div>*@
+                                <div class="row d-flex  ">
+                                    <div class="col-md-4">
+                                        <label>@Localizer["Duration "]</label>
+                                    </div>
+                                    <div class="col-md-8 ">
+                                        <input type="text" class="form-control " disabled id="durr" />
+                                    </div>
+                                </div>
+                                <div class="row d-flex ">
+                                    <div class="col-md-4">
+                                        <label>@Localizer["Status "]</label>
+                                    </div>
+                                    <div class="col-md-8 d-flex">
+                                        <select id="listofstatus" class="form-control" asp-items="ViewBag.Status">
+                                            <option value="0"></option>
+                                        </select>
+                                        <div title="List Customer" id="add-new-list-status" class="input-group-append">
+                                            <i class="fas fa-plus-circle text-info input-group-icon " style="font-size:20px;margin-top:3px"></i>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row d-flex mt-3">
+                                    <div class="col-md-4">
+                                        <label>@Localizer["Recurrence "]</label>
+                                    </div>
+                                    <div class="col-md-8 ">
+                                        <select id="listorecurr" class="form-control" @*asp-items="Model.Recurrence"*@>
+                                            <option value=""></option>
+                                            <option value="None">None</option>
+                                            <option value="Daily">Daily</option>
+                                            <option value="Weekly">Weekly</option>
+                                            <option value="Monthly">Monthly</option>
+                                            <option value="Annualy">Annualy</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="row " hidden id="daily">
+                                    <div class="col-md-4 ">
+                                        <label>@Localizer["Repeat Every  "]</label>
+                                    </div>
+                                    <div class="col-md-8 mt-2">
+                                        <input type="checkbox" id="dailycheckboxday" />
+                                        <input type="text" style="width:73%" id="dailynumofday" /><span>Day(s)</span>
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-8 mt-2" id="everday">
+                                        <input type="checkbox" id="repeateveryweek" />
+                                        <label>@Localizer[" Every Day "]</label>
+                                    </div>
+                                </div>
+                                @*//===========end daily=====*@
+                                <div class="row" hidden id="weekly">
+                                    <div class="col-md-12 mt-2">
+                                        <label>@Localizer["Repeat on"]</label>
+                                        <input type="checkbox" id="mon" style="width:3%" />
+                                        <label>@Localizer[" Mon "]</label>
+
+                                        <input type="checkbox" id="tue" style="width:3%">
+                                        <label>@Localizer[" Tue "]</label>
+
+                                        <input type="checkbox" id="wed" style="width:3%">
+                                        <label>@Localizer[" Wed "]</label>
+
+                                        <input type="checkbox" id="thu" style="width:3%" />
+                                        <label>@Localizer[" Thu "]</label>
+
+                                        <input type="checkbox" id="fri" style="width:3%" />
+                                        <label>@Localizer[" Fri "]</label>
+
+                                        <input type="checkbox" id="sat" style="width:3%" />
+                                        <label>@Localizer[" Sat "]</label>
+
+                                        <input type="checkbox" id="sun" style="width:3%" />
+                                        <label>@Localizer[" Sun "]</label>
+                                    </div>
+
+                                </div>
+                                @*//========monthly====*@
+                                <div class="row" hidden id="monthly">
+                                    <div class="col-md-4 ">
+                                        <label>@Localizer["Repeat Every  "]</label>
+                                    </div>
+                                    <div class="col-md-8 mt-2">
+                                        <input type="text" style="width:73%" id="repeatNumOfmonths" /><span>Months(s)</span>
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-8 mt-2" id="everday">
+
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label>@Localizer["Repeat on"]</label>
+                                    </div>
+                                    <div class="col-md-8 mt-2">
+                                        <input type="checkbox" id="checkday" />
+                                        <label>@Localizer[" Day "]</label>
+                                        <input type="text" id="numdays" style="width:57%" />
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-8 mt-2">
+                                        <input type="checkbox" id="checkrepeat" />
+                                        <select style="width:43%" id="selectnumrepeat">
+                                            <option value="First">First</option>
+                                            <option value="Second">Second</option>
+                                            <option value="Third">Third</option>
+                                            <option value="Fourth">Fourth</option>
+                                            <option value="Last">Last</option>
+                                        </select>
+                                        <select style="width:43%" id="selectdayinmonthly">
+                                            <option value="Day">Day</option>
+                                            <option value="Weekday">Weekday</option>
+                                            <option value="Weekendday">Weekend Day</option>
+                                            <option value="Sunday">Sunday</option>
+                                            <option value="Monday">Monday</option>
+                                            <option value="Tuesday">Tuesday</option>
+                                            <option value="Wednesday">Wednesday</option>
+                                            <option value="Thursday">Thursday</option>
+                                            <option value="Friday">Friday</option>
+                                            <option value="Saturday">Saturday</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                                @*//=====yearly========*@
+
+                                <div class="row" hidden id="yearly">
+                                    <div class="col-md-4 ">
+                                        <label>@Localizer["Repeat Every  "]</label>
+                                    </div>
+                                    <div class="col-md-8 mt-2">
+                                        <input type="text" style="width:73%" id="repeatofNumAnnualy" /><span>Yearly(s)</span>
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-8 mt-2" id="everday">
+
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label>@Localizer["Repeat on"]</label>
+                                    </div>
+                                    <div class="col-md-8 mt-2">
+                                        <input type="checkbox" id="checkannulaly" />
+                                        <select style="width:43%" id="monthinannualy">
+                                            <option value="January">January</option>
+                                            <option value="February">February</option>
+                                            <option value="March">March</option>
+                                            <option value="April">April</option>
+                                            <option value="May">May</option>
+                                            <option value="June">June</option>
+                                            <option value="July">July</option>
+                                            <option value="August">August</option>
+                                            <option value="September">September</option>
+                                            <option value="October">October</option>
+                                            <option value="November">November</option>
+                                            <option value="December">December</option>
+                                        </select>
+                                        <input style="width:43%" id="numofmonthinannualy">
+                                    </div>
+                                    <div class="col-md-4">
+                                    </div>
+                                    <div class="col-md-8 mt-2">
+                                        <input type="checkbox" id="checkboxnumofdayannualy" />
+                                        <select id="selectnumofannualy">
+                                            <option value="First">First</option>
+                                            <option value="Second">Second</option>
+                                            <option value="Third">Third</option>
+                                            <option value="Fourth">Fourth</option>
+                                            <option value="Last">Last</option>
+                                        </select>
+                                        <select style="width:25%" id="selectweekinannualy">
+                                            <option value="Day">Day</option>
+                                            <option value="Weekday">Weekday</option>
+                                            <option value="Weekendday">Weekend Day</option>
+                                            <option value="Sunday">Sunday</option>
+                                            <option value="Monday">Monday</option>
+                                            <option value="Tuesday">Tuesday</option>
+                                            <option value="Wednesday">Wednesday</option>
+                                            <option value="Thursday">Thursday</option>
+                                            <option value="Friday">Friday</option>
+                                            <option value="Saturday">Saturday</option>
+                                        </select>
+                                        <label>Of</label>
+                                        <select style="width:20%" id="selectmonthsinannualy">
+                                            <option value="January">January</option>
+                                            <option value="February">February</option>
+                                            <option value="March">March</option>
+                                            <option value="April">April</option>
+                                            <option value="May">May</option>
+                                            <option value="June">June</option>
+                                            <option value="July">July</option>
+                                            <option value="August">August</option>
+                                            <option value="September">September</option>
+                                            <option value="October">October</option>
+                                            <option value="November">November</option>
+                                            <option value="December">December</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="foot" hidden>
+                                    <div class="col-md-4">
+                                        <label>@Localizer[" Rang"]</label>
+
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div> <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <label>@Localizer["Start"]</label>
+
+                                    </div>
+                                    <div class="col-md-8 ">
+                                        <input type="datetime-local" id="start" readonly class="form-control" />
+                                    </div>
+
+                                    <div class="col-md-4 ">
+                                        <label>@Localizer["End"]</label>
+
+                                    </div>
+                                    <div class="col-md-8 mt-2">
+                                        <input type="checkbox" id="checkboxend" />
+                                        <label>@Localizer["No End Date"]</label>
+                                    </div>
+
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-8 mt-2">
+                                        <input type="checkbox" id="checkafter" />
+                                        <label>@Localizer[" After "]</label>
+                                        <input type="text" id="numafter" style="width:30%" />
+                                        <span>Ocurrencence(s)</span>
+                                    </div>
+
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-8 mt-2">
+                                        <input type="checkbox" id="checkby" />
+                                        <label>@Localizer[" By "]</label>
+                                        <input type="date" id="numdate" style="width:75%" />
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5">
+                                <div class="row d-flex ">
+                                    <div class="col-md-5">
+                                        <label>@Localizer["Priority "]</label>
+                                    </div>
+                                    <div class="col-md-7 ">
+                                        <select id="listofpri" class="form-control" @*asp-items="Model.Priorities"*@>
+                                            <option value=""></option>
+                                            <option value="Low">Low</option>
+                                            <option value="Normal">Medium</option>
+                                            <option value="Hight">High</option>
+                                            <option value="Critical">Critical</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="row d-flex ">
+                                    <div class="col-md-5">
+                                        <label>@Localizer["Meeting Location "]</label>
+                                    </div>
+                                    <div class="col-md-7 d-flex">
+                                        <select id="listoflocation" class="form-control" asp-items="ViewBag.Location">
+                                            <option value="0"></option>
+                                        </select>
+                                        <div title="List Customer" id="add-new-list-location" class="input-group-append">
+                                            <i class="fas fa-plus-circle text-info input-group-icon " style="font-size:20px;margin-top:3px"></i>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </li>
+
+
+            </ul>
+        </div>
+    </div>
+    <div class="row" style="margin-top:35%">
+        <div class="col-md-12">
+            <div id="error-summary"></div>
+            <button id="submit-data" class="btn btn-kernel increanum" btn-xs">@Localizer["Add"]</button>
+            <button id="update-data" class="btn btn-kernel btn-xs" hidden>@Localizer["Update"]</button>
+            <a asp-action="Activity" asp-controller="BusinessPartner" class="btn btn-kernel btn-xs">@Localizer["Cancel"]</a>
+        </div>
+    </div>
+</div>
+
+
+@*//==================model box of add list tYPE===============*@
+<div id="add-type" style="display: none">
+    <div>
+        <table id="list-type">
+            <thead>
+                <tr>
+                    <th><i id="create-level-description" class="fas fa-plus-square" style="color:sandybrown;"></i></th>
+                    <th style="width:70px">@Localizer["Name"]</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+</div>
+@*//==================model box of add list Subject===============*@
+<div id="add-subject" style="display:none">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-list-subject" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="list-subject">
+            <thead>
+                <tr>
+                    <th><i id="create-level-description" class="fas fa-plus-square" style="color:sandybrown;"></i></th>
+                    <th style="width:70px">Name</th>
+                    <th style="width:70px">Related Type</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+</div>
+@*//==================model box of add list status===============*@
+<div id="add-status" style="display:none;  ">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-list-status" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="list-status">
+            <thead>
+                <tr>
+                    <th><i id="create-level-description" class="fas fa-plus-square" style="color:sandybrown;"></i></th>
+                    <th style="width:70px">Status</th>
+                    <th>Color</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+</div>
+@*//==================model box of add list location===============*@
+<div id="add-location" style="display:none;">
+    <div class="group-search-boxes mb-1" style="display:flex;justify-content:flex-end ">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-list-location" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div>
+        <table id="list-location">
+            <thead>
+                <tr>
+                    <th><i id="create-level-description" class="fas fa-plus-square" style="color:sandybrown;"></i></th>
+                    <th style="width:70px">Location</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+</div>
+@*//MODEL BOX BP*@
+<div class="bp_containers" style="display: none;">
+
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-bus" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+
+    <table id="list-bp" class="mt-3">
+        <tr>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Type"]</th>
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+   
+</div>
+
+
+
+
+@*//================Tap==================*@
+<input id="generalid" hidden />
+<input id="activityid" hidden />
+<input id="bpid" hidden />
+<input id="typeid" hidden />
+<div hidden id="model-data">@Json.Serialize(Model)</div>
+<script>
+
+
+
+
+    let __setupactivity = [];
+    let __setuptype = [];
+    let __setupsubject = [];
+    let __setupstatus = [];
+    let __setuplocation = [];
+    var valtype;
+    $(document).ready(function () {
+
+          
+
+
+        $("#search-bus").on("keyup", function (e) {
+            var value = $(this).val().toLowerCase();
+            $("#list-bp tr:not(:first-child)").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $("#starttime").change(function () {
+            time(this.value, $("#endtime").val());
+        })
+        $("#endtime").change(function () {
+            time($("#starttime").val(), this.value);
+        })
+        function time(startDate, endDate) {
+            const sd = moment(startDate);
+            const ed = moment(endDate);
+            var duration = moment.duration(ed.diff(sd));
+            var days = duration.asDays();
+            var hours = duration.asHours();
+            var mins = duration.asMinutes();
+            if (days < 1 && hours < 1) {
+                $('#durr').val(mins.toFixed(5) + "  Minutes");
+            } else if (days < 1 && hours >= 1) {
+                $('#durr').val(hours.toFixed(5) + "  Hours");
+            } else if (days >= 1) {
+                $('#durr').val(days.toFixed(5) + "  Days");
+            }
+        }
+
+        let _data = JSON.parse($("#model-data").text());
+        const disSetting = _data.GeneralSetting;
+        const num = NumberFormat({
+            decimalSep: disSetting.DecimalSeparator,
+            thousandSep: disSetting.ThousandsSep
+        });
+        if (_data.Number > 0) {
+            $("#submit-data").prop("hidden", true);
+            $("#update-data").prop("hidden", false);
+            $("#btn-createnew").prop("hidden", false);
+            bindActivity(_data.Number);
+        }
+        $("#listorecurr").change(function () {
+            if (this.value == "None") {
+                $("#daily").attr("hidden", "hidden");
+                $("#everday").attr("hidden", "hidden");
+                $("#foot").attr("hidden", "hidden");
+                $("#weekly").attr("hidden", "hidden");
+                $("#yearly").attr("hidden", "hidden");
+                $("#monthly").attr("hidden", "hidden");
+            }
+            else if (this.value == "Daily") {
+
+                $("#daily").removeAttr("hidden", "hidden");
+                $("#everday").removeAttr("hidden", "hidden");
+                $("#foot").removeAttr("hidden", "hidden");
+                $("#weekly").attr("hidden", "hidden");
+                $("#yearly").attr("hidden", "hidden");
+                $("#monthly").attr("hidden", "hidden");
+            }
+            else if (this.value == "Weekly") {
+
+                $("#everday").attr("hidden", "hidden");
+                $("#weekly").removeAttr("hidden", "hidden")
+                $("#foot").removeAttr("hidden", "hidden");
+                $("#yearly").attr("hidden", "hidden")
+                $("#monthly").attr("hidden", "hidden")
+                $("#daily").attr("hidden", "hidden")
+            }
+            else if (this.value == "Monthly") {
+
+                $("#everday").attr("hidden", "hidden");
+                $("#weekly").attr("hidden", "hidden");
+                $("#foot").removeAttr("hidden", "hidden");
+                $("#yearly").attr("hidden", "hidden");
+                $("#monthly").removeAttr("hidden", "hidden");
+                $("#daily").attr("hidden", "hidden");
+            }
+            else if (this.value == "Annualy") {
+
+                $("#monthly").attr("hidden", "hidden");
+                $("#weekly").attr("hidden", "hidden");
+                $("#foot").removeAttr("hidden", "hidden");
+                $("#yearly").removeAttr("hidden", "hidden");
+                $("#daily").attr("hidden", "hidden");
+                $("#everday").attr("hidden", "hidden");
+
+            }
+        })
+        $("#dailycheckboxday").click(function () {
+            if ($(this).prop("checked")) {
+                $("#repeateveryweek").prop("checked", false);
+                generalObj.RepeatEveryReCurr = true;
+                generalObj.RepeatEveryWeek = false;
+            } else {
+                generalObj.RepeatEveryReCurr = false;
+            }
+        })
+        $("#repeateveryweek").click(function () {
+            if ($(this).prop("checked")) {
+                $("#dailycheckboxday").prop("checked", false);
+                generalObj.RepeatEveryReCurr = false;
+                generalObj.RepeatEveryWeek = true;
+            } else {
+                generalObj.RepeatEveryWeek = false;
+            }
+        })
+        //========
+        $("#checkboxend").click(function () {
+            if ($(this).prop("checked")) {
+                $("#checkafter").prop("checked", false);
+                $("#checkby").prop("checked", false);
+                generalObj.After = false;
+                generalObj.By = false;
+                generalObj.NoEndDate = true;
+                $("#numafter").attr("disabled", "disabled");
+                $("#numdate").attr("disabled", "disabled");
+            } else {
+                generalObj.NoEndDate = false;
+            }
+        })
+
+        $("#checkafter").click(function () {
+            if ($(this).prop("checked")) {
+
+                $("#checkboxend").prop("checked", false);
+                $("#checkby").prop("checked", false);
+                generalObj.After = true;
+                generalObj.By = false;
+                generalObj.NoEndDate = false;
+                $("#numafter").removeAttr("disabled", "disabled");
+                $("#numdate").attr("disabled", "disabled");
+
+            } else {
+                generalObj.After = false;
+            }
+        })
+        $("#checkby").click(function () {
+            if ($(this).prop("checked")) {
+                $("#checkboxend").prop("checked", false);
+                $("#checkafter").prop("checked", false);
+                generalObj.After = false;
+                generalObj.By = true;
+                generalObj.NoEndDate = false;
+                $("#numafter").attr("disabled", "disabled");
+                $("#numdate").removeAttr("disabled", "disabled");
+
+            } else {
+                generalObj.By = false;
+            }
+        })
+
+        $("#mon").click(function () {
+            if ($(this).prop("checked")) {
+                $("#thu").prop("checked", false);
+                $("#tue").prop("checked", false);
+                $("#wed").prop("checked", false);
+                $("#fri").prop("checked", false);
+                $("#sat").prop("checked", false);
+                $("#sun").prop("checked", false);
+                generalObj.Mon = true;
+                generalObj.Thu = false;
+                generalObj.Fri = false;
+                generalObj.Sun = false;
+                generalObj.Tue = false;
+                generalObj.Sat = false;
+                generalObj.Wed = false;
+
+
+            } else {
+                generalObj.Mon = false;
+            }
+        })
+        $("#tue").click(function () {
+            if ($(this).prop("checked")) {
+                $("#mon").prop("checked", false);
+                $("#thu").prop("checked", false);
+                $("#wed").prop("checked", false);
+                $("#fri").prop("checked", false);
+                $("#sat").prop("checked", false);
+                $("#sun").prop("checked", false);
+                generalObj.Mon = false;
+                generalObj.Thu = false;
+                generalObj.Fri = false;
+                generalObj.Sun = false;
+                generalObj.Tue = true;
+                generalObj.Sat = false;
+                generalObj.Wed = false;
+
+
+            } else {
+                generalObj.Tue = false;
+            }
+        })
+
+        $("#wed").click(function () {
+            if ($(this).prop("checked")) {
+                $("#mon").prop("checked", false);
+                $("#tue").prop("checked", false);
+                $("#tue").prop("checked", false);
+                $("#fri").prop("checked", false);
+                $("#sat").prop("checked", false);
+                $("#sun").prop("checked", false);
+                generalObj.Mon = false;
+                generalObj.Thu = false;
+                generalObj.Fri = false;
+                generalObj.Sun = false;
+                generalObj.Wed = true;
+                generalObj.Sat = false;
+                generalObj.Tue = false;
+
+
+            } else {
+                generalObj.Wed = false;
+            }
+        })
+        $("#thu").click(function () {
+            if ($(this).prop("checked")) {
+                $("#mon").prop("checked", false);
+                $("#tue").prop("checked", false);
+                $("#wed").prop("checked", false);
+                $("#fri").prop("checked", false);
+                $("#sat").prop("checked", false);
+                $("#sun").prop("checked", false);
+                generalObj.Mon = false;
+                generalObj.Thu = true;
+                generalObj.Fri = false;
+                generalObj.Sun = false;
+                generalObj.Tue = false;
+                generalObj.Sat = false;
+                generalObj.Wed = false;
+
+
+            } else {
+                generalObj.Thu = false;
+            }
+        })
+        $("#fri").click(function () {
+            if ($(this).prop("checked")) {
+                $("#mon").prop("checked", false);
+                $("#tue").prop("checked", false);
+                $("#wed").prop("checked", false);
+                $("#thu").prop("checked", false);
+                $("#sat").prop("checked", false);
+                $("#sun").prop("checked", false);
+                generalObj.Mon = false;
+                generalObj.Thu = false;
+                generalObj.Fri = true;
+                generalObj.Sun = false;
+                generalObj.Tue = false;
+                generalObj.Sat = false;
+                generalObj.Wed = false;
+
+
+            } else {
+                generalObj.Fri = false;
+            }
+        })
+        $("#sat").click(function () {
+            if ($(this).prop("checked")) {
+                $("#mon").prop("checked", false);
+                $("#tue").prop("checked", false);
+                $("#wed").prop("checked", false);
+                $("#fri").prop("checked", false);
+                $("#thu").prop("checked", false);
+                $("#sun").prop("checked", false);
+                generalObj.Mon = false;
+                generalObj.Thu = false;
+                generalObj.Fri = false;
+                generalObj.Sun = false;
+                generalObj.Tue = false;
+                generalObj.Sat = true;
+                generalObj.Wed = false;
+
+            } else {
+                generalObj.Sat = false;
+            }
+        })
+        $("#sun").click(function () {
+            if ($(this).prop("checked")) {
+                $("#mon").prop("checked", false);
+                $("#tue").prop("checked", false);
+                $("#wed").prop("checked", false);
+                $("#fri").prop("checked", false);
+                $("#sat").prop("checked", false);
+                $("#thu").prop("checked", false);
+                generalObj.Mon = false;
+                generalObj.Thu = false;
+                generalObj.Fri = false;
+                generalObj.Sun = true;
+                generalObj.Tue = false;
+                generalObj.Sat = false;
+                generalObj.Wed = false;
+
+
+            } else {
+                generalObj.Sun = false;
+            }
+        })
+        $("#checkday").click(function () {
+            if ($(this).prop("checked")) {
+                $("#checkrepeat").prop("checked", false);
+                $("#selectnumrepeat").attr("disabled", "disabled");
+                $("#selectdayinmonthly").attr("disabled", "disabled");
+                $("#numdays").removeAttr("enabled", "enabled");
+
+                generalObj.Days = true;
+                generalObj.repeatOn = false;
+
+
+            } else {
+                generalObj.Days = false;
+            }
+        })
+        $("#checkrepeat").click(function () {
+            if ($(this).prop("checked")) {
+                $("#checkday").prop("checked", false);
+                $("#selectnumrepeat").removeAttr("disabled", "disabled");
+                $("#selectdayinmonthly").removeAttr("disabled", "disabled");
+                $("#numdays").attr("disabled", "disabled");
+                generalObj.Days = false;
+                generalObj.repeatOn = true;
+
+
+            } else {
+                generalObj.repeatOn = false;
+            }
+        })
+        $("#checkannulaly").click(function () {
+            if ($(this).prop("checked")) {
+                $("#checkboxnumofdayannualy").prop("checked", false);
+                $("#selectnumofannualy").attr("disabled", "disabled");
+                $("#selectweekinannualy").attr("disabled", "disabled");
+                $("#selectmonthsinannualy").attr("disabled", "disabled");
+                $("#monthinannualy").removeAttr("disabled", "disabled");
+                $("#numofmonthinannualy").removeAttr("disabled", "disabled");
+                generalObj.checkNumAnnualy = false;
+                generalObj.RepeatOncheckYearly = true;
+
+
+            } else {
+                generalObj.RepeatOncheckYearly = false;
+            }
+        })
+        $("#checkboxnumofdayannualy").click(function () {
+            if ($(this).prop("checked")) {
+                $("#checkannulaly").prop("checked", false);
+                $("#selectnumofannualy").removeAttr("disabled", "disabled");
+                $("#selectweekinannualy").removeAttr("disabled", "disabled");
+                $("#selectmonthsinannualy").removeAttr("disabled", "disabled");
+                $("#monthinannualy").attr("disabled", "disabled");
+                $("#numofmonthinannualy").attr("disabled", "disabled");
+                generalObj.RepeatOncheckYearly = false;
+                generalObj.checkNumAnnualy = true;
+
+
+            } else {
+                generalObj.checkNumAnnualy = false;
+            }
+        })
+
+        $("#starttime").change(function () {
+
+            $("#start").val(this.value);
+        })
+
+        //$("#endtime").change(function () {
+        //    let days1 = this.value;
+        //    let days2 = $("#starttime").val();
+        //    let date1 = new Date(this.value);
+        //    let day1 = date1.getDate();
+        //    let date2 = new Date($('#starttime').val());
+        //    let day2 = date2.getDate();
+        //    $.ajax({
+        //        url: "/BusinessPartner/GeteDaysOfMonths1",
+        //        type: "get",
+        //        dataType: "JSON",
+        //        data: { date1: days1,date2:days2 },
+        //        success: function (__res1) {
+        //            $.ajax({
+        //                url: "/BusinessPartner/GeteDaysOfMonths2",
+        //                type: "get",
+        //                dataType: "JSON",
+        //                data: { date2: days2 },
+        //                success: function (__res2) {
+        //                    if (__res1 > __res2 && __res2 != 28) {
+        //                        var totaldayInmonths = __res1 - 1;
+        //                        var totalday = day1 - day2;
+        //                        let durration = parseFloat(totaldayInmonths) + pasreFloat(totalday);
+        //                        var days="Days"
+        //                        $("#durr").val(durration);
+        //                    }
+        //                    else if (__res2 == 28 && __res2 == 31) {
+        //                        var totaldayInmonths = __res1 - 3;
+        //                        var totalday = day1 - day2;
+        //                        let durration = parseFloat(totaldayInmonths) + totalday;
+        //                        $("#durr").val(durration)
+        //                    }
+        //                    else if (__res2 == 28 && __res2 == 30) {
+        //                        var totaldayInmonths = __res1 - 2;
+        //                        var totalday = day1 - day2;
+        //                        let durration = parseFloat(totaldayInmonths) + paresFloat(totalday);
+        //                        $("#durr").val(durration);
+        //                    }
+        //                    else {
+        //                        var totaldayInmonths = __res1 - __res2;
+        //                        var totalday = day1 - day2;
+        //                        let durration = parseFloat(totaldayInmonths) + parseFloat(totalday);
+        //                        $("#durr").val(durration);
+        //                    }
+
+        //                }
+
+
+        //            });
+        //        }
+
+        //    });
+        //})
+        //$("#empassigned").change(function () {
+        //    $.ajax({
+        //        url: "/BusinessPartner/GetData",
+        //        type: "Get",
+        //        data: { typeassigned: this.value },
+        //        dataType: "Json",
+        //        success: function (response) {
+        //            response.forEach(i => {
+        //                $("#listdataassigned").append('<option value="' + i.ID + '">' + i.Name + '</option>')
+        //            })
+        //        }
+        //    });
+        //});
+        $.get('/BusinessPartner/GetNum', function (num) {
+            $("#next_number").val(num);
+        })
+        $("#listoftype").change(function () {
+            valtype = this.value;
+        })
+
+        $("#add-new-list-type").click(function () {
+            let dialog = new DialogBox({
+                button: {
+                    ok: {
+                        text: "SAVE"
+                    }
+                },
+                type: "ok-cancel",
+                content: {
+                    selector: "#add-type"
+
+                },
+                caption: "SetUp List Type"
+            });
+            dialog.invoke(function () {
+                $setuplisttype = ViewTable({
+                    keyField: "LineID",
+                    selector: "#list-type",
+                    indexed: true,
+                    paging: {
+                        enabled: true,
+                        pageSize: 10
+                    },
+                    visibleFields: ["Name"],
+                    columns: [
+                        {
+                            name: "Name",
+                            template: "<input type='text'>",
+                            on: {
+                                "keyup": function (e) {
+
+                                    updatedata(__setuptype, "LineID", e.key, "Name", this.value);
+                                }
+                            }
+                        },
+                    ],
+
+                });
+
+
+                $.get(
+                    "/BusinessPartner/GetEmptyTableListType",
+                    function (res) {
+                        $("#search-list-type").on("keyup", function () {
+                            let keyword = this.value.replace(/\s+/g, '').trim().toLowerCase();
+                            var rgx = new RegExp(keyword);
+                            var searcheds = $.grep(__setuptype, function (item) {
+                                if (item !== undefined) {
+                                    return item.Name.toLowerCase().match(keyword);
+
+                                }
+                            });
+                            $setuplisttype.bindRows(searcheds);
+
+                        });
+                        $setuplisttype.bindRows(res);
+                        __setuptype = $setuplisttype.yield();
+                    }
+                )
+            })
+            dialog.reject(function () {
+
+                dialog.shutdown();
+            });
+            dialog.confirm(function () {
+                var setuptype = [];
+                __setuptype.forEach(i => {
+                    if (i.Name != "")
+                        setuptype.push(i);
+                })
+                $.ajax({
+                    url: "/BusinessPartner/InsertType",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { types: setuptype },
+                    success: function (__res) {
+
+                        var data = "";
+                        $.each(__res.Data, function (i, item) {
+                            data +=
+                                '<option value="' + item.ID + '">' + item.Name + '</option>';
+                        });
+                        $("#listoftype").html(data);
+                    }
+                })
+                dialog.shutdown();
+
+            });
+        })
+
+        $("#listoftype").change(function () {
+            $("#listoftype").val();
+
+        })
+        $("#listofstatus").change(function(){
+           
+            parseInt(this.value);
+        })
+        $("#add-new-list-subject").click(function () {
+            let dialog = new DialogBox({
+                button: {
+                    ok: {
+                        text: "SAVE"
+                    }
+                },
+                type: "ok-cancel",
+                content: {
+                    selector: "#add-subject"
+
+                },
+                caption: "SetUp List Subject"
+            });
+            dialog.invoke(function () {
+                $setupsubject = ViewTable({
+                    keyField: "LineID",
+                    selector: "#list-subject",
+                    indexed: true,
+                    paging: {
+                        enabled: true,
+                        pageSize: 10
+                    },
+                    visibleFields: ["Name", "SetupType"],
+                    columns: [
+                        {
+                            name: "Name",
+                            template: "<input type='text'>",
+                            on: {
+                                "keyup": function (e) {
+                                    updatedata(__setupsubject, "LineID", e.key, "Name", this.value);
+                                }
+                            }
+                        },
+                        {
+                            name: "SetupType",
+                            template: "<select></select>",
+                            on: {
+                                "change": function (e) {
+                                    updatedata(__setupsubject, "LineID", e.key, "TypeID", this.value);
+
+                                }
+                            }
+                        },
+                    ],
+
+                });
+
+                $.get(
+                    "/BusinessPartner/GetEmptyTableListSubject",
+                    function (res) {
+
+                        $("#search-list-subject").on("keyup", function () {
+                            let keyword = this.value.replace(/\s+/g, '').trim().toLowerCase();
+                            var rgx = new RegExp(keyword);
+                            var searcheds = $.grep(__setupsubject, function (item) {
+                                if (item !== undefined) {
+                                    return item.Name.toLowerCase().match(keyword);
+                                }
+                            });
+                            $setupsubject.bindRows(searcheds);
+
+                        });
+
+                        $setupsubject.bindRows(res);
+                        __setupsubject = $setupsubject.yield();
+                    }
+                )
+            })
+            dialog.reject(function () {
+
+                dialog.shutdown();
+            });
+            dialog.confirm(function () {
+                var setupsubject = [];
+                __setupsubject.forEach(i => {
+                    if (i.Name != "")
+                        setupsubject.push(i);
+                })
+                $.ajax({
+                    url: "/BusinessPartner/InsertSubject",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { subject: setupsubject },
+                    success: function (__res) {
+                        var data = "";
+                        $.each(__res.Data, function (i, item) {
+                            data +=
+                                '<option value="' + item.ID + '">' + item.Name + '</option>';
+                        });
+                        $("#listofsubject").html(data);
+                    }
+                })
+                dialog.shutdown();
+
+            });
+
+        })
+
+        $("#show-list-bp").click(function () {
+            $.ajax({
+                url: "/BusinessPartner/GetBP",
+                type: "Get",
+                dataType: "Json",
+                success: function (response) {
+                    bindBP(response);
+                }
+            });
+        });
+        function bindBP(res) {
+            let dialog = new DialogBox({
+                content: {
+                    selector: ".bp_containers"
+                },
+                caption: "Bussines Partner"
+            });
+            dialog.invoke(function () {
+                const __listBussinesPartner = ViewTable({
+                    keyField: "ID",
+                    selector: "#list-bp",
+                    paging: {
+                        pageSize: 25,
+                        enabled: true
+                    },
+                    visibleFields: ["Code", "Name", "Type", "Choose"],
+                    actions: [
+                        {
+                            template: `<i class="fas fa-arrow-circle-down" id="close"  ></i>`,
+                            on: {
+                                "click": function (e) {
+                                    $("#bpid").val(e.data.ID)
+                                    $("#bpcode").val(e.data.Code);
+                                    $("#bpname").val(e.data.Name);
+                                    $("#bptype").val(e.data.Type);
+                                    $("#contactperson").find('option').remove();
+                                    $("#telno").find('option').remove();
+                                    e.data.ContactPeople.forEach(i => {
+                                        if (i.SetAsDefualt) {
+                                            $("#contactperson").append(`<option value='${i.ContactID}'  selected = "selected">${i.ContactID}</option>`)
+                                            $("#telno").append(`<option  value='${i.Tel1}>' selected = "selected">${i.Tel1}</option>`)
+
+                                        }
+                                        else {
+                                            $("#contactperson").append(`<option value='${i.ContactID}'>${i.ContactID}</option>`)
+                                            $("#telno").append(`<option value=${i.Tel1}>${i.Tel1}</option>`)
+
+                                        }
+
+                                    })
+                                    dialog.shutdown();
+                                }
+                            },
+                        }
+                    ]
+                });
+                __listBussinesPartner.bindRows(res)
+            });
+            dialog.confirm(function () {
+                dialog.shutdown();
+            })
+        }
+        $("#add-new-list-status").click(function () {
+            let dialog = new DialogBox({
+                button: {
+                    ok: {
+                        text: "SAVE"
+                    }
+                },
+                type: "ok-cancel",
+                content: {
+                    selector: "#add-status"
+
+                },
+                caption: "SetUp List Status"
+            });
+            dialog.invoke(function () {
+                $setupstatus = ViewTable({
+                    keyField: "LineID",
+                    selector: "#list-status",
+                    indexed: true,
+                    paging: {
+                        enabled: true,
+                        pageSize: 10
+                    },
+                    visibleFields: ["Status","Color"],
+                    columns: [
+                        {
+                            name: "Status",
+                            template: "<input type='text'>",
+                            on: {
+                                "keyup": function (e) {
+
+                                    updatedata(__setupstatus, "LineID", e.key, "Status", this.value);
+                                }
+                            }
+                        },
+
+                         {
+                            name: "Color",
+                            template: "<input type='color' style='padding:1px' id='colorpicker' name='color' pattern='^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$' value='#bada55'>",
+                            on: {
+                                "input": function (e) {
+                                  
+                                    //$('#hexcolor').val(this.value);
+                                    updatedata(__setupstatus, "LineID", e.key, "Color", this.value);
+                                //$('#hexcolor').on('input', function() {
+                                //        $('#colorpicker').val(this.value);
+                                //});
+
+                                    //updatedata(__setupstatus, "LineID", e.key, "Status", this.value);
+                                }
+                            }
+                        },
+
+                    ],
+
+                });
+
+                $.get(
+                    "/BusinessPartner/GetEmptyTableListStatus",
+                    function (res) {
+                        $("#search-list-status").on("keyup", function () {
+                            let keyword = this.value.replace(/\s+/g, '').trim().toLowerCase();
+                            var rgx = new RegExp(keyword);
+                            var searcheds = $.grep(__setupstatus, function (item) {
+                                if (item !== undefined) {
+                                    return item.Status.toLowerCase().match(keyword);
+
+                                }
+                            });
+                            $setupstatus.bindRows(searcheds);
+
+                        });
+                        $setupstatus.bindRows(res);
+                        __setupstatus = $setupstatus.yield();
+                    }
+                )
+            })
+            dialog.reject(function () {
+
+                dialog.shutdown();
+            });
+            dialog.confirm(function () {
+                var setupstatus = [];
+                __setupstatus.forEach(i => {
+                    if (i.Status != "")
+                        setupstatus.push(i);
+                })
+
+                $.ajax({
+                    url: "/BusinessPartner/InsertStatus",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { setupstatus: setupstatus },
+                    success: function (__res) {
+                        console.log("__res", __res);
+                        var data = "";
+                        $.each(__res.Data, function (i, item) {
+                            data +=
+                                '<option value="' + item.ID + '">' + item.Status + '</option>';
+                        });
+                        $("#listofstatus").html(data);
+                    }
+                })
+                dialog.shutdown();
+
+            });
+        })
+        $("#add-new-list-location").click(function () {
+            let dialog = new DialogBox({
+                button: {
+                    ok: {
+                        text: "SAVE"
+                    }
+                },
+                type: "ok-cancel",
+                content: {
+                    selector: "#add-location"
+
+                },
+                caption: "SetUp List Location"
+            });
+            dialog.invoke(function () {
+                $setuplocation = ViewTable({
+                    keyField: "LineID",
+                    selector: "#list-location",
+                    indexed: true,
+                    paging: {
+                        enabled: true,
+                        pageSize: 10
+                    },
+                    visibleFields: ["Name"],
+                    columns: [
+                        {
+                            name: "Name",
+                            template: "<input type='text'>",
+                            on: {
+                                "keyup": function (e) {
+
+                                    updatedata(__setuplocation, "LineID", e.key, "Name", this.value);
+                                }
+                            }
+                        },
+
+                    ],
+
+                });
+
+                $.get(
+                    "/BusinessPartner/GetEmptyTableListLocation",
+                    function (res) {
+                        $("#search-list-location").on("keyup", function () {
+                            let keyword = this.value.replace(/\s+/g, '').trim().toLowerCase();
+                            var rgx = new RegExp(keyword);
+                            var searcheds = $.grep(__setuplocation, function (item) {
+                                if (item !== undefined) {
+                                    return item.Name.toLowerCase().match(keyword);
+
+                                }
+                            });
+                            $setuplocation.bindRows(searcheds);
+
+                        });
+                        $setuplocation.bindRows(res);
+                        __setuplocation = $setuplocation.yield();
+                    }
+                )
+            })
+            dialog.reject(function () {
+
+                dialog.shutdown();
+            });
+            dialog.confirm(function () {
+                var setuplocation = [];
+                __setuplocation.forEach(i => {
+                    if (i.Name != "")
+                        setuplocation.push(i);
+                })
+
+                $.ajax({
+                    url: "/BusinessPartner/InsertLocation",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { setuplocation: setuplocation },
+                    success: function (__res) {
+
+                        var data = "";
+                        $.each(__res.Data, function (i, item) {
+                            data +=
+                                '<option value="' + item.Name + '">' + item.Name + '</option>';
+                        });
+                        $("#listoflocation").html(data);
+                    }
+                })
+                dialog.shutdown();
+
+            });
+        })
+
+        const generalObj = {
+            ID: 0,
+            ActivityID: 0,
+            Remark: "",
+            StartTime: "",
+            EndTime: "",
+            Durration: "",
+            StatusID:0,
+            Recurrence: "",
+            Priority: "",
+            Location: "",
+            After: 0,
+            By: 0,
+            NoEndDate: 0,
+            NumAfter: 0,
+            NumBy: 0,
+            RepeatDate: 0,
+            RepeatEveryReCurr: 0,
+            RepeatEveryWeek: 0,
+            ByDate: "",
+            Days: 0,
+            numDay: 0,
+            repeatOn: 0,
+            numOfRepeat: "",
+            DaysInMonthly: "",
+            RepeatOncheckYearly: 0,
+            MonthsInAnnualy: "",
+            NumOfMonths: 0,
+            checkNumAnnualy: 0,
+            NumofAnnualy: "",
+            DaysOfAnnualy: "",
+            MonthsOfAnnulay: "",
+            RepeatofNumAnnualy: 0,
+            RepeatNumOfmonths: 0
+        }
+
+        var activity_master = {
+            ID: 0,
+            SetupActID: 0,
+            Activities: 0,
+            TypeID: "",
+            Number: 0,
+            EmpNameID: "",
+            EmpName: "",
+            EmpID: 0,
+            SubNameID: "",
+            Personal: 0,
+            BPID: 0,
+            General: {}
+        }
+        let master = [];
+        master.push(activity_master);
+        $("#submit-data").click(function () {
+            const activity_master = master[0];
+            activity_master.Activities = $("#listofactivity").val();
+            activity_master.SubNameID = $("#listofsubject").val();
+            /*    activity_master.AssignedID = $("#empassigned").val();*/
+            activity_master.TypeID = $("#listoftype").val();
+            //activity_master.EmpID = $("#listdataassigned").val();
+            activity_master.UserID = $("#listdataassigned").val();
+            activity_master.Number = $("#next_number").val();
+            activity_master.BPID = $("#bpid").val();
+            activity_master.TelNo = $("#telno").val();
+            activity_master.Personal = $("#personal").prop("checked") ? true : false;
+            activity_master.EmpNameID = $("#empassigned").val();
+            activity_master.AssignByID = parseInt($("#assbyto").val());
+
+            //generalObj.ActivityID = activity_master.ID;
+            generalObj.After = $("#checkafter").prop("checked") ? true : false;
+            generalObj.Start = $("#start").val();
+            generalObj.ByDate = $("#numdate").val();
+            generalObj.By = $("#checkby").prop("checked") ? true : false;
+            generalObj.NoEndDate = $("#checkboxend").prop("checked") ? true : false;
+            generalObj.NumAfter = $("#numafter").val();
+            //====Daily====
+            generalObj.RepeatDate = $("#dailynumofday").val();
+            generalObj.RepeatEveryReCurr = $("#dailycheckboxday").prop("checked") ? true : false;
+            generalObj.RepeatEveryWeek = $("#repeateveryweek").prop("checked") ? true : false;
+
+            //====weekly===
+            generalObj.Mon = $("#mon").prop("checked") ? true : false;
+            generalObj.Tue = $("#tue").prop("checked") ? true : false;
+            generalObj.Wed = $("#wed").prop("checked") ? true : false;
+            generalObj.Thu = $("#thu").prop("checked") ? true : false;
+            generalObj.Fri = $("#fri").prop("checked") ? true : false;
+            generalObj.Sat = $("#sat").prop("checked") ? true : false;
+            generalObj.Sun = $("#sun").prop("checked") ? true : false;
+            //=======monthly========
+            generalObj.RepeatNumOfmonths = $("#repeatNumOfmonths").val();
+            generalObj.RepeatofNumAnnualy = $("#repeatofNumAnnualy").val();
+            generalObj.Days = $("#checkday").prop("checked") ? true : false;
+            generalObj.numDay = $("#numdays").val();
+            generalObj.repeatOn = $("#checkrepeat").prop("checked") ? true : false;
+            generalObj.numOfRepeat = $("#selectnumrepeat").val()
+            generalObj.DaysInMonthly = $("#selectdayinmonthly").val();
+
+            //=========yearly============
+            generalObj.RepeatOncheckYearly = $("#checkannulaly").prop("checked") ? true : false;
+            generalObj.MonthsInAnnualy = $("#monthinannualy").val();
+            generalObj.NumOfMonths = $("#numofmonthinannualy").val();
+            generalObj.checkNumAnnualy = $("#checkboxnumofdayannualy").prop("checked") ? true : false;
+            generalObj.NumofAnnualy = $("#selectnumofannualy").val();
+            generalObj.DaysOfAnnualy = $("#selectweekinannualy").val();
+            generalObj.MonthsOfAnnulay = $("#selectmonthsinannualy").val();
+
+
+            generalObj.Remark = $("#remark").val();
+            generalObj.StartClock = $("#startclock").val();
+            generalObj.EndClock = $("#endclock").val();
+            generalObj.StartTime = $("#starttime").val()
+            generalObj.EndTime = $("#endtime").val()
+            generalObj.Durration = $("#durr").val()
+            generalObj.StatusID = parseInt($("#listofstatus").val())
+            generalObj.Recurrence = $("#listorecurr").val()
+            generalObj.Priority = $("#listofpri").val()
+            generalObj.Location = $("#listoflocation").val()
+            activity_master.General = generalObj;
+           
+            $.ajax({
+                url: "/BusinessPartner/SubmmitData",
+                type: "POST",
+                dataType: "JSON",
+                data: $.antiForgeryToken({ _data: JSON.stringify(activity_master) }),
+                success: function (respones) {
+                    new ViewMessage({
+                        summary: {
+                            selector: "#error-summary"
+                        },
+                    }, respones)
+                    if (respones.IsApproved) {
+                        location.reload();
+                    }
+                }
+            });
+
+        })
+
+        //=========update data===========
+        $("#update-data").click(function () {
+            const __activity_master = master[0];
+            __activity_master.ID = $("#activityid").val();
+            __activity_master.BPID = $("#bpid").val();
+            __activity_master.TypeID = $("#listoftype").val();
+            __activity_master.Activities = $("#listofactivity").val();
+            __activity_master.SubNameID = $("#listofsubject").val();
+            __activity_master.Number = $("#next_number").val();
+           
+            //activity_master.AssignedID = $("#empassigned").val();
+            __activity_master.Number = activity_master.Number;
+            __activity_master.TelNo = $("#telno").val();
+            __activity_master.Personal = $("#personal").prop("checked") ? true : false;
+            //__activity_master.EmpID = $("#listdataassigned").val();
+            __activity_master.UserID = $("#listdataassigned").val();
+            __activity_master.EmpNameID = $("#empassigned").val();
+            __activity_master.AssignByID = parseInt($("#assbyto").val());
+
+
+            generalObj.ID = $("#generalid").val();
+            generalObj.Remark = $("#remark").val();
+            generalObj.StartClock = $("#startclock").val();
+            generalObj.EndClock = $("#endclock").val();
+            generalObj.StartTime = $("#starttime").val()
+            generalObj.EndTime = $("#endtime").val()
+            generalObj.Durration = $("#durr").val()
+            generalObj.StatusID = $("#listofstatus").val()
+            generalObj.Recurrence = $("#listorecurr").val()
+            generalObj.Priority = $("#listofpri").val()
+            generalObj.Location = $("#listoflocation").val();
+
+            generalObj.After = $("#checkafter").prop("checked") ? true : false;
+            generalObj.Start = $("#start").val();
+            generalObj.ByDate = $("#numdate").val();
+            generalObj.By = $("#checkby").prop("checked") ? true : false;
+            generalObj.NoEndDate = $("#checkboxend").prop("checked") ? true : false;
+            generalObj.NumAfter = $("#numafter").val();
+            //====Daily====
+            generalObj.RepeatDate = $("#dailynumofday").val();
+            generalObj.RepeatEveryReCurr = $("#dailycheckboxday").prop("checked") ? true : false;
+            generalObj.RepeatEveryWeek = $("#repeateveryweek").prop("checked") ? true : false;
+            //====weekly===
+            generalObj.Mon = $("#mon").prop("checked") ? true : false;
+            generalObj.Tue = $("#tue").prop("checked") ? true : false;
+            generalObj.Wed = $("#wed").prop("checked") ? true : false;
+            generalObj.Thu = $("#thu").prop("checked") ? true : false;
+            generalObj.Fri = $("#fri").prop("checked") ? true : false;
+            generalObj.Sat = $("#sat").prop("checked") ? true : false;
+            generalObj.Sun = $("#sun").prop("checked") ? true : false;
+            //=======monthly========
+            generalObj.RepeatNumOfmonths = $("#repeatNumOfmonths").val();
+            generalObj.StatusID = parseInt($("#listofstatus").val());
+            generalObj.Days = $("#checkday").prop("checked") ? true : false;
+            generalObj.numDay = $("#numdays").val();
+            generalObj.repeatOn = $("#checkrepeat").prop("checked") ? true : false;
+            generalObj.numOfRepeat = $("#selectnumrepeat").val()
+            generalObj.DaysInMonthly = $("#selectdayinmonthly").val();
+            //========yearly========
+            generalObj.RepeatofNumAnnualy = $("#repeatofNumAnnualy").val();
+            generalObj.RepeatOncheckYearly = $("#checkannulaly").prop("checked") ? true : false;
+            generalObj.MonthsInAnnualy = $("#monthinannualy").val();
+            generalObj.NumOfMonths = $("#numofmonthinannualy").val();
+            generalObj.checkNumAnnualy = $("#checkboxnumofdayannualy").prop("checked") ? true : false;
+            generalObj.NumofAnnualy = $("#selectnumofannualy").val();
+            generalObj.DaysOfAnnualy = $("#selectweekinannualy").val();
+            generalObj.MonthsOfAnnulay = $("#selectmonthsinannualy").val();
+            __activity_master.General = generalObj;
+            $.ajax({
+                url: "/BusinessPartner/UpdateData",
+                type: "POST",
+                dataType: "JSON",
+                data: $.antiForgeryToken({ _data: JSON.stringify(__activity_master) }),
+                success: function (respones) {
+                    new ViewMessage({
+                        summary: {
+                            selector: "#error-summary"
+                        },
+                    }, respones)
+                    if (respones.IsApproved) {
+                        location.href = "/BusinessPartner/Activity"
+                    }
+                }
+            });
+
+        })
+
+        ////========find data=======
+        function setDate(selector, date_value) {
+            var _date = $(selector);
+            _date[0].valueAsDate = new Date(date_value);
+            _date[0].setAttribute(
+                "data-date",
+                moment(_date[0].value)
+                    .format(_date[0].getAttribute("data-date-format"))
+            );
+        }
+
+        $("#btn-find").on("click", function () {
+            $("#btn-createnew").removeAttr("hidden", "hidden");
+            $("#next_number").val("").prop("readonly", false).focus();
+            $("#submit-data").hide();
+            $("#update-data").removeAttr("hidden");
+        });
+        $("#next_number").on("keypress", function (e) {
+            if (e.which === 13 && $("#next_number").val()) {
+                $("#btn-find").hide();
+                bindActivity($("#next_number").val().trim());
+            }
+        });
+
+        function bindActivity(number) {
+            $("#loading").prop("hidden", false);
+            $.ajax({
+                url: "/BusinessPartner/FindActivity",
+                data: { number },
+                success: function (result) {
+                    console.log("res",result)
+                    if(!result){
+                        
+                        let dialog = new DialogBox({
+                            caption: "Searching",
+                            icon: "danger",
+                            content: "Activity Not found!",
+                            close_button: "none"
+                        });
+
+                        dialog.confirm(function () {
+                            $("#next_number").prop("readonly", false).focus();
+                            dialog.shutdown();
+                        });
+
+                        $("#next_number").val(" ")
+                        $("#next_number").blur();
+                    }
+                   
+                    else {
+                       
+                        console.log("subTypes",result)
+                        $("#contactperson").find('option').remove();
+                        $("#telno").find('option').remove();
+                        $("#next_number").val(result.Number);
+                        console.log("Contact", result);
+                        if(result.Contact !=null){
+                             result.Contact.forEach(i => {
+                            if (i.SetAsDefualt) {
+                                $("#contactperson").append(`<option value='${i.ContactID}'  selected = "selected">${i.ContactID}</option>`)
+                                $("#telno").append(`<option  value='${i.Tel1}>' selected = "selected">${i.Tel1}</option>`)
+
+                            }
+                            else {
+                                $("#contactperson").append(`<option value='${i.ContactID}'>${i.ContactID}</option>`)
+                                $("#telno").append(`<option value=${i.Tel1}>${i.Tel1}</option>`)
+
+                            }
+                        });
+                        }
+                       
+                        $("#generalid").val(result.GID);
+                        $("#assbyto").val(result.AssignedByID);
+                        $("#activityid").val(result.ID);
+                        $("#bpid").val(result.BPID);
+                        $("#listofactivity").val(result.Activities);
+                        $("#listoftype").val(result.TypeID);
+                        $("#listofsubject").val(result.SubNameID);
+                        $("#empassigned").val(result.EmpNameID);
+                        //$("#listdataassigned").val(result.EmpName);
+                        if(result.EmpName !=null){
+                        //$("#listdataassigned").append(` <option selected value=${result.EmpID}>${result.EmpName}</option>`)
+                        $("#listdataassigned").append(` <option selected value=${result.UserID}>${result.EmpName}</option>`)
+                        }
+                        $("#bpcode").val(result.BpCode);
+                        $("#bpname").val(result.BpName);
+                        $("#bptype").val(result.BpType);
+
+                        $("#personal").prop("checked", result.Personal).prop("enabled", true);
+                        $("#remark").val(result.Remark);
+                        //setDate("#starttime", result.StartTime.toString().split("T")[0]);
+                        $("#starttime").val(result.StartTime);
+                        //setDate("#endtime", result.EndTime.toString().split("T")[0]);
+                        $("#endtime").val(result.EndTime);
+                        $("#durr").val(result.Durration);
+                        $("#listofstatus").val(result.StatusID);
+                        $("#startclock").val(result.StartClock);
+                        $("#endclock").val(result.EndClock);
+                        $("#listoflocation").val(result.Location);
+                        $("#listofpri").val(result.Priority);
+                        $("#listorecurr").val(result.Recurrences);
+                      
+                        if (result.Recurrences == "None") {
+                            $("#daily").attr("hidden", "hidden");
+                            $("#everday").attr("hidden", "hidden");
+                            $("#foot").attr("hidden", "hidden");
+                            $("#weekly").attr("hidden", "hidden");
+                            $("#yearly").attr("hidden", "hidden");
+                            $("#monthly").attr("hidden", "hidden");
+                        }
+                        else if (result.Recurrences == "Daily") {
+
+                            $("#daily").removeAttr("hidden", "hidden");
+                            $("#everday").removeAttr("hidden", "hidden");
+                            $("#foot").removeAttr("hidden", "hidden");
+                            $("#weekly").attr("hidden", "hidden");
+                            $("#yearly").attr("hidden", "hidden");
+                            $("#monthly").attr("hidden", "hidden");
+                            //====Dasily======
+                            $("#dailycheckboxday").prop("checked", result.RepeatEveryRecurr).prop("enabled", true);
+                            $("#repeateveryweek").prop("checked", result.RepeatEveryWeek).prop("enabled", true);
+                            $("#dailynumofday").val(result.RepeatDate);
+                            //=====end daily====
+
+                            $("#checkafter").prop("checked", result.After).prop("enabled", true);
+                            setDate("#numdate", result.ByDate.toString().split("T")[0]);
+                            //setDate("#start", result.Start.toString().split("T")[0]);
+                            $("#start").val(result.Start);
+                            $("#checkby").prop("checked", result.By).prop("enabled", true);
+                            $("#checkboxend").prop("checked", result.NoEndDate).prop("enabled", true);
+                            $("#numafter").val(result.NumAfter);
+                        }
+                        else if (result.Recurrences == "Weekly") {
+
+                            $("#everday").attr("hidden", "hidden");
+                            $("#weekly").removeAttr("hidden", "hidden");
+                            $("#foot").removeAttr("hidden", "hidden");
+                            $("#yearly").attr("hidden", "hidden");
+                            $("#monthly").attr("hidden", "hidden");
+                            $("#daily").attr("hidden", "hidden");
+                            $("#dailycheckboxday").prop("checked", result.RepeatEveryRecurr).prop("enabled", true);
+
+
+                            $("#mon").prop("checked", result.Mon).prop("enabled", true);
+                            $("#tue").prop("checked", result.Tue).prop("enabled", true);
+                            $("#wed").prop("checked", result.Wed).prop("enabled", true);
+                            $("#thu").prop("checked", result.Thu).prop("enabled", true);
+                            $("#fri").prop("checked", result.Fri).prop("enabled", true);
+                            $("#sat").prop("checked", result.Sat).prop("enabled", true);
+                            $("#sun").prop("checked", result.Sun).prop("enabled", true);
+                            //===endly====
+                            $("#checkafter").prop("checked", result.After).prop("enabled", true);
+                            setDate("#numdate", result.ByDate.toString().split("T")[0]);
+                            $("#start").val(result.Start);
+                            $("#checkby").prop("checked", result.By).prop("enabled", true);
+                            $("#checkboxend").prop("checked", result.NoEndDate).prop("enabled", true);
+                            $("#numafter").val(result.NumAfter);
+                        }
+                        else if (result.Recurrences == "Monthly") {
+
+                            $("#daily").attr("hidden", "hidden");
+                            $("#everday").attr("hidden", "hidden");
+                            $("#foot").removeAttr("hidden", "hidden");
+                            $("#weekly").attr("hidden", "hidden");
+                            $("#yearly").attr("hidden", "hidden");
+                            $("#monthly").removeAttr("hidden", "hidden");
+                            $("#repeatNumOfmonths").val(result.RepeatNumOfmonths);
+                            $("#checkday").prop("checked", result.Days).prop("enabled", true);
+                            $("#numdays").val(result.numDay);
+                            $("#checkrepeat").prop("checked", result.repeatOn).prop("enabled", true);
+                            $("#selectnumrepeat").val(result.numOfRepeat)
+                            $("#selectdayinmonthly").val(result.DaysInMonthly);
+                            //===end monthly===
+                            $("#checkafter").prop("checked", result.After).prop("enabled", true);
+                            setDate("#numdate", result.ByDate.toString().split("T")[0]);
+                            $("#start").val(result.Start);
+                            $("#checkby").prop("checked", result.By).prop("enabled", true);
+                            $("#checkboxend").prop("checked", result.NoEndDate).prop("enabled", true);
+                            $("#numafter").val(result.NumAfter);
+                        }
+                        else if (result.Recurrences == "Annualy") {
+
+                            $("#monthly").attr("hidden", "hidden");
+                            $("#weekly").attr("hidden", "hidden");
+                            $("#foot").removeAttr("hidden", "hidden");
+                            $("#yearly").removeAttr("hidden", "hidden");
+                            $("#daily").attr("hidden", "hidden");
+                            $("#everday").attr("hidden", "hidden");
+
+                            $("#repeatofNumAnnualy").val(result.RepeatofNumAnnualy);
+                            $("#checkannulaly").prop("checked", result.RepeatOncheckYearly).prop("enabled", true);
+                            $("#monthinannualy").val(result.MonthsInAnnualy);
+                            $("#numofmonthinannualy").val(result.NumOfMonths);
+                            $("#checkboxnumofdayannualy").prop("checked", result.checkNumAnnualy).prop("enabled", true)
+                            $("#selectnumofannualy").val(result.NumofAnnualy);
+                            $("#selectweekinannualy").val(result.DaysOfAnnualy);
+                            $("#selectmonthsinannualy").val(result.MonthsOfAnnulay);
+
+                            $("#checkafter").prop("checked", result.After).prop("enabled", true);
+                            setDate("#numdate", result.ByDate.toString().split("T")[0]);
+                            $("#start").val(result.Start);
+                            $("#checkby").prop("checked", result.By).prop("enabled", true);
+                            $("#checkboxend").prop("checked", result.NoEndDate).prop("enabled", true);
+                            $("#numafter").val(result.NumAfter);
+                        }
+                    }
+                    $("#loading").prop("hidden", true);
+                }
+
+            });
+        }
+
+
+        function isValidArray(values) {
+            return Array.isArray(values) && values.length > 0;
+        }
+        function updatedata(data, keyField, keyValue, prop, propValue) {
+            if (isValidArray(data)) {
+                data.forEach(i => {
+                    if (i[keyField] === keyValue)
+                        i[prop] = propValue
+                })
+            }
+        }
+    });
+
+</script>
+

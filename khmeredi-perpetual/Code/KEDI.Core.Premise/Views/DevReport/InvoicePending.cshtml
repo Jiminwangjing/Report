@@ -1,0 +1,180 @@
+@using KEDI.Core.Premise.Models.Services.ReportSale
+@model PushCancelForm
+<style>
+   .text-right{
+    text-align: right;
+   }
+   .input_dateto, .input_datefrom{
+    width: 100%;
+   }
+
+   ul.pagination {
+     list-style-type: none;
+   }
+
+   ul.pagination > li {
+        display: inline;
+        cursor: pointer;
+        margin-right: 5px;
+   }
+</style>
+<div class="card card-body">
+    <form action="/devReport/invoicePending" method="post">
+
+          <div class="row">
+             <label  class="col-lg-1 col-md-1 col-sm-12 text-lg-right text-sm-left">@Localizer["Date From"]</label>
+             <div class="col-lg-2 col-md-2 col-sm-12">
+                <input name="DateFrom"data-date=""  data-date-format="DD.MM.YYYY" type="date" class="input_datefrom"value="@ViewBag.DateFrom" />
+            </div>
+             <label  class="col-lg-1 col-md-1 col-sm-12 text-lg-right text-sm-left">@Localizer["Date To"]</label>
+             <div class="col-lg-2 col-md-2 col-sm-12">
+                <input name="DateTo" data-date="" data-date-format="DD.MM.YYYY" type="date" class="input_dateto"value="@ViewBag.DateTo" />
+            </div>
+            <div class="col-lg-2 col-md-1 col-sm-12 col-sm-mt-2">
+               <button  class="btn btn-xs btn-kernel">@Localizer["Filter"]</button>
+            </div>
+        </div>
+
+
+    </form>
+
+    <form asp-action="InsusseStock" method="post">
+        <div class="group-search-boxes mb-2">
+                    <div id="text-search" class="wrap-search-box">
+                        <div class="wrap-input show">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="filter-receipt" autocomplete="off" type="text"
+                                placeholder='@Localizer["Search ..." ]'>
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                </div>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th style="text-align: center;"> @Localizer["Emp.Name"] </th>
+                    <th class="text-center"> @Localizer["Code"] </th>
+                    <th class="text-center"> @Localizer["Item Name 1"] </th>
+                    <th class="text-center"> @Localizer["Item Name 2"] </th>
+                    <th class="text-center"> @Localizer["Qty"] </th>
+                    <th class="text-center"> @Localizer["Price"] </th>
+                    <th class="text-center"> @Localizer["Dis.Item"] </th>
+                    <th class="text-center"> @Localizer["Total"] </th>
+                    <th class="text-center"> @Localizer["Push"]   <input name="checks" readonly type="checkbox" class="m0" id="select-all" /></th>
+                </tr>
+            </thead>
+
+            <tbody id="table">
+                @for (int i = 0; i < Model.PageItems.Count; i++)
+                {
+                    <tr>
+                        <th hidden class="text-center"><input readonly asp-for="PageItems[i].ReceiptID" type="hidden">
+                        </th>
+                        <th class="text-center"><input readonly asp-for="PageItems[i].EmpName" type="hidden" width="50px">
+                            <span>@Model.PageItems[i].EmpName</span>
+                        </th>
+                        <th>@Localizer["ReceiptNo :"]<input readonly asp-for="PageItems[i].ReceiptNo" type="hidden">
+                            <span>@Model.PageItems[i].ReceiptNo</span>
+                        </th>
+                        <th colspan="2">@Localizer["Date Out :"]<input readonly asp-for="PageItems[i].DateOut"
+                            type="hidden">
+                            <span>@Model.PageItems[i].DateOut</span>
+                        </th>
+                        <th colspan="4">@Localizer["Time Out :"]<input readonly asp-for="PageItems[i].TimeOut"
+                            type="hidden">
+                            <span>@Model.PageItems[i].TimeOut</span>
+                        </th>
+                        <th colspan="3"><input asp-for="PageItems[i].Selected" type="checkbox"
+                            style=" float: right; margin-right: 20px;" /></th>
+                    </tr>
+
+                    @for (int j = 0; j < Model.PageItems[i].ReceiptDetailVeiws.Length; j++)
+                    {
+                        var item = Model.PageItems[i].ReceiptDetailVeiws[j];
+                        <tr>
+                            <td></td>
+                            <td class="text-center"><input readonly asp-for="PageItems[i].ReceiptDetailVeiws[j].Code" ></td>
+                            <td class="text-center"><input readonly asp-for="PageItems[i].ReceiptDetailVeiws[j].KhmerName">
+                            </td>
+                            <td class="text-center"><input readonly asp-for="PageItems[i].ReceiptDetailVeiws[j].EnglisName">
+                            </td>
+                            <td class="text-center"><input readonly asp-for="PageItems[i].ReceiptDetailVeiws[j].Qty"></td>
+                            <td class="text-center">@(Model.PageItems[i].PLCurrency +" "+ string.Format("{0:n3}",
+                                item.UnitPrice))</td>
+                            <td class="text-center">@(Model.PageItems[i].PLCurrency +" "+ string.Format("{0:n3}",
+                                item.DisValue))</td>
+                            <td class="text-center">@(Model.PageItems[i].PLCurrency +" "+ string.Format("{0:n3}", item.Total))
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="flexbox space-between">
+            @{
+                string dateFrom = ViewBag.DateFrom;
+                string dateTo = ViewBag.DateTo;
+                string byDate = string.IsNullOrWhiteSpace(dateTo)? $"{dateFrom}" : $"{dateFrom}/{dateTo}";
+                int prevIndex = ViewBag.PageIndex ;
+                int nextIndex = ViewBag.PageIndex ;
+                if(prevIndex <= 1){ prevIndex ++; }
+                if(nextIndex >= ViewBag.TotalPages){ nextIndex = ViewBag.TotalPages - 1 ; }
+            }
+            <ul class="pagination">
+                <li><a href="/devReport/invoicePending/1/@byDate" class="btn btn-info">First</a></li>               
+                <li><a href="/devReport/invoicePending/@( prevIndex - 1)/@byDate" class="btn btn-info"> Prev </a></li>
+                <li><a href="/devReport/invoicePending/@( nextIndex + 1)/@byDate" class="btn btn-info"> Next </a></li>
+                <li><a href="/devReport/invoicePending/@(ViewBag.TotalPages)/@byDate" class="btn btn-info">Last</a></li>
+            </ul>
+            <div class="flexbox" ><p style="background-color: rgb(161, 235, 225);padding:5px"><span>@ViewBag.PageIndex</span>/<span>@ViewBag.TotalPages</span></p></div> 
+
+        </div>
+        <button style="width: 60px;" class="btn btn-xs btn-kernel" type="submit">Save</button>
+    </form>
+
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        @* $.each($("[data-date]"), function (i, t) {
+            setDate(t, moment(Date.now()).format("YYYY-MM-DD"));
+        });
+        function setDate(selector, date_value) {
+            var _date = $(selector);
+            _date[0].valueAsDate = new Date(date_value);
+            _date[0].setAttribute(
+                "data-date",
+                moment(_date[0].value)
+                    .format(_date[0].getAttribute("data-date-format"))
+            );
+        } *@
+        $("#filter-receipt").on("keyup", function () {
+            var keyword = this.value.toLowerCase().replace(" ", "");
+            searchListInvoid(keyword);
+        });
+
+        function searchListInvoid(keyword) {
+            var regex = new RegExp(keyword);
+            $.each($("#table tr"), function (i, tr) {
+                $(tr).hide();
+                var text = $(tr).find("th").text().toLowerCase().replace(" ", "");
+                if (text.match(regex)) {
+                    $(tr).show();
+                }
+            });
+        }
+
+        $('#select-all').change(function () {
+            let checkbox = $("#table tr th input");
+            if ($(this).is(":checked")) {
+                checkbox.prop("checked", true);
+            } else {
+                checkbox.prop("checked", false);
+            }
+        });
+    });
+
+</script>

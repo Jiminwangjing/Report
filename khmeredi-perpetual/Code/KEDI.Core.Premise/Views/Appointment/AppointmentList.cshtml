@@ -1,0 +1,92 @@
+﻿@model IEnumerable<CKBS.Models.ServicesClass.KAMSService.AppointmentViewModel>
+@{
+    ViewData["Title"] = "AppointmentList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div hidden id="errorApp">@ViewBag.Error</div>
+
+<link href="~/AutoMobile/css/Appointment.css" rel="stylesheet" />
+<link href="~/AutoMobile/css/_search.css" rel="stylesheet" />
+
+<div id="_listApp" hidden>@Json.Serialize(Model)</div>
+<div class="TitleListApp">@Localizer["List of Appointment"]</div>
+
+
+<a class="btn btn-sm btn-success mt-3 text-light" id="go-to-create-app" @*asp-action="Appointment" asp-controller="Appointment"*@><i class="fas fa-plus-circle"></i> New appointment</a>
+<div class="item group-search-boxes mb-2">
+    <div id="text-search" class="search-box show">
+        <div class="input-box" style="max-width: 326px;">
+            <i id="i-search" class="i-search fas fa-search"></i>
+            <input class="ignore" autocomplete="off" id="search-app" name="search-member" type="text" value="" placeholder="@Localizer["Name,Phone,Plate search ..."]">
+            <i id="i-close" class="i-close far fa-times-circle"></i>
+        </div>
+        <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="wrap-table">
+            <table id="list-app" class="table table-sm table-striped">
+                <thead class="theadTableApp">
+                    <tr>
+                        <td class="text-center text-light">Nº</td>
+                        <td class="text-light"> @Localizer["Customer Name"] </td>
+                        <td class="text-light"> @Localizer["Phone number"] </td>
+                        <td class="text-light"> @Localizer["Plate"] </td>
+                        <td class="text-light"> @Localizer["Brand"] </td>
+                        <td class="text-light"> @Localizer["Model"] </td>
+                        <td class="text-center text-light"> @Localizer["Notification"] </td>
+                        <td class="text-center text-light"> @Localizer["Status"] </td>
+                        <td class="text-center text-light"> @Localizer["Action"] </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="paging-app"></div>
+    </div>
+</div>
+
+@*Model Cancel Warning*@
+<div class="modal fade" style="margin-top:10px;" id="modal-warning" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" style="overflow:auto;">
+            <div class="modal-header p-1" style="background-color:#ccc">
+                <span><i style="font-size:x-large" class="fa fa-warning fn-red"></i></span>
+                <div style="font-size:20px; font-weight:bold; color:black; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["Warning"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky" data-dismiss="modal"></i></span>
+            </div>
+            <div class="modal-body p-2 pt-4 pb-4" style="background-color:#bcc; text-align:center">
+                @Localizer["Are you sure you want to cancel this appointment"]?
+            </div>
+            <div class="modal-footer" style="background-color:#ccc">
+                <a class="btn btn-sm btn-success vmcbtnConfirm text-light" id="cancel-app-cf"><i class="fa fa-check-square"></i>&ensp;@Localizer["Yes"]</a>
+                <a class="btn btn-sm btn-danger vmcbtnClose text-light" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["No"]</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Model Config Alert Management Warning*@
+<div class="modal fade" style="margin-top:10px;" id="modal-config-alert-warning" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" style="overflow:auto;">
+            <div class="modal-header p-1" style="background-color:#ccc">
+                <span><i style="font-size:x-large" class="fa fa-warning fn-red"></i></span>
+                <div style="font-size:20px; font-weight:bold; color:black; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["Warning"]</div>
+                <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky" data-dismiss="modal"></i></span>
+            </div>
+            <div class="modal-body p-2 pt-4 pb-4" style="background-color:#bcc; text-align:center">
+                @Localizer["Please config Alert Management first before creating any appointments"]!
+            </div>
+            <div class="modal-footer" style="background-color:#ccc">
+                <a class="btn btn-sm btn-success vmcbtnConfirm text-light" id="go-to-config-amSetting"><i class="fa fa-check-square"></i>&ensp;@Localizer["Go to config Alert Management"]</a>
+                <a class="btn btn-sm btn-danger vmcbtnClose text-light" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Cancel"]</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/AutoMobile/js/_search.js"></script>
+<script src="~/AutoMobile/js/AppointmentList.js"></script>

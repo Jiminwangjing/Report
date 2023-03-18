@@ -1,0 +1,288 @@
+﻿<style>
+    .overflow-hidden {
+        overflow: hidden !important;
+    }
+</style>
+
+<div class="card card-body">
+    <div class="row">
+        <ul class="widget-tab" style="height: 76vh; width: 79vw">
+            <li class="tab-sheet active" id="Accounts">
+                <div class="tab-title">@Localizer["Sale"]</div>
+                <div class="tab-content widget-scrollbar" style="overflow-x: hidden;">
+                    <div class="row ml-1 mt-1 hide-scroll">
+                        <div class="col-md-5 col-ml-6">
+                            <label>@Localizer["Accounts Receivable"]</label>
+                        </div>
+                        <div class="col-md-2 col-sm-2" id="Control-Account-click">
+                            <button id="codeCon" style="width:30px; height:20px;"><i
+                                    class="fas fa-ellipsis-h"></i></button>
+                            @* <i class="fas fa-ellipsis-h"></i>*@
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                        </div>
+                        <div>
+                            <label>@Localizer["Permit Change of Control Accounts"]</label>
+                        </div>
+                    </div>
+                    <div class="row ml-1 mt-1 hide-scroll">
+                        <div class="col-md-5 col-sm-6">
+                            <label>@Localizer["Default Customer for A/R Invoice and Payment"]</label>
+                        </div>
+                        <div class="col-md-2 col-sm-2" id="accounts-receivable">
+                            <input class="input-box-kernel" id="codeCus" readonly />
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <span id="name"></span>
+                        </div>
+                    </div>
+                    <div class="row ml-5 mt-4">
+                        <div class="wrap-table myt1">
+                            <table class="allw-gl-d">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">@Localizer["#"]</th>
+                                        <th class="text-center">@Localizer["Type of Account"]</th>
+                                        <th class="text-center">@Localizer["Account Code"]</th>
+                                        <th class="text-center">@Localizer["Account Name"]</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="tab-sheet" active" id="Resource">
+                <div class="tab-title">@Localizer["Resources"]</div>
+                <div class="tab-content">
+                    <div class="row ml-1 mt-1 hide-scroll">
+                        <div class="col ml-3 mt-6">
+                            <div>
+                                <div class="wrap-table myt1">
+                                    <table class="allw-gl-r">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">@Localizer["#"]</th>
+                                                <th class="text-center">@Localizer["Type of Account"]</th>
+                                                <th class="text-center">@Localizer["Account Code"]</th>
+                                                <th class="text-center">@Localizer["Account Name"]</th>
+                                                @*<th class="text-center">@Localizer["Advanced Rules"]</th>*@
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="tab-sheet">
+                <div class="tab-title">@Localizer["Purchasing"]</div>
+                <div class="tab-content">
+                    <div class="row ml-5 mt-3 hide-scroll">
+                        <div class="col-md-2 col-sm-4">
+                            <label>@Localizer["Accounts Receivable"]</label>
+                        </div>
+                        <div class="col-md-3 col-sm-4" id="accounts-receivable">
+                            <input class="input-box-kernel" readonly />
+                        </div>
+                        <div class="col-md-5 col-sm-4 mt-1">
+                            <span id="name"></span>
+                        </div>
+
+
+                    </div>
+                </div>
+            </li>
+            @*<li class="tab-sheet">
+                <div class="tab-title">@Localizer["General"]</div>
+                <div class="tab-content">
+                </div>
+                </li>*@
+            @* <li class="tab-sheet">
+                <div class="tab-title">@Localizer["Inventory"]</div>
+                <div class="tab-content">
+                </div>
+                </li>*@
+            <li class="tab-sheet">
+                <div class="tab-title">@Localizer["Member Card"]</div>
+                <div class="tab-content overflow-hidden">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>@Localizer["Cash Account"]</label>
+                                <input type="text" readonly id="cash-account" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label></label>
+                                <p id="cash-account-name"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>@Localizer["Unearned Revenue Account"]</label>
+                                <input type="text" readonly id="unearned-revenue" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label></label>
+                                <p id="unearned-revenue-name"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="tab-sheet">
+                <div class="tab-title">@Localizer["Redeem Point"]</div>
+                <div class="tab-content overflow-hidden">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>@Localizer["Expense Account"]</label>
+                                <input type="text" readonly id="cash-account" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label></label>
+                                <p id="cash-account-name"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-kernel btn-xs" id="Update">@Localizer["Update"]</button>
+            <a href="/GLAccountDetermination/GLAccounting" class="btn btn-kernel btn-xs">
+                @Localizer["Cancel"]
+            </a>
+        </div>
+    </div>
+</div>
+<div id="active-gl-content" style="display:none; height: 90vh">
+    <div class="group-search-boxes">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="txtSearchLA" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div id="container-list-gl" class="wrap-table myt1 widget-scrollbar" style="height: auto">
+        <table class="allw-gl">
+            <thead>
+                <tr>
+                    <th class="text-center">@Localizer["#"]</th>
+                    <th class="text-center">@Localizer["Code"]</th>
+                    <th class="text-center">@Localizer["Name"]</th>
+                    <th class="text-center">@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<div id="Cus-accounts-receivable" style="display:none;">
+    @*<div class="modal-header">
+        @Localizer["List of Business Partners"]
+        </div>*@
+    <div class="col-md-4">
+        <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearchBP" autocomplete="off" type="text"
+                        placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+    <div id="container-input-box-kernel" class="wrap-table myt1 widget-scrollbar" style="height:350px">
+        <table class="input-box">
+            <thead>
+                <tr>
+                    <th class="text-center">@Localizer["#"]</th>
+                    <th class="text-center">@Localizer["Code"]</th>
+                    <th class="text-center">@Localizer["Name"]</th>
+                    <th class="text-center">@Localizer["Phone"]</th>
+                    <th class="text-center">@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<div id="Control-Account-Receivable" style="display:none;">
+    @*<div class="modal-header">
+        @Localizer["Control Accounts-Accounts Receivable"]
+        </div>*@
+    <div class="col-md-4">
+        <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearchCR" autocomplete="off" type="text"
+                        placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+    <div id="container-input-Control" class="wrap-table myt1 widget-scrollbar" style="height:350px">
+        <table class="input-Control">
+            <thead>
+                <tr>
+                    <th class="text-center">@Localizer["#"]</th>
+                    <th class="text-center">@Localizer["Type of Account"]</th>
+                    <th class="text-center">@Localizer["Account Code"]</th>
+                    <th class="text-center">@Localizer["Account Name"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<div id="Account-Resources" style="display:none;">
+    @*<div class="modal-header">
+        @Localizer["Control Accounts-Accounts Receivable"]
+        </div>*@
+    <div class="col-md-4">
+        <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearchRS" autocomplete="off" type="text"
+                        placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+    <div id="container-input-Control" class="wrap-table myt1 widget-scrollbar" style="height:350px">
+        <table class="input-Resources">
+            <thead>
+                <tr>
+                    <th class="text-center">@Localizer["#"]</th>
+                    <th class="text-center">@Localizer["Type of Account"]</th>
+                    <th class="text-center">@Localizer["Account Code"]</th>
+                    <th class="text-center">@Localizer["Account Name"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script src="~/Admin/SaleGLAccDetermination/js/saleGLDetermination.js"></script>

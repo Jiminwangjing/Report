@@ -1,0 +1,498 @@
+﻿<style>
+    fieldset.scheduler-border {
+        border: 2px groove #e6ffe6;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 0 0 1.5em 0 !important;
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #00cc00;
+    }
+
+    legend.scheduler-border {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+    }
+
+    .modal-header {
+        background-color: blue;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+    .form-label {
+        font-weight: bold;
+        position: absolute;
+        left: 25px;
+        top: 20px;
+        color: #999;
+        background-color: #fff;
+        z-index: 10;
+        transition: transform 150ms ease-out, font-size 150ms ease-out;
+    }
+
+    .focused .form-label {
+        transform: translateY(-125%);
+        font-size: 19px;
+        font-weight: bold;
+    }
+
+    form-input {
+        position: relative;
+        padding: 12px 0px 5px 0;
+        width: 100%;
+        outline: 0;
+        border: 0;
+        box-shadow: 0 1px 0 0 #e5e5e5;
+        transition: box-shadow 150ms ease-out;
+    }
+
+    form-select {
+        position: relative;
+        padding: 12px 0px 5px 0;
+        width: 100%;
+        outline: 0;
+        border: 0;
+        box-shadow: 0 1px 0 0 #e5e5e5;
+        transition: box-shadow 150ms ease-out;
+    }
+
+    .modal-header {
+        cursor: move;
+    }
+
+    .btnadd {
+        margin-bottom: 5px;
+        background-color: #00bfff;
+        color: white;
+    }
+
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+</style>
+<div class="card card-body">
+    <fieldset class="scheduler-border">
+        <button class="btn btn-xs btn-kernel btnadd" data-toggle="modal" data-target="#ModalCreate">@Localizer["Create"]</button>
+        <legend class="scheduler-border">@Localizer["MemberCard"]</legend>
+        <div class="row">
+            <div class="col-md-8"> </div>
+            <div class="col-md-4 pull-right" style="margin:10px 0px;">
+                <div class="input-group">
+                    <input class="search-query form-control" name="item-name" type="text" value="" placeholder=" @Localizer["Textsearch"]" id="searchList">
+                    <div class="input-group-append">
+                        <button class="btn btn-kernel btn-xs"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>@Localizer["Ref_No"]</th>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["TypeCard"]</th>
+                        <th>@Localizer["CreateDate"]</th>
+                        <th>@Localizer["ExpireDate"]</th>
+                        <th>@Localizer["ApproveDate"]</th>
+                        <th>@Localizer["Approve"]</th>
+                        <th>@Localizer["Action"]</th>
+                    </tr>
+                </thead>
+                <tbody class="myTable"></tbody>
+            </table>
+        </div>
+
+    </fieldset>
+    <div class="modal fade" id="ModalCreate">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-plus-circle" style="color:white;"><b style="margin-left:3px;">@Localizer["MemberCard"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-wrapper">
+                                <input type="hidden" id="txtid" />
+                                <form action="" class="form">
+                                    <div class="form-group">
+                                        <label class="form-label" for="txtCardTypeID">@Localizer["TypeCard"]</label>
+                                        <select class="form-control" id="txtCardTypeID" asp-items="ViewBag.CardTypeID">
+                                            <option value="0" selected disabled>--- Select ---</option>
+                                        </select>
+                                        <div class="text-danger required_CardTypeID"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="txtRef_No">@Localizer["Reference"]</label>
+                                        <input id="txtRef_No" class="form-control" type="text" />
+                                        <div class="text-danger required_re_no"></div>
+                                        <div class="text-danger" id="error_Ref_no"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="txtName">@Localizer["Name"]</label>
+                                        <input id="txtName" class="form-control" type="text" />
+                                        <div class="text-danger required_name"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="txtDescription">@Localizer["Description"]</label>
+                                        <input id="txtDescription" class="form-control" type="text" />
+                                        <div class="text-danger required_Description"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs btn-success btn_button" onclick="InsertMemberCard()">@Localizer["Add"]</button>
+                    <button class="btn btn-xs btn-danger" data-dismiss="modal" onclick="Clickclose()">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<label class="btnSave" hidden>@Localizer["Save"]</label>
+<label class="btnAdd" hidden>@Localizer["Add"]</label>
+<label id="btnRef_No"></label>
+<input type="hidden" id="txtid" />
+<script>
+    $('#searchCard').on('keyup', function () {
+        var query = ($("#searchCard").val()).toLowerCase();
+
+        $('div.container_style .styleHeader').each(function () {
+            var $this = $(this);
+            if ($this.text().toLowerCase().indexOf(query) === -1)
+                $this.closest('div.container_style ').hide();
+            else $this.closest('div.container_style ').show();
+        });
+    });
+    //styel input box
+    $('input').focus(function () {
+        $(this).parents('.form-group').addClass('focused');
+    });
+
+    $('input').blur(function () {
+        var inputValue = $(this).val();
+        if (inputValue == "") {
+            $(this).removeClass('filled');
+            $(this).parents('.form-group').removeClass('focused');
+        } else {
+            $(this).addClass('filled');
+        }
+    })
+    $('select').focus(function () {
+        $(this).parents('.form-group').addClass('focused');
+    });
+    $('select').blur(function () {
+        var inputValue = $(this).val();
+        if (inputValue == "") {
+            $(this).removeClass('filled');
+            $(this).parents('.form-group').removeClass('focused');
+        } else {
+            $(this).addClass('filled');
+        }
+    })
+    //modal
+    $(".modal-header").on("mousedown", function (mousedownEvt) {
+        var $draggable = $(this);
+        var x = mousedownEvt.pageX - $draggable.offset().left,
+            y = mousedownEvt.pageY - $draggable.offset().top;
+        $("body").on("mousemove.draggable", function (mousemoveEvt) {
+            $draggable.closest(".modal-dialog").offset({
+                "left": mousemoveEvt.pageX - x,
+                "top": mousemoveEvt.pageY - y
+            });
+        });
+        $("body").one("mouseup", function () {
+            $("body").off("mousemove.draggable");
+        });
+        $draggable.closest(".modal").one("bs.modal.hide", function () {
+            $("body").off("mousemove.draggable");
+        });
+    });
+    //search
+    $(".search-query").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $(".myTable tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+    $(document).ready(function () {
+        $.ajax({
+            url: "/MemberCard/GetMemberCard",
+            type: "GET",
+            dataType: "JSON",
+            success: function (respones) {
+                GetDataTable(respones);
+                GetDataTableCard(respones);
+            }
+        })
+    })
+    //GetDataTable
+    function GetDataTable(respones) {
+        var data = "";
+        if (respones == '') {
+             data +=
+            '<tr>' +
+               '<td colspan="8" class="text-center">@Localizer["NoData"]</td>' +
+            '</tr>';
+         }
+        $.each(respones, function (i, item) {
+            var date_Create = item.DateCreate;
+            var create_date = date_Create.slice(0, 10);
+            var date_ex = item.ExpireDate;
+            var ex_date = date_ex.slice(0, 10);
+            var dat_ap = item.DateApprove;
+            var appr_data = dat_ap.slice(0, 10);
+            var App = item.Approve;
+            if (App == "No") {
+                data +=
+                    '<tr>' +
+                    '<td hidden>' + item.ID + '</td>' +
+                    '<td hidden>' + item.CardTypeID + '</td>' +
+                    '<td>' + item.Ref_No + '</td>' +
+                    '<td>' + item.Name + '</td>' +
+                    '<td>' + item.CardType.Name + '</td>' +
+                    '<td>' + create_date + '</td>' +
+                    '<td>' + ex_date + '</td>' +
+                    '<td>' + appr_data + '</td>' +
+                    '<td style="color:red;">' + item.Approve + '</td>' +
+                    '<td hidden>' + item.Description + '</td>' +
+                    '<td>' + '<i class="fa fa-edit edit_membercard"  title="Edit" data-toggle="modal" data-target="#ModalCreate"></i>'+'</td>' +
+                    '</tr>';
+            } else {
+                data +=
+                    '<tr>' +
+                    '<td hidden>' + item.ID + '</td>' +
+                    '<td hidden>' + item.CardTypeID + '</td>' +
+                    '<td>' + item.Ref_No + '</td>' +
+                    '<td>' + item.Name + '</td>' +
+                    '<td>' + item.CardType.Name + '</td>' +
+                    '<td>' + create_date + '</td>' +
+                    '<td>' + ex_date + '</td>' +
+                    '<td>' + appr_data + '</td>' +
+                    '<td style="color:blue;">' + item.Approve + '</td>' +
+                    '<td hidden>' + item.Description + '</td>' +
+                '<td>' + '<i class="fa fa-edit edit_membercard"  title="Edit" data-toggle="modal" data-target="#ModalCreate"></i>' + '</td>' +
+                    '</tr>';
+            }
+
+        });
+        $(".myTable").append(data);
+    }
+    //edit
+    $(".myTable").on('click', '.edit_membercard', function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        var Re_NO = cut.find('td:eq(2)').text();
+        var name = cut.find('td:eq(3)').text();
+        var CardTypeID = cut.find('td:eq(1)').text();
+        var des = cut.find('td:eq(9)').text();
+        $(".btn_button").html($(".btnSave").text());
+        document.getElementById("txtid").value = id;
+        document.getElementById("txtRef_No").value = Re_NO;
+        document.getElementById("txtName").value = name;
+        document.getElementById("txtCardTypeID").value = CardTypeID;
+        document.getElementById("txtDescription").value = des;
+       
+        document.getElementById("btnRef_No").value = Re_NO;
+    });
+    function delay(callback, ms) {
+        var timer = 0;
+        return function () {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                callback.apply(context, args);
+            }, ms || 0);
+        };
+    }
+
+    $('#txtRef_No').keyup(delay(function (e) {
+        CheckRef_No();
+    }, 800));
+    // check Ref_no
+    function CheckRef_No() {
+        var id = $("#txtid").val();
+        var odlRe_No = $("#btnRef_No").val();
+        var ref_no = $("#txtRef_No").val();
+        if (id == null) {
+            $.ajax({
+                url: "/MemberCard/CheckReferentNumber",
+                type: "Post",
+                data: { Check: ref_no },
+                dataType: "JSON",
+                success: function (respones) {
+                    var isHase = false;
+                    $.each(respones, function (i, item) {
+                        isHase = true;
+                    })
+                    if (isHase == true) {
+                        $('#error_Ref_no').text("This refernce number  already exist !");
+                        $("#txtRef_No").css("border-color", "red");
+                        $(".btn_button").attr("disabled", true);
+                    }
+
+                    else {
+                        $("#txtRef_No").css("border-color", "Blue");
+                        $('#error_Ref_no').text("");
+                        $(".btn_button").attr("disabled", false);
+
+                    }
+                }
+            })
+        }
+        else {
+            if (ref_no == odlRe_No) {
+                $("#txtRef_No").css("border-color", "Blue");
+                $('#error_Ref_no').text("");
+                $(".btn_Add").attr("disabled", false);
+            }
+            else {
+                $.ajax({
+                    url: "/MemberCard/CheckReferentNumber",
+                    type: "Post",
+                    data: { Check: ref_no },
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var isHase = false;
+                        $.each(respones, function (i, item) {
+                            isHase = true;
+                        })
+                        if (isHase == true) {
+                            $('#error_Ref_no').text("This refernce number  already exist !");
+                            $("#txtRef_No").css("border-color", "red");
+                            $(".btn_button").attr("disabled", true);
+                        }
+
+                        else {
+                            $("#txtRef_No").css("border-color", "Blue");
+                            $('#error_Ref_no').text("");
+                            $(".btn_button").attr("disabled", false);
+
+                        }
+                    }
+                })
+            }
+
+        }
+
+    }
+    //insert
+    function InsertMemberCard() {
+       
+        var id = $("#txtid").val();
+        var TypeCardID = $("#txtCardTypeID").val();
+        var re_no = $("#txtRef_No").val();
+        var name = $("#txtName").val();
+        var descrciption = $("#txtDescription").val();
+        var dateEx = $("#txtDateExpire").val();
+        var approve = $("#txtApprove").prop('checked');
+        var dt = new Date().toLocaleDateString();
+
+        $(".btn_button").html($(".btnAdd").text());
+        var count = 0;
+        if (TypeCardID == '' || TypeCardID == 0) {
+            count++;
+            $("#txtCardTypeID").css("border-color", "red");
+            $(".required_CardTypeID").text("Please select card type !")
+        }
+        else {
+          
+            $("#txtCardTypeID").css("border-color", "hightgrey");
+            $(".required_CardTypeID").text("");
+        }
+        if (re_no == '') {
+            count++;
+            $("#txtRef_No").css("border-color", "red");
+            $(".required_re_no").text("Please input reference number !");
+        }
+        else {
+            count = 0;
+            $("#txtRef_No").css("border-color", "hightgrey");
+            $(".required_re_no").text("");
+        }
+        if (name == '') {
+            count++;
+            $("#txtName").css("border-color", "red");
+            $(".required_name").text("Please input name !");
+        }
+        else {
+            
+            $("#txtName").css("border-color", "hightgrey");
+            $(".required_name").text("");
+        }
+        if (descrciption == '') {
+            count++;
+            $("#txtDescription").css("border-color", "red");
+            $(".required_Description").text("Please input Description !");
+        } else {
+            
+            $("#txtDescription").css("border-color", "hightgrey");
+            $(".required_Description").text("");
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+        var data = {
+            ID: id,
+            CardTypeID: TypeCardID,
+            Ref_No: re_no,
+            Name: name,
+            Description: descrciption,
+            ExpireDate: dt,
+            Approve:"No",
+            DateCreate: dt,
+            DateApprove: dt
+        }
+        $.ajax({
+            url: "/MemberCard/InsertMemberCard",
+            type: "POST",
+            dataType: "JSON",
+            data: { memberCard: data },
+            success: function (respones) {
+                $(".myTable").empty();
+                $("#txtCardTypeID").val("");
+                $("#txtRef_No").val("");
+                $("#txtName").val("");
+                $("#txtDescription").val("");
+              
+                $.ajax({
+                    url: "/MemberCard/GetMemberCard",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        GetDataTable(respones);
+                    }
+                })
+                $("#txtid").val("");
+            }
+        })
+    }
+    //close
+    function Clickclose() {
+        $("#txtCardTypeID").css("border-color", "Blue");
+        $(".required_CardTypeID").text("");
+        $("#txtRef_No").css("border-color", "Blue");
+        $(".required_re_no").text("");
+        $("#txtName").css("border-color", "Blue");
+        $(".required_name").text("");
+        $("#txtDescription").css("border-color", "Blue");
+        $(".required_Description").text("");
+        $("#txtid").val("");
+        //
+        $("#txtCardTypeID").val("");
+        $("#txtRef_No").val("");
+        $("#txtName").val("");
+        $("#txtDescription").val("");
+      
+    }
+</script>

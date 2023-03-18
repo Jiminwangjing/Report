@@ -1,0 +1,146 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+.final-result {
+    outline: none;
+    width: 150px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 .5rem;
+}
+
+.dialog-box.calculator *, .dialog-box.calculator *::before, .dialog-box.calculator *::after {
+    -webkit-user-select: none; /* Chrome/Safari */        
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+ */
+            user-select: none;
+    font-family: 'Red Hat Display', sans-serif;
+}
+
+.dialog-box.calculator {
+    height: auto;
+    position: relative;
+    // -webkit-transform: translateY(25px);
+    //    -ms-transform: translateY(25px);
+    //        transform: translateY(25px);
+    // visibility: collapse;
+    // transition: all .15s linear;
+    z-index: inherit;
+}
+
+.dialog-box.calculator.show {
+    visibility: visible;
+    -webkit-transform: translateY(0);
+        -ms-transform: translateY(0);
+            transform: translateY(0);
+    transition: all .2s ease-in;
+}
+
+.dialog-box.calculator.standard {
+    width: 300px;
+    border: 1px solid #AAA;
+    background: #EEE;
+}
+
+.dialog-box.calculator .navigator {
+    display: block;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 .3rem;
+}
+
+.dialog-box.calculator .navigator.output {
+    margin: .5px;
+    background: #999;
+    text-align: right;
+}
+
+.dialog-box.calculator .navigator.reserve {
+    text-align: left;
+    font-size: .75em;
+}
+
+.dialog-box.calculator .keypad {
+    display: -webkit-box; 
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex; 
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 100%;
+}
+
+.dialog-box.calculator .keypad .key {
+    position: relative;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+    -webkit-box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.5);
+    cursor: pointer;
+    height: 50px;
+}
+
+.dialog-box.calculator .keypad .key .backspace {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    background-color: #777777;
+    color: #fff;
+    cursor: pointer;
+    list-style: none;
+    line-height: 16px;
+}
+
+.dialog-box.calculator .keypad .key .backspace::before {
+    position: absolute;
+    content: "";
+    left: -8px;
+    border-top: 8px solid transparent;
+    border-right: 8px solid #777777;
+    border-bottom: 8px solid transparent;
+}
+
+.dialog-box.calculator .keypad .key .backspace::after{
+    position: absolute;
+    content: "";
+    display: block;
+    top: 0;
+    left: 100%;
+    width: 6px;
+    height: 16px;
+    background: #777777; 
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.dialog-box.calculator.standard .keypad .key {
+    flex-basis: 25%;
+    border-radius: 1px;
+    background: #AA9;
+    line-height: 35px;
+    border: 1px solid #EEE;
+    text-align: center;
+}
+
+.dialog-box.calculator.standard .keypad .key:hover {
+    background: darken(#AA9, 7%);
+}
+
+.dialog-box.calculator.standard .navigator.accept-result {
+    text-align: center;
+    cursor: pointer;
+}
+
+.dialog-box.calculator.standard .accept-result:hover {
+    background: darken(#EEE, 10%);
+}
+
+

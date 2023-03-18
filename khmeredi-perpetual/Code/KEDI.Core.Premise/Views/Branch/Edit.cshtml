@@ -1,0 +1,67 @@
+﻿@model Branch
+
+<style>
+    .fa {
+        margin-right: 4px;
+    }
+
+    .stylebutton {
+        margin-top:10px;
+    }
+
+    .StyleImge {
+        height: 150px;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        width: 150px;
+    }
+    .form-group{
+        padding:0px;
+        margin:0px;
+    }
+</style>
+<div class="card card-body">
+<form asp-action="Edit" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">@Localizer["Name1"] :</label>
+                <input asp-for="Name" class="input-box-kernel" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+                <div class="form-group">
+                    <label asp-for="Name2" class="control-label">@Localizer["Name2"] :</label>
+                    <input asp-for="Name2" class="input-box-kernel" />
+                    <span asp-validation-for="Name2" class="text-danger"></span>
+                </div>
+            <div class="form-group">
+                <label asp-for="CompanyID" class="control-label">@Localizer["Company"] :</label>
+                <select asp-for="CompanyID" class="input-box-kernel" asp-items="ViewBag.CompanyID">
+                    <option value="0" selected disabled>--- Select ---</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Location" class="control-label">@Localizer["Location"] :</label>
+                <input asp-for="Location" class="input-box-kernel" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label">@Localizer["Address"] :</label>
+                <textarea asp-for="Address" class="input-box-kernel" ></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+        <div class="col-md-12 ">
+            <button class="btn btn-kernel btn-xs" type="submit">@Localizer["Save"]</button>
+            <button class="btn btn-xs btn-kernel" asp-action="Index"> @Localizer["Back"]</button>
+        </div>
+    </div>
+</form>
+</div>
+
+

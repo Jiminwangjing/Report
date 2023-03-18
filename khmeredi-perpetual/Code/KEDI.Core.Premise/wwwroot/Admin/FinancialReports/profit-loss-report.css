@@ -1,0 +1,260 @@
+.input-group .input-group-text, .input-group select, .input-group input {
+    min-width: 21px !important;
+    height: 24px;
+}
+
+.mll_2 {
+    margin: 0px -8px -8px -9px;
+}
+ul{
+    list-style: none;
+}
+.cursor {
+    cursor: pointer;
+}
+
+.menu-item-list {
+    list-style: none;
+}
+
+.menu-item-group,
+.sub-menu-item-group {
+    list-style: none;
+    position: relative;
+}
+
+.menu-item-list {
+   
+    padding: 0;
+    margin-left: 20px;
+}
+.menu-title {
+    font-family: 'Montserrat', sans-serif;
+    color: rgb(0, 0, 0);
+    font-size: 12px;
+}
+
+.alive {
+    background-color: #16a085;
+}
+
+.menu-title-group,
+.menu-title {
+    text-align: left;
+}
+
+.menu-title-group {
+    font-size: 12px !important;
+}
+
+.white {
+    color: white !important;
+}
+
+.flex {
+    display: flex;
+    justify-content: flex-start;
+}
+.flex-container,
+.totalAccount {
+    display: flex;
+    justify-content: space-between;
+    
+}
+.dotBorder {
+    border-top: none;
+    /*border-bottom: 1px dotted #16a085;*/
+}
+.tagborder {
+    border-bottom: 1px solid rgb(198, 198, 198);
+}
+.pm,
+.dotBorder {
+    margin-top: 2px;
+    padding: 3px 15px;
+   
+}
+
+.pm,
+.dotBorder {
+    margin-left: -15px;
+    font-size: 12px;
+}
+
+.totalAccount span {
+    color: #16a085;
+}
+
+.flex-hide-title {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.mt5 {
+    margin-top: 2.5rem;
+}
+
+.glaActive {
+    list-style: none;
+    padding: 10px 0;
+}
+
+#data-QuarterlyReport, #data1-QuarterlyReport, #data2-QuarterlyReport, .mt3 {
+    margin-left: -20px;
+}
+
+.form-group .form-control {
+    height: 24px !important;
+}
+
+.font-size {
+    font-size: 12px;
+}
+
+.mt__2 {
+    margin-top: -5px;
+}
+
+input[type='radio'], input[type='checkbox'] {
+    margin: 1px -15px !important;
+}
+
+.flexName {
+    display: flex;
+}
+
+    .flexName .name1 {
+        flex: 50%;
+    }
+
+    .flexName .name2 {
+        flex: 10%;
+        text-align: center;
+    }
+
+.flexQauater1 {
+    flex: 82%;
+}
+
+.flexQauater2 {
+    flex: 20%;
+}
+
+._1st {
+    flex: 119%;
+    text-align: right;
+    padding-right: 15px;
+}
+
+.flexQauaterTotal1 {
+    flex: 83%;
+}
+
+.flexQauaterTotal2 {
+    flex: 20%;
+}
+.flexSizeQ{
+    flex: 90%;
+}
+.flexSizeQ1 {
+    flex: 20%;
+}
+._2nd, ._3rd, ._4th {
+    flex: 24%;
+    text-align: center;
+}
+
+@media only screen and (max-width: 1000px) {
+    ._1st {
+        flex: 106%;
+        text-align: right;
+        padding-right: 0;
+    }
+
+    ._2nd, ._3rd, ._4th {
+        flex: 20%;
+        text-align: right;
+    }
+}
+.flexTotal1{
+    flex: 90%;
+}
+.flexTotal2 {
+    flex: 20%;
+}
+.flexAn {
+    display: flex;
+    justify-content: space-between;
+}
+.overflow {
+    overflow: auto;
+}
+
+.p_4 {
+    margin-left: 5px !important;
+}
+
+.pd_2 {
+    padding-left: 10px;
+}
+
+.wd-5 {
+    padding: 0px 50px !important;
+}
+
+@media (min-width: 168px) {
+    .dpCol1 .col-md-1 {
+        flex: 0 0 8.3333333333%;
+        max-width: 18.333333%;
+    }
+}
+
+.row {
+    flex-wrap: nowrap !important;
+}
+
+.ml_3 {
+    margin-left: 20px;
+}
+
+.ml_1 {
+    margin-left: 5px;
+}
+
+.ml_0 {
+    margin-left: -10px;
+}
+
+@media (max-width: 1000px) {
+    .ml_5 {
+        margin-left: 120px;
+    }
+}
+
+.ml_5 {
+    margin-left: 60px;
+}
+
+.ml_0_0 {
+    margin-left: -31px;
+}
+
+.widthMax {
+    min-width: 1000px;
+}
+
+@media (min-width: 1350px) {
+    .widthMax {
+        width: 1015px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .widthMax {
+        width: 1100px;
+    }
+}
+.col-total .col-md-2 {
+    flex: 0 0 14.5%;
+    max-width: 16.6666666667%;
+}

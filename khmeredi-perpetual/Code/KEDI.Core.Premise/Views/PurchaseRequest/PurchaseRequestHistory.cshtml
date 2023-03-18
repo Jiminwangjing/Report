@@ -1,0 +1,86 @@
+﻿@*@using KEDI.Core.Premise.Models.Services.Purchase
+    @model PurchaseReport*@
+<script src="~/js/table.js" defer></script>
+<script src="~/js/warehouse.js"></script>
+<link href="~/Admin/Purchase/css/purchaseOrderHistory.css" rel="stylesheet" />
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-2">
+            <label class="lable_warehouse">@Localizer["Warehouse"]</label>
+            <select class="select_warehouse" id="txtwarehouse">
+                <option value="0" selected disabled>--- select ---</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label_vender">@Localizer["Requester"]</label>
+            <select class="select_vender" id="txtusername">
+                <option value="0" selected disabled>--- select ---</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label_Postingdate">@Localizer["DateFrom "]</label>
+            <div>
+                <input type="date" class="input_postingdate" id="valid-until" />
+                @*<i class="fa fa-calendar-alt calender_postting"></i>*@
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label class="label_Documentdate">@Localizer["DateTo"]</label>
+            <div>
+                <input type="date" class="input_documentdate" id="document-date" />
+                @*<i class="fa fa-calendar-alt calender_Documete"></i>*@
+            </div>
+        </div>
+
+        <!--<div class="col-md-2">
+        <div>
+            <input class="input_search" type="text" name="SearchString" value="@ViewData["currentFilter"]" placeholder="@Localizer["SearchInvoice"]" id="txtSearch" />-->
+        @*<span class="calender_search"><i class="fa fa-search "></i></span>*@
+        <!--</div>
+    </div>-->
+        <div class="col-md-2 checkAllItem">
+            <label>@Localizer["AllInvoice"]</label>
+            <input type="checkbox" id="checkAllItem" />
+        </div>
+        <div class="col-md-2 mt-4"><a class="btn btn-xs btn-kernel" id="btn-fillter">Fillter</a></div>
+    </div>
+    <div class="wrap-table listPurchase mt-3">
+        <table cellspacing="0" id="item-list">
+            <colgroup>
+                <col>
+                <col>
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>@Localizer["No"]</th>
+                    <th>@Localizer["Invoice"]</th>
+                    <th>@Localizer["Requester"]</th>
+                    <th>@Localizer["Creater"]</th>
+                    <th>@Localizer["BalanceDue(LC)"]</th>
+
+                    <th style="text-align:center">@Localizer["Status"]</th>
+                    <th style="text-align:center">@Localizer["Cancel"]</th>
+                    <th>@Localizer["Type"]</th>
+                    <th class="text-center">@Localizer["Print"]</th>
+
+                </tr>
+            </thead>
+            <tbody class="list_quotation"></tbody>
+        </table>
+    </div>
+
+    <div id="pager">
+        <ul id="pagination" class="pagination-sm"></ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-xs btn-kernel" asp-action="Purchaseorder"
+                asp-controller="PurchaseOrder">@Localizer["Back"]</a>
+        </div>
+    </div>
+</div>
+<p type="text" hidden id="BranchID">@User.FindFirst("BranchID").Value</p>
+<p id="print-template-url" hidden>@Json.Serialize(Model)</p>
+<script src="~/js/jquery.twbsPagination.min.js"></script>
+<script src="~/Admin/Purchase/js/purchaserequestHistory.js"></script>

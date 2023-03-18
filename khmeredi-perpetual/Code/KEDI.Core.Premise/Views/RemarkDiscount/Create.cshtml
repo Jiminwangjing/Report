@@ -1,0 +1,27 @@
+﻿@using KEDI.Core.Premise.Models.Services.RemarkDiscount;
+@model RemarkDiscountItem;
+<div class="card card-body">
+    <form asp-action="Create" asp-controller="RemarkDiscount" method="post">
+        <div class="row">
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label>@Localizer["Remark Discount"]</label>
+                    <input class="form-control" asp-for="Remark" type="text" />
+                    <span asp-validation-for="Remark" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label>@Localizer["Active"]</label>
+                    <input class="form-control" asp-for="Active" type="checkbox" />
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="flex">
+            <button class="btn btn-xs btn-kernel" type="submit">@Localizer["Add"]</button>
+            <a class="btn btn-xs btn-kernel" asp-action="Index" asp-controller="RemarkDiscount">@Localizer["Cancel"]</a>
+        </div>
+    </form>
+</div>

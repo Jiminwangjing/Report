@@ -1,0 +1,72 @@
+﻿.widget-tab {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: auto;
+    min-height: 130px;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px 0;
+    font-family: monospace;
+}
+
+.widget-tab.stretch {
+    height: 100%;
+}
+
+.widget-tab.tab-y {
+    flex-flow: column wrap;
+}
+.widget-tab .tab-sheet {
+    height: 100%;
+}
+
+.widget-tab .tab-sheet .tab-title {
+    padding: 0 10px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 1.25em;
+    font-weight: bold;
+    border-radius: 4px 4px 0px 0px;
+    margin-right: 1px;
+    cursor: pointer;
+    background-color: $dark-pink;
+    color: $white;
+}
+
+.widget-tab .tab-sheet.active .tab-title {
+    background-color: $light-gray;
+    color: #333;
+}
+
+.widget-tab .tab-sheet .tab-content {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 30px);
+    padding: 10px;
+    border-radius: 0 4px 4px 4px;
+    background-color: $light-gray;
+    overflow: auto;
+    display: none;
+}
+
+.widget-tab .tab-sheet.active .tab-content {
+    display: block;
+    overflow: auto;
+}
+
+.widget-tab.tab-y .tab-sheet .tab-title {
+    border-radius: 0;
+    width: 150px;
+}
+
+.widget-tab.tab-y .tab-sheet .tab-content {
+    top: 0;
+    right: 0;
+    left: auto;
+    height: 100%;
+    width: calc(100% - 150px);
+}
+
+

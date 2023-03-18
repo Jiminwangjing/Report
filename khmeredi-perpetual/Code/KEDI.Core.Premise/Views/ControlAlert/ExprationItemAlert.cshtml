@@ -1,0 +1,71 @@
+﻿@using KEDI.Core.Premise.Models.Services.AlertManagement;
+@model ExpirationStockItem
+<style>
+    .image{
+        border-radius: 10px;
+        width: 250px;
+    }
+</style>
+<div class="card card-body">
+    @if (Model != null)
+    {
+        var image = $"/Images/items/{Model.ImageItem}";
+        <div class="row">
+            <div class="col-md-4">
+                <img class="image" src="@image" />
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4">@Localizer["Item Name"]</div>
+                    <div class="col-md-1">:</div>
+                    <div class="col-md-7">@Model.ItemName</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Localizer["Item Code"]</div>
+                    <div class="col-md-1">:</div>
+                    <div class="col-md-7">@Model.ItemCode</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Localizer["Batch No"]</div>
+                    <div class="col-md-1">:</div>
+                    <div class="col-md-7">@Model.BatchNo</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Localizer["Batch Attribute 1"]</div>
+                    <div class="col-md-1">:</div>
+                    <div class="col-md-7">@Model.BatchAttribute1</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Localizer["Batch Attribute 2"]</div>
+                    <div class="col-md-1">:</div>
+                    <div class="col-md-7">@Model.BatchAttribute2</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Localizer["Expiration Date"]</div>
+                    <div class="col-md-1">:</div>
+                    <div class="col-md-7">@Model.ExpirationDate.ToShortDateString()</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Localizer["Instock"]</div>
+                    <div class="col-md-1">:</div>
+                    <div class="col-md-7">@Model.Instock @Model.UomName</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Localizer["Warehouse Name"]</div>
+                    <div class="col-md-1">:</div>
+                    <div class="col-md-7">@Model.WarehouseName</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Localizer["Admission Date"]</div>
+                    <div class="col-md-1">:</div>
+                    <div class="col-md-7">@Model.AddmissionDate?.ToShortDateString()</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Localizer["Mfr Date"]</div>
+                    <div class="col-md-1">:</div>
+                    <div class="col-md-7">@Model.MfrDate?.ToShortDateString()</div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

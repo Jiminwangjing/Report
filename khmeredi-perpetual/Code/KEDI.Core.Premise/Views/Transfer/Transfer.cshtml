@@ -1,0 +1,254 @@
+﻿<link href="~/Admin/Transfer/css/transfer.css" rel="stylesheet" />
+<partial name="../Components/Sales/_SerialNumber.cshtml" />
+<partial name="../Components/Sales/_BatchNo.cshtml" />
+<div class="card card-body">
+    <fieldset class="scheduler-border">
+        <legend class="scheduler-border">@Localizer["Transfer"]</legend>
+        <div class="row">
+            <div class="col-md-6">
+                <input value="0" hidden id="baseonid" />
+                <label class="label_warehouse">@Localizer["FromWarehouse"]</label>
+                <select class="content_warehouse" id="txtwarehouse_from">
+                    <option value="0" selected>--- select ---</option>
+                </select>
+                <label class="label_branch">@Localizer["Branch"]</label>
+                <select class="content_branch" id="branch">
+                    <option value="0" selected>--- select ---</option>
+                </select>
+                <label class="label_warehouse">@Localizer["ToWarehouse"]</label>
+                <select class="content_warehouse" id="txtwarehouse_to">
+                    <option value="0" selected>--- select ---</option>
+                </select>
+
+                <label class="label_user">@Localizer["User"]</label>
+                <input class="content_user" type="text" value="@User.FindFirst("FullName").Value" id="txtUser"
+                    readonly />
+            </div>
+            <div class="col-md-6">
+                <label class="label_warehouse">@Localizer["Invoice Nº"]</label>
+                <select class="content_warehouse" id="txtInvoice">
+                </select>
+                <label class="label_reff_no">@Localizer["NumberNº"]</label>
+                <input class="content_reff_no" type="text" id="next_number" readonly autocomplete="off" />
+                <div class="content_icon">
+                    <label class="label_postingdate">@Localizer["PostingDate"]</label>
+                    <input class="content_postingdate" type="date" id="txtPostingdate" autocomplete="off" />
+                </div>
+                <div class="content_icon">
+                    <label class="label_documentdate">@Localizer["DocumentDate"]</label>
+                    <input class="content_documentdate" type="date" id="txtDocumentDate" autocomplete="off" />
+
+                </div>
+                @*<label class="label_time">@Localizer["Time"]</label>*@
+                <input class="content_time" type="time" id="txttime" hidden />
+            </div>
+        </div>
+    </fieldset>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="input-group">
+                <input type="text" placeholder="@Localizer["Barcode search"]" id="txtbarcode" class="form-control" />
+                <div class="input-group-append">
+                    <button class="btn btn-xs btn-kernel" id="ch-item_master"
+                        style="line-height: 25px; height: 25px">@Localizer["Choose Item"]</button>
+                </div>
+            </div>
+            <div class="rquried_item text-danger"></div>
+            <div class="item_not_difine text-danger"></div>
+        </div>
+    </div>
+    <fieldset class="scheduler-borders">
+        <legend class="scheduler-border">@Localizer["TransferDetail"]</legend>
+        <div class="wrap-table list widget-scrollbar">
+            <table id="list-items">
+                <thead>
+                    <tr>
+                        <th>@Localizer["From Warehouse"]</th>
+                        <th>@Localizer["To Warehouse"]</th>
+                        <th>@Localizer["Code"]</th>
+                        <th>@Localizer["Item Name 1"]</th>
+                        <th>@Localizer["Item Name 2"]</th>
+                        <th>@Localizer["Quantity"]</th>
+                        <th>@Localizer["In Stock"]</th>
+                        <th>@Localizer["Cost"]</th>
+                        <th>@Localizer["UoM"]</th>
+                        <th>@Localizer["Type"]</th>
+                        <th id="col-to-append-after-detail">@Localizer["Action"]</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </fieldset>
+
+    <div id="item-master-content" style="display:none; height: 90vh">
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <div class="group-search-boxes" style="right:0%;">
+                    <div id="text-search" class="wrap-search-box">
+                        <div class="wrap-input show">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="txtseaerch" autocomplete="off" type="text"
+                                placeholder="@Localizer["Search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search" style="display: none;">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="container-list" class="wrap-table myt1 widget-scrollbar" style="height: auto">
+            <table id="item-master">
+                <tr>
+                    <th>@Localizer["#"]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Item Name 1"]</th>
+                    <th>@Localizer["Item Name 2"]</th>
+                    <th>@Localizer["InStock"]</th>
+                    <th>@Localizer["Cost"]</th>
+                    <th>@Localizer["Currency"]</th>
+                    <th>@Localizer["UoM"]</th>
+                    <th>@Localizer["Barcode"]</th>
+                    <th id="col-to-append-after">@Localizer["Choose"]</th>
+                </tr>
+            </table>
+            <div id="loadingitem" hidden>
+                <img class="loadingitem" src="~/ajaxloader/loading.gif" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label hidden class="label_userrequest">@Localizer["Userrequest"]</label>
+            <input hidden type="text" id="txtuserrequest" class="content_userrequest" readonly
+                value="@User.FindFirst("UserID").Value" />
+            <div>
+                <label class="label_remark">@Localizer["Remark"]</label>
+                <textarea id="txtRemark" class="content_remark"></textarea>
+            </div>
+            <button class="btn btn-xs btn-kernel" id="saveData">@Localizer["Add"]</button>
+            <button class="btn btn-xs btn-kernel" onclick="cancelpurchase()">@Localizer["Cancel"]</button><br />
+        </div>
+        <div class="col-md-4">
+            <div style="display:flex;">
+                <label class="label_remark">@Localizer["Copy From"]</label>
+                <select class="form-control" id="copyfrom">
+                    <option value="0"></option>
+                    <option value="1">TransferRequest</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="err-succ-message"></div>
+
+    <div id="content-transfer" style="display:none;">
+        <table id="transferrequest">
+            <tr>
+                <th>@Localizer["#"]</th>
+                <th>@Localizer["DocumentType"]</th>
+                <th>@Localizer["NumberNo"]</th>
+                <th>@Localizer["Warehouses"]</th>
+                <th>@Localizer["PostingDate"]</th>
+                <th>@Localizer["Time"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </table>
+    </div>
+
+
+    <div class="modal fade" id="ModalError">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header modal-header-item" style="padding:5px; color:white;">
+                    <i>@Localizer["Item not completed"]</i>
+                </div>
+                <div class="modal-body">
+                    <div class="wrap-table list">
+                        <table id="item-manage">
+                            <thead>
+                                <tr>
+                                    <th class="boldth">@Localizer["Code"]</th>
+                                    <th class="boldth">@Localizer["Item Name 1"]</th>
+                                    <th class="boldth">@Localizer["InStock"]</th>
+                                    <th class="boldth">@Localizer["Purchase Qty"]</th>
+                                    @* <th class="boldth">@Localizer["Choose"]</th>*@
+                                </tr>
+                            </thead>
+                            <tbody class="list_not_transaction"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-danger" style="padding:5px;"
+                        data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModalFindBarcode">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:5px; color:white;">
+                    <i>@Localizer["Choose Uom"]</i>
+                </div>
+                <div class="modal-body">
+                    <div class="wrap-table list">
+                        <table id="list_findbarcode">
+                            <tr>
+                                <th class="boldth">@Localizer["Code"]</th>
+                                <th class="boldth">@Localizer["Item Name 1"]</th>
+                                <th class="boldth">@Localizer["Item Name 2"]</th>
+                                <th class="boldth">@Localizer["UoM"]</th>
+                                <th class="boldth">@Localizer["Choose"]</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:5px;">
+                    <button class="btn btn-sm btn-danger" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModalManageExpire">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i style="color:white;"><b>@Localizer["SetExpireDate"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="wrap-table list">
+                        <table id="item-manage-expire">
+                            <thead>
+                                <tr>
+                                    <th>@Localizer["Item Name 1"]</th>
+                                    <th>@Localizer["Item Name 2"]</th>
+                                    <th>@Localizer["Uom"]</th>
+                                    <th>@Localizer["ExpireDate"]</th>
+                                    @* <th>@Localizer["AlertStock"]</th>*@
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-danger" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="text" id="PurchaseAPID" hidden />
+<input type="text" id="seriesGR" hidden />
+<input type="text" id="SeriesDetailID" hidden />
+<input type="text" id="JEID" hidden />
+<input type="text" id="JENumber" hidden />
+<input type="text" id="number" hidden />
+<div id="data-invoice" hidden>@Json.Serialize(Model)</div>
+<p hidden id="BrandID">@User.FindFirst("BranchID").Value</p>
+<p hidden id="UserID">@User.FindFirst("UserID").Value</p>
+<script src="~/Admin/Transfer/js/transfer.js"></script>

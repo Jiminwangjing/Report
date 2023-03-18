@@ -1,0 +1,107 @@
+﻿.select_warehouse,
+.select_vender,
+.input_postingdate,
+.input_documentdate,
+.input_requrieddate,
+.select_showpage,
+.input_search {
+    height: 30px;
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 3px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    width: 100%;
+    font-family: Arial;
+    font-size: 13px;
+    border-radius: 3px;
+    border: 1px solid #c6c1c1;
+}
+
+.select_warehouse:focus,
+.select_vender:focus,
+.input_postingdate:focus,
+.input_documentdate:focus,
+.input_requrieddate:focus,
+.select_showpage:focus,
+input_search:focus {
+    box-shadow: 0 0 5px rgba(27, 93, 185, 0.4);
+    padding: 3px 3px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid rgb(120, 172, 245);
+    border-radius: 3px;
+    font-family: Arial;
+    font-size: 13px;
+}
+
+.lable_barnch,
+.lable_warehouse,
+.lable_vender .label_Postingdate,
+.label_Documentdate,
+.lable_requried,
+.label_showpage {
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.BTNROW {
+    margin-bottom: 10px;
+}
+
+.input_postingdate,
+.input_documentdate,
+.input_requrieddate {
+    position: relative;
+}
+
+.calender_postting,
+.calender_Documete,
+.calender_required {
+    position: absolute;
+    bottom: 13px;
+    right: 20px;
+    color: #0e8cc3;
+}
+
+#ui-datepicker-div {
+    width: 185px;
+}
+
+.input_search {
+    top: 27px;
+    position: relative;
+}
+
+.calender_search {
+    position: absolute;
+    bottom: 5px;
+    right: 20px;
+    color: #0e8cc3;
+    border: none;
+    background-color: white;
+}
+
+.checkAllItem {
+    margin-top: 27px;
+    font-size: 15px;
+}
+
+input[type=checkbox] {
+    height: 18px;
+    width: 18px;
+}
+
+.listPurchase {
+    margin-bottom: 20px;
+}
+
+.btn-fillter {
+    padding: 20px;
+
+}
+
+table#item-list tr td:last-child {
+    text-align: center;
+}

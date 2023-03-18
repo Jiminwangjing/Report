@@ -1,0 +1,1166 @@
+﻿
+<style>
+    table thead tr th, table thead tr th, table tr th, table  tr td{
+        text-align:center !important;
+    }
+    input[type="checkbox"]{
+        width:16px !important;
+        height:16px !important;
+    }
+
+</style>
+
+
+<div class="card card-body mt-3">
+    <div class="row">
+        <div class="col-md-12">
+            <span><label for="terms" class="text button_action"><input type="checkbox" id="bpcode" ></label></span>
+            <span>BPCode</span>
+            <span><label for="terms" class="text button_action"><input type="checkbox" id="saleemp"></label></span>
+            <span>Sale Employee</span>
+            <span><label for="terms" class="text button_action"><input type="checkbox" id="stage"></label></span>
+            <span>Stage</span>
+            <span><label for="terms" class="text button_action"><input type="checkbox" id="date"></label></span>
+            <span>Date</span>
+            <span><label for="terms" class="text button_action"><input type="checkbox" id="doc" ></label></span>
+            <span>Document</span>
+            <span><label for="terms" class="text button_action"><input type="checkbox" id="amount"></label></span>
+            <span>Amounts</span>
+            <span><label for="terms" class="text button_action"><input type="checkbox" id="percent"></label></span>
+            <span>Percenttage Rate</span>
+        </div>
+    </div>
+    <div class="row mt-4">
+        @*<div class="col-md-3"></div>*@
+        @*<div class="col-md-6 col-sm-6 col-xl-6 col-xs-6" style="padding-right:4px; padding-bottom:8px;">*@
+            <div class="card card-body">
+                <center style="font-family:Arial;font-size:15px;color:gray;">@Localizer["Opportunity​ Report"] </center><div id="stagelist"></div>
+            </div>
+        @*</div>*@
+        @*<div class="col-md-3"></div>*@
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="wrap-table myt1">
+                <table id="list-stage">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Localizer["No"]
+                            </th>
+                            <th>
+                                @Localizer["Description"]
+                            </th>
+                            <th>
+                                @Localizer["Stage Number"]
+                            </th>
+                            <th>
+                                @Localizer["Expected Total"]
+                            </th>
+                            <th>
+                                @Localizer["Weighted Amount"]
+                            </th>
+                            <th>
+                                @Localizer["%"]
+                            </th>
+                        </tr>
+
+                    </thead>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-6">Total Of Potential Amount<span class="ml-1"><input readonly id="totalexcetedamount" /></span></div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-6"></div>
+        <div class="col-md-6">Total Of Weighted Amount<span class="ml-4"><input readonly id="weighttotal" /></span></div>
+    </div>
+</div>
+@*//model of search by bp code*@
+<div id="active-edit-content" style="display:none; height: 254px; ">
+    <div class="container" style=" max-width:70% !important;margin:auto;">
+        <input id="editbpid" hidden />
+        <h4 style="font-size:1rem;">Code:</h4>
+        <div class="flex">
+            <div class="row">
+                <div class="col-md-6 input-group">
+                    <span>From</span>
+                    <input type="text" id="code1" />
+                    <div title="List Customer" id="show-list-itemster" class="input-group-append">
+                        <i class="fas fa-plus-circle text-info input-group-icon"></i>
+                    </div>
+                </div>
+                <div class="col-md-6 input-group ">
+                    <span>To</span>
+                    <input type="text" id="code2" />
+                    <div title="List Customer" id="show-list-itemsters" class="input-group-append">
+                        <i class="fas fa-plus-circle text-info input-group-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4 style="font-size:1rem; margin-top:20px;">Bussines Partner Type:</h4>
+        <div class="row">
+            <div class="col-md-12">
+                    <select style="width:95%;" @*asp-items="ViewBag.BPType"*@ id="selectTypebp">
+                        <option>ALL</option>
+                        <option>Customer</option>
+                        <option>Vendor</option>
+                    </select>
+
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+    @*//model box of search sale employee*@
+
+    <div class="em_containers doctypeno_containers " style="display: none; height: 230px;">
+
+        <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+            <div id="text-search" class="wrap-search-box ">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-emp" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="list-em" class="mt-2">
+            <tr>
+                <th>@Localizer["No"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </table>
+    </div>
+    @*//model box of search doctype*@
+    <div class="doc_containers doctypeno_containers widget-scrollbar" style="display: none; height: 260px;">
+
+        <table id="list-doc">
+            <tr>
+                <th>@Localizer["No"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </table>
+        <div class=" mb-2">
+            <span>Document Type</span>
+            <select class="" style="width:500px" id="selectdoc">
+                <option value=1>All</option>
+                <option value=2>Sales Documents</option>
+                <option value=3>Purchesing Documents</option>
+            </select>
+        </div>
+    </div>
+    @*//model box of get stage*@
+    <div class="stage_containers doctypeno_containers " style="display: none; height: 250px;">
+        <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+            <div id="text-search" class="wrap-search-box ">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-doc" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="list-stages" class="mt-3">
+            <tr>
+                <th>@Localizer["No"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </table>
+    </div>
+    @*//MODEL BOX BP*@
+    <div class="bp_containers doctypeno_containers  widget-scrollbar" style="display: none;height:250px">
+         <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+            <div id="text-search" class="wrap-search-box ">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-bp" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="list-bp" class="mt-3">
+            <tr>
+               
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Action"]</th>
+            </tr>
+        </table>
+    </div>
+    @*//model box of search date*@
+    <div id="active-date-content" style="display:none; height: 250px;">
+
+        <div class="container" style=" max-width:70% !important;margin:auto;">
+            <input id="editbpid" hidden />
+            <h4 style="font-size:1rem;">Start Date:</h4>
+            <div class="flex">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>From</label>
+                        <input type="date" id="fstartdate" />
+                    </div>
+                    <div class="col-md-6">
+                        <span>To</span>
+                        <input type="date" id="tstartdate" />
+                    </div>
+                </div>
+            </div>
+            <h4 style="font-size:1rem;margin-top:20px">Closing Date:</h4>
+            <div class="flex">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <span>From</span>
+                        <input type="date" id="fclosedate" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <span>To</span>
+                        <input type="date" id="tclosedate" />
+                    </div>
+                </div>
+            </div>
+            <h4 style="font-size: 1rem; margin-top: 20px;">Predicted Closing Date:</h4>
+            <div class="flex">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span>From</span>
+                        <input type="date" id="fpredate" />
+                    </div>
+                    <div class="col-md-6">
+                        <span>To</span>
+                        <input type="date" id="tpredate" />
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+    @*//model box of search by amount*@
+    <div id="active-amount-content" style="display:none; height: 250px; ">
+        <div class="container" style=" max-width:70% !important;margin:auto;">
+            <input id="editbpid" hidden />
+            <h4 style="font-size:1rem;">Potential Amount:</h4>
+            <div class="flex">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span>From</span>
+                        <input type="text" id="frompotentialamount" autocomplete="off" />
+                    </div>
+                    <div class="col-md-6">
+                        <span>To</span>
+                        <input type="text" id="topotentialamount" autocomplete="off" />
+                    </div>
+                </div>
+            </div>
+            <h4 style="font-size:1rem;margin-top:20px;">Weight Amount:</h4>
+            <div class="flex">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span>From</span>
+                        <input type="text" id="fweightamount" autocomplete="off" />
+                    </div>
+                    <div class="col-md-6">
+                        <span>To</span>
+                        <input type="text" id="tweightamount" autocomplete="off" />
+                    </div>
+                </div>
+            </div>
+            <h4 style="font-size:1rem;margin-top:20px">Groos Profit Amount:</h4>
+            <div class="flex">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span>From</span>
+                        <input type="text" id="fgrossprofit" autocomplete="off" />
+
+                    </div>
+                    <div class="col-md-6">
+                        <span>To</span>
+                        <input type="text" id="tgrossprofit" autocomplete="off" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @*//model box of search by percent tage*@
+    <div id="active-percent-content" style="display:none; height: 50px; ">
+        <div class="container" style=" max-width:70% !important;margin:auto;">
+            <input id="editbpid" hidden />
+            <h4 style="font-size:1rem; margin-bottom:10px;">Close %</h4>
+            <div class="flex">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span>From</span>
+                        <input type="text" id="perfrom" autocomplete="off" />
+                    </div>
+                    <div class="col-md-6">
+                        <span>To</span>
+                        <input type="text" id="perto" autocomplete="off" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input id="idbp" hidden />
+    <input id="idsale" hidden />
+    <input id="bpid1" hidden />
+    <input id="bpid2" hidden />
+<input id="bpfrom"  hidden  />
+<input id="bpto"  hidden/>
+    <div hidden id="model-data">@Json.Serialize(Model)</div>
+    <script>
+        $(document).ready(function ()
+        {
+            let _data = JSON.parse($("#model-data").text());
+            const disSetting = _data.GeneralSetting;
+            const num = NumberFormat({
+                decimalSep: disSetting.DecimalSeparator,
+                thousandSep: disSetting.ThousandsSep
+            });
+
+        $("#search-emp").on("keyup", function (e) {
+            var value = $(this).val().toLowerCase();
+            $("#list-em tr:not(:first-child)").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $("#search-bp").on("keyup", function (e) {
+            var value = $(this).val().toLowerCase();
+            $("#list-bp tr:not(:first-child)").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        $("#search-doc").on("keyup", function (e) {
+            var value = $(this).val().toLowerCase();
+            $("#list-stages tr:not(:first-child)").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        let doctype = 0;
+    function bindstagereport(dataSource) {
+        $("#stagelist").dxChart({
+            rotated: false,
+            dataSource: dataSource,
+            size: {
+                height: 200
+            },
+            series: {
+                label: {
+                    visible: true,
+                    backgroundColor: "red",
+
+                },
+                color: "#33D5FF",
+                type: "bar",
+                argumentField: "Name",
+                valueField: "ExcetedAmount"
+            },
+            argumentAxis: {
+                label: {
+                    customizeText: function () {
+                        return "" + this.valueText;
+                    }
+                }
+            },
+            valueAxis: {
+
+                tick: {
+                    visible: false
+                },
+                label: {
+                    visible: false
+                }
+            },
+            "export": {
+                enabled: false
+            },
+            legend: {
+                visible: false
+            }
+        });
+    }
+        //chart report of stage
+            $.get("/Opportunity/GetStageReports", function (liststagereports) {
+                liststagereports.forEach(i => {
+                    i.ExcetedAmount = num.formatSpecial(i.ExcetedAmount, disSetting.Amounts)
+                    i.WeightAmount = num.formatSpecial(i.WeightAmount, disSetting.Amounts)
+                })
+            bindstagereport(liststagereports);
+
+        })
+
+      
+    function BindDataStage(data)
+    {
+        
+       
+            bindstagereport(data);
+            if (data.length == 0) {
+
+                $("#totalexcetedamount").val(0);
+                $("#weighttotal").val(0);
+
+            }
+            else {
+                let excetedtotal = 0;
+                let weighttotal = 0;
+                for (let i = 0; i < data.length; i++) {
+                    excetedtotal = excetedtotal + data[i].ExcetedAmount;
+                    weighttotal = weighttotal + data[i].WeightAmount;
+                    $("#totalexcetedamount").val(num.formatSpecial(excetedtotal, disSetting.Amounts));
+                    $("#weighttotal").val(num.formatSpecial(weighttotal, disSetting.Amounts));
+                }
+            }
+            const __Liststage = ViewTable({
+                keyField: "ID",
+                selector: "#list-stage",
+                indexed: true,
+                paging: {
+                    pageSize: 5,
+                    enabled: true
+                },
+                visibleFields: [ "Name", "StageNo", "ExcetedAmount", "WeightAmount", "Percent"],
+            });
+        __Liststage.clearRows();
+        data.forEach(i => {
+            i.ExcetedAmount = num.formatSpecial(i.ExcetedAmount, disSetting.Amounts)
+            i.WeightAmount = num.formatSpecial(i.WeightAmount, disSetting.Amounts)
+        })
+        __Liststage.bindRows(data);
+       
+      
+    }
+        //end chart report of stage
+            $("#show-list-itemsters").click(function () {
+                $.ajax({
+                    url: "/Opportunity/GetBP",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (response) {
+                        bindBPS(response);
+                    }
+                });
+            });
+            function bindBPS(res) {
+                let dialog = new DialogBox({
+                    content: {
+                        selector: ".bp_containers"
+                    },
+                    caption: "Bussines Partner"
+                });
+                dialog.invoke(function () {
+                    const __listBussinesPartner = ViewTable({
+                        keyField: "ID",
+                        selector: "#list-bp",
+                        paging: {
+                            pageSize: 10,
+                            enabled: true
+                        },
+                        visibleFields: ["Code", "Name", "Choose"],
+                        actions: [
+                            {
+                                template: `<i class="fas fa-arrow-circle-down" id="close"></i>`,
+                                on: {
+                                    "click": function (e) {
+
+                                        $("#code2").val(e.data.Code);
+                                        $("#bpid2").val(e.data.ID);
+                                        $("#bpto").val(e.data.ID);
+                                        dialog.shutdown();
+                                    }
+                                },
+                            }
+                        ]
+                    });
+                    __listBussinesPartner.bindRows(res)
+                });
+                dialog.confirm(function () {
+                    dialog.shutdown();
+                })
+            }
+    $("#show-list-itemster").click(function ()
+    {
+                $.ajax({
+                    url: "/Opportunity/GetBP",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (response) {
+                        bindBP(response);
+                    }
+                });
+     });
+
+    function bindBP(res)
+    {
+                let dialog = new DialogBox({
+                    content: {
+                        selector: ".bp_containers"
+                    },
+                    caption: "Bussines Partner"
+                });
+                dialog.invoke(function () {
+                    const __listBussinesPartner = ViewTable({
+                        keyField: "ID",
+                        selector: "#list-bp",
+                        paging: {
+                            pageSize: 10,
+                            enabled: true
+                        },
+                        visibleFields: ["Code", "Name", "Choose"],
+                        actions: [
+                            {
+                                template: `<i class="fas fa-arrow-circle-down" id="close"  ></i>`,
+                                on: {
+                                    "click": function (e) {
+                                        $("#code1").val(e.data.Code);
+                                        $("#bpid1").val(e.data.ID);
+                                        $("#bpfrom").val(e.data.ID);
+                                        dialog.shutdown();
+                                    }
+                                },
+                            }
+                        ]
+                    });
+                    __listBussinesPartner.bindRows(res)
+                });
+                dialog.confirm(function () {
+                    dialog.shutdown();
+                    $("#bpcode").prop("checked", false);
+                })
+     }
+
+   
+        function bpcode()
+        {
+
+            // Get the checkbox
+            var checkbpcode = document.getElementById("bpcode");
+            if (checkbpcode.checked == true) {
+                let dialog = new DialogBox({
+                    button: {
+                        ok: {
+                            text: "OK"
+                        }
+                    },
+                    type: "ok-cancel",
+                    content: {
+                        selector: "#active-edit-content"
+                    }
+                });
+                dialog.reject(function () {
+                    GetAllStage();
+                    dialog.shutdown();
+                });
+                dialog.confirm(function () {
+                    $("#bpcode").prop("checked", false);
+                    //let code1 = $("#code1").val();
+                    //let code2 = $("#code2").val();
+                    //let bpfrom = $("#bpfrom").val();
+                    //let bpto = ("#bpto").val();
+                    let bpfrom = $("#bpid1").val();
+                    let bpto = $("#bpid2").val();
+                    let type = $("#selectTypebp").val();
+                    if (!isEmpty(bpfrom) && !isEmpty(bpto) && !isEmpty(type)) {
+                        $.ajax({
+                            url: "/Opportunity/SearchByBp",
+                            type: "Get",
+                            data: { BPFrom: bpfrom, BPTo: bpto, Type: type },
+                            dataType: "Json",
+                            success: function (respones) {
+                                BindDataStage(respones);
+                            }
+                        })
+                    }
+                    if (isEmpty(bpfrom) || isEmpty(bpto) || isEmpty(type)) {
+                        GetAllStage();
+                    }
+                    dialog.shutdown();
+                });
+                dialog.invoke(function () {
+
+                });
+            }
+        }
+        function GetAllStage() {
+            $.get("/Opportunity/Getliststage", function (stage) {
+                BindDataStage(stage);
+            });
+        }
+        GetAllStage();
+        function isEmpty(value) {
+            return value == undefined || value == null || value == "";
+            }
+            const obj = {
+                StageView: new Array()
+
+            }
+    function saleemp()
+    {
+        var checksaleemp = document.getElementById("saleemp");
+            if (checksaleemp.checked == true) {
+                $.ajax({
+                    url: "/Opportunity/GetSaleEmployee",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (response) {
+                        bindEm(response);
+                    }
+                });
+                function bindEm(res)
+                {
+
+                  
+                    let arr_stage = [];
+                    let dialog = new DialogBox({
+                        button: {
+                            ok: {
+                                text: "OK"
+                            }
+                        },
+                        type: "ok-cancel",
+                        content: {
+                            selector: ".em_containers"
+                        },
+                        caption: "Sale Employee"
+                    });
+                    dialog.reject(function () {
+                        dialog.shutdown();
+                    });
+
+                    dialog.invoke(function () {
+                        const __listEmployee = ViewTable({
+                            keyField: "ID",
+                            selector: "#list-em",
+                            indexed: true,
+                            paging: {
+                                pageSize: 5,
+                                enabled: true
+                            },
+                            visibleFields: ["Name", "Action"],
+                            columns:[
+                                    {
+                                        name: "Action",
+                                        template: `<input type="checkbox">`,
+                                        on:{
+                                            "click": function (e) {
+                                                const __checked = $(this).prop("checked") ? true : false;
+                                                __listEmployee.updateColumn(e.data.ID, "Action", __checked);
+                                                var id = e.data.ID;
+                                                if (__checked) {
+                                                    arr_stage.push(id)
+                                                }
+                                                if (!__checked) {
+
+                                                    for (var i = 0; i < arr_stage.length; i++) {
+
+                                                        if (arr_stage[i] === id) {
+
+                                                            arr_stage.splice(i, 1);
+                                                        }
+                                                    }
+                                                }
+                                                }
+                                         }
+                                    }
+                            ]
+                           
+                        });
+                        __listEmployee.clearRows();
+                        __listEmployee.bindRows(res)
+                    });
+                    dialog.confirm(function (e) {
+                        $("#saleemp").prop("checked", false);
+                        obj.StageView = JSON.stringify(arr_stage);
+                        
+                            $.ajax({
+                                url: "/Opportunity/Getbpbycheck",
+                                type: "Get",
+                                data: { searchStageBysaleEmp: obj.StageView },
+                                dataType: "Json",
+                                success: function (respones) {
+                                    BindDataStage(respones);
+                                }
+                            })
+                                        
+                        dialog.shutdown();
+                    })
+                }
+            }
+        }
+
+    function stage()
+    {
+            var checksalestage = document.getElementById("stage")
+            if (checksalestage.checked == true) {
+                $.ajax({
+                    url: "/Opportunity/GetStage",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (response) {
+                        bindstage(response);
+                      
+
+                    }
+                });
+
+                function bindstage(res)
+                {
+                    var arr_stage = [];
+                    let dialog = new DialogBox({
+                        button: {
+                            ok: {
+                                text: "OK"
+                            }
+                        },
+                        type: "ok-cancel",
+                        content: {
+                            selector: ".stage_containers"
+                        },
+                        caption: "Stage"
+                    });
+                    dialog.reject(function () {
+                        dialog.shutdown();
+                    });
+
+                    dialog.invoke(function () {
+                        const __liststage = ViewTable({
+                            keyField: "ID",
+                            selector: "#list-stages",
+                            indexed:true,
+                            paging: {
+                                pageSize: 5,
+                                enabled: true
+                            },
+                            visibleFields: ["Name", "Action"],
+                            columns: [
+                                {
+                                    name: "Action",
+                                    template: `<input type="checkbox">`,
+                                    on: {
+                                        "click": function (e) {
+
+                                            const __checked = $(this).prop("checked") ? true : false;
+                                            __liststage.updateColumn(e.data.ID, "Action", __checked);
+                                    
+                                            var id = e.data.ID;
+                                            if (__checked) {
+                                                arr_stage.push(id)
+                                            }
+                                            if (!__checked) {
+
+                                                for (var i = 0; i < arr_stage.length; i++) {
+
+                                                    if (arr_stage[i] === id) {
+
+                                                        arr_stage.splice(i, 1);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                }
+                            ]
+                        });
+                        __liststage.clearRows();
+                        __liststage.bindRows(res)
+                    });
+                    dialog.confirm(function () {
+                        $("#stage").prop("checked", false);
+                        if (arr_stage.length > 0) {
+                            $.ajax({
+                                url: "/Opportunity/GetsearchByStage",
+                                type: "POST",
+                                data: { function_param: arr_stage },
+                                dataType: "Json",
+                                success: function (respones) {
+                                    BindDataStage(respones);
+
+                                }
+                            })
+                        }
+                       
+                        dialog.shutdown();
+                    })
+                }
+            }
+        }
+        function date() {
+            var checkdate = document.getElementById("date")
+            if (checkdate.checked == true) {
+                let dialog = new DialogBox({
+                    button: {
+                        ok: {
+                            text: "OK"
+                        }
+                    },
+                    type: "ok-cancel",
+                    content: {
+                        selector: "#active-date-content"
+                    }
+                });
+                dialog.reject(function () {
+                  
+                    dialog.shutdown();
+                });
+                dialog.confirm(function ()
+                {
+                    $("#date").prop("checked", false);
+                    $.ajax({
+                        url: "/Opportunity/GetStageBydate",
+                        type: "Get",
+                        data: { DateFrom: $("#fstartdate").val(), DateTo: $("#tstartdate").val(), CDateFrom: $("#fclosedate").val(), CDateTo: $("#tclosedate").val(), PreDateFrom: $("#fpredate").val(), PreDateTo: $("#tpredate").val() },
+                        dataType: "Json",
+                        success: function (respones) {
+                            BindDataStage(respones);
+                        }
+                    })
+                    dialog.shutdown();
+                });
+                dialog.invoke(function () { });
+
+            }
+
+        }
+        const searchStageParams = {
+            PurchaseOrder: false,
+            GoodsReceiptPO: false,
+            SaleAR: false,
+            SaleQuotation: false,
+            SaleOrder: false,
+            SaleDelivery: false,
+        }
+        $("#selectdoc").change(function () {
+            searchStageParams.PurchaseOrder = false
+            searchStageParams.GoodsReceiptPO = false
+            searchStageParams.SaleQuotation = false
+            searchStageParams.SaleQuotation = false
+            searchStageParams.SaleOrder = false
+            searchStageParams.SaleDelivery = false
+            doctype = this.value;
+            $.ajax({
+                url: "/Opportunity/Getdoctypes",
+                type: "Get",
+                data: { ID: doctype },
+                dataType: "Json",
+                success: function (response) {
+                  
+                    tablebind(response)
+                  
+                }
+            });
+
+        });
+        function doc()
+        {
+            var checkdoc = document.getElementById("doc")
+            if (checkdoc.checked == true) {
+                $.ajax({
+                    url: "/Opportunity/Getdoctype",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (response) {
+                        bindEm(response);
+                    }
+                });
+            }
+        }
+        function tablebind(res) {
+            const __listEmployee = ViewTable({
+                keyField: "ID",
+                selector: "#list-doc",
+                indexed:true,
+                paging: {
+                    pageSize: 10,
+                    enabled: true
+                },
+                visibleFields: ["Name", "Choose"],
+                actions: [
+                    {
+                        template: `<input type='checkbox'>`,
+                        on: {
+                            "click": function (e) {
+                              
+                                const __checked = $(this).prop("checked") ? true : false;
+                                if (e.data.Code === "PO") {
+                                    searchStageParams.PurchaseOrder = __checked
+                                }
+                                if (e.data.Code === "PD") {
+                                    searchStageParams.GoodsReceiptPO = __checked
+                                }
+                                if (e.data.Code === "IN") {
+                                    searchStageParams.SaleAR = __checked
+                                }
+                                if (e.data.Code === "SQ") {
+                                    searchStageParams.SaleQuotation = __checked
+                                }
+                                if (e.data.Code === "SO") {
+                                    searchStageParams.SaleOrder = __checked
+                                }
+                                if (e.data.Code === "DN") {
+                                    searchStageParams.SaleDelivery = __checked
+                                }
+                            }
+                        },
+                    }
+                ]
+            });
+            __listEmployee.clearRows();
+            __listEmployee.bindRows(res)
+        }
+        function bindEm(res) {
+         
+            let dialog = new DialogBox({
+                button: {
+                    ok: {
+                        text: "OK"
+                    }
+                },
+                type: "ok-cancel",
+                content: {
+                    selector: ".doc_containers"
+                },
+                caption: "Document"
+            });
+            dialog.reject(function () {
+              
+                dialog.shutdown();
+            });
+            dialog.invoke(function () {
+                tablebind(res);
+            });
+            dialog.confirm(function () {
+                $("#doc").prop("checked", false);
+                if (searchStageParams.PurchaseOrder == true || searchStageParams.GoodsReceiptPO == true || searchStageParams.SaleAR == true || searchStageParams.SaleQuotation == true || searchStageParams.SaleOrder == true || searchStageParams.SaleDelivery == true) {
+                    $.ajax({
+                        url: "/Opportunity/SearchbyDoc",
+                        type: "Get",
+                        data: { searchStageParams: JSON.stringify(searchStageParams) },
+                        dataType: "Json",
+                        success: function (respones) {
+                            BindDataStage(respones);
+                        }
+                    })
+                }
+                
+                dialog.shutdown();
+            })
+        }
+        function amount() {
+            var checkamount = document.getElementById("amount");
+            if (checkamount.checked == true) {
+                let dialog = new DialogBox({
+                    button: {
+                        ok: {
+                            text: "OK"
+                        }
+                    },
+                    type: "ok-cancel",
+                    content: {
+                        selector: "#active-amount-content"
+                    }
+                });
+                dialog.reject(function () {
+                 
+                    dialog.shutdown();
+                });
+                dialog.confirm(function () {
+                    $("#amount").prop("checked", false);
+                    $.ajax({
+                        url: "/Opportunity/GetStageByamount",
+                        type: "Get",
+                        data: { Frompotential: $("#frompotentialamount").val(), Topotential: $("#topotentialamount").val(), Fromweightamount: $("#fweightamount").val(), Toweightamount: $("#tweightamount").val(), Fromprofit: $("#fgrossprofit").val(), Toprofit: $("#tgrossprofit").val() },
+                        dataType: "Json",
+                        success: function (respones) {
+                            BindDataStage(respones);
+                        }
+                    })
+                    dialog.shutdown();
+                });
+                dialog.invoke(function () { });
+            }
+        }
+        function percenttage() {
+            var checkpercent = document.getElementById("percent");
+            if (checkpercent.checked == true) {
+                let dialog = new DialogBox({
+                    button: {
+                        ok: {
+                            text: "OK"
+                        }
+                    },
+                    type: "ok-cancel",
+                    content: {
+                        selector: "#active-percent-content"
+                    }
+                });
+                dialog.reject(function () {
+                   
+                    dialog.shutdown();
+                });
+                dialog.confirm(function () {
+                    $("#percent").prop("checked", false);
+                    let perform = $("#perfrom").val();
+                    let perto = $("#perto").val();
+                    if (!isEmpty(perform) && !isEmpty(perto)) {
+                        $.ajax({
+                            url: "/Opportunity/GetStagebyPercent",
+                            type: "Get",
+                            data: { PerFrom: perform, PerTo: perto },
+                            dataType: "Json",
+                            success: function (respones) {
+                                BindDataStage(respones);
+                            }
+                        })
+                    }
+                    dialog.shutdown();
+                });
+                dialog.invoke(function () { });
+            }
+        }
+        //select type bp
+        $("#selectTypebp").change(function () {
+            var bp = $(this).val();
+            $.ajax({
+                url: "/Opportunity/SelectBp",
+                type: "Get",
+                data: { data: bp },
+                dataType: "Json",
+                success: function (response) {
+                    if (bp == "Customer") {
+                        $("#vendor").hide();
+                        $("#vendorgroup").hide();
+                        $("#customer").show();
+                        $("#customergroup").show();
+                    }
+
+                    else if (bp == "Vendor") {
+                        $("#vendor").show();
+                        $("#vendorgroup").show();
+                        $("#customergroup").hide();
+                        $("#customer").hide();
+                    }
+                    else if (bp == "Lead") {
+                        $("#vendor").hide();
+                        $("#vendorgroup").hide();
+                    }
+                    else if (bp == "Customer And Lead") {
+                        $("#vendor").hide();
+                        $("#vendorgroup").hide();
+                    }
+                    else {
+                        $("#vendorgroup").show();
+                        $("#customergroup").show();
+                        $("#vendor").show();
+                        $("#customer").show();
+                    }
+
+                }
+            });
+
+        })
+
+    $("#bpcode").click(function () {
+        bpcode();
+            if ($(this).prop("checked")) {
+                $("#saleemp").prop("checked", false);
+                $("#stage").prop("checked", false);
+                $("#date").prop("checked", false);
+                $("#doc").prop("checked", false);
+                $("#amount").prop("checked", false);
+                $("#percent").prop("checked", false);
+
+            }
+        })
+    $("#saleemp").click(function () {
+        saleemp();
+            if ($(this).prop("checked")) {
+                $("#bpcode").prop("checked", false);
+                $("#stage").prop("checked", false);
+                $("#date").prop("checked", false);
+                $("#doc").prop("checked", false);
+                $("#amount").prop("checked", false);
+                $("#percent").prop("checked", false);
+            }
+        })
+    $("#stage").click(function () {
+        stage();
+            if ($(this).prop("checked")) {
+                $("#bpcode").prop("checked", false);
+                $("#saleemp").prop("checked", false);
+                $("#date").prop("checked", false);
+                $("#doc").prop("checked", false);
+                $("#amount").prop("checked", false);
+                $("#percent").prop("checked", false);
+            }
+        })
+    $("#date").click(function () {
+        date();
+            if ($(this).prop("checked")) {
+                $("#bpcode").prop("checked", false);
+                $("#saleemp").prop("checked", false);
+                $("#stage").prop("checked", false);
+                $("#doc").prop("checked", false);
+                $("#amount").prop("checked", false);
+                $("#percent").prop("checked", false);
+            }
+        })
+    $("#doc").click(function () {
+        doc();
+            if ($(this).prop("checked")) {
+                $("#bpcode").prop("checked", false);
+                $("#saleemp").prop("checked", false);
+                $("#stage").prop("checked", false);
+                $("#date").prop("checked", false);
+                $("#amount").prop("checked", false);
+                $("#percent").prop("checked", false);
+            }
+        })
+    $("#amount").click(function () {
+        amount();
+            if ($(this).prop("checked")) {
+                $("#bpcode").prop("checked", false);
+                $("#saleemp").prop("checked", false);
+                $("#stage").prop("checked", false);
+                $("#date").prop("checked", false);
+                $("#doc").prop("checked", false);
+                $("#percent").prop("checked", false);
+            }
+        })
+    $("#percent").click(function () {
+        percenttage();
+            if ($(this).prop("checked")) {
+                $("#bpcode").prop("checked", false);
+                $("#saleemp").prop("checked", false);
+                $("#stage").prop("checked", false);
+                $("#date").prop("checked", false);
+                $("#doc").prop("checked", false);
+                $("#amount").prop("checked", false);
+            }
+        })
+});
+    </script>

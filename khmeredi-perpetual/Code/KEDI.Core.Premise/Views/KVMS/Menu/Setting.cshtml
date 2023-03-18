@@ -1,0 +1,143 @@
+﻿
+<style>
+    .pos-setting .flexbox > input,
+    .pos-setting .flexbox > select {
+        width: 50%;
+        -webkit-box-flex: 0;
+        -ms-flex: 0 1 50%;
+        flex: 0 1 50%;
+        border: none;
+        border-bottom: 1px solid #AAA;
+        background-color: transparent;
+        border-radius: 0;
+    }
+</style>
+
+<form id="setting-content" class="pos-setting" style="display: none; width: 800px;">
+    @Html.AntiForgeryToken()
+    <input class="user-id" value="@User.FindFirst("UserID").Value" hidden />
+    <div class="wrap-block col-two">
+        <div class="left-block">
+            <div class="block border myb1">
+                <div class="title">@Localizer["Receipt"]</div>
+                <div class="flexbox space-between">
+                    <div>@Localizer["Print Receipt Order"]</div>
+                    <label class="switch">
+                        <input type="checkbox" checked="" class="print-receipt-order">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="flexbox space-between">
+                    <div>@Localizer["Print Label"]</div>
+                    <label class="switch">
+                        <input type="checkbox" class="print-receipt-label">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="flexbox space-between">
+                    <div>@Localizer["Print Receipt Pay"]</div>
+                    <label class="switch">
+                        <input class="print-receipt-pay" type="checkbox" checked="">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+
+                <div class="flexbox space-between">
+                    <div>@Localizer["Autoqueue"]</div>
+                    <label class="switch">
+                        <input class="autoqueue" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="flexbox space-between">
+                    <div>@Localizer["Max Queue Count"]</div>
+                    <input autocomplete="off" value="0" class="max-queue-count" />
+                </div>
+
+                <div class="flexbox space-between">
+                    <div>@Localizer["Print Receipt Count"]</div>
+                    <input autofocus autocomplete="off" value="0" class="print-receipt-count number" />
+                </div>
+                <div class="flexbox space-between">
+                    <div>@Localizer["Printer"]</div>
+                    <select class="printer" asp-items="Model.Setting.PrinterNames"></select>
+                </div>
+                <div class="flexbox space-between">
+                    <div>@Localizer["Receipt Size"]</div>
+                    <select class="receipt-size">
+                        <option value="80mm">80mm</option>
+                        <option value="A4">A4</option>
+                        <option value="A5">A5</option>
+                    </select>
+                </div>
+                <div class="flexbox space-between">
+                    <div>@Localizer["Receipt Template"]</div>
+                    <select class="receipt-template">
+                        <option value="KBMS">KBMS</option>
+                        <option value="KRMS">KRMS</option>
+                        <option value="KTMS">KTMS</option>
+                    </select>
+                </div>
+
+                <div class="flexbox space-between">
+                    <div>@Localizer["Item View"]</div>
+                    <div class="flexbox width-half">
+                        <input class="item-page-size" />
+                        <select class="item-view-type">
+                            <option value="0">@Localizer["Grid"]</option>
+                            <option value="1">@Localizer["List"]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flexbox space-between">
+                    <div>@Localizer["WiFi Password"]</div>
+                    <input autofocus autocomplete="off" class="password-wifi" />
+                </div>
+            </div>
+        </div>
+        <div class="right-block">
+            <div class="block border">
+                <div class="title">@Localizer["Company"]</div>
+                <div class="flexbox space-between myb1">
+                    <div>@Localizer["VATable"]</div>
+                    <label class="switch">
+                        <input type="checkbox" checked="" class="vat-able">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="flexbox space-between myb1">
+                    <div>@Localizer["Vat Invoice No."]</div>
+                    <input autofocus autocomplete="off" value="0" class="vat-invoice-no" />
+                </div>
+                <div class="flexbox space-between myb1">
+                    <div>@Localizer["Customers"]</div>
+                    <select asp-items="Model.Setting.Customers" class="customer-id"></select>
+                </div>
+                <div class="flexbox space-between myb1">
+                    <div>@Localizer["Price List"]</div>
+                    <select asp-items="Model.Setting.PriceLists" class="price-list-id"></select>
+                </div>
+                
+                <div class="flexbox space-between myb1">
+                    <div>@Localizer["Warehouse"]</div>
+                    <select asp-items="Model.Setting.Warehouses" class="warehouse-id"></select>
+                </div>
+                <div class="flexbox space-between myb1">
+                    <div>@Localizer["Payment Means"]</div>
+                    <select asp-items="Model.Setting.PaymentMeans" class="payment-means-id"></select>
+                </div>
+                <div class="flexbox space-between">
+                    <div>@Localizer["Close Shift Type"]</div>
+                    <select class="close-shift">
+                        <option value="0">None</option>
+                        <option value="1">Category</option>
+                        <option value="2">Payment Means</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

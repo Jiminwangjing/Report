@@ -1,0 +1,240 @@
+﻿@using KEDI.Core.Premise.Models.ServicesClass.GeneralSettingAdminView;
+@using KEDI.Core.Premise.Models.Services.GeneralSettingAdmin;
+@using KEDI.Core.Premise.Models.Services.Account;
+@model GeneralSettingAdminViewModel;
+
+<div class="card card-body">
+    <ul class="widget-tab">
+        <li class="tab-sheet active">
+            <div class="tab-title" id="templatess">@Localizer["Authentication Template"]</div>
+            <form class="tab-content widget-scrollbar" asp-action="SaveAuthTemplate" method="post">
+                <input asp-for="AuthTemplate.ID" type="hidden" />
+                <div class="row">
+                    <div class="col-md-3">
+                        <input asp-for="AuthTemplate.Option" value="0" type="radio" checked />
+                        <label>@Localizer["Password"]</label>
+                    </div>
+                    <divl class="col-md-3">
+                        @if (Model.AuthTemplate.Option == AuthorizationOptions.AccessToken)
+                        {
+                            <input asp-for="AuthTemplate.Option" value="1" type="radio" checked />
+                        }
+                        else
+                        {
+                            <input asp-for="AuthTemplate.Option" value="1" type="radio" />
+                        }
+                        <label>@Localizer["QR Code"]</label>
+                    </divl>
+                </div>
+                <button class="btn btn-kernel mt-2" type="submit">@Localizer["Save"]</button>
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </form>
+        </li>
+        <li class="tab-sheet">
+            <div class="tab-title" id="CardMember">@Localizer["Card Member Template"]</div>
+            <form class="tab-content widget-scrollbar" asp-action="SaveCardMemberTemplate" method="post">
+                <input asp-for="CardMemberTemplate.ID" hidden />
+                <div class="row">
+                    <div class="col-md-3">
+                        <input asp-for="CardMemberTemplate.Option" value="0" type="radio" checked />
+                        <label>@Localizer["Manual Input"]</label>
+                    </div>
+                    <divl class="col-md-3">
+                        @if (Model.CardMemberTemplate.Option == CardMemberOptions.Scan)
+                        {
+                            <input asp-for="CardMemberTemplate.Option" value="1" type="radio" checked />
+                        }
+                        else
+                        {
+                            <input asp-for="CardMemberTemplate.Option" value="1" type="radio" />
+                        }
+
+                        <label>@Localizer["Scan Card"]</label>
+                    </divl>
+
+                </div>
+                <button class="btn btn-kernel mt-2" type="submit">@Localizer["Save"]</button>
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </form>
+        </li>
+        <li class="tab-sheet" id="display" style="height: 65vh">
+            <div class="tab-title" id="displaycolor">@Localizer["Decimal places"]</div>
+            <div class="tab-content widget-scrollbar" style="overflow-x: hidden;">
+                <div class="row">
+                    <ul class="tab-content widget-scrollbar" style="height: 37vh; width: 98vw">
+                        <li class="tab-sheet active" id="Decimal">
+                            <div class="tab-content widget-scrollbar">
+                                <div class="row ml-0 mt-0">
+                                    <table class="allw-decimal">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">?</th>
+                                                <th class="text-center">@Localizer["Currency"]</th>
+                                                <th class="text-center">@Localizer["Amounts"]</th>
+                                                <th class="text-center">@Localizer["Prices"]</th>
+                                                <th class="text-center">@Localizer["Rates"]</th>
+                                                <th class="text-center">@Localizer["Quantities"]</th>
+                                                <th class="text-center">@Localizer["Percent"]</th>
+                                                <th class="text-center">@Localizer["Units"]</th>
+                                                <th class="text-center">@Localizer["Decimal Separator"]</th>
+                                                <th class="text-center">@Localizer["Thousands Sep."]</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <input id="id" asp-for="Display.ID" hidden />
+                <div class="display-message"></div>
+                <button class="btn btn-kernel" id="update-display" type="button">@Localizer["Save"]</button>
+                <button class="btn btn-kernel" id="cancel-display" type="button">@Localizer["Cancel"]</button>
+            </div>
+        </li>
+        <li class="tab-sheet" id="theme" style="height: 120vh">
+            <div class="tab-title" id="themes">@Localizer["Theme skin"]</div>
+            <div class="tab-content widget-scrollbar" style="overflow-x: hidden;">
+                <div class="row">
+                    <ul class="tab-content widget-scrollbar" style="height: 50vh; width: 70vw">
+                        <li>
+                            <form id="updatecolor" method="post" asp-action="GetChecked"
+                                asp-controller="GeneralSettingAdmin">
+                                <table id="color-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">@Localizer["NO."]</th>
+                                            <th class="text-center">@Localizer["Them Name"]</th>
+                                            <th class="text-center">@Localizer["BackgroundColor"]</th>
+                                            <th class="text-center">@Localizer["AlphabetColor"]</th>
+                                            <th class="text-center">@Localizer["HoverColor"]</th>
+                                            <th class="text-center">@Localizer["Them Designer Name"]</th>
+                                            <th class="text-center">@Localizer["Checked"]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.ColorSetting.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>@Model.ColorSetting[i].ID<input asp-for="ColorSetting[i].ID" />
+                                                </td>
+                                                <td>@Model.ColorSetting[i].SkinName<input
+                                                    asp-for="ColorSetting[i].SkinName" /></td>
+                                                <td>@Model.ColorSetting[i].BackgroundColorName<input
+                                                    asp-for="ColorSetting[i].BackgroundColorName" /></td>
+                                                <td>@Model.ColorSetting[i].AlphabetColor<input
+                                                    asp-for="ColorSetting[i].AlphabetColor" /></td>
+                                                <td>@Model.ColorSetting[i].HoverColor<input
+                                                    asp-for="ColorSetting[i].HoverColor" /></td>
+                                                <td>@Model.ColorSetting[i].designName<input
+                                                    asp-for="ColorSetting[i].designName" /></td>
+
+                                                <td class="text-center">
+                                                    <input class="check-is-user" type="checkbox" id="checktruefalse"
+                                                    value="@Model.ColorSetting[i].ID" style="margin: 2.5px 0;"
+                                                    asp-for="ColorSetting[i].Unable" />
+                                                </td>
+
+                                            </tr>
+                                        }
+                                        <div id="0" hidden></div>
+                                    </tbody>
+                                </table>
+                                <div>
+                                    @* <button class="btn btn-kernel" type="submit">@Localizer["Save"]</button> *@
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+                    <ul>
+                        <div class="row" id="checkbox1">
+                            <div class="col-md-12">
+                                @* <input asp-for="Model.SkinUser" value="0" type="radio" checked> *@
+                                <input type="checkbox" asp-for="@Model.SkinUser">
+                                <label>Check All User</label>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li class=" tab-sheet" style="height: 65vh">
+            <div class="tab-title" id="fonttheme">@Localizer["Font"]</div>
+            <div class="tab-content widget-scrollbar" style="overflow-x: hidden;">
+                <div class="row">
+                    <div col-md-12 style="padding-left:17px; padding-top: 10px">
+                        <label style="display:inline-block; margin-bottom:10px">Font-Family </label>
+                        <select id="inputfont" asp-items="@ViewBag.FontSettings" style="margin-left: 10px"
+                            class="fnivel">
+                            <option value='Calibri'>Calibri</option>
+                            <option value="Time New Roman">Time New Roman</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value='system-ui'>system-ui</option>
+                            <option value='cursive'>cursive</option>
+                            <option value='serif'>serif</option>
+                            <option value='Georgia, serif'>Georgia, serif</option>
+                            <option value='khmer OS Battambang'>khmer OS Battambang</option>
+                            <option value='khmer os siemreap'>khmer os siemreap</option>
+                        </select>
+                        <label style="display:inline-block;margin-bottom:10px; margin-left:80px">Font-Size</label>
+                        <select asp-items="@ViewBag.FontSizes" id="inputfontsize" style="margin-left:10px">
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="text-danger" id="erorr"></div>
+                <div class="display-message"></div>
+                <div id="inputfontsize2" hidden="hidden"></div>
+                <input id="myuserID" value="0" hidden>
+                <button class="btn btn-kernel" id="update-Font" type="button"
+                    style="margin-top:10px; right:0">@Localizer["Save"]</button>
+            </div>
+        </li>
+    </ul>
+</div>
+<script>
+    var tf = false;
+    $(document).ready(function () {
+        $(".check-is-user").click(function () {
+            var ii = parseInt(this.value);
+            console.log("ii", ii);
+            $.ajax({
+                url: "/GeneralSettingAdmin/GetColorSetting",
+                type: "get",
+                dataType: "JSON",
+                success: function (respones) {
+                    respones.forEach(s => {
+                        if (s.SkinID == ii) {
+                            $.ajax({
+                                url: "/GeneralSettingAdmin/PostColorSetting",
+                                type: "post",
+                                dataType: "JSON",
+                                data: { data: s },
+                                success: function (respones) {
+                                    location.reload();
+                                }
+                            })
+                            location.reload();
+
+                        }
+
+                    })
+                }
+            })
+
+        })
+    })
+
+</script>
+<script src="~/Admin/AdminGeneralSetting/index.js"></script>

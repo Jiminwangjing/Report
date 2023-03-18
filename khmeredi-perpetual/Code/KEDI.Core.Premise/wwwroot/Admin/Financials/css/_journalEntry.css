@@ -1,0 +1,32 @@
+﻿.tile .col-md-2 {
+    padding-left: 2.5px;
+    padding-right: 2.5px;
+}
+.tile .col-md-2 label, .tile .col-md-4 label {
+    margin-top: 0px;
+}
+.tile .col-md-4 {
+    padding-right: 2.5px;
+    padding-left: 2.5px;
+}
+.col-md-12 {
+    margin-left: 15px;
+}
+.wrap-table {
+    font-size: 1rem;
+    padding-top:10px;
+}
+table tr th {
+    line-height: 25px;
+    background: #f2e8c5;
+    color: black;
+    font-weight: normal;
+    font-size: 0.9em;
+    border-left: 1px solid;
+    border-color: #bbc;
+}
+table tr td {
+    border-left: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #bbc;
+}

@@ -1,0 +1,37 @@
+﻿<div id="other-payment-dialog-contianer" style="display: none">
+    <div class="widget-tab" style="height: 80vh;">
+        <div class="tab-sheet active">
+            <div class="tab-title">@Localizer["Card Member"]</div>
+            <div class="tab-content widget-scrollbar">
+                <div id="form-card-manual" class="text-center" hidden>
+                    <div class="stack-block">
+                        <label>Card Number</label>
+                        <input id="card-number" autocomplete="off" class="width-full" type="text">
+                    </div>
+                    <div class="manual-card-message"></div>
+                    <div>
+                        <button id="clear-card-payment" class="btn" type="button">@Localizer["Clear Card Payment"]</button>
+                    </div>
+                </div>
+
+                <div id="form-scan-card" class="text-center widget-scrollbar" hidden style="overflow: auto">
+                    <div>
+                        <input id="scan-card-number" class="width-full" style="opacity: 0; width: 0 !important; height: 0;" />
+                        <img id="token-radar" src="~/Images/icon/credit-card-icon.png" style="width: 65%; height: 55%; margin-left: 10%; align-items: center" />
+                        <div class="scan-card-message" style="position: absolute; z-index: 1;"></div>
+                    </div>
+                    <div class="manual-card-message"></div>
+                    <div>
+                        <button id="clear-card-payment" class="btn" type="button">@Localizer["Clear Card Payment"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="tab-sheet">
+            <div class="tab-title">@Localizer["Other Maybe"]</div>
+            <div class="tab-content widget-scrollbar">
+                <h2>Other Maybe</h2>
+            </div>
+        </div>*@
+    </div>
+</div>

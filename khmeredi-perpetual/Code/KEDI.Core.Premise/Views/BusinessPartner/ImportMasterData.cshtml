@@ -1,0 +1,179 @@
+﻿
+@model CKBS.Models.Services.ExcelFile.ExcelFormFile;
+<div class="card card-body">
+    <h5>@Localizer["Import Business Partner Master Data"]</h5><hr />
+    <div class="widget-tab height-md">
+        <div class="tab-sheet active">
+            <div class="tab-title">@Localizer["Import"]</div>
+            <div class="tab-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="title">@Localizer["List of Excel Sheets"]</div>
+                        <form id="formfile-master-data" method="post" enctype="multipart/form-data">
+                            <div class="ck-file-container">
+                                <img src="~/Images/default/file.jpg" />
+                                <input asp-for="FormFile" type="file" accept=".xls, .xlsx" />
+                                <select id="sheet-names" asp-for="SheetIndex" class="form-control"></select>
+                            </div>
+                            @* <div class="mt-2">
+                        <input asp-for="BulkImport" type="checkbox" />
+                        <label title="@Localizer["Import all excel sheets into database"]">@Localizer["Bulk Import"]</label>
+                    </div>*@
+                            <span class="text-danger"></span>
+                            <a asp-action="GetExcelTemplate" asp-controller="BusinessPartner" class="btn btn-kernel mt-2"><i class="far fa-file-excel"></i> @Localizer["Template"]</a>
+                            <button id="preview-master-data" class="btn btn-kernel mt-2" type="button" disabled><i class="fas fa-search"></i> @Localizer["Preview"]</button>
+                            <button id="submit-master-data" class="btn btn-kernel mt-2" type="submit" disabled><i class="fas fa-file-upload"></i> @Localizer["Upload"]</button>
+                        </form>
+                    </div>
+                </div>
+                <div asp-validation-summary="All"></div>
+                <div class="wrap-table mt-2 widget-scrollbar">
+                    <table id="list-preview-master-data">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["GLAccID"]</th>
+                                <th>@Localizer["Code"]</th>
+                                <th>@Localizer["Name"]</th>
+                                <th>@Localizer["Type"]</th>
+                                <th>@Localizer["PriceListID"]</th>
+                                <th>@Localizer["Phone"]</th>
+                                <th>@Localizer["Email"]</th>
+                                <th>@Localizer["Address"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="tab-sheet">
+            <div class="tab-title">@Localizer["References"]</div>
+            <div class="tab-content">
+                <div class="widget-tab">
+                    <div class="tab-sheet active">
+                        <div class="tab-title">@Localizer["GL Accounts"]</div>
+                        <div class="tab-content">
+                            <div class="wrap-table">
+                                <table id="list-gl-accts">
+                                    <thead>
+                                        <tr>
+                                            <th>@Localizer["ID"]</th>
+                                            <th>@Localizer["Code"]</th>
+                                            <th>@Localizer["Name"]</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-sheet">
+                        <div class="tab-title">@Localizer["Pricelists"]</div>
+                        <div class="tab-content">
+                            <div class="wrap-table">
+                                <table id="list-pricelists">
+                                    <thead>
+                                        <tr>
+                                            <th>@Localizer["ID"]</th>
+                                            <th>@Localizer["Name"]</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>            
+            </div>
+        </div>
+   
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        const __tableGLs = ViewTable({
+            selector: "#list-gl-accts",
+            keyField: "ID",
+            visibleFields:["ID", "Code", "Name"]
+        });
+        const __tablePLs = ViewTable({
+            selector: "#list-pricelists",
+            keyField: "ID",
+            visibleFields:["ID", "Name"]
+        });
+
+        const __tablePreviewBps = ViewTable({
+            selector: "#list-preview-master-data",
+            keyField: "Code",
+            visibleFields:["Code", "Name", "Type", "PriceListID", "Phone", "Email", "Address", "GLAccID"]
+        });
+
+        let __workbook = {};
+        $.get("/businessPartner/GetImportReference", function(resp){
+            __tableGLs.bindRows(resp["GLAccounts"]);
+            __tablePLs.bindRows(resp["PriceLists"]);
+        });
+
+        $("#FormFile").on("change", function () {
+            loadScreen();
+            postFormData("/businessPartner/getFromExcel", "#formfile-master-data", 
+            function(resp){
+                __workbook = resp;
+                let sheets = Object.getOwnPropertyNames(__workbook);
+                createSelect("#sheet-names", sheets);
+                if(isValidArray(sheets)){
+                    $("#preview-master-data").prop("disabled", false);
+                    $("#submit-master-data").prop("disabled", false);
+                }
+                loadScreen(false);
+            });
+        });
+
+        $("#preview-master-data").on("click", function(){
+            let currentSheet = $("#sheet-names").find("option:selected").text();
+            __tablePreviewBps.bindRows(__workbook[currentSheet]);
+        });
+
+        $("#formfile-master-data").submit(function(e){
+            e.preventDefault();
+            loadScreen()
+            postFormData("/businessPartner/ImportMasterData", this, function(resp){
+                loadScreen(false)
+                ViewMessage({}, resp)
+            });
+        });
+
+        function createSelect(selector, items){
+            let _select = $(selector);
+            _select.children().remove();
+            if(Array.isArray(items) && items.length > 0){
+                for(let i = 0; i < items.length; i++){
+                    _select.append("<option value='"+ i +"'>"+ items[i] +"</option");
+                }
+            }
+           return _select;
+        }
+
+        function postFormData(url, formSelector, onSuccess){
+             $.ajax({
+                method: "post",
+                url: url,
+                processData: false,
+                cache:false,
+                contentType: false,
+                enctype: "multipart/form-data",
+                data: new FormData($(formSelector)[0]), 
+                success: onSuccess
+            });
+        }
+
+        function isValidArray(values){
+            return Array.isArray(values) && values.length > 0;
+        }
+        function loadScreen(enabled = true) {
+            if (enabled) {
+                $("#load-screen").show();
+            } else {
+                $("#load-screen").hide();
+            }
+        }
+    });
+</script>

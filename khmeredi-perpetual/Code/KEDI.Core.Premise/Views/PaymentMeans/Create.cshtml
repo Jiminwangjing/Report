@@ -1,0 +1,148 @@
+﻿@model PaymentMeans
+
+@{
+    ViewData["Title"] = "Create";
+}
+<style>
+    .stylebutton {
+        margin-left: 12px;
+    }
+
+    #click_dialog {
+        cursor: pointer;
+    }
+
+    .reload {
+        margin-top: -350px;
+    }
+</style>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label class="control-label">@Localizer["Type"]</label>
+                            <input asp-for="Type" class="input-box-kernel" />
+                            <span asp-validation-for="Type" class="text-danger"></span>
+                        </div>
+                        @if (!UserManager.CheckEdition(SystemEdition.Basic))
+                        {
+                            <div class="col-md-5">
+                                <label class="control-label">@Localizer["Choose Account"]</label>
+                                <div id="click_dialog"><input class="input-box-kernel" readonly id="select_account" /></div>
+                                <input asp-for="AccountID" hidden id="accountID" />
+                                <span asp-validation-for="AccountID" class="text-danger"></span>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <div class="row pull-left">
+                    <div class="col-md-6 stylebutton">
+                        <button class="btn btn-kernel btn-xs" type="submit">@Localizer["Add"]</button>
+                        <a class="btn btn-xs btn-kernel" asp-action="Index">@Localizer["Back"]</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="active-gl-content" style="display:none; height: 90vh">
+        <div class="group-search-boxes float-right mb-2">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearch" autocomplete="off" type="text" placeholder="Search ...">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="list-active-gl" class="table-responsive-sm table-responsive" style="height: auto;">
+            <thead>
+                <tr>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+
+        <div class="row mt-4">
+            <div class="col-md-5"></div>
+            <div class="col-md-6">
+                <div class="reload">
+                    <img src="~/Images/ajaxloader/loading.gif" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#click_dialog").click(function () {
+            chooseCode();
+        })
+        search("#txtSearch", "#list-active-gl tr:not(:first-child)");
+    });
+    function chooseCode() {
+        let dialog = new DialogBox({
+            button: {
+                ok: {
+                    text: "Close",
+                    callback: function () {
+                        this.meta.shutdown();
+                    }
+                }
+            },
+            content: {
+                selector: "#active-gl-content"
+            }
+        });
+
+        dialog.invoke(function () {
+            $(".reload").show();
+            $.get("/ItemGroup1/GetGlAccountLastLevel", function (resp) {
+                let $listActiveGL = ViewTable({
+                    keyField: "ID",
+                    selector: dialog.content.find("#list-active-gl"),
+                    paging: {
+                        pageSize: 10,
+                        enabled: false
+                    },
+                    visibleFields: ["Code", "Name"],
+                    actions: [
+                        {
+                            template: "<i class='fas fa-arrow-circle-down'></i>",
+                            on: {
+                                "click": function (e) {
+                                    $("#select_account").val(e.data.Code + " - " + e.data.Name);
+                                    $("#accountID").val(e.data.ID);
+                                    dialog.shutdown();
+                                }
+                            }
+                        }
+                    ]
+                });
+                $listActiveGL.clearRows();
+                $listActiveGL.bindRows(resp);
+
+                $(".reload").hide();
+
+            });
+        });
+    }
+    //search
+    function search(searchInput, filter) {
+        $(searchInput).on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(filter).filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    }
+</script>

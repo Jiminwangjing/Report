@@ -1,0 +1,159 @@
+﻿<style>
+    .font-size {
+        font-size: 13px;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+    .choose-item {
+        height: 10px !important;
+        line-height: 2 !important;
+        margin-top: -1px !important;
+    }
+</style>
+
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Item Code"]</label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control font-size" id="item-code" />
+        </div>
+        <div class="col-md-4 mtk-1">
+            <div class="btn btn-xs btn-kernel choose-item">
+                <i class="fas fa-arrow-circle-down fa-lg"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Item Name"]</label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control font-size" id="item-name" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Warehouse Name"]</label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control font-size" id="warehouse-name" />
+        </div>
+        @*<div class="col-md-2">
+                <label class="font-size">@Localizer["Status"]</label>
+            </div>
+            <div class="col-md-3">
+                <input class="form-control font-size" id="status" readonly />
+            </div>*@
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Batch"]</label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control font-size" type="text" id="batch" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Batch Attribute 1"]</label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control font-size" id="batch-attribute-1" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Batch Attribute 1"]</label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control font-size" id="batch-attribute-2" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Admission Date"]</label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control font-size" type="date" id="admission-date" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Manufacturing Date"]</label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control font-size" type="date" id="manufacturing-date" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Expiration Date"]</label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control font-size" type="date" id="expiration-date" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Location"]</label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control font-size" id="location" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Details"]</label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control font-size" id="detials" />
+        </div>
+    </div>
+    <br />
+    <div class="serial-message"></div>
+    <div class="row">
+        <div class="col-md-1 ml-1">
+            <button class="btn btn-xs btn-kernel" id="save-data">@Localizer["Save"]</button>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-xs btn-kernel" id="cancel-data">@Localizer["Cancel"]</button>
+        </div>
+    </div>
+</div>
+<div id="dialog-batch-no-detial" class="widget-scrollbar" style="display:none; height: 400px; overflow: auto">
+    <table class="batch-no-detial">
+        <thead>
+            <tr>
+                <th>@Localizer["#"]</th>
+                <th>@Localizer["Item Code"]</th>
+                <th>@Localizer["Item Name"]</th>
+                <th>@Localizer["Batch"]</th>
+                <th>@Localizer["Location"]</th>
+                <th>@Localizer["Details"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class="item-lists" style="display: none">
+    <table class="item-table">
+        <thead>
+            <tr>
+                <th>@Localizer["#"]</th>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Barcode"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<input id="batch-no-og" hidden />
+<script src="~/Admin/ItemManagement/ItemBatchNo/item-batch-no-detial.js"></script>

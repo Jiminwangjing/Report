@@ -1,0 +1,236 @@
+﻿<link href="~/Admin/Bank/css/outgoing-payment.css" rel="stylesheet" />
+<div hidden id="data-invioce">@Json.Serialize(Model)</div>
+<div class="card card-body">
+    <div class="row btn_Find">
+        <div class="col-md-12">
+            <button class="btn btn-xs btn-kernel findbtn">@Localizer["Find"]</button>
+            <a class="btn btn-xs btn-kernel" asp-controller="Outgoingpayment"
+                asp-action="OutgoingpaymentHistory">@Localizer["Outgoing Payment History"]</a>
+        </div>
+    </div>
+    <fieldset class="scheduler-border">
+        <legend class="scheduler-border">@Localizer["OutgoingPayment"]</legend>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="label_vendor">@Localizer["Vendor"]</label>
+                <input type="text" readonly id="show-list-vendor" class="content_vendor txtvendor" />
+                <input type="text" id="vendorID" hidden />
+
+                <label class="label_reff_no">@Localizer["Branch"]</label>
+                <select id="branch" class="content_reff_no"></select>
+                
+
+
+
+
+                <label class="label_ap">@Localizer["RefNº"]</label>
+                <input class="content_ap" type="text" id="txtref_no" autocomplete="off" />
+                <label class="label_user">@Localizer["User"]</label>
+                <input class="content_user" type="text" value="@User.FindFirst("FullName").Value" id="txtUser"
+                    readonly />
+                @if (!UserManager.CheckEdition(SystemEdition.Basic))
+                {
+                    <label class="label_user ">@Localizer["Payment Means"]</label>
+                    <input class="content_user" id="paymentMeans" readonly />
+                    <input class="content_user" id="paymentMeansID" hidden readonly value="0" />
+                }
+
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-6">
+                <label class="label_reff_no">@Localizer["NumberNº"]</label>
+                <select id="txtInvoice" class="content_reff_no"></select>
+                <label class="label_reff_no">@Localizer["Number"]</label>
+                <input class="content_reff_no" type="text" id="next_number" autocomplete="off" readonly />
+                <div class="content_icon">
+                    <label class="label_postingdate">@Localizer["PostingDate"]</label>
+                    <input class="content_postingdate" type="date" id="txtPostingdate" autocomplete="off" />
+                </div>
+                <div class="content_icon">
+                    <label class="label_documentdate">@Localizer["DocumentDate"]</label>
+                    <input class="content_documentdate" type="date" id="txtDocumentDate" autocomplete="off" />
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="scheduler-borders">
+        <legend class="scheduler-border">@Localizer["OutgoingPaymentDetail"]</legend>
+        <div class="wrap-table list widget-scrollbar">
+            <table id="list-items">
+                <thead>
+                    <tr>
+                        <th class="boldth">@Localizer["DocumentNo"]</th>
+                        <th class="boldth" style="min-width:120px;">@Localizer["DucumentType"]</th>
+                        <th class="boldth">@Localizer["Date"]</th>
+                        <th class="boldth">@Localizer["OverdueDay"]</th>
+                        <th class="boldth">@Localizer["Total"]</th>
+                        <th class="boldth" style="min-width:120px;">@Localizer["AppliedAmount"]</th>
+                        <th class="boldth">@Localizer["BalanceDue"]</th>
+                        <th class="boldth" style="min-width:140px;">@Localizer["CashDiscount"] %</th>
+                        <th class="boldth" style="min-width:140px;">@Localizer["TotalDiscount"] $</th>
+                        <th class="boldth" style="min-width:110px;">@Localizer["TotalPayment"]</th>
+                        @*<th class="boldth">@Localizer["Cash"]</th>*@
+                        <th class="boldth" style="min-width:130px;">@Localizer["Selected"] <input type="checkbox"
+                                id="selectall" style="vertical-align:middle;margin:0px 0 0 5px;" /></th>
+                    </tr>
+                </thead>
+            </table>
+
+            <table id="list-items-cancel" hidden>
+                <thead>
+                    <tr>
+                        <th class="boldth">@Localizer["DocumentNo"]</th>
+                        <th class="boldth" style="min-width:120px;">@Localizer["DucumentType"]</th>
+                        <th class="boldth">@Localizer["Date"]</th>
+                        <th class="boldth">@Localizer["OverdueDay"]</th>
+                        <th class="boldth">@Localizer["Currency"]</th>
+                        <th class="boldth">@Localizer["Total"]</th>
+                        <th class="boldth" style="min-width:120px;">@Localizer["AppliedAmount"]</th>
+                        <th class="boldth">@Localizer["BalanceDue"]</th>
+                        <th class="boldth" style="min-width:140px;">@Localizer["CashDiscount"] %</th>
+                        <th class="boldth" style="min-width:140px;">@Localizer["TotalDiscount"] $</th>
+                        <th class="boldth" style="min-width:110px;">@Localizer["TotalPayment"]</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </fieldset>
+    <div class="row">
+        <div class="col-md-4">
+            <label class="lable_remark">@Localizer["Remark"]</label>
+            <textarea class="content_remark" id="txtremark"></textarea>
+        </div>
+         <div class="col-md-5">
+            <label class="lable_total">@Localizer["Total Amount Due (SYS)"]</label>
+            <span class="currency_text"></span>
+            <input class="content_total" id="totalamount_due" type="text" readonly hidden />
+            <input type="text" class="content_total" id="totalamount_due_asing" readonly />
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" style="margin: 0;">
+                <label class="font-size">@Localizer["Copy From"]</label>
+                <select id="txtcopy" class="form-control font-size hover" disabled style="height: 25px !important">
+                    <option value="0" selected disabled>--- select ---</option>
+                    <option value="1">@Localizer["Outgoing Payment Order"]</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div id="error-summary"></div>
+    <div id="vendor-content" style="display:none; height: 90vh">
+        <div class="group-search-boxes float-right mb-2">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="VendorSearch" autocomplete="off" type="text" placeholder="Search ...">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="list-vendor" class="table-responsive-sm table-responsive widget-scrollbar" style="height: auto;">
+            <thead>
+                <tr>
+                    <th>@Localizer["No"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Phone"]</th>
+                    <th>@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+        <div class="row mt-4">
+            <div class="col-md-5"></div>
+            <div class="col-md-6">
+                <div class="reload">
+                    <img src="~/Images/ajaxloader/loading.gif" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="active-gl-content" style="display:none; height: 39vh;">
+        <div class="group-search-boxes float-right mb-2">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="txtSearch" autocomplete="off" type="text" placeholder="Search ...">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="list-payment-means" class="table-responsive-sm table-responsive widget-scrollbar"
+            style="height: 370px; overflow: auto;">
+            <thead>
+                <tr>
+                    <th class="text-center">@Localizer["No"]</th>
+                    <th class="text-center">@Localizer["Name"]</th>
+                    <th>@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+        </table>
+        <div class="row mt-4">
+            <div class="col-md-5"></div>
+            <div class="col-md-6">
+                <div class="reload">
+                    <img src="~/Images/ajaxloader/loading.gif" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row btnadd" id="div-add-cancel">
+        <div class="col-md-12">
+            <button class="btn btn-xs btn-kernel btn_add">@Localizer["Add"]</button>
+            <button class="btn btn-xs btn-kernel btn_cancel">@Localizer["Cancel"]</button>
+        </div>
+    </div>
+    <div class="row btnadd" id="div-cancel" hidden>
+        <div class="col-md-12">
+            <button class="btn btn-sm btn-danger" id="btn_cancel">@Localizer["Cancel"]</button>
+        </div>
+    </div>
+</div>
+
+@* Item Copy *@
+<div id="container-outgingOrder" class="wrap-table widget-scrollbar" style="height: 350px; display: none;">
+    <div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore font-size" id="txtSearch-item-copy" autocomplete="off" type="text"
+                    placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table class="item-copy">
+        <thead>
+            <tr>
+                <th>@Localizer["#"]</th>
+                <th>@Localizer["InvoiceNumber "]</th>
+                <th>@Localizer["DocumentType "]</th>
+                <th>@Localizer["Vendor"]</th>
+                <th>@Localizer["Date"]</th>
+                
+                <th>@Localizer["Total Amount Due"]</th>
+                <th>@Localizer["Total Payment"]</th>
+                <th>@Localizer["Choose"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<p hidden id="UserID">@User.FindFirst("UserID").Value</p>
+<p hidden id="BranchID">@User.FindFirst("BranchID").Value</p>
+<input hidden id="DocumentID" />
+<input hidden id="SeriesID" />
+<input hidden id="SeriesDetailID" />
+<input type="text" id="number" hidden />
+<input type="text" id="JEID" hidden />
+<input type="text" id="JENumber" hidden />
+<div id="txttype" hidden>Add</div>
+<div hidden id="model-data">@Json.Serialize(Model)</div>
+<input type="text" id="baseonid" hidden value="0"/>
+<script src="~/Admin/Bank/js/outgoing-payment.js"></script>

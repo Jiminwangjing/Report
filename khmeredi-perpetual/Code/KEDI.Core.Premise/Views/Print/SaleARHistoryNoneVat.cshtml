@@ -1,0 +1,225 @@
+﻿@model IEnumerable<KEDI.Core.Premise.Models.Sale.Print.PrintSaleHistory>
+@{
+    ViewData["Title"] = "SaleARHistory";
+    Layout = "_Layout_print";
+    var num = 0;
+    double amountreal = 0;
+}
+
+<style>
+    body {
+        font-family: 'Khmer OS Battambang';
+        font-size: 19px;
+    }
+
+    #th1 {
+        border: solid;
+        border-right: hidden;
+        border-bottom: hidden
+    }
+
+    #th2 {
+        text-align: right;
+        border: solid;
+        border-bottom: hidden
+    }
+
+    #th3 {
+        border: solid;
+        border-right: hidden
+    }
+
+    #th4 {
+        border: solid;
+        text-align: right
+    }
+  *{
+        font-size:1.5rem;
+    }
+</style>
+<br />
+<div class="row">
+    @*<div class="col-xs-2">
+        <img src="~/Images/company/@Model.First().Logo" width="150" height="150" />
+    </div>
+    <div class="col-xs-8" style="text-align:center">
+        <h1>@Model.FirstOrDefault().Branch</h1>
+        <h2>ANGUS PARK MEAT STORE</h2>
+        <h3>@Model.FirstOrDefault().EnglishDesc</h3>
+        <h3>@Model.First().Tel1 @Model.FirstOrDefault().Tel2</h3>
+    </div>
+    <div class="col-xs-2"></div>*@
+</div>
+<div class="row" style="text-align:center">
+    <div class="col-xs-12">
+        <h2><u style="font-size:2.5rem">វិក្កយបត្រ</u></h2>
+            <h3>INVOICE</h3>
+</div>
+</div>
+<div class="row">
+    <div class="col-xs-6">
+        <div style="position:relative;">
+            <p>ឈ្មោះក្រុមហ៊ុន ឬអតិថិជន​ ៖ </p>
+            <p>Company Name/Customer :</p>
+            <p class="res" style="float:left; position:absolute; top:0;left:41%;"> @Model.FirstOrDefault().CusName</p>
+        </div>
+        <div style="position:relative;">
+            <p>អាសយដ្ឋា​ន ៖</p>
+            <p>Addrees :</p>
+            <p class="res" style="float: left; position: absolute; top: 0; left: 41%;">@Model.FirstOrDefault().Address</p>
+        </div>
+       
+        <div style="position:relative;">
+            <p>Store Name :</p>
+            <p class="res" style="float: left; position: absolute; top: 0; left: 41%;"> @Model.FirstOrDefault().Branch</p>
+        </div>
+        <div style="position:relative;">
+            
+            <p>Attentione :</p>
+            <p class="res" style="float: left; position: absolute; top: 0; left: 41%;">@Model.FirstOrDefault().CusName </p>
+        </div>
+        <div style="position:relative;">
+            <p>Mobile :</p>
+            <p class="res" style="float: left; position: absolute; top: 0; left: 41%;"> @Model.FirstOrDefault().Phone</p>
+        </div>
+
+    </div>
+    <div class="col-xs-6" style="padding-left:15%">
+        
+        <div style="position:relative;">
+            <p>លេខរៀងវិក្កយបត្រ ​៖ </p>
+            <p>Invoice No :</p>
+            <p class="res" style="float:left; position:absolute; top:0;left:40%;"> @Model.FirstOrDefault().Invoice</p>
+        </div>
+        <div style="position:relative;">
+            <p>កាលបរិច្ឆេទ ៖ </p>
+            <p>Date : </p>
+            <p class="res" style="float: left; position: absolute; top: 0; left: 40%;"> @Model.FirstOrDefault().PostingDate</p>
+        </div>
+        <div style="position:relative;">
+            <p>លេខការបញ្ជាទិញ៖</p>
+            <p>P.O Nº : </p>
+            <p class="res" style="float: left; position: absolute; top: 0; left: 40%;">@Model.FirstOrDefault().OrderNumber</p>
+        </div>
+        <div style="position:relative;">
+            <p>លេខសម្រង់៖</p>
+            <p>Quotation No : </p>
+            <p class="res" style="float: left; position: absolute; top: 0; left: 40%;">@Model.FirstOrDefault().QSNumber</p>
+        </div>
+
+        <div style="position:relative;">
+            <p>លេខបញ្ជូនទំនិញ ៖ </p>
+            <p>Delivery Note No:</p>
+            <p class="res" style="float: left; position: absolute; top: 0; left: 40%;">@Model.FirstOrDefault().DSNumber </p>
+        </div>
+        <div style="position:relative;">
+            <p>Exchange Rate :</p>
+            <p>អត្រាប្តូរប្រាក់  : </p>
+            <p class="res" style="float: left; position: absolute; top: 0; left: 40%;">@Model.FirstOrDefault().ExchangeRate</p>
+        </div>
+    </div>
+</div>
+
+<div style="min-height:950px">
+    <table class="table table-bordered" style="border-left: none; border-bottom: none;">
+        <thead style="background-color:#2874A6;">
+            <tr style="color:white">
+                <th class="text-center">ល.រ<br />No.</th>
+                <th class="text-center" width="40%">បរិយាយមុខទំនិញ<br />Description</th>
+                <th class="text-center" width="15%">បរិមាណ<br />Quantity</th>
+                <th class="text-center" width="15%">តម្លៃលក់រាយ<br />Unit Price</th>
+                <th class="text-center" width="10%">ថ្លៃទំនិញជា(@(Model.FirstOrDefault().PriceList))<br />Amount (@(Model.FirstOrDefault().PriceList))</th>
+                <th class="text-center" width="20%">ថ្លៃទំនិញជា(@(Model.FirstOrDefault().LocalCurrency))<br />Amount (@(Model.FirstOrDefault().LocalCurrency))</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model)
+            {
+                num++;
+                amountreal = (@Model.FirstOrDefault().ExchangeRate * item.LocalSetRate) * item.Amount;
+                <tr>
+                    <td class="text-center">@num</td>
+                    <td>@item.ItemNameKh  @item.Barcode</td>
+                    <td class="text-center">@(string.Format("{0:n0}", item.Qty))</td>
+                    <td class="text-center">@(string.Format("{0:n2}", item.Price))</td>
+                    <td class="text-center">@(Model.FirstOrDefault().LabelUSA + " " )@(string.Format("{0:n2}", item.Amount))</td>
+                    <td class="text-center">@(Model.FirstOrDefault().LabelReal + " " )@(string.Format("{0:n2}", amountreal))</td>
+                </tr>
+            }
+
+            <tr>
+                <td colspan="3" rowspan="3" style="position: relative; border-left: none; border-bottom: none;">
+                    <p style="display:inline-block;padding-right:100px;">Bank Acc ABA</p><p style="display:inline-block;">086 723 636</p>
+                    <br/>
+                    <p style="display:inline-block;padding-right:97px;">Name Acc​ ABA</p><p style="display:inline-block;">Tan Thachanna</p>
+                    <img src="~/Images/icon/barcode.PNG" align="left" hspace="20" style="width: 140px; height: 140px;" />
+                    <div style="display:inline-block;padding-left:20px; margin-top:40px; ">
+                        <input type="checkbox" />&nbsp;&nbsp;&nbsp;ទូទាត់ភ្លាម <br /><br />
+                        <input type="checkbox" />&nbsp;&nbsp;&nbsp;ទូទាត់ពេលក្រោយ<br /><br />
+                        <input type="checkbox" />&nbsp;&nbsp;&nbsp;ថ្ងៃទូទាត់ ៖ ......................
+                    </div>
+                </td>
+                <td class="text-center">សរុប<br />Total</td>
+                <td class="text-center">@(Model.FirstOrDefault().LabelUSA + " " + string.Format("{0:n2}", Model.FirstOrDefault().Sub_Total))</td>
+                <td class="text-center">@(Model.FirstOrDefault().LabelReal) @(string.Format("{0:n2}", (@Model.FirstOrDefault().ExchangeRate * Model.FirstOrDefault().Sub_Total* @Model.FirstOrDefault().LocalSetRate)))</td>
+            </tr>
+            <tr>
+
+                <td class="text-center">បញ្ចុះតម្លៃ @(string.Format("{0:n2}",Model.FirstOrDefault().DiscountRate)) %<br />Discount</td>
+                <td class="text-center">
+                    @(Model.FirstOrDefault().LabelUSA) @(string.Format("{0:n2}",Model.FirstOrDefault().DiscountValue))
+                </td>
+                <td class="text-center">@(Model.FirstOrDefault().LabelReal) @(string.Format("{0:n2}", Model.FirstOrDefault().ExchangeRate * Model.FirstOrDefault().DiscountValue * Model.FirstOrDefault().LocalSetRate))</td>
+
+            </tr>
+            <tr>
+
+                <td class="text-center">សរុប<br />Total</td>
+                <td class="text-center">@(Model.FirstOrDefault().LabelUSA) @(string.Format("{0:n2}", Model.FirstOrDefault().Sub_totalAfterdis))</td>
+                <td class="text-center">@(Model.FirstOrDefault().LabelReal) @(string.Format("{0:n2}", Model.FirstOrDefault().ExchangeRate * ((double)Model.FirstOrDefault().Sub_totalAfterdis) * Model.FirstOrDefault().LocalSetRate))</td>
+            </tr>
+        </tbody>
+       
+    </table>
+    <table style="margin-top:50px;">
+        <tr>
+            <td colspan="6" style="border: none;">
+                <p>** Please Note: Header comes with a standard one year warranty</p>
+                <p style="margin-left:30px;">
+                    Membrane 1 year warranty does not cover factors relating to blockages that may be caused by sediments and other particles or
+                    substances found in local water supply. Warranty covers manufacturer fault only. Aquatek advises frequent checks to maintain
+                    longevity of your filtration system
+                </p>
+                <div class="row">
+                    <div class="col-xs-6" style="text-align:center;">
+                        <br /><br /><br />____________________________<br />
+                        ហត្ថលេខា និងឈ្នោះអ្នកទិញ <br />
+                        Customer's Signature & Name
+                    </div>
+                    <div class="col-xs-6" style="text-align:center;">
+                        <br /><br /><br /> ____________________________<br />
+                        ហត្ថលេខា និងត្រាក្រុមហ៊ុន <br />
+                        Company's Signature & Stamp
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+    </table>
+
+
+
+
+
+
+
+
+</div>
+
+@*<div class="row">
+    <div class="col-xs-12" style="text-align:center">
+        <p>@Model.FirstOrDefault().khmerDesc</p>
+    </div>
+</div>*@

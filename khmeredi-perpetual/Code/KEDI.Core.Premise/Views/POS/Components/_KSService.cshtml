@@ -1,0 +1,62 @@
+﻿<style>
+    .loading{
+        width: 9%;
+        margin: auto;
+    }
+</style>
+<div class="widget-combobox menubox down-right">
+    <div id="ks-service" class="combobox-trigger" title="@Localizer["Choose Service"]">
+        <i class="fas fa-hands csr-pointer icon-tab"></i>
+    </div>
+    <div class="combobox-content" style="width: 80vw;">
+        <div class="combobox-header">
+            <h4 class="title">@Localizer["Service"]</h4>
+            <i class="i-close"></i>
+        </div>
+        <div class="combobox-body widget-scrollbar">
+            <div class="widget-tab" style="height: 75vh;">
+                <div class="tab-sheet active">
+                    <div id="tab-ksservice" class="tab-title">@Localizer["Service Setup"]</div>
+                    <div class="tab-content widget-scrollbar">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="group-search-boxes mb-2">
+                                    <div class="search-box show">
+                                        <div class="input-box">
+                                            <i id="i-search" class="i-search fas fa-search"></i>
+                                            <input id="search-ksservice" class="ignore" type="text" autocomplete="off" placeholder="@Localizer["Search ..."]">
+                                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                                        </div>
+                                        <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                                    </div>
+                                </div>
+                                <table id="list-ksservice-items">
+                                    <thead>
+                                        <tr>
+                                            <th>@Localizer["Serive Code"]</th>
+                                            <th>@Localizer["Item Code"]</th>
+                                            <th>@Localizer["Item Name"]</th>
+                                            <th>@Localizer["UoM"]</th>
+                                            <th>@Localizer["Price"]</th>
+                                            <th>@Localizer["Choose"]</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="loading" id="no-data" hidden>
+                                    <h3>@Localizer["No Data"]</h3>
+                                </div>
+                                <div class="loading" id="loading">
+                                    <img class="img-loading" src="~/ajaxloader/loading.gif" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

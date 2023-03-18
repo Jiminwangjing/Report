@@ -1,0 +1,273 @@
+﻿
+@{
+    int @BranchID = Convert.ToInt32(@User.FindFirst("BranchID").Value);
+    int @UserID = Convert.ToInt32(@User.FindFirst("UserID").Value);
+}
+
+<style>
+    #goto-setting, ul li {
+        background: transparent;
+    }
+
+    #goto-setting .wrap-block .block input,
+    #goto-setting .wrap-block .block select,
+    #goto-setting .wrap-block .block textarea {
+        width: 100%;
+    } 
+</style>
+<div id="goto-setting" class="wrap-btn">
+    @*<div class="btn"><i class="fas fa-cogs"></i></div>*@
+        @*<label>Setting</label>*@
+
+    <fieldset id='setting-content'>
+        <legend>@Localizer["POS Setting"]</legend>
+        <div class="wrap-block col-two">
+            <div class="left-block">
+                <div class="block border myb1">
+                    <div class="title">@Localizer["Receipt"]</div>
+
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["Print Receipt Order"]</div>
+                        <label class="switch">
+                            <input type="checkbox" checked="" class="print-receipt-order">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["Print Receipt Pay"]</div>
+                        <label class="switch">
+                            <input class="print-receipt-pay" type="checkbox" checked="">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="row myb1">
+                        <div class="col-md-6">@Localizer["Print Receipt Count"]</div>
+                        <div class="col-md-6"><input autofocus autocomplete="off" value="0" class="print-receipt-count" /></div>                       
+                    </div>
+                    <div class="row myb1">
+                        <div class="col-md-6">@Localizer["Max Queue Count"]</div>
+                        <div class="col-md-6"><input autofocus autocomplete="off" value="0" class="max-queue-count" /></div>                      
+                    </div>
+
+                    <div class="row myb1">
+                        <div class="col-md-6">@Localizer["Receipt Size"]</div>
+                        <div class="col-md-6">
+                            <select class="receipt-size">
+                                <option>80mm</option>
+                                <option>A4</option>
+                                <option>A5</option>
+                            </select>
+                        </div>                      
+                    </div>
+                    <div class="row myb1">
+                        <div class="col-md-6">@Localizer["Receipt Template"]</div>
+                        <div class="col-md-6">
+                            <select class="receipt-template">
+                                <option>KRMS</option>
+                                <option>KTMS</option>
+                                <option>KBMS</option>
+                            </select>
+                        </div>
+                        
+                    </div>
+                    <div class="row myb1">
+                        <div class="col-md-6">@Localizer["Password Wifi"]</div>
+                        <div class="col-md-6">
+                            <input autofocus autocomplete="off" class="password-wifi" />
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <div class="right-block">
+                <div class="block border">
+                    <div class="title">@Localizer["Company"]</div>
+                    @*<div hidden class="flexbox space-between myb1">
+                    <div>Dual Screen</div>
+                    <label class="switch">
+                        <input type="checkbox" checked="" class="dual-screen">
+                        <span class="slider round"></span>
+                    </label>
+                </div>*@
+
+                    <div class="flexbox space-between myb1">
+                        <div>@Localizer["VATable"]</div>
+                        <label class="switch">
+                            <input type="checkbox" checked="" class="vat-able">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="row myb1">
+                        <div class="col-md-6">@Localizer["Vat Invoice No."]</div>
+                        <div class="col-md-6"><input autofocus autocomplete="off" value="0" class="vat-invoice-no" /></div>
+                    </div>
+                    <div class="row myb1">
+                        <div class="col-md-6">@Localizer["Customer"]</div>
+                        <div class="col-md-6"><select class="customer-id"></select></div>
+                    </div>
+                    <div class="row myb1">
+                        <div class="col-md-6">@Localizer["Price List"]</div>
+                        <div class="col-md-6"><select class="price-list-id"></select></div>
+                    </div>
+                    <div class="row myb1">
+                        <div class="col-md-6">@Localizer["Other Currency"]</div>
+                        <div class="input-group col-md-6">
+                            <div class="input-group-prepend">
+                                <select class="receipt-other-curr"></select>
+                            </div>
+                            <input autofocus autocomplete="off" class="other-curr-rate form-control" style="width: 50%;" />
+                        </div>
+                    </div>
+                    <div class="row myb1">
+                        <div class="col-md-6">@Localizer["Warehouse"]</div>
+                        <div class="col-md-6"><select class="warehouse-id"></select></div>
+                    </div>
+                    <div class="row myb1">
+                        <div class="col-md-6">@Localizer["Payment Means"]</div>
+                        <div class="col-md-6"><select class="payment-means-id"></select></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">@Localizer["Close Shift Type"]</div>
+                        <div class="col-md-6">
+                            <select class="close-shift">
+                                <option value="1">Category</option>
+                                <option value="2">Payment Means</option>
+                                <option value="3">None</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn btn-success pull-right" id="setting-add-new"><i class="fas fa-plus-circle"></i> Add</div>
+        </div>
+
+    </fieldset>
+    
+</div>
+
+<script>
+    $.ajax({
+        url: '/POS/GetPriceList',
+        async: false,
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (pricelist) {
+            $.each(pricelist, function (i, pr) {
+                $('.price-list-id').append("<option value=" + pr.ID + ">" + pr.Name + "</option>");
+            });
+        }
+    });
+    $.ajax({
+        url: '/POS/GetCustomer',
+        async: false,
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (customer) {
+            $.each(customer, function (i, cus) {
+                $('.customer-id').append("<option value=" + cus.ID + ">" + cus.Name + "</option>");
+                $('.price-list-id').val(cus.PriceListID);
+            });
+        }
+    });
+
+    $.ajax({
+        url: '/POS/GetPaymentMeans',
+        async: false,
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (paymentmeans) {
+            $.each(paymentmeans, function (i, pay) {
+                $('.payment-means-id').append("<option value=" + pay.ID + ">" + pay.Type + "</option>");
+            })
+        }
+    });
+
+    $.ajax({
+        url: '/POS/GetWarehouse',
+        async: false,
+        type: 'GET',
+        dataType: 'JSON',
+        data: { branchid:@BranchID},
+        success: function (warehouse) {
+            $.each(warehouse, function (i, wh) {
+                $('.warehouse-id').append("<option value=" + wh.ID + ">" + wh.Name + "</option>");
+            })
+        }
+    });
+    //Get exchange rate 
+    let exchange_rate = $.ajax({
+        url: '/POS/GetExchangeRate',
+        async: false,
+        type: 'GET',
+        success: function () { }
+    }).responseJSON;
+   
+    //Other currency list
+    $.each(exchange_rate, function (i, curr) {
+        let dis_curr = "<option value=" + curr.Currency.ID + ">" + curr.Currency.Description + "</option>";
+        $('.receipt-other-curr').append(dis_curr);
+    });
+    $('#setting-add-new').click(function () {
+
+        if (parseInt($('.print-receipt-count').val()) === 0 || isNaN(parseInt($('.print-receipt-count').val()))) {
+            $('.print-receipt-count').css('border-color', 'red');
+        }
+        else if (parseInt($('.max-queue-count').val()) === 0 || isNaN(parseInt($('.max-queue-count').val()))) {
+        }
+        else if ($(".receipt-size option:selected").text() === null || $(".receipt-size option:selected").text() === '') {
+
+        }
+        else if ($('.receipt-template option:selected').text() === null || $('.receipt-template option:selected').text() === '') {
+
+        }
+        else if (parseInt($('.customer-id').val()) === 0 || isNaN(parseInt($('.customer-id').val()))) {
+
+        }
+        else if (parseInt($('.price-list-id').val()) === 0 || isNaN(parseInt($('.price-list-id').val()))) {
+
+        }
+        else if (parseInt($('.warehouse-id').val()) === 0 || isNaN(parseInt($('.warehouse-id').val())))
+        {
+
+        }
+        else if (parseInt($('.payment-means-id').val()) === 0 || isNaN(parseInt($('.payment-means-id').val())))
+        {
+
+        }
+        else {
+                let setting = {};
+                setting.PrintReceiptOrder = $(".print-receipt-order").is(":checked");
+                setting.PrintReceiptTender = $(".print-receipt-pay").is(":checked");
+                setting.PrintCountReceipt = parseInt($('.print-receipt-count').val());
+                setting.QueueCount = parseInt($('.max-queue-count').val());
+                setting.Receiptsize = $(".receipt-size option:selected").text();
+                setting.ReceiptTemplate = $('.receipt-template option:selected').text();
+                setting.Printer = 0;
+                setting.DaulScreen = $('.dual-screen').is(':checked');
+                setting.VatAble = $('.vat-able').is(':checked');
+                setting.VatNum = $('.vat-invoice-no').val();
+                setting.Wifi = $('.password-wifi').val();
+                setting.CustomerID = parseInt($('.customer-id').val());
+                setting.PriceListID = parseInt($('.price-list-id').val());
+                setting.CurrencyDisplay = $('.receipt-other-curr option:selected').text();
+                setting.DisplayRate = parseFloat($('.other-curr-rate').val());
+                setting.WarehouseID = parseInt($('.warehouse-id').val());
+                setting.PaymentMeansID = parseInt($('.payment-means-id').val());
+                setting.LocalCurrencyID = parseInt($('.receipt-other-curr').val());
+                setting.CloseShift = parseInt($('.close-shift').val())
+                $.ajax({
+                    url: '/POS/UpdateSetting',
+                    type: 'POST',
+                    data: { setting: setting },
+                    dataType: 'JSON',
+                    success: function (response) {
+                        window.location.href = "/POS/KRMS";
+                       
+                    }
+
+                });
+            }
+       
+    });
+
+</script>

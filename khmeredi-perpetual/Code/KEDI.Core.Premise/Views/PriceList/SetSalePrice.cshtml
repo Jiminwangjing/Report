@@ -1,0 +1,84 @@
+﻿<link href="~/Admin/PriceList/css/setsaleprice.css" rel="stylesheet" />
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-6">
+            <div class="error-message"></div>
+        </div>
+    </div>
+    <div class="row">
+        <input hidden id="price-list-baseid" value="@ViewBag.PriceListID" />
+        <div hidden class="col-md-2">
+            <label class="label">@Localizer["From Price List"]</label>
+            <select class="selectbox" id="price-list">
+                <option value="0" selected disabled>@Localizer["--- Select ---"]</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label">@Localizer["Item Group(1)"]</label>
+            <select class="selectbox" id="item-group1">
+                <option value="0" selected disabled>@Localizer["--- Select ---"]</option>
+
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label">@Localizer["Item Group(2)"]</label>
+            <select class="selectbox" id="item-group2">
+                <option value="0" selected disabled>@Localizer["--- Select ---"]</option>
+
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label">@Localizer["Item Group(3)"]</label>
+            <select class="selectbox" id="item-group3">
+                <option value="0" selected disabled>@Localizer["--- Select ---"]</option>
+
+            </select>
+        </div>
+        <div class="col-md-1 mt-4">
+            <button class="btn btn-kernel" id="filter-item">@Localizer["Filter"]</button>
+        </div>
+        <div class="col-md-5 flex-end mt-4">
+            <div class="item group-search-boxes">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="txtsearch" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrap-table list widget-scrollbar mt-3">
+        <table style="border-right: 1px solid rgb(194, 192, 192)" id="item-list">
+            <thead>
+                <tr>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Item Name 1"]</th>
+                    <th>@Localizer["Item Name 2"]</th>
+                    <th>@Localizer["UoM"]</th>
+                    <th>@Localizer["Cost"]</th>
+                    @*<th>@Localizer["Currency"]</th>*@
+                    <th hidden>@Localizer["Make up"]</th>
+                    <th>@Localizer["Price"]</th>
+                    <th>@Localizer["Currency"]</th>
+                    <th>@Localizer["Process"]</th>
+                    <th>@Localizer["Barcode"]</th>
+                    <th>@Localizer["Action"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="row" id="pager" style="margin-top:10px;">
+        <div class="col-sm-10">
+            @*<ul id="pagination" class="pagination-sm"></ul>*@
+        </div>
+        <div class="col-sm-2 text-right">
+            <span><button id="add-item" class="btn btn-kernel btn-xs">@Localizer["Add"]</button></span>
+            <a asp-action="Index" class="btn btn-xs btn-kernel">@Localizer["Cancel"]</a>
+        </div>
+    </div>
+</div>
+<script src="~/Admin/PriceList/js/setsaleprice.js"></script>

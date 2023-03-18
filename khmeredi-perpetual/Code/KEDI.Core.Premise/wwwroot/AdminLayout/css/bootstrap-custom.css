@@ -1,0 +1,356 @@
+﻿body {
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.form-group {
+    position: relative;
+    display: inline-block;
+    margin: 5px 0 0 0;
+    width: 100%;
+}
+
+.form-group .form-control {
+    height: 30px !important;
+    z-index: 1;
+}
+
+.form-group .form-label {
+    position: absolute;
+    left: 10px;
+    top: -12.5px;
+    font-size: .9em;
+    font-family: monospace;
+    font-weight: bold;
+    color: #FFF;
+    margin: 0;
+    padding: 0 5px;
+    border-radius: 3px 3px 0 0;
+    height: 17px;
+    line-height: 17px;
+    z-index: 2;
+    background: #75c6ab;
+    min-width: 100px;
+    -webkit-box-shadow: 0px 0px 1.5px 0.1px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0px 0px 1.5px 0.1px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 0px 1.5px 0.1px rgba(0, 0, 0, 0.25);
+}
+
+.form-group:focus-within .form-label,
+.form-group.focused .form-label {
+    font-size: 1em;
+    transform: none;
+}
+
+label {
+    margin-bottom: 0px;
+    line-height: 20px;
+}
+
+.user-logo {
+    position: relative;
+    width: 155px;
+    height: 155px;
+}
+
+.user-logo img {
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+}
+
+.user-logo input[type=file] {
+    display: inline-block;
+    position: absolute;
+    width: 100%;
+    height: 100% !important;
+    left: 0;
+    opacity: 0;
+    border-radius: 3px;
+}
+
+input,
+select,
+textarea,
+.form-control {
+    position: relative;
+    border-radius: 3px;
+    outline: 0;
+    border: 1px solid #CCC;
+    height: 25px !important;
+    font-size: 0.9em;
+    padding: 0 5px;
+}
+
+input[type=checkbox],
+input[type=radio] {
+    height: 22px;
+    width: 22px;
+    vertical-align: middle;
+}
+
+button[disabled],
+input[type=button] {
+    pointer-events: none;
+}
+
+.btn {
+    display: inline-block;
+    height: auto;
+    padding: 0 5px;
+    min-height: 25px;
+}
+
+.btn.btn-sm {
+    height: 30px;
+    line-height: 30px;
+    font-size: .9em;
+}
+
+.btn.btn-xs {
+    height: 10px;
+    line-height: 10px;
+    font-size: .8em;
+    line-height: 25px;
+}
+
+.btn.btn-success {
+    font-size: 12px;
+    font-family: Arial;
+    /* background-color: #f2e8c5; */
+    border: 0px;
+    color: black;
+}
+
+.btn.btn-success:hover {
+    background: #f2e8c5;
+}
+
+.btn.right {
+    float: right;
+}
+
+.input-group * {
+    height: 25px;
+    border-radius: 3px;
+    margin: 0;
+}
+
+.input-group> :first-child,
+.input-group :first-child * {
+    border-right: none !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.input-group> :last-child,
+.input-group :last-child * {
+    border-left: none !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.input-group .input-group-text,
+.input-group select,
+.input-group input {
+    min-width: 60px;
+}
+
+.input-group .input-group-icon {
+    right: 15px;
+    padding: 0 2px;
+    cursor: pointer;
+    border: .5px solid #CCC;
+    border-left: none;
+    line-height: 1.5;
+    background-color: #FFF;
+}
+
+
+.form-control:disabled,
+.form-control[readonly] {
+    cursor: default;
+    pointer-events: none;
+    background: #F3F5F8;
+}
+
+ul.nav.nav-tabs {
+    margin-bottom: .5rem;
+    border-bottom: .5px solid #dee2e6;
+}
+
+ul.nav.nav-tabs>li {
+    height: 30px;
+    line-height: 30px;
+    padding: 0 .5rem;
+    background: #CCC;
+    border-top-right-radius: 10px;
+    min-width: 70px;
+    margin-right: 1px;
+    text-align: center;
+    border: 1px solid #CCC;
+    border-bottom: none;
+    cursor: pointer;
+    text-decoration: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+ul.nav.nav-tabs>li.active {
+    background: unset;
+}
+
+.ck-file-container {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    background: #fff;
+    border-radius: 5px;
+    padding: 5px 5px 5px 0;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.ck-file-container img {
+    width: 40px;
+    border-radius: 50%;
+
+}
+
+.ck-file-container input[type=file] {
+    position: absolute;
+    left: 0;
+    height: 100%;
+    opacity: 0;
+    width: 70px;
+    cursor: pointer;
+}
+
+.ck-file-container select {
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #ccc;
+}
+
+.ck-file-container select:focus {
+    border-bottom: 1.5px solid #36A3F7;
+}
+
+
+/*Modal Dialog*/
+.modal-backdrop.fade.show {
+    z-index: 0;
+    display: none;
+}
+
+.modal.fade.show {
+    background: rgba(0, 0, 0, .25);
+    width: 100vw;
+    height: 100vh;
+}
+
+.modal .modal-dialog {
+    margin-top: 50px;
+}
+
+.modal .modal-dialog .modal-header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 30px;
+    line-height: 45px;
+    color: black;
+    background: #f4fcff;
+}
+
+.modal .modal-dialog .modal-header>* {
+    margin: 0;
+    color: black;
+    text-transform: capitalize;
+    font-style: inherit;
+}
+
+.modal .modal-dialog .modal-body {
+    background: #f4fcff;
+    padding: 5px;
+}
+
+
+.modal .modal-dialog .modal-footer {
+    height: 45px;
+    line-height: 45px;
+    padding: 0 10px;
+}
+
+span.field-validation-error {
+    font-size: .8em;
+    color: #C1515A;
+}
+
+@media (max-width: 415px) {
+    .modal-dialog-container .modal-dialog {
+        margin-top: 100px;
+    }
+}
+
+.ck-widget-container .widget-body .widget-content .content-section {
+    position: relative;
+    height: calc(100% - 35px);
+    padding: 5px;
+    background-color: #beeffe;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 0;
+    color: #333;
+}
+
+.ck-widget-container .widget-body .widget-content .content-section>* {
+    background: #beeffe;
+    border-radius: 5px;
+    min-height: 100%;
+    padding: 8px;
+}
+
+table tr th {
+    line-height: 25px;
+    background: #f2e8c5;
+    color: black;
+    font-weight: normal;
+    font-size: 0.9em;
+    border-left: 1px solid;
+    border-color: #bbc;
+    height: 27px;
+}
+
+table tr td {
+    border-left: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #bbc;
+    /* 
+     */
+    font-size: 0.9em;
+    height: 23px;
+    font-family: 'Calibri';
+}
+
+.card {
+    background-color: #f4fcff;
+}
+
+.dx-datagrid .dx-row>td {
+    padding-bottom: 0px;
+    padding-top: 0px;
+}

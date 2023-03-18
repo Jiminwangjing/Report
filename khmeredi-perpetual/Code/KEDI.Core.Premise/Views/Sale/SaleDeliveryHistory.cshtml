@@ -1,0 +1,138 @@
+﻿@model KEDI.Core.Premise.Models.Sale.HistoryOfSaleViewModel;
+<style>
+    .lable_barnch,
+    .lable_warehouse,
+    .label_Postingdate,
+    .label_Documentdate,
+    .lable_requried,
+    .label_showpage,
+    .label_AllInvoice,
+    .btn-kernel {
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .select_warehouse,
+    .input_postingdate,
+    .input_documentdate,
+    .input_requrieddate,
+    .select_showpage,
+    .input_search {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+    }
+
+    .checkAllItem {
+        padding-top: 27px;
+        font-size: 15px;
+    }
+
+    .btn-fillter {
+        padding-top: 27px;
+    }
+
+    table tr th,
+    table tr td {
+        text-align: center !important;
+    }
+
+    .wrap-table.sale-histories {
+        height: 300px;
+    }
+</style>
+<div id="datasource" hidden>@Json.Serialize(Model.SaleHistories)</div>
+<div class="card card-body">
+    <div class="row BTNROW">
+        <div class="col-md-2">
+            <label class="lable_warehouse">@Localizer["Customer"]</label>
+            <select id="sale-customer" class="select_warehouse">
+                <option value="0" selected>--- select ---</option>
+                @foreach (var c in Model.Customers)
+                {
+                    <option value="@c.ID">@c.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="lable_warehouse">@Localizer["Warehouse"]</label>
+            <select class="select_warehouse" id="sale-warehouse">
+                <option value="0" selected disabled>--- select ---</option>
+                @foreach (var c in Model.Warhouses)
+                {
+                    <option value="@c.ID">@c.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label_Postingdate">@Localizer["Date From"]</label>
+            <div>
+                <input type="date" class="input_postingdate" id="sale-date-from"
+                    />
+                @*<i class="fa fa-calendar-alt calender_postting"></i>*@
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label class="label_Documentdate">@Localizer["Date To"]</label>
+            <div>
+                <input type="date" class="input_documentdate" id="sale-date-to"
+                    />
+                @*<i class="fa fa-calendar-alt calender_Documete"></i>*@
+            </div>
+        </div>
+        <div class="col-md-2 ">
+            <label class="lable_warehouse">@Localizer["Delivery Person"]</label>
+            <select class="select_warehouse" asp-items="@ViewBag.Devlivery"
+                id="delivery-by">
+                <option value="0" selected disabled>--- select ---</option>
+            </select>
+        </div>
+
+        <div class="row mb-2 btn-fillter">
+            <div class="col-md-10"></div>
+            <div class="col-md-2"><a class="btn btn-xs btn-kernel"
+                    id="btn-fillter">Fillter</a></div>
+        </div>
+        <div class="col-md-2 checkAllItem">
+            <label class="label_AllInvoice">@Localizer["All Invoice"]</label>
+            <input type="checkbox" id="checkAllItem" />
+        </div>
+    </div>
+
+    <div>
+        <img id="data-loading" class="ck-data-loading"
+            src="~/Images/ajaxloader/loading.gif" />
+        <div class="wrap-table widget-scrollbar list myt1 sale-histories">
+            <table id="sale-histories" cellspacing="0">
+                <tr>
+                    <th>@Localizer["No"]</th>
+                    <th>@Localizer["DN Number"]</th>
+                    <th>@Localizer["Customer"]</th>
+                    <th>@Localizer["Creator"]</th>
+                    <th>@Localizer["Amount(PLC)"]</th>
+                    @*<th>@Localizer["Balance Due(SC)"]</th>*@
+                    @* <th>@Localizer["Exchange Rate"]</th> *@
+                    <th>@Localizer["Posting Date"]</th>
+                    <th>@Localizer["Document Date"]</th>
+                    <th>@Localizer["Due Date"]</th>
+                    <th>@Localizer["Status"]</th>
+                    <th>@Localizer["Template"]</th>
+                    <th class="text-center">@Localizer["Preview"]</th>
+                </tr>
+            </table>
+        </div>
+        <div id="data-paging-container"></div>
+    </div>
+</div>
+<p id="print-template-url" hidden>@Json.Serialize(Model)</p>
+<script src="~/js/Sale/history-delivery.js"></script>

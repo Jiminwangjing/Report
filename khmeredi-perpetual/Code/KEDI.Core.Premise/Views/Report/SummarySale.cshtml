@@ -1,0 +1,340 @@
+﻿<script src="~/js/warehouse.js"></script>
+<script src="~/js/table.js" defer></script>
+
+<style>
+    .input_datefrom, .input_dateto, .input_user, .input_branch {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #DDDDDD;
+        width: 100%;
+        min-width: 100%;
+        height: 28px;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size: 12px;
+        border-radius: 3px;
+    }
+
+    .lable_branch, .lable_datefrom, .lable_dateto, .lable_user {
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .btn-success, .btn-primary {
+        margin-top: 22px;
+        font-size: 12px;
+        font-family: Arial;
+        height: 28px;
+    }
+
+    .wrap-table {
+        margin-top: 20px;
+    }
+
+    .grandtotal {
+        margin-left: 15px;
+    }
+
+    .subtotaltd {
+        border-bottom: 1px solid gray;
+        font-weight: 700;
+    }
+
+    .hidden {
+        visibility: collapse !important;
+    }
+
+    .styletr {
+        font-weight: 800;
+    }
+
+    .list_detail {
+        float: right;
+        min-width: 1000px;
+    }
+
+    #list_summarysale {
+        margin-top: 10px;
+    }
+</style>
+<link href="~/css/Modal.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-md-3">
+        <label class="lable_datefrom">@Localizer["Date From"]</label>
+        <input type="date" class="input_datefrom" id="datefrom" />
+        <label class="lable_branch">@Localizer["By Branch"]</label>
+        <select type="text" class="input_branch" id="bybranch">
+            <option value="0"></option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="lable_dateto">@Localizer["Date To"]</label>
+        <input type="date" class="input_dateto" id="dateto" />
+        <label class="lable_user">@Localizer["User Name"] </label>
+        <select type="text" class="input_user" id="byuser">
+            <option value="0"></option>
+        </select>
+    </div>
+    <div class="col-md-3 ">
+        <button class="btn btn-xs btn-success" id="filter">@Localizer["Filter"]</button>
+        <button class="btn btn-xs btn-primary" id="preview">@Localizer["Preview"]</button>
+    </div>
+ 
+</div>
+<div class="wrap-table list">
+    <table id="list_summarysale">
+        <tr style="background:#5F758B;color:white;">
+            <th width="80">@Localizer["Detail"]</th>
+            <th style="min-width:100px;">@Localizer["Receipt"]</th>
+            <th style="min-width:100px;">@Localizer["User"]</th>
+            <th style="min-width:100px;">@Localizer["Date In"]</th>
+            <th style="min-width:100px;">@Localizer["Time In"]</th>
+            <th style="min-width:100px;">@Localizer["Date Out"]</th>
+            <th style="min-width:100px;">@Localizer["Time Out"]</th>
+            <th style="min-width:120px;" class="text-lg-center">@Localizer["Grand Total"]</th>
+        </tr>
+    </table>
+</div>
+<div class="row" style="margin-top:30px;">
+    <div class="col-md-12">
+        <div>
+            <span>@Localizer["Total (SYS)"]</span>
+            <span>:</span>
+            <span id="gratotal_sys"></span>
+        </div>
+    </div>
+</div>
+<i class="fa fa-arrows-circle-down"></i>
+<script src="~/pos/scripts/krms/numeral.min.js"></script>
+<script>
+    var db = new Warehouse();
+    $(document).ready(function () {
+        $("#gratotal_sys").text("0.00");
+         $('#list_summarysale').append('<tr><td class="text-center" colspan="8">@Localizer["No Data"]</td></tr>');
+        //Get branch
+        $.ajax({
+            url: "/Report/GetBranch",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bybranch").append(data);
+            }
+        });
+    });
+    $("#bybranch").on('change', function () {
+        var branchid = $(this).val();
+        // Get Employee
+        $.ajax({
+            url: "/Report/GetEmployee",
+            type: "Get",
+            dataType: "Json",
+            data: {BranchID:branchid},
+            success: function (respones) {
+                var data = '';
+                $("#byuser option:not(:first-child)").remove();
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Employee.Name + '</option>';
+                });
+                $("#byuser").append(data);
+            }
+        })
+    });
+
+    $("#filter").on('click', function () {
+        var datefrom = $("#datefrom").val();
+        var dateto = $("#dateto").val();
+        var branch = $("#bybranch").val();
+        var user = $("#byuser").val();
+        let listSummary = $.ajax({
+            url: "/Report/GetSummarySale",
+            type: "Get",
+            dataType: "Json",
+            async: false,
+            data: { DateFrom: datefrom, DateTo: dateto, BranchID: branch, UserID: user },
+            success: function (respones) {
+
+            }
+        }).responseJSON;
+        db.table("tb_summary").clear();
+        if (listSummary.length !== 0) {
+            $("#list_summarysale tr:not(:first-child)").remove();
+            db.insert("tb_summary", listSummary, "OrderID");
+        }
+        else {
+            $("#list_summarysale tr:not(:first-child)").remove();
+            $('#list_summarysale').append('<tr><td class="text-center" colspan="8">@Localizer["No Data"]</td></tr>');
+        }
+        var subgratotal = 0;
+        var subgratotal_sys = 0;
+        var local = '';
+        var sys = '';
+        if (db.from("tb_summary") !== 0) {
+            db.from("tb_summary").where(function (item) {
+                subgratotal += parseFloat(item.GrandTotal);
+                subgratotal_sys += parseFloat(item.GrandTotal_Sys);
+                local = item.LocalCurrency;
+                sys = item.SysCurrency;
+                GetDataBindTable(item);
+            });
+        }
+        
+        $(".tabelshow").addClass("fa-plus-circle");
+        if (local == "KHR" || local == '៛') {
+            subgratotal = numeral(subgratotal).format('0,0');
+        }
+        else {
+            subgratotal = subgratotal.toFixed(2);
+        }
+        if (sys == "KHR" || sys == '៛') {
+            subgratotal_sys = numeral(subgratotal_sys).format('0,0');
+        }
+        else {
+            subgratotal_sys = subgratotal_sys.toFixed(2);
+        }
+        $("#gratotal_local").text(local + ' ' + subgratotal);
+        $("#gratotal_sys").text(sys + ' ' + subgratotal_sys);
+
+
+    });
+    function GetDataBindTable(item) {
+        var data = '';
+        var grantotal = '';
+
+        if (item.LocalCurrency == 'KHR' || item.LocalCurrency == '៛') {
+            grantotal = '<td class="text-center">' + '<span style="margin-right:15px;">' + item.LocalCurrency + '</span>' + '<span>' + numeral(item.GrandTotal).format('0,0') + '</span>' + '</td>';
+        } else {
+            grantotal = '<td class="text-center">' + '<span style="margin-right:15px;">' + item.LocalCurrency + '</span>' + '<span>' + item.GrandTotal.toFixed(2) + '</span>' + '</td>';
+        }
+        data +=
+        '<tr style="border-bottom:3px solid #e0e0d1;">' +
+            '<td>' + '<i class="fa  tabelshow" style="color:#008000;" data-id='+item.OrderID+'></i>' +'<input hidden type="checkbox" class="check_box" checked/>'+ '</td>' +
+            '<td hidden id="order_id">' + item.OrderID + '</td>' +
+            '<td hidden>' + item.Branch + '</td>' +
+            '<td>' + item.Receipt + '</td>' +
+            '<td >' + item.User + '</td>' +
+            '<td>' + item.DateIn + '</td>' +
+            '<td>' + item.TimeIn + '</td>' +
+            '<td>' + item.DateOut + '</td>' +
+            '<td>' + item.TimeOut + '</td>' +
+             grantotal +
+            '<td hidden>' + item.GrandTotal_Sys + '</td>' +
+            '<td hidden>' + item.SysCurrency + '</td>' +
+           '<td hidden>' + item.LocalCurrency + '</td>' +
+            '<td hidden>' + item.GrandTotal + '</td>' +
+         '</tr>' +
+         '<tr class="nestedtable hidden">' +
+                '<td colspan="8">' +
+                    '<table id='+item.OrderID+' class="table-hover list_detail">'+
+
+                    '</table>' +
+           '</td>' +
+        '<tr>';
+        $("#list_summarysale").append(data);
+    }
+    var click = 0;
+    $("#list_summarysale").on('click', '.tabelshow', function () {
+        var orderid = $(this).data("id");
+        var cut = $(this).closest('tr');
+        var grantotal = cut.find('td:eq(13)').text();
+        var local = cut.find('td:eq(12)').text();
+        if ($(this).parent().find(".check_box").is(':checked')) {
+            $(this).parent().find(".check_box").prop('checked',false);
+            $(this).parent().parent().next().toggleClass("hidden");
+            $(this).removeClass("fa-plus-circle");
+            $(this).addClass("fa-minus-circle");
+            $(this).css("color", "red");
+            $.ajax({
+                    url: "/Report/GetDetailSale",
+                    type: "Get",
+                    dataType: "Json",
+                    data: { OrderID:parseInt(orderid) },
+                    success: function (e) {
+                        let data = '<tr class="styletr">'+
+                                '<td class="text-left">@Localizer["Code"]</td>' +
+                                '<td class="text-left">@Localizer["Khmer Name"]</td>' +
+                                '<td class="text-left">@Localizer["English Name"]</td>' +
+                                '<td class="text-center">@Localizer["Qty"]</td>' +
+                                '<td class="text-center">@Localizer["Price"]</td>' +
+                                '<td class="text-center">@Localizer["Discount"]</td>' +
+                                '<td class="text-right" style="min-width:100px;">@Localizer["Total"]</td>' +
+                                '</tr>';
+                        $.each(e, function (i, item) {
+                            data +=
+                                '<tr>' +
+                                '<td class="text-left">' + item.Code + '</td>' +
+                                '<td class="text-left">' + item.KhmerName + '</td>' +
+                                '<td class="text-left">' + item.EnglishName + '</td>' +
+                                '<td class="text-center">' + item.Qty + '</td>' +
+                                '<td class="text-center">' + item.UnitPrice + '</td>' +
+                                '<td class="text-center">' + item.DisItem + '</td>' +
+                                '<td class="text-right" style="min-width:100px;">' + item.Total + '</td>' +
+                                '<td hidden>' + item.Total_Sys + '</td>' +
+                                '</tr>';
+                        });
+                        data += '<tr>' + '<td></td>' + '<td></td>' + '<td></td>' + '<td></td>' + '<td></td>' + '<td class="text-center" style="font-weight:800;">@Localizer["Sub Total"]</td>' + '<td class="text-right" style="font-weight:800;"> '+'<span>'+local+'</span>'+'<span style="margin-left:5px;">'+grantotal+'</span>'+ '<td>' + '</tr>';
+                        $('#' + orderid).html(data);
+                    }
+            }).responseJSON;
+        }
+        else {
+
+            $(this).parent().find(".check_box").prop('checked', true);
+            $(this).parent().parent().next().toggleClass("hidden");
+            $(this).removeClass("fa-minus-circle");
+            $(this).addClass("fa-plus-circle");
+            $(this).css("color", "#008000");
+        }
+    });
+
+    //Print Summary Sale
+    $("#preview").on('click', function () {
+        var datefrom = $("#datefrom").val();
+        var dateto = $("#dateto").val();
+        var branch = $("#bybranch").val();
+        var user = $("#byuser").val();
+        window.open("/Print/PrintSummarySale?DateFrom=" + datefrom + "&DateTo=" + dateto + "&BranchID=" + branch + "&UserID=" + user + "", "_blank");
+    });
+
+
+    //Export
+    function fnExcelReport() {
+        //$("td:hidden").remove();
+        var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+        var textRange; var j = 0;
+        tab = document.getElementById('list_summarysale'); // id of table
+        for (j = 0; j < tab.rows.length; j++) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+        }
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+        {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+        }
+        else
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+        return (sa);
+    }
+
+</script>   

@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KEDI.Core.Premise", "KEDI.Core.Premise.csproj", "{5AFB2766-467B-4BCA-A69D-93345714B5D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D8630A93-A3C8-438B-A703-00324A549C47}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5AFB2766-467B-4BCA-A69D-93345714B5D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AFB2766-467B-4BCA-A69D-93345714B5D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AFB2766-467B-4BCA-A69D-93345714B5D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AFB2766-467B-4BCA-A69D-93345714B5D9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1DCD045C-5E0F-4C25-A6B7-C37D33CAC301}
+	EndGlobalSection
+EndGlobal

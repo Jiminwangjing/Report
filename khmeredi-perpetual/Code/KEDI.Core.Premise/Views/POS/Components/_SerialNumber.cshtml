@@ -1,0 +1,158 @@
+﻿<style>
+    .__mt-1 {
+        margin-top: 0.25rem !important;
+    }
+
+    .serail-detail-container {
+        height: 29vh;
+        overflow: auto;
+        width: 100%;
+    }
+
+    table thead tr th {
+        font-size: 12px;
+    }
+</style>
+@*// Model Serial //*@
+<div id="container-list-serial" class="wrap-table widget-scrollbar" style="display: none;">
+    <div class="row">
+        <div class="col-md-12">
+            <div style="overflow: auto; height: 17vh;" class="widget-scrollbar">
+                <table class="serial-lists">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["No"]</th>
+                            <th>@Localizer["Item Code"]</th>
+                            <th>@Localizer["Item Name"]</th>
+                            <th>@Localizer["Whse Code"]</th>
+                            <th>@Localizer["Quantity"]</th>
+                            <th>@Localizer["Total Selected"]</th>
+                            <th>@Localizer["Open Qty"]</th>
+                            <th>@Localizer["Derection"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <p class="font-size">@Localizer["Available Serial Numbers"]</p>
+        </div>
+        <div class="col-md-3">
+            <label class="font-size">@Localizer["Find"]</label>
+            <input class="form-control font-size" id="searchSNs" />
+        </div>
+        @* <div class="col-md-4">
+            <input class="form-control font-size" id="searchSNs" />
+            </div> *@
+        <div class="col-md-4">
+            <label class="font-size">@Localizer["Display Available SNs"]</label>
+            <select class="form-control font-size" id="filterBP" disabled>
+                <option value="1" selected>@Localizer["All"]</option>
+                <option value="2">@Localizer["Related to Current BP"]</option>
+            </select>
+        </div>
+        @* <div class="col-md-3">
+            <select class="form-control font-size" id="filterBP" disabled>
+            <option value="1" selected>@Localizer["All"]</option>
+            <option value="2">@Localizer["Related to Current BP"]</option>
+            </select>
+            </div> *@
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget-scrollbar" style="overflow: auto; height: 180px;">
+                <table class="serial-unselect-lists">
+                    <thead>
+                        <tr>
+                            @* <th>@Localizer["Serial Number"]</th>
+                                <th>@Localizer["Mfr Serial No."]</th>
+                                <th>@Localizer["Lot Number"]</th>
+                                <th>@Localizer["Unit Cost"]</th> *@
+
+                            <th style="min-width: 300px;">@Localizer["Mfr Serial No."]</th>
+                            <th style="min-width: 300px;">@Localizer["Engine NO / SerialNumber"]</th>
+                            <th>@Localizer["Plate Number"]</th>
+                            <th>@Localizer["Lot Number"]</th>
+                            <th>@Localizer["Color"]</th>
+                            <th>@Localizer["Brand"]</th>
+                            <th>@Localizer["Condition"]</th>
+                            <th>@Localizer["Type"]</th>
+                            <th>@Localizer["H.Power"]</th>
+                            <th>@Localizer["Year"]</th>
+                            <th>@Localizer["Expiration Date"]</th>
+                            <th>@Localizer["Mfr Date"]</th>
+                            <th>@Localizer["Admission Date"]</th>
+                            <th>@Localizer["Mfr Warranty Start"]</th>
+                            <th>@Localizer["Mfr Warranty End"]</th>
+                            <th>@Localizer["Location"]</th>
+                            <th>@Localizer["Details"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            <label class="font-size">@Localizer["Available Quantity"]</label>
+            <input class="font-size form-control" readonly id="avbQty" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-5">
+            <p class="text-center font-size">@Localizer["Selected Serial Numbers"]</p>
+        </div>
+    </div>
+
+    <div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="widget-scrollbar" style="overflow: auto; height: 15vh;">
+                    <table class="serial-select-lists">
+                        <thead>
+                            <tr>
+                                @* <th>@Localizer["Serial Number"]</th>
+                                    <th>@Localizer["Unit Cost"]</th> *@
+
+                                <th style="min-width: 300px;">@Localizer["Mfr Serial No."]</th>
+                                <th style="min-width: 300px;">@Localizer["Engine NO / SerialNumber"]</th>
+                                <th>@Localizer["Plate Number"]</th>
+                                <th>@Localizer["Lot Number"]</th>
+                                <th>@Localizer["Color"]</th>
+                                <th>@Localizer["Brand"]</th>
+                                <th>@Localizer["Condition"]</th>
+                                <th>@Localizer["Type"]</th>
+                                <th>@Localizer["H.Power"]</th>
+                                <th>@Localizer["Year"]</th>
+                                <th>@Localizer["Expiration Date"]</th>
+                                <th>@Localizer["Mfr Date"]</th>
+                                <th>@Localizer["Admission Date"]</th>
+                                <th>@Localizer["Mfr Warranty Start"]</th>
+                                <th>@Localizer["Mfr Warranty End"]</th>
+                                <th>@Localizer["Location"]</th>
+                                <th>@Localizer["Details"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            <label class="font-size">@Localizer["Total Selected"]</label>
+            <input class="font-size form-control" readonly id="ttSlt" />
+    </div>
+    <div class="col-md-4">
+        <div class="serailErrorMessage"></div>
+    </div>
+</div>
+</div>
+<input id="checkingSerialString" value="unchecked" hidden />
+<script src="~/Admin/Components/SerialsBatches/POS/serialNumber.js"></script>

@@ -1,0 +1,253 @@
+﻿@using KEDI.Core.Premise.Models.Services.CanRingExchangeAdmin;
+@model ExchangeCanRingParam;
+<partial name="../Components/Purchases/_SerailNumber" />
+<partial name="../Components/Purchases/_BatchNo" />
+<partial name="../POS/Components/_SerialNumber" />
+<partial name="../POS/Components/_BatchNo" />
+<style>
+    .loading {
+        position: absolute;
+        left: -9vw;
+        z-index: 2;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+<div class="loading" id="loading" hidden>
+    <img class="img-loading" src="~/ajaxloader/loading.gif" />
+</div>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-12 flexbox flex-end">
+            <a id="History" href="/CanRing/ExchangeCanRingHistory" class="btn btn-kernel btn-xs">
+                @Localizer["History"]
+            </a>
+            <a id="btn-addnew" href="/CanRing/ExchangeCanRing" class="btn btn-kernel btn-xs" hidden>
+                @Localizer["Create New"]
+            </a>
+            <button id="btn-find" class="btn btn-kernel btn-xs">
+                @Localizer["Find"]
+            </button>
+        </div>
+    </div>
+    <form id="form-submit">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label>@Localizer["Vendor"]</label>
+                    </div>
+                    <div class="col-md-7 cursor" id="show-list-vendor">
+                        <input type="text" hidden asp-for="ExchangeCanRingMaster.CusId" readonly id="vendor-id" class="form-control font-size" />
+                        <input type="text" readonly id="vendor-name" class="form-control font-size" />
+                    </div>
+                    <div class="col-md-5">
+                        <label>@Localizer["Warehouse"]</label>
+                    </div>
+                    <div class="col-md-7">
+                        <select id="ware-id" asp-for="ExchangeCanRingMaster.WarehouseID" asp-items="@ViewBag.Warehouse" class="form-control font-size">
+                            <option selected value=0>@Localizer["--- Select ---"]</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label>@Localizer["Price List"]</label>
+                    </div>
+                    <div class="col-md-7">
+                        <select id="cur-id" asp-for="ExchangeCanRingMaster.PriceListID" asp-items="@ViewBag.PriceList" class="form-control font-size">
+                            <option selected value=0>@Localizer["--- Select ---"]</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label>@Localizer["User"]</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" id="user-id" class="form-control font-size" readonly
+                               value="@User.FindFirst("FullName").Value" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label>@Localizer["Invoice No."]</label>
+                    </div>
+                    <div class="col-md-7">
+                        <select id="invoice-no" asp-for="ExchangeCanRingMaster.SeriesID" class="form-control font-size"></select>
+                        <input hidden id="docTypeId" asp-for="ExchangeCanRingMaster.DocTypeID" class="form-control font-size" />
+                    </div>
+                    <div class="col-md-5">
+                        <label>@Localizer["Number"]</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" readonly id="next_number" asp-for="ExchangeCanRingMaster.Number" class="form-control font-size" />
+                    </div>
+                    <div class="col-md-5">
+                        <label>@Localizer["Posting Date"]</label>
+                    </div>
+                    <div class="col-md-7" style="position:relative;">
+                        <input readonly type="date" id="post-date" asp-for="ExchangeCanRingMaster.CreatedAt" class="form-control font-size" />
+                    </div>
+                    <div class="col-md-5">
+                        <label>@Localizer["Payment Means"]</label>
+                    </div>
+                    <div class="col-md-7">
+                        <select id="payment-means-id" asp-for="ExchangeCanRingMaster.PaymentMeanID" asp-items="@ViewBag.PaymentMeans" class="form-control font-size">
+                            <option selected value=0>@Localizer["--- Select ---"]</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-11">
+                <input id="name-reading" class="form-control font-size" placeholder="@Localizer["search name here..."]" />
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-kernel btn-xs" id="item-id" type="button">
+                    @Localizer["Choose"]
+                </button>
+            </div>
+        </div>
+        <div class="wrap-table detail mt-2 widget-scrollbar bTable">
+            <table id="list-detail">
+                <tr>
+                    <th>@Localizer["No"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Item Name"]</th>
+                    <th>@Localizer["Qty"]</th>
+                    <th>@Localizer["Uom"]</th>
+                    <th>@Localizer["Item Change"]</th>
+                    <th>@Localizer["Qty Change"]</th>
+                    <th>@Localizer["Uom Change"]</th>
+                    <th>@Localizer["Charge"]</th>
+                    <th>@Localizer["Action"]</th>
+                </tr>
+            </table>
+        </div>
+        <br />
+        <div class="row mb-3">
+            <div class="col-md-1 col-sm-3">
+                <label class="font-size">@Localizer["Total: "]</label>
+            </div>
+            <div class="col-md-3 col-sm-4 input-group">
+                <div class="input-group-prepend">
+                    <span class="cur font-size input-group-kernel"></span>
+                </div>
+                <input type="text" id="totalDis" class="form-control font-size" readonly />
+                <input type="text" id="total" hidden class="form-control font-size" asp-for="ExchangeCanRingMaster.Total" readonly />
+                <input type="text" id="totalSys" hidden class="form-control font-size" asp-for="ExchangeCanRingMaster.TotalSystem" value=0 readonly />
+            </div>
+        </div>
+        <div class="error-summary"></div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <button id="submit-item" class="btn btn-kernel btn-xs" type="button">@Localizer["Save"]</button>
+                @*<button id="cancel-item" hidden class="btn btn-kernel btn-xs" type="button">@Localizer["Cancel Invoice"]</button>*@
+                <a href="/CanRing/ExchangeCanRing" class="btn btn-kernel btn-xs">
+                    @Localizer["Cancel"]
+                </a>
+            </div>
+        </div>
+    </form>
+
+    @* Choose Vendor Modal *@
+    <div class="vendor-container-list" style="display: none">
+        <div class="row">
+            <div class="col-md-7"></div>
+            <div class="col-md-5">
+                <div class="group-search-boxes">
+                    <div id="text-search" class="wrap-search-box">
+                        <div class="wrap-input show">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="find-vendor" autocomplete="off" type="text"
+                                   placeholder="@Localizer["Search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search" style="display: none;">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            @*<img id="data-loading" class="ck-data-loading" src="~/Images/ajaxloader/loading.gif" />*@
+            <table id="list-vendor">
+                <tr>
+                    <th>No</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Type"]</th>
+                    <th>@Localizer["Phone"]</th>
+                    <th>@Localizer["Action"]</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!--Items not enough stock-->
+    <div id="item-stock-info" class='wrap-table widget-scrollbar' hidden>
+        <table id="item-stock-info-listview">
+            <tr>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["In Stock"]</th>
+                <th>@Localizer["Ordered Qty"]</th>
+                <th>@Localizer["Committed Qty"]</th>
+            </tr>
+        </table>
+    </div>
+    <div id="choose-content-can-ring" style="display: none; height: 74vh;">
+        <div class="row">
+            <div class="col-md-7"></div>
+            <div class="col-md-5">
+                <div class="group-search-boxes">
+                    <div id="text-search" class="wrap-search-box">
+                        <div class="wrap-input show">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="search-can-ring" autocomplete="off" type="text"
+                                   placeholder="@Localizer["Search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search" style="display: none;">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="widget-scrollbar">
+            <table id="can-ring-list">
+                <tr>
+                    <th>@Localizer["No"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Item Name"]</th>
+                    <th>@Localizer["Qty"]</th>
+                    <th>@Localizer["Uom"]</th>
+                    <th>@Localizer["Item Change"]</th>
+                    <th>@Localizer["Qty Change"]</th>
+                    <th>@Localizer["Uom Change"]</th>
+                    <th>@Localizer["Charge"]</th>
+                    <th>@Localizer["Choose"]</th>
+                </tr>
+            </table>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="loading" id="no-data" hidden>
+                        <h3>@Localizer["No Data"]</h3>
+                    </div>
+                    <div class="loading" id="loading">
+                        <img class="img-loading" src="~/ajaxloader/loading.gif" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="data" hidden>@Json.Serialize(Model)</div>
+<script src="~/Admin/CanRing/exchange-can-ring.js"></script>

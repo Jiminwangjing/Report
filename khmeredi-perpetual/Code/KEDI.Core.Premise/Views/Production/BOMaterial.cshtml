@@ -1,0 +1,209 @@
+﻿
+<script src="~/js/warehouse.js"></script>
+<script src="~/js/Production/bom-material.js" defer></script>
+<div id="error-summary"></div>
+<div class="card card-body">
+    <fieldset class="scheduler-border">
+        <legend class="title">@Localizer["BillOfMaterial"]</legend>
+        <form>
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label>@Localizer["ItemCode"]</label>
+                        </div>
+                        <div class="col-md-7 input-group">
+                            <input type="text" readonly id="code" class="form-control" disabled />
+                            <div title="List Customer" id="show-list-itemster" class="input-group-append">
+                                <i class="fas fa-plus-circle text-info input-group-icon"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <label>@Localizer["ItemName"]</label>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" readonly id="item-id" class="form-control" disabled />
+                        </div>
+                        <div class="col-md-5">
+                            <label>@Localizer["UoM"]</label>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" id="uom-id" class="form-control" disabled />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label>@Localizer["User"]</label>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" id="user-id" class="form-control" readonly value="@User.FindFirst("FullName").Value" />
+                        </div>
+                        <div class="col-md-5">
+                            <label>@Localizer["PostingDate"]</label>
+                        </div>
+                        <div class="col-md-7" style="position:relative;">
+                            <input data-date="" data-date-format="DD.MM.YYYY" type="date" id="post-date" class="form-control" />
+                        </div>
+                        <div class="col-md-5">
+                            <label>@Localizer["Active"]</label>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="checkbox" id="active" class="form-control float-left" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </fieldset>
+
+    <fieldset class="scheduler-border mt-2">
+        <legend class="title">
+            @Localizer["BillOfMaterialDetail"]
+        </legend>
+        <button class="btn btn-primary btn-sm right mb-1" id="item-detail">
+            <i class="fas fa-list"></i> @Localizer["Choose"]
+        </button>
+        <div class="wrap-table detail">
+            <table id="list-detail">
+                <tr>
+                    <th>@Localizer["ItemCode"]</th>
+                    <th style="min-width:150px;">@Localizer["ItemName"]</th>
+                    <th>@Localizer["Quantity"]</th>
+                    <th class="text-center">@Localizer["UoM"]</th>
+                    <th>@Localizer["Cost"]</th>
+                    <th>@Localizer["Amount"]</th>
+                    <th>@Localizer["Active"]</th>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+    <div class="row">
+        <div class="col-md-5"></div>
+        <div class="col-md-2"></div>
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-5">
+                    <label>@Localizer["TotalAmount"]</label>
+                </div>
+                <div class="col-md-7 input-group">
+                    <div class="input-group-append"><span class="cur-class input-group-text"></span></div>
+                    <input type="text" id="total-amount" value="0" readonly data-number class="summary form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button id="submit-item" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> @Localizer["Save"]</button>
+            <a href="/Sale/SaleAR" class="btn btn-primary btn-sm"><i class="fas fa-window-close"></i> @Localizer["Cancel"]</a>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade modal-dialog-container" id="ModalItem">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>@Localizer["ListItemmaster"]</h4>
+            </div>
+            <div class="modal-body">
+                <div class="flexbox justify-content-between">
+                    <div class="group-search-boxes" style="right:0%;">
+                        <div id="text-search" class="wrap-search-box">
+                            <div class="wrap-input show">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input class="ignore" id="find-itemmaster" autocomplete="off" type="text"
+                                       placeholder="@Localizer["Search ..."]">
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" class="btn-search" style="display: none;">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+                <div>
+                    <img id="data-loading" class="ck-data-loading" src="~/Images/ajaxloader/loading.gif" />
+                    <div class="wrap-table cus widget-scrollbar">
+                        <table id="list-itemmater">
+                            <tr>
+                                <th><i>#</i></th>
+                                <th>@Localizer["Code"]</th>
+                                <th>@Localizer["BarCode"]</th>
+                                <th>@Localizer["UoM"]</th>
+                                <th>@Localizer["KhmerName"]</th>
+                                <th>@Localizer["EnglishName"]</th>                                
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="data-paging-customer"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  btn-primary btn-sm" id="cus-choosed">@Localizer["Choose"]</button>
+                <button class="btn btn-primary btn-sm" id="cus-cancel" data-dismiss="modal">@Localizer["Cancel"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-dialog-container" id="ModalItemDetail" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>@Localizer["ListItemMasterData"]</h4>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;">
+                    <div class="group-search-boxes" style="right:0%;">
+                        <div id="text-search" class="wrap-search-box">
+                            <div class="wrap-input show">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input class="ignore" id="find-itemMasterdeatil" autocomplete="off" type="text"
+                                       placeholder="@Localizer["Search ..."]">
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" class="btn-search" style="display: none;">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                   
+                    <img id="data-loading" class="ck-data-loading" src="~/Images/ajaxloader/loading.gif" />
+                    <div class="wrap-table widget-scrollbar item"style="margin-top:10px;">
+                        <table id="list-itemdetail">
+                            <tr>
+                                <th><i>#</i></th>
+                                <th>@Localizer["Code"]</th>
+                                <th>@Localizer["BarCode"]</th>
+                                <th>@Localizer["UoM"]</th>
+                                <th>@Localizer["Cost"]</th>
+                                <th>@Localizer["KhmerName"]</th>
+                                <th>@Localizer["EnglishName"]</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="data-paging-item"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  btn-primary btn-sm" id="item-detail-choosed">@Localizer["Choose"]</button>
+                <button class="btn btn-primary btn-sm" id="cus-cancel" data-dismiss="modal">@Localizer["Cancel"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

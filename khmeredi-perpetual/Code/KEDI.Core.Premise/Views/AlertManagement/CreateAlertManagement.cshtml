@@ -1,0 +1,32 @@
+﻿@model CKBS.Models.Services.Administrator.AlertManagement.AlertManagement
+@{
+    ViewData["Title"] = "CreateAlertManagement";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<link href="~/AutoMobile/css/AlertManagement.css" rel="stylesheet" />
+<div class="card card-body">
+<div class="TitleListAlert">@Localizer["CreateAlertManagement"]</div>
+<form asp-action="CreateAlertManagement" method="post" class="mt-4">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-5">
+            <input asp-for="ID" value="0" hidden />
+
+            <label asp-for="Code">@Localizer["Code"] </label>
+            <input asp-for="Code" autocomplete="off" class="form-control form-control-sm" />
+
+            <label asp-for="Name"> @Localizer["Typeofalert"] </label>
+            <select asp-for="Name" asp-items="ViewBag.Name" class="form-control form-control-sm">
+                <option selected disabled>@Localizer["Choose"]</option>
+            </select>
+
+            <button type="submit" class="btn btn-sm btn-kernel mt-5">@Localizer["Save"] </button>
+            <a asp-action="AlertManagement" asp-controller="AlertManagement" class="btn btn-sm btn-kernel mt-5"> @Localizer["Back"]</a>
+        </div>
+        <div class="col-md-7"></div>
+
+
+    </div>
+
+</form>
+    </div>

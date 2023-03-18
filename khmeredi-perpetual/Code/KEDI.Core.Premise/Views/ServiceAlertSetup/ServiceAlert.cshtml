@@ -1,0 +1,45 @@
+﻿<div class="card card-body">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="service-list">
+                <tr>
+                    <th>@Localizer["#"]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Active"]</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        const serviceTable = ViewTable({
+            keyField: "ID",
+            selector: "#service-list",
+            indexed: true,
+            paging: {
+                pageSize: 10,
+                enabled: true
+            },
+            visibleFields: ["Code", "Name", "Active"],
+            columns: [
+                {
+                    name: "Active",
+                    template: `<input type="checkbox"/>`,
+                    on: {
+                        "click": function (e) {
+                            const checked = $(this).prop("checked") ? true : false
+                            e.data.Active = checked
+                            $.post("/ServiceAlertSetup/UpdateService", {generalService: e.data})
+                        }
+                    }
+                }
+            ]
+        })
+        $.get("/ServiceAlertSetup/GetService", function(res){
+            serviceTable.bindRows(res)
+        });
+    })
+</script>

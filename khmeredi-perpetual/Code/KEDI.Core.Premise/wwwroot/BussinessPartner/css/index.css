@@ -1,0 +1,78 @@
+﻿.fa-edit {
+    color: #459025;
+}
+
+.fa-trash {
+    color: #ff0000;
+    cursor: pointer;
+}
+
+#Styleimge {
+    height: 30px;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    width: 30px;
+}
+
+h3 {
+    color: white;
+    margin-right: 10px;
+}
+
+
+.stylerow {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.fa-question {
+    color: white;
+}
+
+.modal-header {
+    background-color: blue;
+}
+
+.fa-sort-amount-down {
+    margin-left: 10px;
+    font-size: 10px;
+    color: white;
+}
+
+a {
+    color: white;
+}
+
+    a:hover {
+        color: white;
+    }
+
+h5 {
+    margin: 10px 5px;
+}
+
+.content_select {
+    height: 25px;
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 3px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    width: 100%;
+    font-family: Arial;
+    font-size: 13px;
+    border-radius: 3px;
+    border: 1px solid #c6c1c1;
+}
+
+    .content_select:focus {
+        box-shadow: 0 0 5px rgba(27, 93, 185,0.4);
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid rgb(120, 172, 245);
+        border-radius: 3px;
+        font-family: Arial;
+        font-size: 13px;
+    }

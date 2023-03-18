@@ -1,0 +1,412 @@
+﻿@{
+    ViewData["Title"] = "Top Sale Quantity View";
+}
+
+<head>
+    <link href="~/Admin/DevReport/css/DevReport.css" rel="stylesheet" />
+    <style>
+        .dx-row.dx-data-row.dx-column-lines:not(:first-child):nth-child(even) {
+            background-color: #f2f2f2 !important;
+        }
+    </style>
+</head>
+
+<body class="dx-viewport">
+    <div class="card card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <label class="lable_datefrom">@Localizer["Date From"]</label>
+                <input type="date" class="input_datefrom" id="datefrom" />
+            </div>
+            <div class="col-md-2">
+                <label class="lable_dateto">@Localizer["Date To"]</label>
+                <input type="date" class="input_dateto" id="dateto" />
+            </div>
+            <div class="col-md-2">
+                <label class="lable_branch">@Localizer["By Branch"]</label>
+                <select type="text" class="input_branch" id="bybranch">
+                    <option value="0">All Branch</option>
+                </select>
+            </div>
+            <div class="col-md-4 ">
+                <button class="btn btn-xs btn-kernel" id="filter">@Localizer["Filter"]</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label>@Localizer["Time From"]</label>
+                <input type="Time" id="timefrom" style="width:100%" />
+            </div>
+            <div class="col-md-2">
+                <label>@Localizer["Time To"]</label>
+                <input type="Time" id="timeto" style="width:100%" />
+            </div>
+        </div>
+        <div id="gridContainer"></div>
+        <div class="options">
+            <div class="option">
+                <div id="autoExpand"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(function () {
+        filterData();
+        //Get branch
+        $.ajax({
+            url: "/DevReport/GetBranch",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = '';
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<option value="' + item.ID + '">' + item.Name + '</option>';
+                });
+                $("#bybranch").append(data);
+            }
+        });
+
+        $('#filter').click(function () {
+            filterData(this);
+        });
+        function filterData(button) {
+            let btn_filter = $(button).children("i.fa-search");
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var branch_id = $("#bybranch").val();
+            var user_id = $("#byuser").val();
+            let timefrom = $("#timefrom").val();
+            let timeto = $("#timeto").val();
+            console.log(timefrom,"hi");
+            console.log(timeto,"jkae");
+            $.ajax({
+                url: "/DevReport/TopSaleQuantityReport",
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    DateFrom: date_from,
+                    DateTo: date_to,
+                    BranchID: branch_id,
+                    UserID: user_id,
+                    TimeFrom: timefrom,
+                    TimeTo: timeto,
+                },
+                beforeSend: function () {
+                    btn_filter.addClass("fa-spinner fa-spin");
+                },
+                success: function (reponse) {
+                    console.log(reponse,"Nika");
+                    bindGrid(reponse);
+                    btn_filter.removeClass("fa-spinner fa-spin");
+                }
+            });
+        }
+        function bindGrid(reponse) {
+            console.log(reponse);
+            var dataGrid = $("#gridContainer").dxDataGrid({
+                dataSource: reponse,
+                allowColumnReordering: true,
+                showBorders: true,
+                allowColumnResizing: true,
+                hoverStateEnabled: true,
+                allowColumnResizing: true,
+                columnResizingMode: "nextColumn",
+                columnMinWidth: 50,
+                columnAutoWidth: true,
+                scrolling: {
+                    columnRenderingMode: "virtual"
+                },
+                grouping: {
+                    autoExpandAll: false,
+                },
+                searchPanel: {
+                    visible: true
+                },
+                filterRow: {
+                    visible: false,
+                    applyFilter: "auto"
+                },
+
+                paging: {
+                    pageSize: 10
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20, 50, 100],
+                    showInfo: true
+                },
+                loadPanel: {
+                    enabled: true
+                },
+                groupPanel: {
+                    visible: false
+                },
+
+                columns: [
+                    {
+                        dataField: "Group1",
+                        caption: "Item Group1",
+                        groupIndex: 0
+                    },
+                    {
+                        dataField: "Barcode",
+                        caption: "Barcode"
+                    },
+                    {
+                        dataField: "Code",
+                        caption: "Item Code"
+                    },
+                    {
+                        dataField: "KhmerName",
+                        caption: "Item Name"
+                    },
+                    {
+                        dataField: "Qty",
+                        caption: "Qty",
+                        alignment: "center"
+                    },
+                    {
+                        dataField: "ReturnQty",
+                        caption: "Return Qty",
+                        alignment: "center"
+                    },
+                    {
+                        dataField: "Uom",
+                        caption: "Uom",
+                        alignment: "center"
+                    },
+                    {
+                        dataField: "Price",
+                        caption: "Unit Price",
+                        format: {
+                            type: "fixedPoint",
+                            precision: 2
+                        },
+                        alignment: "center"
+                    },
+                    {
+                        dataField: "TotalQty",
+                        caption: "Total Qty",
+                        alignment: "center"
+
+                    },
+                    {
+                        dataField: "Total",
+                        caption: "Total Amount",
+                        format: {
+                            type: "fixedPoint",
+                            precision: 3
+                        },
+                        alignment: "center"
+                    }
+                ],
+
+                summary: {
+                    groupItems: [
+                        {
+                            column: "Group1",
+                            summaryType: "count",
+                            displayFormat: "{0} items",
+                        },
+                        {
+                            column: "Qty",
+                            summaryType: "sum",
+                            displayFormat: "{0}",
+                            showInGroupFooter: false,
+                            alignByColumn: true,
+                        },
+                        {
+                            column: "ReturnQty",
+                            summaryType: "sum",
+                            displayFormat: "{0}",
+                            showInGroupFooter: false,
+                            alignByColumn: true,
+                        },
+                        {
+                            showInColumn: "TotalQty",
+                            column: "TotalQty",
+                            summaryType: "sum",
+                            displayFormat: "{0}",
+                            showInGroupFooter: false,
+                            alignByColumn: "right",
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "Total",
+                            summaryType: "sum",
+                            displayFormat: "{0}",
+                            format: {
+                                type: "fixedPoint",
+                                precision: 2
+                            },
+                            showInGroupFooter: false,
+                            alignByColumn: true,
+                        }
+                    ],
+                    totalItems: [
+                        {
+                            showInColumn: "Price",
+                            column: "SDiscountItem",
+                            summaryType: "max",
+                            displayFormat: "Discount Item   :",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "Price",
+                            column: "SDiscountTotal",
+                            summaryType: "max",
+                            displayFormat: "Discount Total  :",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "Price",
+                            column: "SGrandTotalSysCal",
+                            summaryType: "max",
+                            displayFormat: "Grand Total SSC :",
+                            alignment: "left"
+                        },
+                        {
+                            showInColumn: "Price",
+                            column: "SGrandTotalCal",
+                            summaryType: "max",
+                            displayFormat: "Grand Total LCC :",
+                            alignment: "left"
+                        },
+
+                        //value
+                        {
+                            showInColumn: "Total",
+                            column: "SDiscountItem",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SDiscountTotal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SVat",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SGrandTotalSysCal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+                        {
+                            showInColumn: "Total",
+                            column: "SGrandTotalCal",
+                            summaryType: "max",
+                            displayFormat: "{0}",
+                            alignment: "right"
+                        },
+
+                    ]
+
+                },
+                export: {
+                    enabled: true
+                },
+                onExporting: function (e) {
+                    var workbook = new ExcelJS.Workbook();
+                    var worksheet = workbook.addWorksheet('top-sale-report');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet: worksheet,
+                        topLeftCell: { row: 4, column: 1 }
+                    }).then(function (dataGridRange) {
+                        // header
+                        var headerRow = worksheet.getRow(2);
+                        headerRow.height = 30;
+                        worksheet.mergeCells(2, 1, 2, 8);
+                        headerRow.getCell(1).value = 'Top Sale Report';
+                        headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
+                        headerRow.getCell(1).alignment = { horizontal: 'center' };
+
+                        // footer
+                        //var footerRowIndex = dataGridRange.to.row + 2;
+                        //var footerRow = worksheet.getRow(footerRowIndex);
+                        //worksheet.mergeCells(footerRowIndex, 1, footerRowIndex, 8);
+                        //footerRow.getCell(1).value = 'www.wikipedia.org';
+                        //footerRow.getCell(1).font = { color: { argb: 'BFBFBF' }, italic: true };
+                        //footerRow.getCell(1).alignment = { horizontal: 'right' };
+
+                    }).then(function () {
+                        // https://github.com/exceljs/exceljs#writing-xlsx
+                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'top-sale-report.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                onToolbarPreparing: function (e) {
+                    var dataGrid = e.component;
+                    e.toolbarOptions.items.unshift({
+                        location: "before",
+                        template: function () {
+                            return
+                        }
+                    },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "refresh",
+                                onClick: function () {
+                                    dataGrid.refresh();
+                                    filterData();
+                                }
+                            }
+                        },
+                        {
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                icon: "fas fa-file-pdf",
+                                onClick: function () {
+                                    var datefrom = $("#datefrom").val();
+                                    var dateto = $("#dateto").val();
+                                    var branch = $("#bybranch").val();
+                                    var user = $("#byuser").val();
+                                    var time_from = $("#timefrom").val();
+                                    var time_to = $("#timeto").val();
+                                    if (datefrom == "" || dateto == "") {
+                                        $("#datefrom").css("border-color", "red");
+                                        $("#dateto").css("border-color", "red");
+                                        return;
+                                    } else {
+                                        $("#datefrom").css("border-color", "#DDDDDD");
+                                        $("#dateto").css("border-color", "#DDDDDD");
+                                        window.open("/DevPrint/PrintTopSaleQuantity?DateFrom=" + datefrom + "&DateTo=" + dateto + "&BranchID=" + branch + "&TimeFrom=" + time_from + "&TimeTo=" + time_to + "", "_blank");
+                                    }
+                                }
+                            },
+                            title: 'Export to PDF'
+                        }
+                    );
+                }
+
+            }).dxDataGrid("instance");
+            $("#autoExpand").dxCheckBox({
+                value: false,
+                text: "Expand All Groups",
+                onValueChanged: function (data) {
+                    dataGrid.option("grouping.autoExpandAll", data.value);
+                }
+            });
+        }
+
+    })
+</script>

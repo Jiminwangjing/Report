@@ -1,0 +1,150 @@
+.dx-scheduler-work-space-week .dx-scheduler-header-panel-cell,
+.dx-scheduler-work-space-work-week .dx-scheduler-header-panel-cell {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.dx-scheduler-appointment-collector.dx-button, .dx-scheduler-appointment-collector.dx-button.dx-state-active, .dx-scheduler-appointment-collector.dx-button.dx-state-focused, .dx-scheduler-appointment-collector.dx-button.dx-state-hover {
+    width: 82px !important;
+}
+
+
+.dx-scheduler-time-panel {
+    float: left;
+    width: 100px;
+    border-collapse: collapse;
+}
+.dx-scheduler-work-space-month .dx-scheduler-header-panel-cell {
+    text-align: center;
+    font-family: Arial font-size;
+    font-size: 15px;
+    background-color: #2E94F2;
+    border-right: 2px solid #ccc;
+    border-left: 2px solid #ccc;
+}
+
+
+.dx-scheduler-all-day-table-row:before, .dx-scheduler-group-row:before, .dx-scheduler-header-row:before {
+    background-color: #2E94F2;
+    border-left: 2px solid #ccc;
+}
+.dx-scheduler-work-space {
+    padding-top: 51px;
+    margin-top: -60px;
+}
+
+
+.dx-scheduler-work-space-week .dx-scheduler-header-panel-cell,
+.dx-scheduler-work-space-work-week .dx-scheduler-header-panel-cell {
+    text-align: center;
+    vertical-align: middle;
+}
+.dx-scheduler-work-space .dx-scheduler-header-panel-cell .name {
+    font-size: 16px;
+    line-height: 15px;
+}
+
+
+.dx-scheduler-work-space-month .dx-scheduler-date-table-cell > div {
+    margin-left: 100px;
+    color:blue;
+    padding-right: 121px;
+}
+.dx-scheduler-header-panel-cell {
+    position: relative;
+    color: whitesmoke;
+    vertical-align: middle;
+    font-weight: bold;
+    text-align: center;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 15px;
+    font-family: Arial !important;
+    border-left: 2px solid #ccc;
+    border-right: 2px solid #ccc;
+}
+
+
+.dx-scheduler-date-table-cell {
+    border: 2px solid #ccc;
+    margin-right: 20px !important
+}
+
+
+table tr td {
+    border-left: 1px solid #ff9933;
+    border-bottom: 1px solid #ff9933;
+    border-color: #ff9933;
+    background-color: #f4fcff;
+    font-size: 0.75em;
+    height: 23px;
+}
+
+
+.dx-scheduler-header {
+    background-color: #2E94F2;
+    border: 1px solid blue;
+    height: 56px;
+}
+
+
+.dx-tab {
+    position: relative;
+    display: table-cell;
+    vertical-align: middle;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.dx-scheduler-time-panel-cell > div {
+    margin-top: 10px;
+}
+
+
+
+.dx-scheduler-time-panel-cell {
+    color: blue;
+    position: relative;
+    width: 100%;
+    font-size: 14px;
+    text-align: right;
+    font-weight: 100;
+    padding-right: 20px;
+    border-right: 2px solid #ccc;
+    border-bottom:2px solid #ccc;
+}
+
+
+.dx-scheduler-work-space-month .dx-scheduler-appointment-content {
+    font-size: 13px;
+}
+
+table tr th {
+    width: 100%;
+    background-color: #2E94F2;
+    font-size: 17px;
+    height: 27px;
+    font-family: Arial;
+}
+
+
+
+.dx-scheduler-work-space .dx-scheduler-header-panel-cell .number {
+    font-size: 5px;
+    line-height: 15px;
+}
+
+.dx-tab-text {
+    vertical-align: middle;
+    line-height: 25px;
+    color: #1c1b1b;
+    font-weight: 600;
+    font-family: Arial font-size;
+}
+
+/*============================add style=============================*/
+
+
+

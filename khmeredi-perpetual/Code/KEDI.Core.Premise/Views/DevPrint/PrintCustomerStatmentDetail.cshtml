@@ -1,0 +1,105 @@
+@model IEnumerable<CKBS.Models.Services.Banking.IncomingPaymentCustomer>
+@{
+    ViewData["Title"] = "Preview Summary Sale";
+    Layout = "~/Views/Shared/_Layout_Print.cshtml";
+}
+@{
+    double grandtotalPay = @Model.Sum(i => i.TotalPayment);
+    double grandtotalApplyamount = @Model.Sum(i => i.Applied_Amount);
+    double grandtotalbalance = @Model.Sum(i => i.BalanceDue);
+    double SumTotal=0;
+}
+<style>
+.column {
+  font-size:1.6rem;
+  float: left;
+  width: 33.33%;
+  padding-left: 20px;
+  font-weight: bold;
+}
+</style>
+<h3 class="text-center" style="font-size:2.7rem; font-weight:bold;">Customer
+    Statement Summary Report</h3>
+<div class="text-center" style="font-size: 1.9rem;"> From
+    @Model.FirstOrDefault().DateFrom To
+    @Model.FirstOrDefault().DateTo</div>
+<div class="text-center" style="font-size:2.1rem;">@Model.FirstOrDefault().CustomerName</div>
+<div class="text-center" style="font-size:2rem;">@Model.FirstOrDefault().EmployeeName
+</div>  
+
+<table class="table">
+    <thead style="background-color:#f4ecd9; font-size:1.5rem">
+        <tr style="border:1px solid black;">
+            <th class="text-center" style="width:12%;border:none; text-align:left">@Localizer["SaleID"]</th>
+            <th class="text-center" style="width:12%;border:none;">@Localizer["Sale Date"]</th>
+            <th class="text-center" style="width:13%;border:none;">@Localizer["Required Date"]</th>
+            <th class="text-center" style="width:12%;border:none;">@Localizer["Employee"]</th>
+            <th class="text-center" style="width:12%;border:none;"></th>
+            <th class="text-center" style="width:12%;border:none;">@Localizer["Sale Amount"]</th>
+            <th class="text-center" style="width:12%;border:none;">@Localizer["Amount Paid"]</th>
+            <th class="text-center" style="width:12%;border:none;">@Localizer["Outstanding"]</th>
+
+        </tr>
+    </thead>
+</table>
+<div class="row">
+    <div class="column">
+        <p>Customer: @Model.FirstOrDefault().CustomerName</p>
+    </div>
+    <div class="column" style="margin-left:-4rem;">
+        <p>Company: @Model.FirstOrDefault().CustomerNametwo</p>
+    </div>
+    <div class="column">
+        <p>Contact: @Model.FirstOrDefault().ContactName</p>
+    </div>
+</div>
+<table class="table">
+    <tbody>
+
+        @foreach (var group in Model)
+        {
+            string postingdate = @group.PostingDate.ToString("dd-MM-yyyy");
+            string date = @group.Date.ToString("dd-MM-yyyy");
+            <tr>
+                <th style="border: 1px solid black; barder-bottom:1px solid black;border-right:hidden;border-left:hidden">@group.InvoiceNumber</th>
+                <th style="border: 1px solid black; barder-bottom:1px solid black;border-right:hidden;">@postingdate</th>
+                <th style="border: 1px solid black; barder-bottom:1px solid black;border-right:hidden;">@date</th>
+                <th style="text-align:left;border: 1px solid black; barder-bottom:1px solid black;border-right:hidden;">@group.EmName</th>
+                <th style="width: 105px;border: 1px solid black; barder-bottom:1px solid black;border-right:hidden;"></th>
+                <th style="border: 1px solid black; barder-bottom:1px solid black;border-right:hidden;">@group.SysName @string.Format("{0:n2}",@group.TotalPayment)</th>
+                <th style="border: 1px solid black; barder-bottom:1px solid black;border-right:hidden;">@group.SysName @string.Format("{0:n2}",@group.Applied_Amount)</th>
+                <th style="text-align: right;border: 1px solid black; barder-bottom:1px solid black;border-right:hidden;">@group.SysName @string.Format("{0:n2}",@group.BalanceDue)</th>
+            </tr>
+            <tr>
+                <th>Products</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            @foreach (var detail in group.DetailIteme)
+            {
+                SumTotal+= @detail.TotalAmount;
+                <tr>
+                    <td style="border-top:hidden; border-bottom:hidden;">@detail.Code</td>
+                    <td style="border-top:hidden; border-bottom:hidden;">@detail.ItemName</td>
+                    <td style="text-align:right;border-top:hidden; border-bottom:hidden;">@detail.Qty</td>
+                    <td style="text-align:right;border-top:hidden;border-bottom:hidden;">@group.SysName @string.Format("{0:n2}",@detail.Price)</td>
+                    <td style="text-align:center;border-top:hidden;">@group.SysName @string.Format("{0:n2}",@detail.Discount)</td>
+                    <td style="text-align:left;border-top:hidden;">@group.SysName @string.Format("{0:n2}",@detail.TotalAmount)</td>
+                </tr>
+            }   
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="1" ></td>
+                <td colspan="2" style="border-top: 1px solid black;"></td>
+                <td colspan="1" style="border-top: 1px solid black;">@Model.FirstOrDefault().SysName @string.Format("{0:n2}",@group.TotalPayment)</td>
+                <td colspan="1" style="border-top: 1px solid black;"></td>
+                <td colspan="1" style="border-top: 1px solid black;"></td>
+            </tr>
+        }
+    </tbody>
+</table>

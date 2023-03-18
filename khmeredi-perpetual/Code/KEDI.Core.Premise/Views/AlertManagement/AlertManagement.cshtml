@@ -1,0 +1,157 @@
+﻿@{
+    ViewData["Title"] = "AlertManagement";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="~/AutoMobile/css/_search.css" rel="stylesheet" />
+<link href="~/AutoMobile/css/AlertManagement.css" rel="stylesheet" />
+<div class="card card-body">
+    <div hidden id="_masterAlert">@Json.Serialize(Model)</div>
+    <div class="TitleListAlert">@Localizer["ListofAlertfunctions"]</div>
+
+    <div class="d-flex justify-content-between mt-3">
+        <a class="btn btn-sm btn-kernel " asp-action="CreateAlertManagement" asp-controller="AlertManagement" style="width:150px"> @Localizer["Newalertmanagement"] </a>
+        @* Search Box *@
+        <div class="item group-search-boxes mb-2">
+            <div id="text-search" class="search-box show">
+                <div class="input-box" style="max-width: 326px;">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-alert-list" name="search-member" autocomplete="off" type="text" value="" placeholder="@Localizer["Alter'sfunctionsearch ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="wrap-table">
+                <table id="list-alert" class="table table-sm table-striped">
+                    <thead class="theadTableAlert">
+                        <tr>
+                            <td class="text-center text-light">@Localizer["Nº"]</td>
+                            <td class="text-light"> @Localizer["AlertCode"] </td>
+                            <td class="text-light"> @Localizer["AlertFuntion"] </td>
+                            <td class="text-center text-light"> @Localizer["Active"] </td>
+                            <td class="text-center text-light"> @Localizer["Action"] </td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="paging-alert"></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-setting-alert" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="overflow:hidden;">
+                @* Header *@
+                <div class="modal-header pt-2 pl-2 pr-2 pb-1 sticky" style="background-color:#ccc">
+                    <div class="modalHead text-dark"><i class="fas fa-cogs"></i>@Localizer["Setting"]</div>
+                    <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky closeRefresh" data-dismiss="modal"></i></span>
+                </div>
+
+                @* Body *@
+                <div class="modal-body p-0 pb-2" style="background-color:#bcc">
+                    <div class="row pl-2 pr-2">
+
+                        <div class="col-md-6">
+                            <label class="labelHead">@Localizer["TimesbeforeAppointment"]</label>
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <input id="bf-app-input" type="number" class="form-control form-control-sm inputNumber" style="height: 27px !important;" />
+
+                                    <select id="bf-app-select" class="form-control form-control-sm ml-2 typeFrequently" style="height: 27px !important;">
+                                        <option selected disabled value="0">@Localizer["Choose"]</option>
+                                        <option value="1">@Localizer["Minutes"]</option>
+                                        <option value="2">@Localizer["Hours"]</option>
+                                        <option value="3">@Localizer["Days"]</option>
+                                        <option value="4">@Localizer["Weeks"]</option>
+                                        <option value="5">@Localizer["Months"]</option>
+                                        <option value="6">@Localizer["Years"]</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* Frequently *@
+                        <div class="col-md-6">
+                            <label class="labelHead">@Localizer["Frequently"]</label>
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <input id="fq-app-input" type="number" class="form-control form-control-sm inputNumber" style="height: 27px !important;" />
+
+                                    <select id="fq-app-select" class="form-control form-control-sm ml-2 typeFrequently" style="height: 27px !important;">
+                                        <option selected disabled value="0">@Localizer["Choose"]</option>
+                                        <option value="1">@Localizer["Minutes"]</option>
+                                        <option value="2">@Localizer["Hours"]</option>
+                                        <option value="3">@Localizer["Days"]</option>
+                                        <option value="4">@Localizer["Weeks"]</option>
+                                        <option value="5">@Localizer["Months"]</option>
+                                        <option value="6">@Localizer["Years"]</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    @* Search Box *@
+                    <div class="item group-search-boxes mb-2 mt-2 mr-2">
+                        <div id="text-search" class="search-box show">
+                            <div class="input-box" style="max-width: 326px;">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input class="ignore" id="search-user" name="search-member" autocomplete="off" type="text" value="" placeholder="@Localizer["Namesearch ..."]">
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+
+                    <div id="validation-summary" class="validationSummary mt-2 ml-3"></div>
+
+                    <div class="row m-2 ">
+                        <div class="wrap-table">
+                            <table id="list-user-alert">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">@Localizer["Nº"]</th>
+                                        <th>@Localizer["EmployeeName"]</th>
+                                        <th class="text-center">@Localizer["Active"]</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer p-1 pt-2" style="background-color:#ccc;">
+                    <a class="btn btn-sm btn-success vmcbtnConfirm text-light" id="save-alert-setting"><i class="fa fa-check-square"></i>&ensp;@Localizer["Save"]</a>
+                    <button class="btn btn-sm btn-danger vmcbtnClose closeRefresh" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Model Warning*@
+    <div class="modal fade" style="margin-top:10px;" id="modal-warning-alertM" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content" style="overflow:auto;">
+                <div class="modal-header p-1" style="background-color:#ccc">
+                    <span><i style="font-size:x-large" class="fa fa-warning fn-red"></i></span>
+                    <div style="font-size:20px; font-weight:bold; color:black; font-family: Trebuchet MS, Arial, Helvetica, sans-serif;"> @Localizer["Warning"]</div>
+                    <span><i style="font-size:x-large" class="fa fa-times-circle fn-sky closeRefresh" data-dismiss="modal"></i></span>
+                </div>
+                <div class="modal-body p-2 pt-4 pb-4" style="background-color:#bcc; text-align:center">
+                    @Localizer["Pleasecompleteyoursettingfirstbeforeactivatethisalert."]
+                </div>
+                <div class="modal-footer" style="background-color:#ccc">
+                    @*<a class="btn btn-sm btn-success vmcbtnConfirm text-light"><i class="fa fa-check-square"></i>&ensp;@Localizer["Go to setting"]</a>*@
+                    <a class="btn btn-sm btn-danger vmcbtnClose text-light closeRefresh" data-dismiss="modal"><i class="fa fa-window-close"></i>&ensp;@Localizer["Close"]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/AutoMobile/js/_search.js"></script>
+<script src="~/AutoMobile/js/AlertManagement.js"></script>

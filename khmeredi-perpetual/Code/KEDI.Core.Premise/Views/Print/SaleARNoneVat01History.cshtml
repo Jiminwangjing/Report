@@ -1,0 +1,139 @@
+﻿@model IEnumerable<KEDI.Core.Premise.Models.Sale.Print.PrintSaleHistory>
+@{
+    ViewData["Title"] = "SaleARHistory";
+    Layout = "_Layout_print";
+    var num = 0;
+    double sub_Total = 0;
+    decimal TotalVat = 0;
+}
+
+<style>
+    body {
+        font-family: 'Khmer OS Battambang';
+        font-size: 19px;
+    }
+
+    #th1 {
+        border: solid;
+        border-right: hidden;
+        border-bottom: hidden
+    }
+
+    #th2 {
+        text-align: right;
+        border: solid;
+    }
+
+    #th3 {
+        border: solid;
+        border-right: hidden
+    }
+
+
+    #th4 {
+        border: solid;
+        text-align: right
+    }
+</style>
+<hr style="border: 2px solid #2874A6;">
+<div class="row">
+    <div class="col-xs-2">
+        <img src="~/Images/company/@Model.First().Logo" width="150" height="150" />
+    </div>
+    <div class="col-xs-8" style="text-align:center">
+        <h1>@Model.FirstOrDefault().Branch</h1>
+        <h2>ANGUS PARK MEAT STORE</h2>
+        <h3>@Model.FirstOrDefault().EnglishDesc</h3>
+        <h3>@Model.First().Tel1 @Model.FirstOrDefault().Tel2</h3>
+    </div>
+    <div class="col-xs-2"></div>
+</div>
+<div class="row" style="text-align:center">
+    <div class="col-xs-12">
+        <h3>វិក្កយបត្រ</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-6">
+        @*<p>Cashier : @Model.FirstOrDefault().UserName</p>*@
+        <p>ឈ្មោះអតិថិជន : @Model.FirstOrDefault().CusName</p>
+    </div>
+    <div class="col-xs-6" style="padding-left:20%">
+        @*<p>Receipt No : @Model.FirstOrDefault().Invoice</p>*@
+        <p>លេខទូរស័ព្ទអតិថិជន : @Model.FirstOrDefault().Phone</p>
+    </div>
+</div>
+
+<div style="min-height:950px">
+    <table class="table table-bordered">
+        <tr>
+            <th style="border:solid">ល.រ</th>
+            <th style="border:solid">រាយមុខទំនិញ</th>
+            <th style="border:solid">ចំនួន</th>
+            <th style="border:solid">តម្លៃរាយ</th>
+            <th style="border:solid">តម្លៃសរុប</th>
+        </tr>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                num++;
+                sub_Total += item.Amount;
+                TotalVat += item.TaxValue;
+
+                <tr style="border:solid">
+                    <td style="border:solid" class="text-center">@num</td>
+                    <td style="border:solid">@item.ItemNameKh <br />@item.Barcode</td>
+                    <td style="border:solid" class="text-center">@item.Qty @item.UomName</td>
+                    <td style="border:solid" class="text-center">@(string.Format("{0:n2}",item.Price)) @item.SysCurrency</td>
+                    <td style="border:solid" class="text-center">@(string.Format("{0:n2}",item.Amount)) @item.SysCurrency</td>
+                </tr>
+
+            }
+        </tbody>
+        <tr>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden"></td>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden"></td>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden"></td>
+            <td style=" border-bottom:hidden">តម្លៃសរុប</td>
+            <td style="text-align:center;border:solid">@(Model.FirstOrDefault().SysCurrency + " " + string.Format("{0:n2}", Model.FirstOrDefault().TotalAmount))</td>
+        </tr>
+        <tr>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden"></td>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden"></td>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden"></td>
+            <td style=" border-bottom:hidden">កក់មុន</td>
+            <td style="text-align:center;border:solid">@(Model.FirstOrDefault().SysCurrency + " " + string.Format("{0:n2}", Model.FirstOrDefault().Applied_Amount))</td>
+        </tr>
+        <tr>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden"></td>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden"></td>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden"></td>
+            <td style=" border-bottom:hidden">នៅខ្វះ</td>
+            <td style="text-align:center;border:solid">@(Model.FirstOrDefault().SysCurrency + " " + string.Format("{0:n2}", Model.FirstOrDefault().Debit))</td>
+        </tr>
+        <tr>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden"></td>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden">Date : @Model.FirstOrDefault().PostingDate</td>
+            <td style="border-right: hidden; border-left: hidden;border-bottom:hidden"></td>
+            <td style=" border-bottom:hidden">KHR</td>
+            <td style="text-align:center;border:solid">@(Model.FirstOrDefault().LocalCurrency + " " + string.Format("{0:n2}", Model.FirstOrDefault().DebitSys))</td>
+        </tr>
+
+    </table>
+
+    <div>
+        <label style="margin-left:10%">អ្នកទិញ</label>
+        <label style="margin-left:15%">អ្នកលក់</label>
+    </div>
+    <div style="margin-top:5%">
+        <label style="margin-left:5%;width:135px;height:1px;background:black"></label>
+        <label style="margin-left:8%;width:135px;height:1px;background:black"></label>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-xs-12" style="text-align:center">
+        <p>@Model.FirstOrDefault().KhmerDesc</p>
+    </div>
+</div>

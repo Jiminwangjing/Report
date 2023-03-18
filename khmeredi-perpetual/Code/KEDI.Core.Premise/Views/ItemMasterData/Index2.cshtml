@@ -1,0 +1,370 @@
+﻿@model IQueryable<ItemMasterData>
+@{
+    ViewData["Title"] = "Index";
+}
+<script src="~/js/warehouse.js"></script>
+<script src="~/js/jquery.twbsPagination.min.js"></script>
+<style>
+    .wrap-table table th {
+        text-align: center !important;
+    }
+
+    .input-file {
+        height: 35px;
+        width: 35px;
+        background: #FFF;
+        border-radius: 50%;
+        margin: 0 auto;
+    }
+
+    .input-file img {
+        position: absolute;
+        width: 35px;
+        height: 35px;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+
+    .input-file input[type=file] {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        opacity: 0;
+    }
+</style>
+<script src="~/ExcelFile/import-item-master.js" defer></script>
+<div message-summary></div>
+
+<div class="flexbox">
+    <a asp-action="Create" class="btn btn-sm tbncrate"><i class="fa fa-plus-circle"></i> @Localizer["Create"]</a>
+    <a asp-action="Import" asp-controller="ExcelWorkbook" class="btn btn-sm tbncrate"><i class="fa fa-file-import"></i> @Localizer["Import"]</a>
+    <a hidden asp-action="Export" class="btn btn-sm tbncrate"><i class="fa fa-file-export"></i> @Localizer["Export"]</a>
+</div>
+<fieldset>
+    <legend class="title">@Localizer["List of item masters"]</legend>
+    <form asp-action="Index" class="mb-lg-1" method="get" id="form-id">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <label class="input-group-text">@Localizer["Select Page"]</label>
+                    <div class="input-group-append">
+                        <select id="selectpage" name="minpage" class="form-control">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="0">All</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 pull-right">
+                <div class="input-group">
+                    <input class="form-control btn-md" type="text" autocomplete="off" placeholder="@Localizer["Search"]" id="txtsearch" />
+                    <div class="input-group-append">
+                        <button class="btn btn-sm"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="wrap-table list" style="height: 400px; position: relative;">
+        <table id="item-list">
+            <tr>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Khmer"]</th>
+                <th>@Localizer["English"]</th>
+                <th>@Localizer["UoM"]</th>
+                <th>@Localizer["Item1"]</th>
+                <th>@Localizer["Barcode"]</th>
+                <th>@Localizer["Image"]</th>
+                <th>@Localizer["Action"]</th>
+            </tr>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <div id="data-paging-item-master"></div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group form-inline">
+                <input type="checkbox" class="form-check-input" id="ch-show-inactive" />
+                @Localizer["Inactive"]
+            </div>
+
+        </div>
+    </div>
+    <div id="data-loading-item-master" style="position: absolute; right: 50%; top: 50%; display: none;">
+        <img class="widget-data-loading" src="~/AdminLayout/images/loading.gif" />
+    </div>
+</fieldset>
+<form enctype='multipart/form-data'></form>
+<input type="text" id="txtid" hidden />
+<div class="modal fade" id="ClickDelete" style="margin-top:50px;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header stylei" style="background-color:blue;">
+                <i class="far fa-question-circle"><b>@Localizer["ItemMasterData"]</b></i>
+            </div>
+            <div class="modal-body stylei">
+                <h3>@Localizer["question"]</h3>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm stylei" data-dismiss="modal" onclick="ClickYes()"><i class="far fa-calendar-check"></i> @Localizer["Yes"]</button>
+                <button class="btn btn-danger btn-sm stylei" data-dismiss="modal"><i class="fas fa-exclamation-triangle"></i> @Localizer["No"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<input hidden id="page-remeber" value="@ViewBag.PageRemeber" />
+<script>
+    var db = new Warehouse();
+
+    let itemMaster = {
+        ID: "",
+        Code: "",
+        KhmerName: "",
+        EnglishName: "",
+        Barcode: ""
+    };
+
+    function submitForm() {
+            document.getElementById("form-id").submit();
+    }
+
+    function applyPaging(response, pageNumber = 10) {
+        $("#data-loading-item-master").show();
+        const paging = new Kernel.DataPaging({
+            pageSize: pageNumber
+        }).render(response, function (summary) {
+            displayData(summary.data);
+            $("#data-loading-item-master").hide();
+        });
+        $("#data-paging-item-master").html(paging.selfElement);
+    }
+
+    if ($('#page-remeber').val().toString().includes('/')) {
+        pageRemember = parseInt($('#page-remeber').val().split('/')[0])
+        recPerPage = parseInt($('#page-remeber').val().split('/')[1])
+        $('#selectpage').val(recPerPage);
+        let pageNumber = $("#selectpage option:selected").val();
+        $.ajax({
+            url: '/ItemMasterData/GetItems',
+            type: 'POST',
+            data: {
+                Inactive: $("#ch-show-inactive").prop("checked"),
+                pageNumber: pageNumber
+            },
+            success: function (response) {
+                applyPaging(response, $("#selectpage option:selected").val());
+                setTimeout(() => {
+                    db.insert("tb_items", response, "ID");
+                }, 0);
+            }
+        })
+    }
+
+    $("#txtsearch").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        let items = db.from('tb_items').where(w => {
+            return w.Code.toLowerCase().includes(value)
+                || w.KhmerName.toLowerCase().includes(value)
+                || w.EnglishName.toLowerCase().includes(value)
+                || w.Barcode.toLowerCase().includes(value)
+                || w.ItemGroup1.Name.toLowerCase().includes(value)
+        });
+        applyPaging(items, $("#selectpage option:selected").val());
+    });
+
+    $('#ch-show-inactive').change(function () {
+        var inActive = false;
+        if ($(this).is(":checked")) {
+            inActive = true;
+        }
+
+        $.ajax({
+            url: '/ItemMasterData/GetItems',
+            type: 'GET',
+            data: {
+                InActive: inActive
+            },          
+            dataType: 'JSON',
+            success: function (items) {
+                applyPaging(items || [], $("#selectpage option:selected").val());
+                if (items.length > 0) {
+                    db.insert('tb_items', items, 'ID');                               
+                }
+                
+            }
+        });
+    });
+
+    $("#item-list").on("click", "#DeleteItemMaster", function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        document.getElementById("txtid").value = id;
+    });
+
+    function ClickYes() {
+        var id = $("#txtid").val();
+        $.ajax({
+            url: "/ItemMasterData/DeleteItemMaster",
+            type: "Delete",
+            dataType: "Json",
+            data: { ID: id },
+            complete: function (respones) {
+                location.reload();
+            }
+        });
+    }
+
+    $("#selectpage").on('change', function () {
+        let pageNumber = parseInt(this.value);
+        $.ajax({
+            url: '/ItemMasterData/GetItems',
+            type: 'POST',
+            data: {
+                Inactive: $("#ch-show-inactive").prop("checked")
+            },
+            success: function (response) {
+                applyPaging(response, pageNumber);
+            }
+        })
+    });
+
+
+    function displayData(displayRecords) {
+        $("#item-list").find("tr:not(:first-child)").remove();
+        var tr;
+        let index = 0;
+        for (var i = 0; i < displayRecords.length; i++) {
+            tr = $('<tr/>');
+            if (displayRecords.length == 0) {
+                tr = $('<tr/>');
+                tr.append("<td colspan='11' class='text-center'>@Localizer["NoData"]</td>");
+                $('#item-list').append(tr);
+            }
+            else {
+                index = index + 1;
+                var currPage = pageRemember + '/' + recPerPage + '/' + displayRecords[i].ID;
+                if (displayRecords[i].ID == parseInt($('#page-remeber').val().split('/')[2])) {
+                    tr = $('<tr class=seleted/>').on('dblclick', editRow);
+                    tr.append("<td contenteditable='false' hidden data-id=" + displayRecords[i].ID + ">" + displayRecords[i].ID +"</td>");
+                    tr.append("<td contenteditable='false'>" + displayRecords[i].Code + "</td>");
+                    tr.append("<td contenteditable='false'>" + displayRecords[i].KhmerName + "</td>");
+                    tr.append("<td contenteditable='false'>" + displayRecords[i].EnglishName + "</td>");
+                    tr.append("<td>" + displayRecords[i].UnitofMeasureInv.Name + "</td>");
+                    tr.append("<td>" + displayRecords[i].ItemGroup1.Name + "</td>");
+                    tr.append("<td contenteditable='false'>" + displayRecords[i].Barcode + "</td>");
+                    tr.append("<td><form enctype='multipart/form-data' class='input-file'><input name='ItemID' type=hidden value='" + displayRecords[i].ID + "'><img src='/Images/" + displayRecords[i].Image + "'/><input name='ImageFile' type='file' onchange='show(this)' value='' accept='.ico, .png, .jpg, .jpeg, .gif'></form></td>");
+
+                    let td = $("<td>");
+                    td.append($("<a title='Save'<i class='fa fa-save fa-lg hide'></i></a>").on('click', saveEdit))
+                    td.append("&nbsp;|&nbsp;<a title='Edit' href='/ItemMasterData/Edit?id=" + displayRecords[i].ID + "&currPage=" + currPage + " '><i class='fa fa-edit fa-lg'></i></a>");
+                    td.append("&nbsp;|&nbsp;<a title='Copy' href='/ItemMasterData/Copy?id=" + displayRecords[i].ID + "&currPage=" + currPage + " '><i class='fa fa-copy fa-lg'></i></a>");
+                    tr.append(td);
+
+                    $('#item-list').append(tr);
+                }
+                else {
+                    tr = $('<tr/>').on('dblclick', editRow);
+                    tr.append("<td contenteditable='false' hidden data-id=" + displayRecords[i].ID + ">" + displayRecords[i].ID +"</td>");
+                    tr.append("<td contenteditable='false'>" + displayRecords[i].Code + "</td>");
+                    tr.append("<td contenteditable='false'>" + displayRecords[i].KhmerName + "</td>");
+                    tr.append("<td contenteditable='false'>" + displayRecords[i].EnglishName + "</td>");
+                    tr.append("<td>" + displayRecords[i].UnitofMeasureInv.Name + "</td>");
+                    tr.append("<td>" + displayRecords[i].ItemGroup1.Name + "</td>");
+                    tr.append("<td contenteditable='false'>" + displayRecords[i].Barcode + "</td>");
+                    tr.append("<td><form enctype='multipart/form-data' class='input-file'><input name='ItemID' type=hidden value='" + displayRecords[i].ID + "'><img src='/Images/" + displayRecords[i].Image + "'/><input name='ImageFile' type='file' onchange='show(this)' value='' accept='.ico, .png, .jpg, .jpeg, .gif'></form></td>");
+
+                    let td = $("<td>");
+                    td.append($("<a title='Save'><i class='fa fa-save fa-lg hide'></i></a>").on('click', saveEdit))
+                    td.append("&nbsp;|&nbsp;<a title='Edit' href='/ItemMasterData/Edit?id=" + displayRecords[i].ID + "&currPage=" + currPage + " '><i class='fa fa-edit fa-lg'></i></a>");
+                    td.append("&nbsp;|&nbsp;<a title='Copy' href='/ItemMasterData/Copy?id=" + displayRecords[i].ID + "&currPage=" + currPage + " '><i class='fa fa-copy fa-lg'></i></a>");
+                    tr.append(td);
+
+                    $('#item-list').append(tr);
+                }
+            }
+        }
+    }
+   
+
+    function editRow() {
+        $(this).removeClass('seleted');
+        $(this).find('.fa-save').removeClass('hide');
+        $(this).find('input').removeAttr('disabled');
+        let tds = $(this).find('[contenteditable=false]');
+        $.each(tds, function (i, td) {
+            $(td).prop('contenteditable', true);
+        });
+    }
+
+    function saveEdit() {
+        let editables = $(this).parent().siblings("[contenteditable=true]");
+        
+        $.each(editables, function (i, cell) {
+            let header = Object.getOwnPropertyNames(itemMaster)[i];
+            itemMaster[header] = cell.textContent;
+        });
+        let cell = $(this).parent().parent();
+        if ($(cell).children().length > 0) {
+            let files = $(cell).find("input[type=file]")[0].files;
+            if (files[0] !== undefined) {
+                itemMaster["Image"] = files[0].name
+
+            }
+        }
+        $(this).addClass('hide');
+        $.each(editables, function (i, td) {
+            $(td).prop('contenteditable', false);
+        });
+
+        if (itemMaster["ID"] && parseInt(itemMaster["ID"]) > 0) {
+            $.ajax({
+                url: '/ItemMasterData/UpdateRow',
+                type: 'POST',
+                dataType: 'JSON',
+                data: {
+                    itemMaster: itemMaster
+                },
+                success: function (data) {
+                    new ViewMessage({
+                        summary: {
+                            attribute: "message-summary"
+                        }
+                    }, data);
+
+                }
+            });
+        }
+
+    }
+
+    function show(input) {
+        let img = $(input).siblings('img');
+        if (input.files && input.files[0]) {
+            $.ajax({
+                url: "/ItemMasterData/UploadImage",
+                data: new FormData($(input).parent(".input-file")[0]),
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function () {
+                    var filerdr = new FileReader();
+                    filerdr.onload = function (e) {
+                        img.attr('src', e.target.result);
+                    }
+
+                    filerdr.readAsDataURL(input.files[0]);
+                }
+            });
+
+        }
+    }
+</script>

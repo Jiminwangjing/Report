@@ -1,0 +1,69 @@
+﻿<div class="card card-body">
+    <div class="row" >
+        <ul class="widget-tab" style="height: 90vh; width: 79vw">
+            <li class="tab-sheet active" id="Frieht">
+                <div class="tab-title">@Localizer["Freight-Setup"]</div>
+                <div class="tab-content">
+                    <div class="row ml-5 mt-4">
+                        <table class="allw-gl-frieht" style="height: auto;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"><i id="add-new-friegh" class="fas fa-plus-square" ></i></th>
+                                    <th class="text-center">@Localizer["Name"]</th>
+                                    <th class="text-center">@Localizer["Revenue Account"]</th>
+                                    <th class="text-center">@Localizer["Expense Account"]</th>
+                                    <th class="text-center">@Localizer["Output TaxGroup"]</th>
+                                    <th class="text-center">@Localizer["Input TaxGroup"]</th>
+                                    <th class="text-center">@Localizer["Freight Type"]</th>
+                                    <th class="text-center">@Localizer["Amount Revenue"]</th>
+                                    <th class="text-center">@Localizer["Amount Expense"]</th>
+                                    <th class="text-center">@Localizer["Active"]</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div id="error-summary"></div>
+    <div id="error-default"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-kernel btn-xs" id="Update">@Localizer["Update"]</button>
+            <a href="/Frieht/Friehts" class="btn btn-kernel btn-xs">
+                @Localizer["Cancel"]
+            </a>
+        </div>
+    </div>
+</div>
+<div id="active-gl-content" style="display:none;height:90vh">
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+            <div class="group-search-boxes">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="txtSearchLA" autocomplete="off" type="text" placeholder="@Localizer["Search ..."]">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="container-list" class="wrap-table myt1 widget-scrollbar" style="height: auto">
+        <table class="allw-gl">
+            <thead>
+                <tr>
+                    <th class="text-center">@Localizer["#"]</th>
+                    <th class="text-center">@Localizer["Account Number"]</th>
+                    <th class="text-center">@Localizer["Account Name"]</th>
+                    <th class="text-center">@Localizer["Account Balance"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script src="~/Admin/SetUp/Freight/js/freight.js"></script>

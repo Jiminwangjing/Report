@@ -1,0 +1,277 @@
+﻿.disabled {
+    pointer-events: none;
+}
+
+.input-group {
+    height: 20px !important;
+}
+
+.icon {
+    cursor: pointer;
+}
+
+i {
+    cursor: pointer;
+}
+
+.w-8 {
+    width: 70%;
+    height: 20px;
+}
+
+.StyleImge {
+    height: 120px;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    width: 120px;
+}
+
+input[type="checkbox"] {
+    height: 20px;
+    width: 20px;
+    margin: 0 0.4em 0.4em 0;
+    outline: none;
+    box-shadow: 0px 0px 3px rgba(105, 107, 228, 0.3);
+    background: rgba(144, 232, 115, 0.4);
+}
+
+.form-check-label {
+    margin-left: 25px;
+    margin-top: 2px;
+}
+
+.stylechick {
+    margin-top: 15px;
+}
+
+#txtlogo {
+    width: 120px;
+    border-radius: 50px;
+}
+
+.StyleImge {
+    box-shadow: 0px 0px 4px;
+}
+
+.modal-header {
+    cursor: move;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 50px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        cursor: inherit;
+        display: block;
+    }
+
+#imagestyle {
+    border-radius: 50px;
+    margin-left: 23px;
+    margin-top: 10px;
+    box-shadow: 0px 0px 4px;
+    color: blue;
+}
+
+
+#styleheader {
+    color: white;
+    font-size: 15px;
+}
+
+b {
+    margin-left: 10px;
+}
+
+.modal-header {
+    background-color: blue;
+}
+
+.modal-content {
+    margin-top: 20px;
+}
+
+.fa-share-square {
+    margin-top: 6px;
+}
+
+.fa, .fas {
+    margin-right: -10px;
+}
+
+input[type=text], input[type=date], textarea {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid #DDDDDD;
+    height: 35px;
+    font-family: Arial;
+    font-size: 13px;
+    border-radius: 3px;
+    min-width: 65%;
+    width: 65%;
+}
+
+.control-label {
+    min-width: 27%;
+    width: 24%;
+}
+
+select {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid #DDDDDD;
+    height: 35px;
+    font-family: Arial;
+    font-size: 13px;
+    border-radius: 3px;
+    min-width: 65%;
+}
+
+input[type=text]:focus, textarea:focus, input[type=date]:focus {
+    box-shadow: 0 0 7px rgba(79, 110, 230,1);
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid rgba(106, 164, 213,1);
+    border-radius: 3px;
+    font-family: Arial;
+    font-size: 13px;
+}
+
+select:focus {
+    box-shadow: 0 0 7px rgba(79, 110, 230,1);
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid rgba(106, 164, 213,1);
+    border-radius: 3px;
+    font-family: Arial;
+    font-size: 13px;
+}
+
+.text-danger {
+    font-size: 12px;
+    font-family: Arial;
+}
+
+.group_Input_select {
+    position: relative;
+}
+
+.Btn_link_a {
+    position: absolute;
+    font-size: 10px;
+}
+
+.Btn_link {
+    font-size: 13px;
+}
+
+select#listGroupUom, select#itemgroup3Name, select#txtcurrency, select#selectItmegroup2, select#selectItemGroup1 {
+    width: 273px;
+    min-width: 0px;
+}
+
+select#txtselectprice, select#txtselectwarehouse, select#txtprinter {
+    width: 120px;
+    min-width: 0px;
+}
+
+label.control-label {
+    font-weight: 500;
+    min-width: 28%;
+    width: 24%;
+}
+
+.label_control {
+    position: relative;
+    bottom: 14px;
+    left: 10px;
+}
+
+input[type=checkbox][readonly] {
+    pointer-events: none;
+}
+
+.Btn_link_item3 {
+    position: relative;
+    /*top: 10px;*/
+    font-size: 13px;
+}
+
+.input-group .input-group-text, .input-group select, .input-group input {
+    min-width: 30px !important;
+}
+
+ul.nav.nav-tabs > li.nav-item {
+    height: 100%;
+    line-height: normal;
+}
+
+.input-group input {
+    min-width: 0px;
+}
+
+.nav-link {
+    height: 100% !important;
+    padding: 0;
+}
+
+.flexContainer {
+    display: flex !important;
+}
+
+.btn-warranty-template {
+    margin: 0px -8px -8px -9px;
+}
+
+#choose-warranty {
+    min-width: 2px !important;
+    margin-top: 5px !important;
+}
+
+.checkMt-1 {
+    margin-top: 0.4rem !important;
+    margin-left: -21px;
+}
+
+.w100 {
+    width: 100% !important;
+}
+
+.form-check-label-custom {
+    margin-left: 32px;
+    margin-top: -6px;
+}
+
+.circle {
+    width: 70%;
+    height: auto;
+    border: 1px solid #81ecec;
+    margin: 30px;
+    padding: 20px 0px 20px 40px;
+    border-radius: 10px;
+}
+
+.mt-5px {
+    margin-top: 5px !important;
+}

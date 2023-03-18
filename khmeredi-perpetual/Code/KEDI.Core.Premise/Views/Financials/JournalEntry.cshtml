@@ -1,0 +1,126 @@
+﻿@model CKBS.Models.Services.Financials.JournalEntry;
+
+<link href="~/Admin/Financials/css/_journalEntry.css" rel="stylesheet" />
+<div class="card card-body">
+    <div id="journal-entry" hidden>@Json.Serialize(Model)</div>
+    <div class="row">
+        <div class="col-md-12 list">
+            <div class="row tile">
+                <div class="col-md-2">
+                    <label>@Localizer["Series"]</label>
+                    <select id="series-id" class="form-control"></select>
+                </div>
+                <div class="col-md-2">
+                    <label>@Localizer["Number"]</label>
+                    <input type="text" readonly id="next-number" asp-for="Number" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label>@Localizer["Posting Date"]</label>
+                    <input data-date="" asp-for="PostingDate" type="date" id="post-date" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label>@Localizer["Due Date"]</label>
+                    <input data-date="" asp-for="DueDate" type="date" id="due-date" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label>@Localizer["Document Date"]</label>
+                    <input data-date="" asp-for="DocumentDate" type="date" id="docu-date" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 list">
+            <div class="row tile">
+                <div class="col-md-2 tow">
+                    <label>@Localizer["Origin"]</label>
+                    <input type="text" readonly id="invoice-no" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label>@Localizer["Origin No."]</label>
+                    <input type="text" readonly id="invoice-no" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label>@Localizer["Branch"]</label>
+                     <select id="branch" class="form-control">
+                       
+                     </select>
+                </div>
+                <div class="col-md-3">
+                    <label>@Localizer["Remarks"]</label>
+                    <input type="text" id="master-remarks" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrap-table">
+        <table id="journal-entries" class="table-responsive-sm">
+            <thead>
+                <tr>
+                    <th>@Localizer["G/L Acct/BP Code"]</th>
+                    <th>@Localizer["G/L Acct/BP Name"]</th>
+                    <th>@Localizer["Debit"]</th>
+                    <th>@Localizer["Credit"]</th>
+                    <th>@Localizer["Remarks"]</th>
+                </tr>
+            </thead>
+
+        </table>
+
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-5"></div>
+        <div class="input-group col-md-2" style="margin-left:0%">
+            <div class="input-group-prepend">
+                <span class="input-group-kernel font-size cur-class">@Model.SysCurrency</span>
+            </div>
+            <input readonly id="total-debit" class="form-control" style="width:30px" />
+        </div>
+        <div class="input-group col-md-2" style="margin-left:2%">
+            <div class="input-group-prepend">
+                <span class="input-group-kernel font-size cur-class">@Model.SysCurrency</span>
+            </div>
+            <input readonly id="total-credit" class="form-control" style="width:30px" />
+        </div>
+    </div>
+    <div id="active-gl-content" style="display:none; height: 90vh;">
+         <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <div class="group-search-boxes" style="right:0%;">
+                    <div id="text-search" class="wrap-search-box">
+                        <div class="wrap-input show">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input class="ignore" id="txtseaerch-acc" autocomplete="off" type="text"
+                                   placeholder="@Localizer["Search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search" style="display: none;">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="list-active-gl" class="table-responsive-sm mt-2">
+            <thead>
+                <tr>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Choose"]</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    <hr />
+    <div id="error-summary"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <button id="submit-item" class="btn btn-kernel btn-xs">@Localizer["Save"]</button>
+            <a href="" class="btn btn-kernel btn-xs">@Localizer["Cancel"]</a>
+        </div>
+    </div>
+</div>
+<script src="~/Admin/Financials/js/_journalEntry.js"></script>
+
+

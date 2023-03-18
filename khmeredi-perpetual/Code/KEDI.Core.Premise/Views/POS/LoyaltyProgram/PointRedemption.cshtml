@@ -1,0 +1,163 @@
+﻿<style>
+    .popup-hint {
+        position: absolute;
+        z-index: 9;
+        background: aliceblue;
+        padding: 5px;
+        border-radius: 5px;
+        margin: 5px;
+        width: 50%;
+        height: calc(100% - 25px);
+        overflow: auto;
+    }
+</style>
+<div class="row" id="content-point-members">
+    <div class="col-md-12">
+        <div class="group-search-boxes mb-2">
+            <div class="search-box show">
+                <div class="input-box">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input id="search-point-members" class="ignore" type="text" autocomplete="off" placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+        <table id="list-point-members">
+            <thead>
+                <tr>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Points"]</th>
+                    <th>@Localizer["Phone"]</th>
+                    <th>@Localizer["Email"]</th>
+                    <th>@Localizer["Redeem"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<div id="content-point-redempt-details" class="row" style="display: none;">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="group-search-boxes mb-2">
+                    <div class="search-box show">
+                        <div class="input-box">
+                            <i id="i-search" class="i-search fas fa-search"></i>
+                            <input id="search-point-redemptions" class="ignore" type="text" autocomplete="off" placeholder="@Localizer["Search ..."]">
+                            <i id="i-close" class="i-close far fa-times-circle"></i>
+                        </div>
+                        <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                    <div class="select-master" style="float: left;">
+                        <select id="warehouse-id" asp-items="@Model.Warehouses" style="width:150px;margin-top:-10px;">
+                            <option selected></option>
+                        </select>
+
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="select-master" style="float: left;">
+                        <input id="txtInvoice" style="width:150px;margin-top:-10px;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="select-master" style="float: left;">
+                        <input id="next_number" style="width:150px;margin-top:-10px;" readonly>
+                    </div>
+                </div>
+                 <div class="col-md-2">
+                <div id="close-point-redemption" class="icon-tab csr-pointer">
+                    <i class="fas fa-backspace fa-lg fn-red"></i>
+                </div>
+            </div>
+         </div>
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <div class="wrap-table widget-scrollbar">
+
+                        <table id="list-point-redemptions">
+                            <thead>
+                                <tr>
+                                    <th>@Localizer["Code"]</th>
+                                    <th>@Localizer["Title"]</th>
+                                    <th>@Localizer["Points"]</th>
+                                    <th>@Localizer["Expired"]</th>
+                                    <th>@Localizer["Factor"]</th>
+                                    <th style="width: 0.05%; text-align: center;">@Localizer["Choose"]</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-2" style="text-align:center;">
+                    <label>@Localizer["Current Points"]</label>
+                    <div class="pc-circle p100 green" style="margin-left:25px;">
+                        <span id="pm-current-points"></span>
+                        <span id="pm-points-percent" class="side">100%</span>
+                        <div class="slice" style="text-align:center!important;">
+                            <div class="bar"></div>
+                            <div class="fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div>
+                        <i class="fas fa-user fa-lg"></i>
+                        [<span id="pm-code"></span>]
+                        <span id="pm-name"></span>
+                    </div>
+                    <div>
+                        <span>@Localizer["Tel"]:&nbsp;</span>
+                        <span id="pm-phone"></span>
+                    </div>
+                    <div>
+                        <span>@Localizer["Email"]:&nbsp;</span>
+                        <span id="pm-email"></span>
+                    </div>
+                    <div>
+                        <span>@Localizer["Outstanding Points"]:&nbsp;</span>
+                        <span id="pm-outstand-points"></span>
+                    </div>
+                    <div>
+                        <span>@Localizer["Redeemed Points"]:&nbsp;</span>
+                        <span id="pm-redeemed-points"></span>
+                    </div>
+                    <div class="display-message"></div>
+                    <div class="flexbox mt-2" style="float: right;">
+                        <button id="btn-reset-point" class="bg-sky mr-2"><i class="fas fa-undo-alt"></i> @Localizer["Reset"]</button>
+                        <button id="btn-redeem-point" class="bg-dark-pink"><i class="far fa-check-circle"></i> @Localizer["Redeem"]</button>
+                    </div>
+                </div>
+            </div><hr />
+            <div class="flexbox">
+                <span>@Localizer["Total Items"]: <span id="total-items"></span></span>&nbsp;|&nbsp;
+                <span>@Localizer["Total Qty"]: <span id="total-item-qty"></span></span>
+            </div>
+            <div class="wrap-table">
+                <table id="list-point-items">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["Code"]</th>
+                            <th>@Localizer["Item Name"]</th>
+                            <th>@Localizer["Item Qty"]</th>
+                            <th>@Localizer["Item UoM"]</th>
+                            <th>@Localizer["In Stock"]</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+</div>
+
+
+

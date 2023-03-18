@@ -1,0 +1,202 @@
+@{
+    ViewData["Title"] = "Preview Selected Detail Report";
+}
+
+<script>window.jsPDF = window.jspdf.jsPDF;</script>
+<style>
+#priceDataGrid,
+#ratingDataGrid {
+    padding: 10px;
+}
+
+#exportContainer {
+    padding-top: 5px;
+    padding-right: 10px;
+    text-align: right;
+}
+#exportButton{
+    border: 1px solid #2874A6;
+}
+
+#tabPanel {
+    padding-top: 5px;
+}
+
+</style>
+
+<div class="data" hidden>@Json.Serialize(Model)</div>
+
+<div class="dx-viewport demo-container">
+    <div id="exportContainer">
+        <div id="exportButton"></div>
+        @* <div id="ButtonPdf"></div> *@
+    </div>
+    <div id="tabPanel"></div>
+</div>
+
+<script>
+const data = JSON.parse($(".data").text());
+const priceCaption = 'Item Sale';
+const ratingCaption = 'Item Purchase';
+viewTable(data);
+
+function viewTable(data) {
+    $('#tabPanel').dxTabPanel({
+        dataSource: [{
+            title: priceCaption,
+            template(){
+                return $("<div id='priceDataGrid'>").dxDataGrid({
+                    width: '100%',
+                    columns:[
+                            { dataField: 'InvoiceNo', caption: 'Invoice No', alignment: "center", width: 80},
+                        { dataField: 'ItemNameKhmer', caption: 'Item NameKh' },
+                        { dataField: 'ItemNameEng', caption: 'Item NameEng' },
+                        { dataField: 'Qty', caption: 'Qty', alignment: "center", width: 50},
+                        { dataField: 'Uom', caption: 'Uom', alignment: "center", width: 80 },
+                        { dataField: 'Currency', caption: 'Currency', alignment: "center", width: 70 },
+                        { dataField: 'UnitPrice', caption: 'Unit Price'},
+                        { dataField: 'Total', caption: 'Total'},
+                    ],
+                    showBorders: true,
+                    rowAlternationEnabled: true,
+                    paging: {
+                        pageSize: 10
+                    },
+                    pager: {
+                        showInfo: true,
+                        showNavigationButtons: true,
+                        visible: true,
+                    },
+                    dataSource: data,
+                });
+            },
+        }, {
+            title: ratingCaption,
+            template(){
+                return $("<div id='ratingDataGrid'>").dxDataGrid({
+                    width: '100%',
+                    columns: [
+                        { dataField: 'InvoiceNo', caption: 'Invoice No', alignment: "center", width: 80},
+                        { dataField: 'ItemNameKhmer', caption: 'Item NameKh' },
+                        { dataField: 'ItemNameEng', caption: 'Item NameEng' },
+                        { dataField: 'Qty', caption: 'Qty', alignment: "center", width: 50},
+                        { dataField: 'Uom', caption: 'Uom', alignment: "center", width: 80 },
+                        { dataField: 'Currency', caption: 'Currency', alignment: "center", width: 70 },
+                        { dataField: 'Cost', caption: 'Cost'},
+                        { dataField: 'UnitPrice', caption: 'Unit Price'},
+                    ],
+                    showBorders: true,
+                    rowAlternationEnabled: true,
+                    paging: {
+                        pageSize: 10
+                    },
+                    pager: {
+                        showInfo: true,
+                        showNavigationButtons: true,
+                        visible: true,
+                    },
+                    dataSource: data.filter(s => s.Process == "FIFO" || s.Process == "Average"),
+                });
+            },
+        }],
+        itemTitleTemplate(itemData, itemIndex, itemElement) {
+            itemElement.append(`<span class='dx-tab-text'>${itemData.title}</span>`);
+        },
+        deferRendering: false,
+    });
+
+    $('#exportButton').dxButton({
+        text: 'Export To Excel',
+        icon: 'xlsxfile',
+        onClick(){
+            const dataGrid1 = $('#priceDataGrid').dxDataGrid('instance');
+            const dataGrid2 = $('#ratingDataGrid').dxDataGrid('instance');
+
+            const workbook = new ExcelJS.Workbook();
+            const priceSheet = workbook.addWorksheet(priceCaption);
+            const ratingSheet = workbook.addWorksheet(ratingCaption);
+
+            priceSheet.getRow(2).getCell(2).value = 'Item Sale';
+            priceSheet.getRow(2).getCell(2).font = { bold: true, size: 16, underline: 'double' };
+
+            ratingSheet.getRow(2).getCell(2).value = 'Item Purchase';
+            ratingSheet.getRow(2).getCell(2).font = { bold: true, size: 16, underline: 'double' };
+
+            function setAlternatingRowsBackground(gridCell, excelCell){
+                if (gridCell.rowType === 'header' || gridCell.rowType === 'data') {
+                    if (excelCell.fullAddress.row % 2 === 0) {
+                        excelCell.fill = {
+                        type: 'pattern', pattern: 'solid', fgColor: { argb: 'D3D3D3' }, bgColor: { argb: 'D3D3D3' },
+                        };
+                    }
+                }
+            }
+
+            DevExpress.excelExporter.exportDataGrid({
+                worksheet: priceSheet,
+                component: dataGrid1,
+                topLeftCell: { row: 4, column: 2 },
+                customizeCell(options) {
+                    setAlternatingRowsBackground(options.gridCell, options.excelCell);
+                },
+            }).then(() => DevExpress.excelExporter.exportDataGrid({
+                worksheet: ratingSheet,
+                component: dataGrid2,
+                topLeftCell: { row: 4, column: 2 },
+                customizeCell(options) {
+                setAlternatingRowsBackground(options.gridCell, options.excelCell);
+                },
+            })).then(() => {
+                workbook.xlsx.writeBuffer().then((buffer) => {
+                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'MultipleGrids.xlsx');
+                });
+            });
+        }
+    });
+}
+
+    @* $('#ButtonPdf').dxButton({
+        text: 'Export To Pdf',
+        icon: 'exportpdf',
+        onClick() {
+            const doc = new jsPDF();
+
+            const priceDataGrid = $('#priceDataGrid').dxDataGrid('instance');
+
+            function setAlternatingRowsBackgroundPdf(dataGrid, gridCell, pdfCell) {
+                if (gridCell.rowType === 'data') {
+                const rowIndex = dataGrid.getRowIndexByKey(gridCell.data.Product_ID);
+                    if (rowIndex % 2 === 0) {
+                        pdfCell.backgroundColor = '#D3D3D3';
+                    }
+                }
+            }
+
+            DevExpress.pdfExporter.exportDataGrid({
+                jsPDFDocument: doc,
+                component: priceDataGrid,
+                topLeft: { x: 7, y: 5 },
+                columnWidths: [20, 50, 50, 50],
+                customizeCell: ({ gridCell, pdfCell }) => {
+                setAlternatingRowsBackgroundPdf(priceDataGrid, gridCell, pdfCell);
+                },
+            }).then(() => {
+                doc.addPage();
+
+                const ratingDataGrid = $('#ratingDataGrid').dxDataGrid('instance');
+                DevExpress.pdfExporter.exportDataGrid({
+                    jsPDFDocument: doc,
+                    component: ratingDataGrid,
+                    topLeft: { x: 7, y: 5 },
+                    columnWidths: [20, 50, 50, 50],
+                    customizeCell: ({ gridCell, pdfCell }) => {
+                        setAlternatingRowsBackgroundPdf(ratingDataGrid, gridCell, pdfCell);
+                    },
+                }).then (() => {
+                    doc.save('MultipleGrids.pdf');
+                });
+            });
+        },
+    }); *@
+
+</script>

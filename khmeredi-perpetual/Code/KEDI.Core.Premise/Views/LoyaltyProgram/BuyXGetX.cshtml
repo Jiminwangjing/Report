@@ -1,0 +1,82 @@
+﻿<style>
+    #table,
+    tr,
+    th {
+        text-align: center !important;
+    }
+
+    #table,
+    tr,
+    td {
+        text-align: center !important;
+    }
+</style>
+<div class="card card-body">
+    <div class="d-flex justify-content-between">
+        <a asp-action="BuyXGetXCreate" class="btn btn-xs btn-kernel">
+            @Localizer["Create"]</a>
+        <div class="group-search-boxes">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore" id="search-buyxgetx"
+                        autocomplete="off" type="text"
+                        placeholder="@Localizer["Search ..."]">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i
+                        class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="wrap-table myt1 grid-box">
+        <table id="list-BuyXGetXDetail">
+            <thead>
+                <tr>
+                    <th>@Localizer["No."]</th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["PriceList"]</th>
+                    <th>@Localizer["Date From"]</th>
+                    <th>@Localizer["Date To"]</th>
+                    <th>@Localizer["Start Time"]</th>
+                    <th>@Localizer["Stop Time"]</th>
+                    <th>@Localizer["Action"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var $listView = ViewTable({
+            keyField: "ID",
+            selector: "#list-BuyXGetXDetail",
+            visibleFields: ["Code", "Name", "PriceList", "DateF", "DateT","StartTime","StopTime"],
+            indexed: true,
+            actions: [
+                {
+                    template: "<i class='fas fa-edit fn-orange fa-lg csr-pointer'></i>",
+                    on: {
+                        "click": function (e) {
+                            location.href = "/LoyaltyProgram/BuyXGetXEdit?ID=" + e.key;
+                        }
+                    }
+                },
+            ],
+        });
+        searchBuyXGetX($listView);
+        $("#search-buyxgetx").on("keyup", function () {
+            searchBuyXGetX($listView, this.value);
+        });
+        function searchBuyXGetX($listView, keyword = "") {
+            $.get("/LoyaltyProgram/GetBuyXGetX", {
+                keyword: keyword
+            },
+                function (BuyXGetX) {
+                    $listView.clearRows();
+                    $listView.bindRows(BuyXGetX);
+                });
+        }
+    });
+</script>

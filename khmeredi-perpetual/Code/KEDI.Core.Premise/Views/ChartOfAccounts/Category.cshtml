@@ -1,0 +1,87 @@
+﻿
+@model CKBS.Models.Services.ChartOfAccounts.GLAccountViewModel;
+<style>
+    .category label {
+        font-size: .8em;
+        margin: 0;
+        height: 25px !important;
+        line-height: 25px;
+    }
+
+    .wrap-table table tr.active {
+        background-color: #5AB07A;
+    }
+</style>
+<form asp-controller="ChartOfAccounts" asp-action="UpdateCategory" method="post">
+    <div class="row">
+        <div class="col-md-3">
+            <fieldset class="category">
+                <input hidden asp-for="GLAccount.ID" />
+                <div class="flexbox space-between">
+                    <div>
+                        <input asp-for="GLAccount.IsTitle" type="radio" value="GLAccount.IsTitle" disabled>
+                        <span>@Localizer["Title"]</span>
+                    </div>
+                    <a asp-controller="ChartOfAccounts" asp-action="CreateCategoryByDefault" class="btn btn-xs btn-success">
+                        <i class="fas fa-clipboard-list fa-lg"></i> @Localizer["Default"]
+                    </a>
+                </div>
+                <legend class="title">@Localizer["Category"]</legend>
+                <label>@Localizer["G/L Account"]</label>
+                <span asp-validation-for="GLAccount.Code"></span>
+                <input asp-for="GLAccount.Code" class="form-control" readonly />
+
+
+                <label class="control-label">@Localizer["Name"]</label>
+                <span asp-validation-for="GLAccount.Name"></span>
+                <input asp-for="GLAccount.Name" class="form-control" disabled="@ViewBag.Disabled" />
+
+                <label>@Localizer["External Code"]</label>
+                <input asp-for="GLAccount.ExternalCode" class="form-control" disabled="@ViewBag.Disabled" />
+
+                <label>@Localizer["Level"]</label>
+                <input asp-for="GLAccount.Level" class="form-control" value="1" readonly />
+
+
+                <button type="submit" class="btn btn-xs btn-primary"><i class="fas fa-file-alt"></i> @Localizer["Save"]</button>
+                <a asp-controller="ChartOfAccounts" asp-action="Category" class="btn btn-xs btn-info">
+                    <i class="fas fa-window-close"></i> @Localizer["Cancel"]
+                </a>
+            </fieldset>
+        </div>
+        <div class="col-md-9">
+            <div class="wrap-table">
+                @{ var __index = 0; }
+                <table>
+                    <tr>
+                        <th>@Localizer["No."]</th>
+                        <th>@Localizer["Code"]</th>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["External Code"]</th>
+                        <th>@Localizer["Level"]</th>
+                        <th>@Localizer["Update Date"]</th>
+                        <th>@Localizer["Action"]</th>
+                    </tr>
+                    @foreach (var gl in Model.Categories)
+                    {
+                        { __index++; }
+                        <tr>
+                            <td>@__index</td>
+                            <td>@gl.Code</td>
+                            <td title="@gl.Name">@gl.Name</td>
+                            <td>@gl.ExternalCode</td>
+                            <td>@gl.Level</td>
+                            <td>@gl.ChangeLog.ToString("dd/MM/yyyy HH:mm tt")</td>
+                            <td>
+                                <a asp-controller="ChartOfAccounts" asp-action="Category" asp-route-id="@gl.ID">
+                                    <i class="fas fa-edit fn-orange csr-pointer"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+
+</form>

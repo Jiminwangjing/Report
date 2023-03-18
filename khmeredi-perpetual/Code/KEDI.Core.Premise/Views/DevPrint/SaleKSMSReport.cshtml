@@ -1,0 +1,136 @@
+﻿@model KEDI.Core.Premise.Models.ServicesClass.KSMS.SaleReportKSMSPrint
+@{
+    ViewData["Title"] = "Preview Sale Gross Profit";
+    Layout = "~/Views/Shared/_Layout_Print.cshtml";
+}
+
+<div>
+    <div class="row">
+        <div class="col-xs-4">
+            @*<img src="~/Images/company/@Model.First().HeaderCloseShift.Logo" width="150" height="130" style="padding:0px 0px 0px 10px;" />*@
+        </div>
+        <div class="col-xs-5" style="margin-top:70px;">
+            <div class="text-center" style="opacity:0;">.</div>
+            <div class="text-center" style="font-size:30px; margin-top:-20px;"> របាយការណ៍លក់ </div>
+            <div class="text-center" style="font-size:30px; margin-top:10px;"> Sale Report </div>
+            <div class="row" style="margin-top:75px;"></div>
+        </div>
+        <div class="col-xs-4"> </div>
+    </div>
+    <div class="row" style="margin: 0px -1px 20px -10px">
+        <div class="col-xs-4">
+            <table>
+                <tr>
+                    <th class="header">@Localizer["From Date"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header">@Model.Header.FromDate</td>
+                </tr>
+                <tr>
+                    <th class="header">@Localizer["To Date"]</th>
+                    <td style="padding: 0 5px 0 5px">:</td>
+                    <td class="header">@Model.Header.ToDate</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-2"></div>
+    </div>
+    <div>
+        <table class="table" id="expectedTable" border="1" cellpadding="3" cellspacing="0">
+            <thead style="background-color:#5F758B;">
+                <tr>
+                    <th class="header" style="color:white;">@Localizer["Customer"]</th>
+                    <th class="header" style="color:white;" colspan="2">@Localizer["Posting Date"]</th>
+                    <th class="header" style="color:white;">@Localizer["InvoiceNo"]</th>
+                    <th class="header" style="color:white;">@Localizer["Item Name"]</th>
+                    <th class="header" style="color:white;">@Localizer["Item Code"]</th>
+                    <th class="header" style="color:white;">@Localizer["Qty"]</th>
+                    <th class="header" style="color:white;">@Localizer["UoM Name"]</th>
+                    <th class="header" style="color:white;">@Localizer["Unit Price"]</th>
+                    <th class="header" style="color:white;">@Localizer["Discount"]</th>
+                    <th class="header" style="color:white;">@Localizer["Total"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model.Detials)
+                {
+                    <tr>
+                        <td class="header" style="border:none; background-color:lightgray">
+                            <span>@group.FirstOrDefault()?.CusName</span>
+                        </td>
+                        <td class="header" style="border:none; background-color:lightgray" colspan="2">
+                            <span>Plate: @group.FirstOrDefault()?.Plate</span>
+                        </td>
+                        <td class="header" style="border:none; background-color:lightgray" colspan="3">
+                            <span>Model: @group.FirstOrDefault()?.ModelName</span>
+                        </td>
+                        <td class="header" style="border:none; background-color:lightgray" colspan="4">
+                            <span>Branch: @group.FirstOrDefault()?.BranchName</span>
+                        </td>
+                        <td class="header" style="border:none; background-color:lightgray" colspan="10">
+                            <span>@group.FirstOrDefault()?.TotalF</span>
+                        </td>
+                    </tr>
+                    @foreach (var item in group)
+                    {
+                        <tr>
+                            <td colspan="3" class="text-right">@item.PostingDate</td>
+                            <td>@item.Invoice</td>
+                            <td>@item.ItemName</td>
+                            <td>@item.ItemCode</td>
+                            <td>@item.Qty</td>
+                            <td>@item.UoM</td>
+                            <td>@item.UnitPrice</td>
+                            <td>@item.Discount</td>
+                            <td>@item.TotalF</td>
+                        </tr>
+                    }
+                    @*<tr>
+                        <td class="header text-right" style="border:none; background-color:lightgray" colspan="10">
+                            <span>@group.FirstOrDefault()?.TotalAll</span>
+                        </td>
+                    </tr>*@
+                }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <table class="table table-bordered">
+            <tr> </tr>
+            <tr style="background-color:#5F758B; padding:0px;">
+                <th class="header" style="color:white;"> *** @Localizer["Summary"] </th>
+                <th></th>
+            </tr>
+            <tr>
+                <th> @Localizer["Total Item"] : </th>
+                <th class="text-danger">@Model.Footer.TotalItem</th>
+            </tr>
+            <tr>
+                <th> @Localizer["Total"] : </th>
+                <th class="text-danger">@Model.Footer.TotalAll</th>
+            </tr>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-xs-4">
+            <label> **@Localizer["Acknowledge"] </label>
+            <hr style="margin-top:-3px; background-color:gray; color:gray; height:1px; width:80%; float:left;" />
+            <div style="margin-top:65px;">
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Published by"] </u></b></div>
+        </div>
+        <div class="col-xs-4" style="margin-top:95px;">
+            <div>
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Reviewed by"] </u></b></div>
+        </div>
+        <div class="col-xs-4" style="margin-top:95px;">
+            <div>
+                <label> @Localizer["Date"]/........../........../20.......</label>
+            </div>
+            <div style="margin-top:10px;"><b><u> @Localizer["Approved by"] </u></b></div>
+        </div>
+    </div>
+</div>
+

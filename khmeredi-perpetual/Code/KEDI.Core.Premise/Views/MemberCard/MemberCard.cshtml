@@ -1,0 +1,870 @@
+﻿
+<style>
+    fieldset.scheduler-border {
+        border: 2px groove #e6ffe6;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 0 0 1.5em 0 !important;
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #00cc00;
+    }
+
+    legend.scheduler-border {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+    }
+
+    .modal-header {
+        background-color: blue;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+    .form-label {
+        font-weight: bold;
+        position: absolute;
+        left: 25px;
+        top: 20px;
+        color: #999;
+        background-color: #fff;
+        z-index: 10;
+        transition: transform 150ms ease-out, font-size 150ms ease-out;
+    }
+
+    .focused .form-label {
+        transform: translateY(-125%);
+        font-size: 19px;
+        font-weight: bold;
+    }
+
+    form-input {
+        position: relative;
+        padding: 12px 0px 5px 0;
+        width: 100%;
+        outline: 0;
+        border: 0;
+        box-shadow: 0 1px 0 0 #e5e5e5;
+        transition: box-shadow 150ms ease-out;
+    }
+
+    form-select {
+        position: relative;
+        padding: 12px 0px 5px 0;
+        width: 100%;
+        outline: 0;
+        border: 0;
+        box-shadow: 0 1px 0 0 #e5e5e5;
+        transition: box-shadow 150ms ease-out;
+    }
+
+    .modal-header {
+        cursor: move;
+    }
+
+    .btnadd {
+        margin-bottom: 5px;
+        background-color: #00bfff;
+        color: white;
+    }
+
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+
+    .container_style .styledelete_edit {
+        visibility: collapse;
+    }
+
+    .container_style:hover .styledelete_edit {
+        visibility: visible;
+    }
+
+    .container_style {
+        width: 240px;
+        height: 150px;
+        box-sizing: border-box;
+        box-shadow: 0px 0px 1px;
+        border-radius: 6px;
+        float: left;
+        padding: 3px 3px;
+        background-color: #b3cbf7;
+        margin: 3px 3px;
+    }
+
+        .container_style:hover {
+            background-color: rgb(247, 240, 240);
+        }
+
+    .container_style_one {
+        width: 234px;
+        height: 74px;
+        float: left;
+    }
+
+    .container_style_tow {
+        width: 234px;
+        height: 70px;
+        float: left;
+    }
+
+    .container_style_one_frist {
+        width: 77px;
+        height: 74px;
+        float: left;
+    }
+
+    .container_style_one_second {
+        width: 152px;
+        height: 74px;
+        float: left;
+        margin-left: 5px;
+    }
+
+    .styleName {
+        font-weight: bold;
+        font-family: Arial;
+        font-size: 14px;
+    }
+
+    .container_style_tow_first {
+        width: 234px;
+        height: 50px;
+        float: left;
+    }
+
+    .container_style_tow_secound {
+        width: 234px;
+        height: 20px;
+        float: left;
+    }
+
+    .styleHeader {
+        margin-top: 3px;
+        text-align: center;
+        font-family: Arial;
+        font-size: 20px;
+    }
+
+    .arrow_right {
+        width: 152px;
+        height: 38px;
+    }
+
+    .arrow_lefe {
+        width: 152px;
+        height: 30px;
+    }
+
+    .arrow_right_first {
+        width: 0px;
+        height: 0px;
+        border-top: 40px solid rgb(228, 91, 91);
+        border-left: 70px solid transparent;
+        float: right;
+        position: relative;
+    }
+
+        .arrow_right_first::after {
+            content: "Member";
+            position: absolute;
+            left: -42px;
+            bottom: 20px;
+            color: white;
+            font-size: 10px;
+        }
+    #lableBool{
+        font-weight:bold;
+    }
+    #control{
+        margin-top:5px;
+        margin-left:4px;
+    }
+</style>
+<div class="card card-body">
+    <fieldset class="scheduler-border">
+        
+        <legend class="scheduler-border">@Localizer["MemberCard"]</legend>
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <button class="btn btn-kernel btn-xs btnadd" data-toggle="modal" data-target="#ModalCreate">@Localizer["Create"]</button>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active btn btn-kernel btn-xs" style="padding:6px 10px; border:none;" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><i class="fa fa-list" title="List"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " style="padding:4px 10px; border:none; margin-left:10px;" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false"><i class="fa fa-address-card" title="Card"></i></a>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                <div class="row">
+                    <div class="col-md-8"> </div>
+                    <div class="col-md-4 pull-right" style="margin:10px 0px;">
+                        <div class="input-group">
+                            <input class="search-query form-control" name="item-name" type="text" value="" placeholder="@Localizer["Textsearch"]" id="searchList">
+                            <div class="input-group-append">
+                                <button class="btn btn-kernel btn-xs"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wrap-table list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Ref_No"]</th>
+                                <th>@Localizer["Name"]</th>
+                                <th>@Localizer["TypeCard"]</th>
+                                <th>@Localizer["DateCreate"]</th>
+                                <th>@Localizer["ExpireDate"]</th>
+                                <th>@Localizer["DateApprove"]</th>
+                                <th>@Localizer["Approve"]</th>
+                                <th>@Localizer["Action"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="myTable"></tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                <div class="row">
+                    <div class="col-md-8"> </div>
+                    <div class="col-md-4 pull-right" style="margin:10px 0px;">
+                        <div class="input-group">
+                            <input class="search-query form-control" name="item-name" type="text" value="" placeholder="@Localizer["Textsearch"]" id="searchCard">
+                            <div class="input-group-append">
+                                <button class="btn btn-xs"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" id="ListCard">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+    <div class="modal fade" id="ModalCreate">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-plus-circle" style="color:white;"><b style="margin-left:3px;">@Localizer["MemberCard"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-wrapper">
+                                <input type="hidden" id="txtid" />
+                                <form action="" class="form">
+                                    <div class="form-group">
+                                        <label class="form-label" for="txtCardTypeID">@Localizer["CardType"]</label>
+                                        <select class="form-control" id="txtCardTypeID" asp-items="ViewBag.CardTypeID">
+                                            <option value="0" selected disabled>--- Select ---</option>
+                                        </select>
+                                        <div class="text-danger required_CardTypeID"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="txtRef_No">@Localizer["Reference"]</label>
+                                        <input id="txtRef_No" class="form-control" type="text" />
+                                        <div class="text-danger required_re_no"></div>
+                                        <div class="text-danger" id="error_Ref_no"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="txtName">@Localizer["Name"]</label>
+                                        <input id="txtName" class="form-control" type="text" />
+                                        <div class="text-danger required_name"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="txtDateExpire">@Localizer["DateExpire"]</label>
+                                        <input id="txtDateExpire" type="date" class="form-control" />
+                                        <div class="text-danger required_DateExpire"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="txtDescription">@Localizer["Description"]</label>
+                                        <input id="txtDescription" class="form-control" type="text" />
+                                        <div class="text-danger required_Description"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="checkbox" id="txtApprove" />
+                                        <label>@Localizer["Approve"]</label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs btn-success btn_button" onclick="InsertMemberCard()">@Localizer["Add"]</button>
+                    <button class="btn btn-xs btn-danger" data-dismiss="modal" onclick="Clickclose()">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModalDelete">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-question" style="color:white;"><b style="margin-left:4px;">@Localizer["MemberCard"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <h4>@Localizer["quanction"]</h4>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs btn-success" onclick="ClickYes()" data-dismiss="modal">@Localizer["Yes"]</button>
+                    <button class="btn btn-xs btn-danger" data-dismiss="modal">@Localizer["No"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="Modaldubbleclick">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-info-circle" style="color:white;"><b style="margin-left:4px;">@Localizer["DetailCard"]</b></i>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group row">
+                                <label class="col-sm-4 " id="lableBool">@Localizer["Ref_No"]:</label>
+                                <div id="label_Ref_no" class="col-sm-8"></div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 " id="lableBool">@Localizer["Name"]:</label>
+                                <div id="label_name" class="col-sm-8"> </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-5 " id="lableBool">@Localizer["TypeCard"]:</label>
+                                <div id="label_typecard" class="col-sm-7"> </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 " id="lableBool">@Localizer["Approve"]:</label>
+                                <div id="label_approve" class="col-sm-8"> </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="form-group row">
+                                <label class="col-sm-4 " id="lableBool">@Localizer["DateCreate"]:</label>
+                                <div id="label_datecreate" class="col-sm-8"> </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 " id="lableBool">@Localizer["ExpireDate"]:</label>
+                                <div id="label_dateexpire" class="col-sm-8"> </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 " id="lableBool">@Localizer["DateApprove"]:</label>
+                                <div id="label_dateappr" class="col-sm-8"> </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 " id="lableBool">@Localizer["Description"]:</label>
+                                <div id="label_des" class="col-sm-8"> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-xs btn-danger" data-dismiss="modal">@Localizer["Close"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<label class="btnSave" hidden>@Localizer["Save"]</label>
+<label class="btnAdd" hidden>@Localizer["Add"]</label>
+<label id="btnRef_No"></label>
+
+<script>
+    //$("#txtDateExpire").datetimepicker({
+    //    value: new Date(),
+    //    defaultDate: new Date(),
+    //    format: 'Y/m/d',
+    //    timepicker: false,
+
+    //});
+    //search card
+    $('#searchCard').on('keyup', function () {
+        var query = ($("#searchCard").val()).toLowerCase();
+
+        $('div.container_style .styleHeader').each(function () {
+            var $this = $(this);
+            if ($this.text().toLowerCase().indexOf(query) === -1)
+                $this.closest('div.container_style ').hide();
+            else $this.closest('div.container_style ').show();
+        });
+    });
+    //styel input box
+    $('input').focus(function () {
+        $(this).parents('.form-group').addClass('focused');
+    });
+
+    $('input').blur(function () {
+        var inputValue = $(this).val();
+        if (inputValue == "") {
+            $(this).removeClass('filled');
+            $(this).parents('.form-group').removeClass('focused');
+        } else {
+            $(this).addClass('filled');
+        }
+    })
+    $('select').focus(function () {
+        $(this).parents('.form-group').addClass('focused');
+    });
+    $('select').blur(function () {
+        var inputValue = $(this).val();
+        if (inputValue == "") {
+            $(this).removeClass('filled');
+            $(this).parents('.form-group').removeClass('focused');
+        } else {
+            $(this).addClass('filled');
+        }
+    })
+    //modal
+    $(".modal-header").on("mousedown", function (mousedownEvt) {
+        var $draggable = $(this);
+        var x = mousedownEvt.pageX - $draggable.offset().left,
+            y = mousedownEvt.pageY - $draggable.offset().top;
+        $("body").on("mousemove.draggable", function (mousemoveEvt) {
+            $draggable.closest(".modal-dialog").offset({
+                "left": mousemoveEvt.pageX - x,
+                "top": mousemoveEvt.pageY - y
+            });
+        });
+        $("body").one("mouseup", function () {
+            $("body").off("mousemove.draggable");
+        });
+        $draggable.closest(".modal").one("bs.modal.hide", function () {
+            $("body").off("mousemove.draggable");
+        });
+    });
+    //search
+    $(".search-query").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $(".myTable tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+    $(document).ready(function () {
+        $.ajax({
+            url: "/MemberCard/GetMemberCard",
+            type: "GET",
+            dataType: "JSON",
+            success: function (respones) {
+                GetDataTable(respones);
+                GetDataTableCard(respones);
+            }
+        })
+    })
+    //GetDataTable
+    function GetDataTable(respones) {
+        var data = "";
+        if (respones == '') {
+             data +=
+            '<tr>' +
+               '<td colspan="8" class="text-center">@Localizer["NoData"]</td>' +
+            '</tr>';
+         }
+        $.each(respones, function (i, item) {
+            var date_Create = item.DateCreate;
+            var create_date = date_Create.slice(0, 10);
+            var date_ex = item.ExpireDate;
+            var ex_date = date_ex.slice(0, 10);
+            var dat_ap = item.DateApprove;
+            var appr_data = dat_ap.slice(0, 10);
+            var App = item.Approve;
+            if (App == "No") {
+                data +=
+                    '<tr>' +
+                    '<td hidden>' + item.ID + '</td>' +
+                    '<td hidden>' + item.CardTypeID + '</td>' +
+                    '<td>' + item.Ref_No + '</td>' +
+                    '<td>' + item.Name + '</td>' +
+                    '<td>' + item.CardType.Name + '</td>' +
+                    '<td>' + create_date + '</td>' +
+                    '<td>' + ex_date + '</td>' +
+                    '<td>' + appr_data + '</td>' +
+                    '<td style="color:red;">' + item.Approve + '</td>' +
+                    '<td hidden>' + item.Description + '</td>' +
+                    '<td>' + '<i class="fa fa-edit edit_membercard"  title="Edit" data-toggle="modal" data-target="#ModalCreate"></i>. <i data-toggle="modal" data-target="#ModalDelete" title="Delete" class="fa fa-trash Delete_membercard"></i>' + '</td>' +
+                    '</tr>';
+            } else {
+                data +=
+                    '<tr>' +
+                    '<td hidden>' + item.ID + '</td>' +
+                    '<td hidden>' + item.CardTypeID + '</td>' +
+                    '<td>' + item.Ref_No + '</td>' +
+                    '<td>' + item.Name + '</td>' +
+                    '<td>' + item.CardType.Name + '</td>' +
+                    '<td>' + create_date + '</td>' +
+                    '<td>' + ex_date + '</td>' +
+                    '<td>' + appr_data + '</td>' +
+                    '<td style="color:blue;">' + item.Approve + '</td>' +
+                    '<td hidden>' + item.Description + '</td>' +
+                    '<td>' + '<i class="fa fa-edit edit_membercard"  title="Edit" data-toggle="modal" data-target="#ModalCreate"></i>. <i data-toggle="modal" data-target="#ModalDelete" title="Delete" class="fa fa-trash Delete_membercard"></i>' + '</td>' +
+                    '</tr>';
+            }
+                
+        });
+        $(".myTable").append(data);
+    }
+    //Data Table Card
+    function GetDataTableCard(respones) {
+        var data = "";
+        $.each(respones, function (i, item) {
+            var date_Create = item.DateCreate;
+            var create_date = date_Create.slice(0, 10);
+            var date_ex = item.ExpireDate;
+            var ex_date = date_ex.slice(0, 10);
+            var dat_ap = item.DateApprove;
+            var appr_data = dat_ap.slice(0, 10);
+            data +=
+                ' <div class="container_style" data-nameD="' + item.Name + '" data-descriptionD="' + item.Description + '" data-CrarTypeIDD="' + item.CardType.Name + '" data-Re_NoD="' + item.Ref_No + '" data-date_appD="' + appr_data + '" data-date_createD="' + create_date + '" data-date_exD="' + ex_date + '" data-apprD="' + item.Approve + '">' +
+                    '<div class="container_style_one" >'+
+                        '<div class="container_style_one_frist">'+
+                            '<img src="../../Logo/credit-cards.png" width="77" height="74" />'+
+                        '</div>'+
+                        '<div class="container_style_one_second">'+
+                            '<div class="arrow_right">'+
+                                '<div class="arrow_right_first">'+
+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="arrow_lefe">' +
+                            '<div class="styleName">' + item.Name + '</div>' +
+                            '</div>'+
+                        '</div>'+
+                    '</div>'+
+                    '<div class="container_style_tow">'+
+                    '<div class="container_style_tow_first">' +
+                    '<div class="styleHeader">' + item.Ref_No + '</div>' +
+                    '<div>' + item.Approve + '</div>' +
+                        '</div>'+
+                        '<div class="container_style_tow_secound pull-right">'+
+                        ' <div class="pull-right styledelete_edit">' +
+                       ' <i class="fa fa-edit Edit_card" data-toggle="modal" data-target="#ModalCreate" style="font-size:12px;" data-approve="' + item.Approve + '" data-dateEx="' + ex_date + '" data-id_edit="' + item.ID + '" data-Re_No="' + item.Ref_No + '" data-name="' + item.Name + '" data-description="' + item.Description + '" data-CrarTypeID="' + item.CardTypeID + '" title="Edit"></i>. <i class="fa fa-trash delete_card" data-id="' + item.ID + '" data-toggle="modal" data-target="#ModalDelete" style="font-size:12px;"  title="Delete"></i>' +
+                       '</div>' +
+                        '</div>'+
+                    '</div>'+
+                '</div>';
+        })
+        $("#ListCard").html(data);
+    }
+    //edit list
+    $(".myTable").on('click', '.edit_membercard', function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        var Re_NO = cut.find('td:eq(2)').text();
+        var name = cut.find('td:eq(3)').text();
+        var CardTypeID = cut.find('td:eq(1)').text();
+        var des = cut.find('td:eq(9)').text();
+        var date_expire = cut.find('td:eq(6)').text();
+        var approve = cut.find('td:eq(8)').text();
+        $(".btn_button").html($(".btnSave").text());
+        document.getElementById("txtid").value = id;
+        document.getElementById("txtRef_No").value = Re_NO;
+        document.getElementById("txtName").value = name;
+        document.getElementById("txtCardTypeID").value = CardTypeID;
+        document.getElementById("txtDescription").value = des;
+        document.getElementById("txtDateExpire").value = date_expire;
+        if (approve == "No") {
+            $("#txtApprove").prop('checked', false);
+        } else {
+            $("#txtApprove").prop('checked', true);
+        }
+       
+        document.getElementById("btnRef_No").value = Re_NO;
+    });
+    //edit card
+    $("#ListCard").on('click', '.Edit_card', function () {
+        var id = $(this).attr('data-id_edit');
+        var name = $(this).attr('data-name');
+        var des = $(this).attr('data-description');
+        var cartypeID = $(this).attr('data-CrarTypeID');
+        var Re_NO = $(this).attr('data-Re_No');
+        var date_Ex = $(this).attr('data-dateEx');
+        var approve = $(this).attr('data-approve');
+        $(".btn_button").html($(".btnSave").text());
+        document.getElementById("txtid").value = id;
+        document.getElementById("txtRef_No").value = Re_NO;
+        document.getElementById("txtName").value = name;
+        document.getElementById("txtCardTypeID").value = cartypeID;
+        document.getElementById("txtDescription").value = des;
+        if (approve == "No") {
+            $("#txtApprove").prop('checked', false);
+        } else {
+            $("#txtApprove").prop('checked', true);
+        }
+        
+        document.getElementById("txtDateExpire").value = date_Ex;
+        document.getElementById("btnRef_No").value = Re_NO;
+    });
+    //delete
+    $(".myTable").on('click', '.Delete_membercard', function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        document.getElementById("txtid").value = id;
+
+    });// delete card
+    $("#ListCard").on('click', '.delete_card', function () {
+        var id = $(this).attr('data-id');
+        document.getElementById("txtid").value = id;
+    });
+    //detail card
+    $('#ListCard').on('dblclick','.container_style',function () {
+        $('#Modaldubbleclick').modal('show');
+        var name = $(this).attr('data-nameD');
+        var des = $(this).attr('data-descriptionD');
+        var cartypeID = $(this).attr('data-CrarTypeIDD');
+        var Re_NO = $(this).attr('data-Re_NoD');
+        var dete_app = $(this).attr('data-date_appD');
+        var date_create = $(this).attr('data-date_createD');
+        var date_ex = $(this).attr('data-date_exD');
+        var appr = $(this).attr('data-apprD');
+        $("#label_Ref_no").text(Re_NO);
+        $("#label_name").text(name);
+        $("#label_typecard").text(cartypeID);
+        $("#label_dateappr").text(dete_app);
+        $("#label_datecreate").text(date_create);
+        $("#label_dateexpire").text(date_ex);
+        $("#label_approve").text(appr);
+        $("#label_des").text(des);
+
+       
+    });
+    function ClickYes() {
+        var id = $("#txtid").val();
+        $.ajax({
+            url: "/MemberCard/DeleteMemberCard",
+            type: "Post",
+            data: { ID: id },
+            dataType: "JSON",
+            success: function (respones) {
+                $(".myTable").empty();
+
+                GetDataTable(respones);
+                GetDataTableCard(respones)
+            }
+        })
+    }
+    // delay
+    function delay(callback, ms) {
+        var timer = 0;
+        return function () {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                callback.apply(context, args);
+            }, ms || 0);
+        };
+    }
+
+    $('#txtRef_No').keyup(delay(function (e) {
+        CheckRef_No();
+    }, 800));
+    // check Ref_no
+    function CheckRef_No() {
+        var id = $("#txtid").val();
+        var odlRe_No = $("#btnRef_No").val();
+        var ref_no = $("#txtRef_No").val();
+        if (id == null) {
+            $.ajax({
+                url: "/MemberCard/CheckReferentNumber",
+                type: "Post",
+                data: { Check: ref_no },
+                dataType: "JSON",
+                success: function (respones) {
+                    var isHase = false;
+                    $.each(respones, function (i, item) {
+                        isHase = true;
+                    })
+                    if (isHase == true) {
+                        $('#error_Ref_no').text("This refernce number  already exist !");
+                        $("#txtRef_No").css("border-color", "red");
+                        $(".btn_button").attr("disabled", true);
+                    }
+
+                    else {
+                        $("#txtRef_No").css("border-color", "lightgrey");
+                        $('#error_Ref_no').text("");
+                        $(".btn_button").attr("disabled", false);
+
+                    }
+                }
+            })
+        }
+        else {
+            if (ref_no == odlRe_No) {
+                $("#txtRef_No").css("border-color", "lightgrey");
+                $('#error_Ref_no').text("");
+                $(".btn_Add").attr("disabled", false);
+            }
+            else {
+                $.ajax({
+                    url: "/MemberCard/CheckReferentNumber",
+                    type: "Post",
+                    data: { Check: ref_no },
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var isHase = false;
+                        $.each(respones, function (i, item) {
+                            isHase = true;
+                        })
+                        if (isHase == true) {
+                            $('#error_Ref_no').text("This refernce number  already exist !");
+                            $("#txtRef_No").css("border-color", "red");
+                            $(".btn_button").attr("disabled", true);
+                        }
+
+                        else {
+                            $("#txtRef_No").css("border-color", "lightgrey");
+                            $('#error_Ref_no').text("");
+                            $(".btn_button").attr("disabled", false);
+
+                        }
+                    }
+                })
+            }
+
+        }
+
+    }
+    //insert
+    function InsertMemberCard() {
+        var Date_Expire = '';
+        var Date_Appro = '';
+        var A_pprove = '';
+        var id = $("#txtid").val();
+        var TypeCardID = $("#txtCardTypeID").val();
+        var re_no = $("#txtRef_No").val();
+        var name = $("#txtName").val();
+        var descrciption = $("#txtDescription").val();
+        var dateEx = $("#txtDateExpire").val();
+        var approve = $("#txtApprove").prop('checked');
+        var dt = new Date().toLocaleDateString();
+      
+        $(".btn_button").html($(".btnAdd").text());
+        var count = 0;
+        if (TypeCardID == null) {
+            count++;
+            $("#txtCardTypeID").css("border-color", "red");
+            $(".required_CardTypeID").text("Please select card type !")
+        }
+        else {
+           
+            $("#txtCardTypeID").css("border-color", "lightgrey");
+            $(".required_CardTypeID").text("");
+        }
+        if (re_no == '') {
+            count++;
+            $("#txtRef_No").css("border-color", "red");
+            $(".required_re_no").text("Please input reference number !");
+        }
+        else {
+           
+            $("#txtRef_No").css("border-color", "lightgrey");
+            $(".required_re_no").text("");
+        }
+        if (name == '') {
+            count++;
+            $("#txtName").css("border-color", "red");
+            $(".required_name").text("Please input name !");
+        }
+        else {
+          
+            $("#txtName").css("border-color", "lightgrey");
+            $(".required_name").text("");
+        }
+        if (descrciption == '') {
+            count++;
+            $("#txtDescription").css("border-color", "red");
+            $(".required_Description").text("Please input Description !");
+        } else {
+            
+            $("#txtDescription").css("border-color", "lightgrey");
+            $(".required_Description").text("");
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+        
+        if (dateEx == '') {
+            Date_Expire = dt;
+        }
+        else {
+            Date_Expire = dateEx;
+        }
+        if (approve == false) {
+            Date_Appro = dt;
+            A_pprove = "No";
+        }
+        else {
+            Date_Appro = dt;  
+            A_pprove = "Yes";
+        }
+        var data = {
+            ID: id,
+            CardTypeID: TypeCardID,
+            Ref_No: re_no,
+            Name: name,
+            Description: descrciption,
+            ExpireDate: Date_Expire,
+            Approve: A_pprove,
+            DateCreate: dt,
+            DateApprove: Date_Appro
+        }
+        $.ajax({
+            url: "/MemberCard/InsertMemberCard",
+            type: "POST",
+            dataType: "JSON",
+            data: { memberCard: data },
+            success: function (respones) {
+                $(".myTable").empty();
+                $("#txtCardTypeID").val("");
+                $("#txtRef_No").val("");
+                $("#txtName").val("");
+                $("#txtDescription").val("");
+                $("#txtDateExpire").val("");
+                $("#txtApprove").prop('checked', false);
+                $.ajax({
+                    url: "/MemberCard/GetMemberCard",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (respones) {
+                        GetDataTable(respones);
+                        GetDataTableCard(respones);
+                    }
+                })
+                $("#txtid").val("");
+            }
+        })
+    }
+    //close
+    function Clickclose() {
+        $("#txtCardTypeID").css("border-color", "lightgrey");
+        $(".required_CardTypeID").text("");
+        $("#txtRef_No").css("border-color", "lightgrey");
+        $(".required_re_no").text("");
+        $("#txtName").css("border-color", "lightgrey");
+        $(".required_name").text("");
+        $("#txtDescription").css("border-color", "lightgrey");
+        $(".required_Description").text("");
+        $("#txtid").val("");
+        //
+        $("#txtCardTypeID").val("");
+        $("#txtRef_No").val("");
+        $("#txtName").val("");
+        $("#txtDescription").val("");
+        $("#txtDateExpire").val("");
+        $("#txtApprove").prop('checked', false);
+    }
+</script>

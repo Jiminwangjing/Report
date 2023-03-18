@@ -1,0 +1,299 @@
+
+.width-full {
+    width: 100%;
+}
+
+.width-half {
+    width: 50%;
+}
+
+.width-25pc {
+    width: 25%;
+}
+
+.height-full {
+    height: 100%;
+}
+
+.height-half {
+    height: 50%;
+}
+
+.height-25pc {
+    height: 25%;
+}
+
+.inblock {
+    display: block !important;
+}
+
+.inline {
+    display: inline !important;
+}
+
+.inline-block {
+    display: inline-block !important;
+}
+
+.tag-border {
+    display: block;
+    margin: 0;
+    padding: 0 5px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 0px 1.5px 0.5px rgba(250, 250, 250, 0.5);
+    -moz-box-shadow: 0px 0px 1.5px 0.5px rgba(250, 250, 250, 0.5);
+    box-shadow: 0px 0px 1.5px 0.5px rgba(250, 250, 250, 0.5);
+}
+
+.tag-border.circle {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.stretch-fill {
+    width: 100%;
+}
+
+label {
+    display: block;
+    margin-top: 7px;
+    line-height: 30px;
+    font-size: 0.9em;
+}
+
+input, select, textarea {
+    position: relative;
+    border-radius: 3px;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    outline: 0;
+    margin: 0;
+    border: 1px solid #EEE;
+    height: 30px;
+    line-height: 30px;
+}
+
+button, input[type=button], input[type=submit] {
+    position: relative;
+    display: inline-block;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    border-radius: 4px;
+    text-align: center;
+    padding: 0 10px;
+    background-color: #f2e8c5;
+    color: black;
+    line-height: 40px;
+}
+
+button:hover, input[type=button]:hover, input[type=submit]:hover, .btn:hover {
+    background-color: #f2e8c5;
+    cursor: pointer;
+}
+
+input[type=checkbox] {
+    width: 25px;
+}
+
+.box-group {
+    display: block;
+    margin-top: 10px;
+}
+
+.stack-inline {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-shadow: 0px 0px 0px 1px #CCC;
+    -moz-box-shadow: 0px 0px 0px 1px #CCC;
+    box-shadow: 0px 0px 0px .5px #CCC;
+    border-radius: 3px;
+    padding: 0;
+}
+
+.stack-inline.space-between {
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.stack-inline > *:not(input):not(select):not(textarea) {
+    text-align: center;
+}
+
+.stack-inline > * {
+    height: 30px;
+    line-height: 30px;
+    border-radius: 2px;
+    border: 0;
+    min-width: 55px;
+}
+
+.stack-inline:focus-within {
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 0px 0px 1.7px #85FFC0;
+    -moz-box-shadow: 0px 0px 0px 1.7px #85FFC0;
+    box-shadow: 0px 0px 0px 1.7px #85FFC0;
+    -webkit-transition: all .25s;
+    -o-transition: all .25s;
+    transition: all .25s;
+}
+
+.stack-inline > :first-child, .stack-inline > :first-child > * {
+    border-right: none;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.stack-inline > :last-child, .stack-inline > :last-child > * {
+    border-left: none;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.stack-inline .stack-inline-text, .stack-inline select, .stack-inline input {
+    min-width: 60px;
+}
+
+.stack-inline .stack-inline-icon {
+    right: 15px;
+    width: 20px;
+    padding: 0 2px;
+    cursor: pointer;
+    border: .5px solid #CCC;
+    border-left: none;
+}
+
+/*Key combination*/
+.deadlock-box {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background-color: #7B7f85;
+    margin: 0 auto;
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,.15);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,.15);
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0,.15);
+}
+
+.deadlock-box.circle {
+    border-radius: 50%;
+    -webkit-animation: 1.5s resize ease infinite alternate-reverse;
+    animation: 1.5s resize ease infinite alternate-reverse;
+    -webkit-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.deadlock-box .core-loader {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 25%;
+    left: 25%;
+    z-index: 0;
+    border-radius: 50%;
+    -webkit-box-shadow: 0px 0px 5px 1.5px rgba(0,0,0,.15);
+    -moz-box-shadow: 0px 0px 5px 1.5px rgba(0,0,0,.15);
+    box-shadow: 0px 0px 5px 1.5px rgba(0,0,0,.15);
+    -webkit-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.deadlock-box .core-loader.unlock {
+    border-radius: 0;
+}
+
+.deadlock-box .angle-up, .deadlock-box .angle-right,
+.deadlock-box .angle-down, .deadlock-box .angle-left {
+    z-index: 1;
+    -webkit-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.deadlock-box .angle-up.reverse, .deadlock-box .angle-right.reverse,
+.deadlock-box .angle-down.reverse, .deadlock-box .angle-left.reverse {
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.deadlock-box .angle-up {
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-top: 50px solid #252525;
+    position: absolute;
+    top: 25%;
+    right: 25%;
+}
+
+.deadlock-box .angle-up.back {
+    top: 0;
+}
+
+.deadlock-box .angle-down {
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 50px solid #3E65D0;
+    position: absolute;
+    bottom: 25%;
+    right: 25%;
+}
+
+.deadlock-box .angle-down.back {
+    bottom: 0;
+}
+
+.deadlock-box .angle-left {
+    width: 0;
+    height: 0;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-left: 50px solid #DF3333;
+    position: absolute;
+    left: 25%;
+    top: 25%;
+}
+
+.deadlock-box .angle-left.back {
+    left: 0;
+}
+
+.deadlock-box .angle-right {
+    width: 0;
+    height: 0;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-right: 50px solid #5EAE75;
+    position: absolute;
+    right: 25%;
+    top: 25%;
+}
+
+.deadlock-box .angle-right.back {
+    right: 0;
+}
+
+/*Validate error message*/
+.field-validation-error {
+    font-size: .8em;
+    color: #E05050;
+}

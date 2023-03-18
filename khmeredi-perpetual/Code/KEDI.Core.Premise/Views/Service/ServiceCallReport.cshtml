@@ -1,0 +1,141 @@
+﻿@{@using KEDI.Core.Premise.Models.Services.Inventory;
+ViewData["Title"] = "Service CallReport";
+}
+
+<style>
+    .form-group {
+        margin: -6px 0 0 0 !important;
+    }
+
+        .form-group .form-control {
+            height: 27px !important;
+        }
+</style>
+
+<body class="dx-viewport">
+    <div class="card card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="font-size">@Localizer["Date From"]</label>
+                    <input type="date" class="form-control font-size" id="datefrom" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="font-size">@Localizer["Date To"]</label>
+                    <input type="date" class="form-control font-size" id="dateto" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="font-size">@Localizer["Priority"]</label>
+                    <select id="priority" asp-items="Html.GetEnumSelectList<PriorityType>()" class="form-control font-size">
+                        <option value="0">@Localizer["--- Select ---"]</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="font-size">@Localizer["Call Status"] </label>
+                    <select id="callStatus" asp-items="Html.GetEnumSelectList<CallStatusType>()" class="form-control font-size">
+                        <option value="0">@Localizer["--- Select ---"]</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <a class="btn btn-xs btn-kernel" style="margin-top:19px;" id="filter">@Localizer["Filter"]</a>
+            </div>
+        </div>
+        <br />
+        <div class="wrap-table detail mt-2 bTable widget-scrollbar">
+            <table class="list-report">
+                <thead>
+                    <tr>
+                        <th>@Localizer["No"]</th>
+                        <th>@Localizer["Call ID"]</th>
+                        <th>@Localizer["BP Name"]</th>
+                        <th>@Localizer["BP Code"]</th>
+                        <th>@Localizer["Item"]</th>
+                        <th>@Localizer["Mfr Serial No."]</th>
+                        <th>@Localizer["Serial No"]</th>
+                        <th>@Localizer["Subject"]</th>
+                        <th>@Localizer["Status"]</th>
+                        <th>@Localizer["Priority"]</th>
+                        <th>@Localizer["Creation Date"]</th>
+                        <th>@Localizer["Creation Time"]</th>
+                        <th>@Localizer["Closure Date"]</th>
+                        <th>@Localizer["Closure Time"]</th>
+                        <th>@Localizer["Resoved Date"]</th>
+                        <th>@Localizer["Resoved Time"]</th>
+                        <th>@Localizer["Resolution"]</th>
+
+                    </tr>
+                </thead>
+            </table>
+
+        </div>
+
+    </div>
+</body>
+
+<script>
+    $(function () {
+        $('#filter').click(function () {
+            var date_from = $("#datefrom").val();
+            var date_to = $("#dateto").val();
+            var priority = $("#priority").val();
+            var call_status = $("#callStatus").val();
+            $.ajax({
+                url: "/Service/GetServiceReport",
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    DateFrom: date_from,
+                    DateTo: date_to,
+                    priority: priority,
+                    callstatus: call_status,
+                },
+                success: function (reponse) {
+
+                    if (resizeBy.length > 0) {
+                        customerTable.clearRows();
+                        customerTable.bindRows(reponse);
+                    }
+
+                }
+            });
+
+
+        });
+
+
+
+
+
+        const customerTable = ViewTable({
+            keyField: "ID",
+            selector: ".list-report",
+            indexed: true,
+            paging: {
+                pageSize: 10,
+                enabled: true
+            },
+            visibleFields: ["CallID", "BName", "BPCode", "ItemName", "MfrSerialNo", "SerialNumber", "Subject", "CallStatus",
+                "Priority", "CreatedOnDate", "CreatedOnTime", "ClosedOnDate", "ClosedOnTime", "Resolvedondate", "Resolvedontime", "Resolution"],
+            //actions: [
+            //    {
+            //        template: `<i class="fa fa-arrow-alt-circle-down hover"></i>`,
+            //        on: {
+            //            "click": function (e) {
+
+
+            //        }
+            //    }
+            //]
+        })
+    })
+</script>
+
+

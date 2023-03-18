@@ -1,0 +1,41 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+* {
+    vertical-align: middle;
+}
+
+*::before, *::after {
+    vertical-align: text-bottom;
+}
+
+/**:not(input), *:not(input)::before, *:not(input)::after {
+    -webkit-user-select: none;*/ /* Chrome/Safari */        
+       /*-moz-user-select: none;*/ /* Firefox */
+        /*-ms-user-select: none;*/ /* IE10+ */
+            /*user-select: none;
+}*/
+
+body {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    font-size: 1em;
+    font-family: monospace;
+}
+
+.measure {
+    max-width: 1200px;
+    margin: 0 auto;
+    max-height: calc(100vh - 2 * 40px);
+}
+
+.readonly {
+    pointer-events: none !important;
+}
+.font-16{
+    font-size: 16px !important;
+    font-weight: bold;
+}

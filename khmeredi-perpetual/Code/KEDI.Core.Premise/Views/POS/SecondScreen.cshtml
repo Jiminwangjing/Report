@@ -1,0 +1,182 @@
+﻿
+@{
+    Layout = "_POSLayout";
+    string widthZero = "";
+}
+
+<style>
+    .nav-header {
+        height: 70px;
+    }
+
+    .nav-header > .header-logo{
+        margin-left: 5px;
+    }
+
+    .nav-header > .header-logo > img {
+        height: 60px;
+        width: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .nav-header .branch-name {
+        font-size: 3em;
+        font-weight: bold;
+        color: #FFF;
+    }
+
+    .panel {
+        top: 70px;
+        height: calc(100% - 70px);
+    }
+
+    .panel .wrap-table.summary table > tr {
+        font-size: 1.5em;
+    }
+    
+</style>
+<div id="carousel-container"></div>
+<nav class="nav-header flexbox space-between">
+    <div class="header-logo">
+        <img id="company-logo" src="" />
+    </div>
+    <div id="branch-name" class="branch-name"></div>
+    <div title="@Localizer["Switch to full list"]">
+        <i id="panel-view-mode" data-view-mode="0"></i>
+    </div>
+</nav>
+<div class="panel"> 
+    <div id="panel-group-items" class="full-panel flexbox show">
+        <div class="left-panel flexbox column flex-1">
+            <nav class="nav-toolbar top">
+                <div class="item">
+                    <label id="order-number" class="tag-border bg-cadeblue mr-2">003 &gt; #Order-1</label>
+                </div>
+                <div class="item">
+                    <label id="count-row-number" class="tag-border bg-cadeblue mr-2">Count Rows : ( <span id="count-row-number-text">0</span> )</label>
+                </div>
+                <!-- <div class="item grow"></div> -->
+            
+            </nav>
+            
+            <div id="wrap-list" class="grid-box widget-scrollbar flex-1">
+                <table id="item-listview">
+                    <thead>
+                        <tr>
+                            <th style="width: 0.5%;">Code</th>
+                            <th>Name</th>
+                            <th style="width: 0.25%; text-align: center;">Qty</th>
+                            <th style="width: 0.05%;">UoM</th>
+                            <th style="width: 0.5%;">Price</th>
+                            <th style="width: 0.05%;">Disc.(%)</th>
+                            <th class="tax-display" style="width: 0.05%; display: none;">Tax(%)</th>
+                            <th>Amount</th>
+                            <th style="width: 0.05%;" id="col-to-append-after"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div class="wrap-table summary widget-scrollbar">
+                <table>
+                    <tbody><tr>
+                        <th class="font-16">Sub Total</th>
+                        <th class="font-16">Discount<span id="summary-discount-rate" class="fn-black">(0.00%)</span></th>
+                        <th class="tax-display tax-rate-display-invoice font-16" style="display: none;">Tax Rate %<span class="fn-black"></span></th>
+                        <th class="tax-display tax-display-invoice font-16" style="display: none;">Tax Value<span class="fn-black"></span></th>
+                        <th class="font-16">Total</th>
+                    </tr>
+                    <tr>
+                        <td class="font-16" id="summary-sub-total">USD 0.00</td>
+                        <td class="font-16" id="summary-discount">USD 0.00</td>
+                        <td class="tax-display tax-rate-display-invoice font-16" id="summary-vat-rate" style="display: none;">0.00 %</td>
+                        <td class="tax-display tax-display-invoice font-16" id="summary-vat" style="display: none;">USD 0.00</td>
+                        <td class="font-16" id="summary-total">USD 0.00</td>
+                    </tr>
+                </tbody></table>
+            </div>
+
+            <!-- <div class="collapser v-collapser arrow-left"></div> -->
+        </div><!--end left-panel-->
+
+        <div class="right-panel @widthZero">
+            <nav id="right-toolbar" class="nav-toolbar top">
+                <div class="item toggle-panel-mobile">
+                    <div class="goto-panel-group-tables icon-tab csr-pointer hover-resize">
+                        <i class="fas fa-caret-left fa-lg"></i><span>&nbsp;Table</span>
+                    </div>
+                </div>
+
+
+                <div class="item">
+                    <div class="widget-stackcrumb nav-toolbar desktop group-item-steps p-0">
+                        <div class="all-groups">All</div>
+                    </div>
+                </div>
+                <span class="item grow"></span>
+               
+            </nav>
+            <nav class="nav-toolbar responsive">
+                <div class="item widget-stackcrumb group-item-steps">
+                    <div class="all-groups">All</div>
+                </div>
+            </nav>
+            <div class="group-item-views">
+                <div id="group-item-gridview" class="gridview item-gridview" style="">
+                    <!--gridview-->
+                    <div class="wrap-grid widget-scrollbar copper-lite"></div>
+
+                </div><!--end-gridview-->
+                <div id="group-item-listview" class="item-listview widget-scrollbar" style="display:none;">
+                    <div class="group-search-boxes hidden" style="margin-bottom: 5px;">
+                        <div id="text-search" class="search-box show">
+                            <div class="input-box" style="width: 250px;">
+                                <i id="i-search" class="i-search fas fa-search"></i>
+                                <input id="search-sale-items" class="ignore" type="text" autocomplete="off" placeholder="Search ...">
+                                <i id="i-close" class="i-close far fa-times-circle"></i>
+                            </div>
+                            <div id="btn-search" style="display: none;" class="btn-search no-space"><i class="fas fa-search"></i></div>
+                        </div>
+                    </div>
+                    <table id="list-sale-items">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Khmer name</th>
+                                <th>Unit price</th>
+                                <th>UoM</th>
+                                <th id="item-col-append">Choose</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                <div id="image-not-found" class="not-found hide">
+                    <img src="/pos/images/no-products.png">
+                </div>
+                <svg class="svg-header-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#7C555C" fill-opacity="1" d="M0,0L120,16C240,32,480,64,720,106.7C960,149,1200,203,
+                                1320,229.3L1440,256L1440,0L1320,0C1200,0,960,0,720,0C480,0,240,0,120,0L0,0Z">
+                    </path>
+                </svg>
+                <svg class="svg-footer-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#7C555C" fill-opacity="1" d="M0,32L120,64C240,96,480,160,720,208C960,256,1200,288,1320,304L1440,320L1440,320L1320,
+                                    320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z">
+                    </path>
+                </svg>
+            </div>
+
+            <nav class="nav-toolbar bottom">
+                <div class="item" id="pagination-list" style="z-index: 1;"></div>
+                <span class="grow"></span>
+                <div class="item">
+                    <div id="datetime" class="datetime">@DateTime.Now.ToString("M/d/yyyy h:m:ss tt")</div>
+                </div>
+            </nav>
+
+        </div><!--End right-panel-->
+    </div><!--End panel-group-items-->
+</div>
+
+<script src="~/pos/js/second-screen.js"></script>

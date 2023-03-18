@@ -1,0 +1,72 @@
+﻿@model CKBS.Models.Services.Account.UserAccount
+<div class="card card-body">
+    <fieldset class="scheduler-border">
+        <legend class="title">@Localizer["Register"]</legend>
+        <form asp-action="Register" method="post">
+            <div class="row">
+                <div class="col-md-4">
+                    <label asp-for="EmployeeID" class="control-label">@Localizer["Employee"]</label>
+                    <span asp-validation-for="EmployeeID" class="text-danger"></span>
+                    <select asp-for="EmployeeID" class="input-box-kernel" asp-items="ViewBag.EmployeeID">
+                        <option value="0" selected>--- Select ---</option>
+                    </select>
+
+                    <label asp-for="CompanyID" class="control-label">@Localizer["Company"]</label>
+                    <span asp-validation-for="CompanyID" class="text-danger"></span>
+                    <select asp-for="CompanyID" class="input-box-kernel" asp-items="ViewBag.CompanyID">
+                        <option value="0" selected>--- Select--- </option>
+                    </select>
+
+
+                    <label asp-for="BranchID" class="control-label">@Localizer["Branch"]</label>
+                    <span asp-validation-for="BranchID" class="text-danger"></span>
+                    <select asp-for="BranchID" class="input-box-kernel" asp-items="ViewBag.BranchID">
+                        <option value="0" selected>--- Select ---</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Username" class="control-label">@Localizer["Username"]</label>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                    <input asp-for="Username" class="input-box-kernel" />
+
+                    <label asp-for="Password" class="control-label">@Localizer["Password"]</label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <input asp-for="Password" class="input-box-kernel" type="password" />
+
+                    <label asp-for="TelegramUserID" class="control-label">@Localizer["TelegramID"]</label>
+                    <input asp-for="TelegramUserID" class="input-box-kernel" />
+
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group form-inline" style="margin-top:30px;">
+                                <label class="form-check-label">
+                                    <input class="input-box-kernel" asp-for="UserPos" /> @Localizer["POS User"]
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-inline" style="margin-top:30px;">
+                                <label class="form-check-label">
+                                    <input class="input-box-kernel" asp-for="IsUserOrder" /> @Localizer["QR Order User"]
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group pull-left">
+                        <button class="btn btn-kernel btn-xs" type="submit" title="Add">@Localizer["Add"]</button>
+                        <a class="btn btn-xs btn-kernel" asp-action="Index" title="Back"> @Localizer["Back"]</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+
+</div>
+

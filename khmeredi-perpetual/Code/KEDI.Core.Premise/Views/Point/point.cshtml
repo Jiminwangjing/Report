@@ -1,0 +1,740 @@
+﻿@model IEnumerable<PointService>
+
+@{
+    ViewData["Title"] = "Create";
+}
+<style>
+    .fa {
+        margin-right: 4px;
+    }
+
+    .stylebutton {
+        background-color: white;
+    }
+
+    .modal-header {
+        background-color: blue;
+    }
+
+    .modal-header {
+        cursor: move;
+    }
+
+    #styleSearch {
+        margin-top: 1px;
+        margin-bottom: 5px;
+    }
+
+    #colortd {
+        background-color: white;
+    }
+
+    .fa-edit {
+        color: #00cc00;
+    }
+
+    .fa-trash {
+        color: red;
+    }
+
+    #styleSearchPoint {
+        margin-top: 1px;
+        margin-bottom: 5px;
+    }
+
+    fieldset.scheduler-border {
+        border: 2px groove #e6ffe6;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 0 0 1.5em 0 !important;
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #00cc00;
+    }
+
+    legend.scheduler-border {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+    }
+    .form-group{
+        margin:0px;
+        padding:0px;
+    }
+</style>
+
+<button class="btn btn-xs btn-success" type="button" data-toggle="modal" data-target="#ModalPoint"><i class="fa fa-list"></i>@Localizer["ListPoint"]</button>
+    <fieldset class="scheduler-border">
+        <legend class="scheduler-border">@Localizer["Point"]</legend>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>@Localizer["Amount"] :</label>
+                <div class="input-group">
+                    <input class="form-control" type="text" id="txtAmount" />
+                    <div class="input-group-append">
+                        <span class="input-group-text md-addon" style="background-color:white; border:1px solid;"></span>
+                    </div>
+                </div>
+                <div class="text-danger requried_Acount"></div>
+                &nbsp;<span id="errmsgAmount"></span>
+            </div>
+            <div class="form-group">
+                <label>@Localizer["Point"] :</label>
+                <input class="form-control" type="text" id="txtPoint" />&nbsp;<span id="errmsgPoint"></span>
+                <div class="text-danger requried_Point"></div>
+            </div>
+        </div>
+        <div class="col-md-6"> 
+            <div class="form-group">
+                <label class="control-label">@Localizer["SetPoint"] :</label>
+                <input class="form-control" type="text" id="txtSetPoint" />
+                &nbsp;<span id="errmsg"></span>
+                <div id="pointduble" class="text-danger"></div>
+                <div class="text-danger requried_setpont"></div>
+            </div>
+        </div>
+    </div>
+</fieldset>
+<div class="requried text-danger"></div>
+<button class="btn btn-xs btn-success" onclick="InsertItemMaster()" type="button" data-toggle="modal" data-target="#ModalChooesItem"><i class="fa fa-arrow-alt-circle-right"></i>@Localizer["Choose"]</button>
+<fieldset class="scheduler-border">
+    <legend class="scheduler-border">@Localizer["PointDetail"]</legend>
+    <div class="wrap-table list">
+        <table>
+            <thead>
+                <tr>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Name(KH)"]</th>
+                    <th>@Localizer["Name(EN)"]</th>
+                    <th>@Localizer["Price"]</th>
+                    <th>@Localizer["Qty"]</th>
+                    <th>@Localizer["Currency"]</th>
+                    <th>@Localizer["UoM"]</th>
+                    <th>@Localizer["Barcode"]</th>
+                    <th>@Localizer["Action"]</th>
+                </tr>
+            </thead>
+            <tbody class="lsititem"></tbody>
+        </table>
+    </div>
+   
+</fieldset>
+<div class="row">
+    <div class="col-md-12 pull-left">
+        <button id="btnAdd" class="btn btn-xs btn-success" onclick="InsertPoint()"><i class="fa fa-plus-circle"></i>@Localizer["Add"]</button>
+    </div>
+</div>
+<link href="~/css/Modal.css" rel="stylesheet" />
+
+@*Modal Choose item*@
+<div class="modal fade" id="ModalChooesItem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-plus-circle" style="color:white;"><b style="margin-left:4px;">@Localizer["ListItem"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row" id="styleSearch">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input type="text" placeholder="@Localizer["Search"]" id="txtsearchItem" class="form-control" style="font-size:10px;" />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wrap-table list">
+                            <table>
+                              
+                                    <tr>
+                                        <th>@Localizer["Code"]</th>
+                                        <th>@Localizer["KhmerName"]</th>
+                                        <th>@Localizer["EnglishName"]</th>
+                                        <th>@Localizer["UnitPrice"]</th>
+                                        <th>@Localizer["Currency"]</th>
+                                        <th>@Localizer["UoM"]</th>
+                                        <th>@Localizer["Barcode"]</th>
+                                        <th>@Localizer["Choose"]</th>
+                                    </tr>
+                               
+                                <tbody id="MyTale"></tbody>
+                            </table>
+                        </div>
+                        
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-xs" data-dismiss="modal"><i class="fa fa-ban" style="margin-right:3px; font-size:10px;"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Modal Data Point*@
+<div class="modal fade" id="ModalPoint">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-list" style="color:white;"><b style="margin-left:4px;">@Localizer["Point"]</b></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row" id="styleSearchPoint">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input type="text" placeholder="@Localizer["Search"]" id="txtsearchPoint" class="form-control" style="font-size:10px;" />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-xs"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wrap-table list">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>@Localizer["Amount"]  <b class="currencyPoint"></b></th>
+                                        <th>@Localizer["Point"]</th>
+                                        <th>@Localizer["SetPoint"]</th>
+                                        <th>@Localizer["Action"]</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="listPoint"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-xs btn-danger" data-dismiss="modal"><i class="fa fa-ban" style="font-size:10px;"></i>@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<label class="btnsaveP" hidden>@Localizer["Save"]</label>
+<label class="btnAddP" hidden>@Localizer["Add"]</label>
+<script src="~/js/easytimer.js"></script>
+<script src="~/js/easytimer.min.js"></script>
+<script>
+
+    var arr_items = [];
+    var arr_item = [];
+    var list_pointdetail;
+    var EditP = 'f';
+    var Pointid = 0;
+    var addP = $(".btnAddP").text();
+    var saveP = $(".btnsaveP").text();
+    var set = '';
+    var check = false;//check set point exist
+    $(document).ready(function () {
+
+        $("#txtsearchItem").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#MyTale tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $("#txtsearchPoint").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".listPoint tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $(".modal-header").on("mousedown", function (mousedownEvt) {
+            var $draggable = $(this);
+            var x = mousedownEvt.pageX - $draggable.offset().left,
+                y = mousedownEvt.pageY - $draggable.offset().top;
+            $("body").on("mousemove.draggable", function (mousemoveEvt) {
+                $draggable.closest(".modal-dialog").offset({
+                    "left": mousemoveEvt.pageX - x,
+                    "top": mousemoveEvt.pageY - y
+                });
+            });
+            $("body").one("mouseup", function () {
+                $("body").off("mousemove.draggable");
+            });
+            $draggable.closest(".modal").one("bs.modal.hide", function () {
+                $("body").off("mousemove.draggable");
+            });
+        });
+        //get base currency
+        $.ajax({
+            url: "/Point/GetBasecurrency",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                var data = "";
+                $.each(respones, function (i, item) {
+                    data = item.Description;
+                })
+                $(".md-addon").text(data);
+            }
+        })
+        $.ajax({
+            url: "/Point/GetPointItemMaster",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                arr_items = respones;
+                GetDataTable();
+            }
+        })
+        $.ajax({
+            url: "/Point/GetPoint",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                GetDataTablePoint(respones);
+                $.ajax({
+                    url: "/Point/GetBasecurrency",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (respones) {
+                        var data = "";
+                        $.each(respones, function (i, item) {
+                            data = item.Description;
+                        })
+                        $(".currencyPoint").text(data);
+                    }
+                })
+            }
+        })
+    });
+    function GetDataTablePoint(respones) {
+        var data = "";
+        $.each(respones, function (i, item) {
+            if (respones)
+                data +=
+                    '<tr>' +
+                    '<td hidden>' + item.ID + '</td>' +
+                    '<td>' + item.Amount + '</td>' +
+                    '<td>' + item.Points + '</td>' +
+                    '<td>' + item.Quantity + '</td>' +
+                    '<td>' + '<i class="fa fa-edit editPoint" title="Edit" data-dismiss="modal"></i> . <i class="fa fa-trash deletepoint" title="Delete"></i>' + '</td>' +
+                    '</tr>';
+        });
+        $(".listPoint").html(data);
+    }
+    function GetDataTable() {
+        var data = "";
+        $.each(arr_items, function (i, item) {
+            data +=
+                '<tr id="' + item.ItemID + '" class="TableDub" data-id="' + item.ItemID + '">' +
+                '<td hidden>' + item.ItemID + '</td>' +
+                '<td hidden>' + item.CurrencyID + '</td>' +
+                '<td hidden>' + item.UomID + '</td>' +
+                '<td>' + item.Code + '</td>' +
+                '<td>' + item.KhmerName + '</td>' +
+                '<td>' + item.EnglishName + '</td>' +
+                '<td>' + item.UnitPrice + '</td>' +
+                '<td>' + item.CurrencyName + '</td>' +
+                '<td>' + item.UomName + '</td>' +
+                '<td>' + item.Barcode + '</td>' +
+                '<td>' + '<button class="btn btn-xs btn-success ItemChoose"  onclick="ChooseItem()"><i class="fa fa-arrow-alt-circle-right"></i></button>' + '</td>' +
+                '</tr>';
+        });
+        $("#MyTale").html(data);
+    }
+    // choose getData
+    function InsertItemMaster() {
+        $.ajax({
+            url: "/Point/GetPointItemMaster",
+            type: "Get",
+            dataType: "Json",
+            success: function (respones) {
+                GetDataTable();
+            }
+        })
+    }
+    // click choose
+    $("#MyTale").on('click', '.ItemChoose', function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        $(".requried").text("");
+        let found = false;
+        for (var i = 0; i < arr_item.length; i++) {
+            if (arr_item[i].ItemID == id) {
+                arr_item[i].Qty += 1;
+                found = true;
+            }
+        }
+        if (!found) {
+            var data = arr_items.find(x => x.ItemID == id);
+            arr_item.push(data);
+
+        }
+        $('#' + id).remove();
+        Showlistitem();
+    });
+    $("#MyTale").on('dblclick','.TableDub', function () {
+
+        var id = $(this).attr('data-id');
+        $(".requried").text("");
+        let found = false;
+        for (var i = 0; i < arr_item.length; i++) {
+            if (arr_item[i].ItemID == id) {
+                arr_item[i].Qty += 1;
+                found = true;
+            }
+        }
+        if (!found) {
+            var data = arr_items.find(x => x.ItemID == id);
+            arr_item.push(data);
+
+        }
+        $('#' + id).remove();
+        Showlistitem();
+    });
+    function Showlistitem() {
+        var data = "";
+        $(".lsititem").empty();
+        $.each(arr_item, function (i, item) {
+            data += '<tr>' +
+                '<td hidden>' + item.ItemID + '</td>' +
+                '<td hidden>' + item.CurrencyID + '</td>' +
+                '<td hidden>' + item.UomID + '</td>' +
+                '<td>' + item.Code + '</td>' +
+                '<td>' + item.KhmerName + '</td>' +
+                '<td>' + item.EnglishName + '</td>' +
+                '<td>' + item.UnitPrice + '</td>' +
+                '<td contenteditable="true" id="colortd" class="EditPoint">' + item.Qty + '</td > ' +
+                '<td>' + item.CurrencyName + '</td>' +
+                '<td>' + item.UomName + '</td>' +
+                '<td>' + item.Barcode + '</td>' +
+                '<td>' + '<i class="fa fa-trash" style="color:red;" id="clickdelete">' + '</td>' +
+                '</tr>';
+        });
+        $(".lsititem").append(data);
+    }
+    //edit Point deatil
+
+    $(".lsititem").on('keyup', '.EditPoint', function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        var qty = parseFloat(cut.find('td:eq(7)').text());
+        for (var i = 0; i < arr_item.length; i++) {
+            if (arr_item[i].ItemID == id) {
+                arr_item[i].Qty = qty;
+            }
+        }
+    })
+    //Edit Point Detail after edit point 
+    $(".lsititem").on('keyup', '.EditPointDetail', function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(2)').text();
+        var qty = parseFloat(cut.find('td:eq(9)').text());
+        alert(qty)
+        for (var i = 0; i < arr_item.length; i++) {
+            if (arr_item[i].ItemID == id) {
+                arr_item[i].Qty = qty;
+            }
+        }
+    })
+    //Edit Point
+    $(".listPoint").on('click', '.editPoint', function () {
+        var cut = $(this).closest('tr');
+        var pointID = cut.find('td:eq(0)').text();
+        var amount = cut.find('td:eq(1)').text();
+        var point = cut.find('td:eq(2)').text();
+        set = cut.find('td:eq(3)').text();
+        document.getElementById("txtAmount").value = amount;
+        document.getElementById("txtPoint").value = point;
+        document.getElementById("txtSetPoint").value = set;  
+        Pointid = pointID;
+        $("#btnAdd").html(saveP);
+        $.ajax({
+            url: "/Point/GetPointDetail",
+            type: "Get",
+            dataType: "Json",
+            data: { ID: pointID },
+            success: function (respones) {
+                var data = "";
+                arr_item = [];
+                $.each(respones, function (i, item) {
+                    data +=
+                        '<tr>' +
+                        '<td hidden>' + item.ID + '</td>' +
+                        '<td hidden>' + item.PointID + '</td>' +
+                        '<td hidden>' + item.ItemID + '</td>' +
+                        '<td hidden>' + item.CurrencyID + '</td>' +
+                        '<td hidden>' + item.UomID + '</td>' +
+                        '<td>' + item.ItemMasterData.Code + '</td>' +
+                        '<td>' + item.ItemMasterData.KhmerName + '</td>' +
+                        '<td>' + item.ItemMasterData.EnglishName + '</td>' +
+                        '<td>' + item.Price + '</td>' +
+                        '<td contenteditable="true" id="colortd" class="EditPointDetail">' + item.Qty + '</td > ' +
+                        '<td>' + item.Currency.Description + '' + item.Currency.Symbol + '</td>' +
+                        '<td>' + item.UnitofMeasure.Name + '</td>' +
+                        '<td>' + item.ItemMasterData.Barcode + '</td>' +
+                        '<td>' + '<i class="fa fa-trash" style="color:red;" id="clickdeleteDelail">' + '</td>' +
+                        '</tr>';
+                    var lsit = {
+                        ID: item.ID,
+                        PointID: item.PointID,
+                        ItemID: item.ItemID,
+                        CurrencyID: item.CurrencyID,
+                        UomID: item.UomID,
+                        Code: item.ItemMasterData.Code,
+                        KhmerName: item.ItemMasterData.KhmerName,
+                        EnglishName: item.ItemMasterData.EnglishName,
+                        UnitPrice: item.Price,
+                        Qty: item.Qty,
+                        CurrencyName: item.Currency.Description + item.Currency.Symbol,
+                        UomName: item.UnitofMeasure.Name,
+                        Barcode: item.ItemMasterData.Barcode
+                    }
+                    arr_item.push(lsit);
+                });
+                $(".lsititem").html(data);
+            }
+        });
+    });
+    // delete Point Detail
+    $(".lsititem").on('click', '#clickdelete', function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        var data = arr_item.find(x => x.ItemID == id);
+        if (data != null) {
+            arr_item.splice(data, 1);
+        }
+        Showlistitem();
+    });
+    //delete detail
+    $(".lsititem").on('click', '#clickdeleteDelail', function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(2)').text();
+        var dID = cut.find('td:eq(0)').text();
+        var data = arr_item.find(x => x.ItemID == id);
+        if (data != null) {
+            arr_item.splice(data, 1);
+            $.ajax({
+                url: "/Point/DeletePointDetail",
+                type: "Post",
+                dataType: "Json",
+                data: { ID: dID },
+                success: function (respones) {
+
+                }
+            })
+        }
+        Showlistitem();
+    });
+
+    //delete point
+    $(".listPoint").on('click', '.deletepoint', function () {
+        var cut = $(this).closest('tr');
+        var id = cut.find('td:eq(0)').text();
+        $.ajax({
+            url: "/Point/DeletePoint",
+            type: "Post",
+            dataType: "Json",
+            data: { ID: id },
+            complete: function () {
+                $.ajax({
+                    url: "/Point/GetPoint",
+                    type: "Get",
+                    dataType: "Json",
+                    success: function (respones) {
+                        GetDataTablePoint(respones);
+                    }
+                });
+            }
+        })
+    })
+
+    
+    $("#txtSetPoint").keypress(function (e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+               $("#errmsg").html("Digits Only").show().fadeOut("slow");
+               return false;
+        }
+    });
+    $("#txtAmount").keypress(function (e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            $("#errmsgAmount").html("Digits Only").show().fadeOut("slow");
+            return false;
+        }
+    });
+    $("#txtPoint").keypress(function (e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            $("#errmsgPoint").html("Digits Only").show().fadeOut("slow");
+            return false;
+        }
+    });
+    function delay(callback, ms) {
+        var timer = 0;
+        return function () {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                callback.apply(context, args);
+            }, ms || 0);
+        };
+    }
+    $('#txtSetPoint').keyup(delay(function (e) {
+        CheckSetPoint();
+    }, 800));
+
+    //Check set Point
+    function CheckSetPoint() {
+        var set_point = $("#txtSetPoint").val();      
+            if (Pointid == 0) {
+                $.ajax({
+                    url: "/Point/CheckSet_Point",
+                    type: "Post",
+                    data: { Check: set_point },
+                    dataType: "JSON",
+                    success: function (respones) {
+                        var isHase = false;
+                        $.each(respones, function (i, item) {
+                            isHase = true;
+                        })
+                        if (isHase == true) {
+                            $('#pointduble').text("This set point  already exist !");
+                            $("#txtSetPoint").css("border-color", "red");
+                            $("#btnAdd").attr("disabled", true);
+
+                        }
+
+                        else {
+                            $("#txtSetPoint").css("border-color", "lightgrey");
+                            $('#pointduble').text("");
+                            $("#btnAdd").attr("disabled", false);
+
+                        }
+                    }
+                })
+
+            }
+            else {
+                if (set_point == set) {
+                    $("#txtSetPoint").css("border-color", "lightgrey");
+                    $('#pointduble').text("");
+                    $("#btnAdd").attr("disabled", false);
+                }
+                else {
+                    $.ajax({
+                        url: "/Point/CheckSet_Point",
+                        type: "Post",
+                        data: { Check: set_point },
+                        dataType: "JSON",
+                        success: function (respones) {
+                            var isHase = false;
+                            $.each(respones, function (i, item) {
+                                isHase = true;
+                            })
+                            if (isHase == true) {
+                                $('#pointduble').text("This set point  already exist !");
+                                $("#txtSetPoint").css("border-color", "red");
+                                $("#btnAdd").attr("disabled", true);
+
+
+                            }
+
+                            else {
+                                $("#txtSetPoint").css("border-color", "lightgrey");
+                                $('#pointduble').text("");
+                                $("#btnAdd").attr("disabled", false);
+                            }
+                        }
+                    })
+                }
+
+            }      
+    }
+
+    //Insert POint
+    function InsertPoint() {
+
+       
+        var amount = $("#txtAmount").val();
+        var point = $("#txtPoint").val();
+        var setpoint = $("#txtSetPoint").val();
+        $("#btnAdd").html(addP);
+        var count = 0;
+
+      
+        if (amount == '') {
+            count++;
+            $("#txtAmount").css("border-color", "red");
+            $(".requried_Acount").text("Please input amount !");
+        }
+        else {
+            count = 0;
+            $("#txtAmount").css("border-color", "lightgrey");
+            $(".requried_Acount").text("");
+        }
+        if (point == '') {
+            count++;
+            $("#txtPoint").css("border-color", "red");
+            $(".requried_Point").text("Please input point !");
+        }
+        else {
+            count = 0;
+            $("#txtPoint").css("border-color", "lightgrey");
+            $(".requried_Point").text("");
+        }
+        if (setpoint == '') {
+            count++;
+            $("#txtSetPoint").css("border-color", "red");
+            $(".requried_setpont").text("Please set point !");
+        }
+        else {
+            count = 0;
+            $("#txtSetPoint").css("border-color", "lightgrey");
+            $(".requried_setpont").text(" ");
+        }
+        if (count > 0) {
+            count = 0;
+            return;
+        }
+
+
+        if (arr_item.length <= 0) {
+            $(".requried").text("Please choose item for promotion !");
+        }
+        else {
+            list_pointdetail = {
+                PointID: Pointid,
+                Amount: amount,
+                Point: point,
+                SetPoint: setpoint,
+                ServicePointDetails: arr_item
+            };
+            $.ajax({
+                url: "/Point/InsertPoint",
+                type: "post",
+                dataType: "json",
+                data: { servicedata: list_pointdetail },
+                success: function (respones) {
+                    $("#txtAmount").val("");
+                    $("#txtPoint").val("");
+                    $("#txtSetPoint").val("");
+                    arr_item=[];
+                    $(".lsititem").empty();
+                    $.ajax({
+                        url: "/Point/GetPoint",
+                        type: "Get",
+                        dataType: "Json",
+                        success: function (respones) {                          
+                            GetDataTablePoint(respones);
+                        }
+                    });
+                    Pointid = 0;
+                    let msg = new DialogBox({
+                            type: "ok",
+                            content: "@Localizer["Create successfully ..!"]"
+                    });
+                }
+            });
+        }
+    }
+
+</script>

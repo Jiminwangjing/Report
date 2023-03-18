@@ -1,0 +1,117 @@
+﻿
+<nav class="nav-toolbar bg-dark-pink">
+    <div class="item csr-pointer">
+        <div id="goto-panel-can-ring" class="tag-border"><i class="fas fa-caret-left fa-lg"></i>&nbsp;@Localizer["Back"]</div>
+    </div>
+    <div class="item">
+        <div class="title Table"></div>
+    </div>
+    <div class="grow"></div>
+</nav>
+<div class="wrap-block col-two measure p1 widget-scrollbar">
+    <div class="left-block">
+        <fieldset class="shadow" style="height: 100%;">
+            <legend class="title">@Localizer["Quick Number"]</legend>
+            <div class="gridview number-pad">
+                <div class="wrap-grid">
+                    <span class="grid" data-value="7">7</span>
+                    <span class="grid" data-value="8">8</span>
+                    <span class="grid" data-value="9">9</span>
+                    <span class="grid" data-value="4">4</span>
+                    <span class="grid" data-value="5">5</span>
+                    <span class="grid" data-value="6">6</span>
+                    <span class="grid" data-value="1">1</span>
+                    <span class="grid" data-value="2">2</span>
+                    <span class="grid" data-value="3">3</span>
+                    <span class="grid" data-value="."><img src="~/pos/icons/dot.png" /></span>
+                    <span class="grid" data-value="0">0</span>
+                    <span class="grid" data-value="-1"><img src="~/pos/icons/backspace.png" /></span>
+                </div>
+            </div>
+            <div class="gridview quick-number number-plus">
+                <div class="wrap-grid">
+                    <span class="grid bg-green" data-value="10">+10</span>
+                    <span class="grid bg-sky" data-value="50">+50</span>
+                    <span class="grid bg-yellow" data-value="100">+100</span>
+                    <span class="grid bg-orange" data-value="500">+500</span>
+                    <span class="grid bg-red" data-value="1000">+1000</span>
+                </div>
+            </div>
+            <div class="gridview quick-number number-multiply">
+                <div class="wrap-grid">
+                    <span class="grid bg-green" data-value="2">x2</span>
+                    <span class="grid bg-sky" data-value="5">x5</span>
+                    <span class="grid bg-yellow" data-value="10">x10</span>
+                    <span class="grid bg-orange" data-value="50">x50</span>
+                    <span class="grid bg-red" data-value="100">x100</span>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="right-block">
+        <fieldset class="shadow px1">
+            <legend class="title">@Localizer["Payment detail"]</legend>
+            <div style="width: 400px">
+                <div class="title">@Localizer["Payment Means"]</div>
+                <select asp-items="Model.Setting.PaymentMeans" id="payment-mean-id-can-ring" class="csr-pointer"></select>
+            </div>
+            <div class="stack-inline">
+                <div class="widget-stackcrumb">
+                    <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Total"]</i></div>
+                </div>
+                <input id="pay-total-can-ring" readonly>
+                <div class="base-currency symbol bg-grey"></div>
+            </div>
+            <div class="stack-inline">
+                <div class="widget-stackcrumb">
+                    <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Total"]</i></div>
+                </div>
+                <input id="pay-total-alt-can-ring" readonly>
+                <div class="alt-currency symbol bg-grey"></div>
+            </div>
+            @* Additional Currencies *@
+            <div class="addition-currencies-can-ring"></div>
+            <div class="stack-inline">
+                <div class="widget-stackcrumb" id="other-currencies">
+                    <div class="step">@Localizer["Other"] <i class="far fa-money-bill-alt"></i></div>
+                </div>
+                <input autocomplete="off" class="number" id="pay-cash-can-ring" value="0">
+                <div class="base-currency symbol bg-grey"></div>
+            </div>
+
+            <div class="stack-inline">
+                <select class="symbol bg-grey" id="other-currency-list-can-ring"></select>
+                <input autocomplete="off" class="number" id="pay-other-currency-can-ring" value="0">
+                <div class="other-curr-symbol symbol bg-grey"></div>
+            </div>
+
+            <div class="stack-inline">
+                <div class="widget-stackcrumb">
+                    <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Received"]</i></div>
+                </div>
+                <input readonly id="pay-received-can-ring" value="0">
+                <div class="base-currency symbol bg-grey"></div>
+            </div>
+
+            <div class="stack-inline">
+                <div class="widget-stackcrumb">
+                    <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Changed"]</i></div>
+                </div>
+                <input readonly id="pay-change-can-ring" class="error-change" value="0">
+                <div class="base-currency symbol bg-grey"></div>
+            </div>
+            <div class="stack-inline">
+                <div class="widget-stackcrumb">
+                    <div class="step"><i class="far fa-money-bill-alt"> @Localizer["Changed"]</i></div>
+                </div>
+                <input readonly id="pay-change-alt-can-ring" class="error-change" value="0">
+                <div class="alt-currency symbol bg-grey"></div>
+            </div>
+            @* Additional Currencies Change*@
+            <div class="addition-currencies-change-can-ring"></div>
+            <div id="display-change-rate-can-ring"></div>
+            <div class="btn submit" id="pay-can-ring"><i class="fas fa-shopping-cart"></i> @Localizer["Pay"]</div>
+
+        </fieldset>
+    </div>
+</div>

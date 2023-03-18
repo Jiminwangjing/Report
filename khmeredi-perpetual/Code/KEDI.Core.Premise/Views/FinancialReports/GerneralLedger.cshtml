@@ -1,0 +1,117 @@
+﻿<style>
+    .input-group .input-group-text, .input-group select, .input-group input {
+        min-width: 21px !important;
+        height: 24px;
+    }
+
+    .mll_2 {
+        margin: 0px -8px -8px -9px;
+    }
+
+    .mt4 {
+        margin-top: 1.6rem !important;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+
+    .overflow {
+        overflow: auto;
+    }
+
+    .row {
+        flex-wrap: nowrap !important;
+    }
+
+    .form-group .form-control {
+        height: 24px !important;
+    }
+
+    .mine-btn {
+        min-height: 18px;
+        min-width: 50px;
+        line-height: 5px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+        .mine-btn:focus {
+            outline: none;
+        }
+</style>
+
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <label class="font-size">@Localizer["Date"]</label>
+                        <select class="form-control" id="postingdate" disabled>
+                            <option value="0">@Localizer["Posting Date"]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <label class="font-size">@Localizer["From Date"]</label>
+                        <div class="input-group">
+                            <input type="date" class="form-control font-size" id="from-date">
+                            <div class="input-group-append">
+                                <span class="input-group-text from-sh-posting-period cursor">
+                                    <i class="fa fa-plus-circle mll_2"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <label class="font-size">@Localizer["To Date"]</label>
+                        <div class="input-group">
+                            <input type="date" class="form-control font-size" id="to-date">
+                            <div class="input-group-append">
+                                <span class="input-group-text to-sh-posting-period cursor">
+                                    <i class="fa fa-plus-circle mll_2"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="mt4">
+                            <button type="button" class="btn btn-kernel font-size" id="btn-ok">@Localizer["Ok"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row m-0 bg-white" id="content">
+    <div id="tree-view" class="col-md-12 m-0 col-sm-12 widget-scrollbar overflow " style="height: 65vh">
+        <div class="wrap-table">
+            <table id="GeneralLedger"></table>
+            <div class="options" id="option">
+                <div class="option">
+                    <div id="autoExpand"></div>
+                </div>
+            </div>
+
+            <div class="row" id="loading-view" hidden style="overflow: hidden; width: 90%;">
+                <div class="col-md-5"></div>
+                <div class="col-md-3">
+                    <img src="~/Images/ajaxloader/loading.gif" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<partial name="../Components/FinancialReport/_PostingPeriod" />
+<script src="~/Admin/FinancialReports/Gerneral-Ledger-report.js"></script>

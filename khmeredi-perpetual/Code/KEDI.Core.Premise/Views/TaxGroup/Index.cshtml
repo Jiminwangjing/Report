@@ -1,0 +1,85 @@
+﻿<link href="~/Admin/Tax/css/index.css" rel="stylesheet" />
+<div class="card card-body">
+    <div id="list-taxgroups-content">
+        @*<div class="group-search-boxes float-right mb-2">
+                <div id="text-search" class="wrap-search-box">
+                    <div class="wrap-input show">
+                        <i id="i-search" class="i-search fas fa-search"></i>
+                        <input class="ignore" id="txtSearchdl" autocomplete="off" type="text" placeholder="Search ...">
+                        <i id="i-close" class="i-close far fa-times-circle"></i>
+                    </div>
+                    <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+                </div>
+            </div>*@
+        <div id="error-summary"></div>
+        <table id="list-taxgroups" class="table-responsive-sm table-responsive-md table-responsive-xl table-responsive-lg">
+            <thead>
+                <tr>
+                    <th class="text-center"><i class="fas fa-plus-square hover text-dark" id="add-new-taxgroup"></i></th>
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["Active"]</th>
+                    <th>@Localizer["Name."]</th>
+                    <th>@Localizer["Category"]</th>
+                    <th>@Localizer["Effective from"]</th>
+                    <th>@Localizer["Rate %"]</th>
+                    <th>@Localizer["Tax Account"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-kernel" id="save">@Localizer["Save"]</button>
+            <button type="button" class="btn btn-kernel" id="add" hidden>@Localizer["Add"]</button>
+            <button type="button" class="btn btn-kernel" id="cancel">@Localizer["Cancel"]</button>
+        </div>
+    </div>
+</div>
+
+@*/// GLACC Dialog ///*@
+<div id="list-glacc-content" style="display:none; height: 400px;">
+    <div class="group-search-boxes float-right mb-2">
+        <div id="text-search" class="wrap-search-box">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore font-size" id="txtSearglacc" autocomplete="off" type="text" placeholder="Search ...">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <table id="list-glaccs" class="table-responsive-sm table-responsive-md table-responsive-xl table-responsive-lg">
+        <thead>
+            <tr>
+                <th>@Localizer["#"]</th>
+                <th>@Localizer["Code"]</th>
+                <th>@Localizer["Name"]</th>
+                <th id="action">@Localizer["Action"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div id="list-td-content" style="display:none; height: 400px;">
+    @*<div class="group-search-boxes float-right mb-2">
+            <div id="text-search" class="wrap-search-box">
+                <div class="wrap-input show">
+                    <i id="i-search" class="i-search fas fa-search"></i>
+                    <input class="ignore font-size" id="txtSear" autocomplete="off" type="text" placeholder="Search ...">
+                    <i id="i-close" class="i-close far fa-times-circle"></i>
+                </div>
+                <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+            </div>
+        </div>*@
+    <div id="error-summarytd"></div>
+    <table id="list-tds" class="table-responsive-sm table-responsive-md table-responsive-xl table-responsive-lg">
+        <thead>
+            <tr>
+                <th class="text-center"><i class="fas fa-plus-square hover text-dark" id="add-new-td"></i></th>
+                <th>@Localizer["Effective From"]</th>
+                <th>@Localizer["Rate"]</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script src="~/Admin/Tax/js/index.js"></script>

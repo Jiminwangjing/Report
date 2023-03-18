@@ -1,0 +1,117 @@
+$palette-white: #FFF;
+$palette-grey: #CCC;
+$palette-green:  #0AAC50;
+$palette-orange: #FA9C25;
+$palette-purple: mix($palette-grey, #F84545, 10%);
+
+.ck-notification {
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    position: relative;
+    text-align: center;
+}
+
+.ck-notification.animate .n-icon {
+    animation: swing-shake 1.5s infinite;
+}
+
+.ck-notification.info .n-icon path {
+    stroke: $palette-green;
+    fill: $palette-green;
+}
+
+.ck-notification.warning .n-icon path {
+    stroke: $palette-orange;
+    fill: $palette-orange;
+}
+
+.ck-notification.danger .n-icon path {
+    stroke: $palette-purple;
+    fill: $palette-purple;
+}
+
+.ck-notification.expire .n-icon path {
+    stroke: $palette-grey;
+    fill: $palette-grey;
+}
+
+//Custom colors
+.ck-notification.white .n-icon path {
+    stroke: $palette-white;
+    fill: $palette-white;
+}
+
+.ck-notification.orange .n-icon path {
+    stroke: #8c8c8c;
+    fill: #8c8c8c;
+}
+
+
+.ck-notification .n-value {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    top: 1px;
+    left: auto;
+    right: 0;
+    z-index: 1;
+    border-radius: 50%;
+    background: #EEE;
+    text-align: center;
+    cursor: pointer;
+    font-size: .6em;
+}
+
+.ck-notification .n-icon {
+  height: 30px;
+  width: 30px;
+  transform-origin: 50% 50%;
+  cursor: pointer;
+  border-radius: 50px;
+  transition-property: box-shadow;
+  transition-duration: .25s;
+  &.read {
+    animation: none;
+    path {
+      stroke: darken($palette-grey, 25%);
+      fill: darken($palette-grey, 25%);
+    }
+  }
+  path {
+    stroke: $palette-grey;
+    fill: $palette-grey;
+    transition-property: stroke, fill;
+    transition-duration: 0.25s;
+  }
+}
+
+@keyframes swing-shake {
+  0%,
+  25%,
+  83%,
+  100% {
+    transform: rotatez(0deg);
+  }
+  32.5%,
+  62.5% {
+    transform: rotatez(-5deg);
+  }
+  47.5%,
+  75.5% {
+    transform: rotatez(5deg);
+  }
+}
+
+/****************************DOM***********************
+<div class="ck-notification animate">
+    <svg class="n-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 156 220.65">
+        <path d="M78.47,8a6,6,0,1,1-6,6,6,6,0,0,1,6-6m0-8a14,14,0,1,0,14,14,14,14,0,0,0-14-14Z" />
+        <path class="cls-2" d="M93.38,209.39a4.74,4.74,0,0,0-4.4-6.72c-3.38.05,4.85-.1-11-.1-4.63,0-8.52.27-12,.13a4,4,0,0,0-3.87,5.51,17,17,0,0,0,31.25,1.18Z" />
+        <path d="M137.19,113.75c-.7-18.82,5.84-52.32-8-75.67-8.77-14.8-16.76-20.22-21.43-22.2a3.65,3.65,0,0,0-5,2.46c-1.67,6.52-7.14,19.6-24.29,19.6S55.84,24.77,54.19,18.27a3.66,3.66,0,0,0-4.83-2.56c-4.9,1.84-13.52,7.13-22.55,22.37-13.84,23.35-7.3,56.84-8,75.67S3.3,147.56,3.3,147.56s37.35,16,74.7,16,74.7-16,74.7-16S137.89,132.57,137.19,113.75Z" />
+        <path d="M1.5,160.65A191.84,191.84,0,0,0,78,176.55a191.84,191.84,0,0,0,76.5-15.91v10.44a6.45,6.45,0,0,1-4.08,6,197.54,197.54,0,0,1-72,13.76A197.57,197.57,0,0,1,5.61,177.11,6.51,6.51,0,0,1,1.5,171Z" />
+    </svg>
+    <span class="n-value">99</span>
+</div>
+*/

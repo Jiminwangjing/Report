@@ -1,0 +1,87 @@
+﻿<style>
+    .hover {
+        cursor: pointer;
+    }
+</style>
+
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-4">
+            <a class="btn btn-kernel btn-xs" asp-action="TypeCardCreate" asp-controller="CardMember">@Localizer["Create"]</a>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-3">
+           @* <div class="form-group">
+                <label>@Localizer["Option filter"]</label>
+                <select class="form-control" id="filter">
+                    <option value="true">@Localizer["Deleted"]</option>
+                    <option value="false" selected>@Localizer["Not Deleted"]</option>
+                </select>
+            </div>*@
+
+        </div>
+    </div>
+    <br />
+    <table id="typeCard">
+        <tr>
+            <th>@Localizer["#"]</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Code"]</th>
+            <th>@Localizer["Discount Type"]</th>
+            <th>@Localizer["Discount Value"]</th>
+            <th>@Localizer["Action"]</th>
+        </tr>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function(){
+        const _customer = ViewTable({
+            keyField: "ID",
+            selector: "#typeCard",
+            indexed: true,
+            paging: {
+                pageSize: 10,
+                enabled: true
+            },
+            visibleFields: ["Code", "Name", "TypeDiscountName", "Discount"],
+            actions: [
+                {
+                    template: `<i class="fas fa-pen hover"></i>`,
+                    on: {
+                        "click": function (e) {
+                            location.href = "/CardMember/TypeCardCreate?id="+e.key;
+                        }
+                    },
+                },
+                {
+                    template: `<i class="fas fa-trash text-danger hover"></i>`,
+                    on: {
+                        "click": function (e) {
+                            $.post("/CardMember/DeleteCardType", {id: e.data.ID}, function(res){
+                                if(res.Error){
+                                    new DialogBox({
+                                        content: res.Message,
+                                        icon: "danger"
+                                    });
+                                }else{
+                                    _customer.removeRow(e.key);
+                                }
+                            })
+                        }
+                    },
+                }
+            ]
+        });
+        //$("#filter").change(function(){
+        //    getData(this.value)
+        //})
+        getData(false)
+        function getData(isDeleted){
+            $.get("/CardMember/GetCardTypes", {isDeleted}, function(res){
+                _customer.clearRows();
+                _customer.bindRows(res)
+            })
+        }
+    })
+</script>

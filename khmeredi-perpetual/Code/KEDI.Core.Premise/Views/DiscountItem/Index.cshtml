@@ -1,0 +1,438 @@
+﻿
+<style>
+
+    .label {
+        font-size: 15px;
+        font-family: Arial;
+    }
+
+    .selectbox {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+    }
+
+    .content_sreach {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+        position: relative;
+        margin-top: 21px;
+    }
+
+        .content_sreach:focus {
+            box-shadow: 0 0 5px rgba(27, 93, 185,0.4);
+            padding: 3px 3px 3px 3px;
+            margin: 5px 1px 3px 0px;
+            border: 1px solid rgb(120, 172, 245);
+            border-radius: 3px;
+            font-family: Arial;
+            font-size: 13px;
+            margin-top: 21px;
+        }
+
+    .icon_search {
+        position: absolute;
+        top: 30px;
+        right: 20px;
+    }
+
+    .wrap-table {
+        margin-top: 10px;
+    }
+
+    .filter,input {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width: 100%;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+        background-color: aqua;
+    }
+
+    .wrap-table table th, .wrap-table table td {
+        min-width: 0px;
+    }
+
+        .wrap-table table th input[type=checkbox] {
+            vertical-align: text-bottom;
+        }
+
+        .wrap-table table td input[type=checkbox] {
+            vertical-align: middle;
+        }
+    input {
+        height: 30px;
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        padding: 3px 3px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        width:50px;
+        font-family: Arial;
+        font-size: 13px;
+        border-radius: 3px;
+        border: 1px solid #c6c1c1;
+        background-color: #ffffff;
+    }
+    .is-null {
+        border: 1px solid #ff0000;
+    }
+</style>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-2">
+            <label class="label">@Localizer["Promotion"]</label>
+            <select class="selectbox" id="promotion-id">
+                <option value="0" selected disabled>--- Select ---</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label">@Localizer["FromPriceList"]</label>
+            <select class="selectbox" id="price-list">
+                <option value="0" selected disabled>--- Select ---</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label">@Localizer["ItemGroup(1)"]</label>
+            <select class="selectbox" id="item-group1">
+                <option value="0" selected disabled>--- Select ---</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label">@Localizer["ItemGroup(2)"]</label>
+            <select class="selectbox" id="item-group2">
+                <option value="0" selected disabled>--- Select ---</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label">@Localizer["ItemGroup(3)"]</label>
+            <select class="selectbox" id="item-group3">
+                <option value="0" selected disabled>--- Select ---</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="label"></label>
+            <button class="btn btn-kernel filter" id="filter-item">Fitler</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <input id="discount-input" class="selectbox" type="text"
+                placeholder="@Localizer["Inputdiscount"]" />
+        </div>
+        <div class="col-md-2">
+            <select class="selectbox" id="type-dis">
+                <option value="Percent">Percent</option>
+                <option value="Cash">Cash</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="wrap-table list">
+        <table>
+            <thead>
+                <tr>
+
+                    <th>@Localizer["Code"]</th>
+                    <th>@Localizer["KhmerName"]</th>
+                    <th>@Localizer["EnglishName"]</th>
+                    <th>@Localizer["UoM"]</th>
+                    <th>@Localizer["Price"]</th>
+                    <th>@Localizer["Currency"]</th>
+                    @*<th>@Localizer["Type"]<i
+                    style="margin-left:15px;font-size:12px;" class="fa
+                    fa-percent"></i></th>*@
+                    <th>@Localizer["Discount"]</th>
+                </tr>
+            </thead>
+            <tbody id="item-list"></tbody>
+        </table>
+    </div>
+
+    <div class="row" id="pager" style="margin-top:10px;">
+        <div class="col-sm-10">
+            <ul id="pagination" class="pagination-sm"></ul>
+        </div>
+        <div class="col-sm-2 text-right">
+            <span><button id="add-item" class="btn btn-kernel btn-xs">@Localizer["Add"]</button></span>
+            <a asp-action="Index" class="btn btn-xs btn-kernel">@Localizer["Cancel"]</a>
+        </div>
+    </div>
+</div>
+@*<link href="~/pos/css/core.css" rel="stylesheet" />*@
+<script src="~/js/warehouse.js"></script>
+<script src="~/js/table.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/jquery.twbsPagination.min.js"></script>
+<script>
+    var db = new Warehouse();
+    var $pagination = $('#pagination'),
+        totalRecords = 0,
+        records = [],
+        displayRecords = [],
+        recPerPage = 10,
+        page = 1,
+        totalPages = 0;
+
+    tr = $('<tr/>');
+    tr.append("<td colspan='11' class='text-center'>@Localizer["NoData"]</td>");
+    $('#item-list').append(tr);
+
+    $.ajax({
+        url: '/DiscountItem/GetPromotion',
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (promotions) {
+            $.each(promotions, function (i, promotion) {
+                $("#promotion-id").append(" <option value=" + promotion.ID + ">" + promotion.Name + "</option>");
+            })
+        }
+
+    });
+    $.ajax({
+        url: '/DiscountItem/GetPriceList',
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (price_lists) {
+            $.each(price_lists, function (i, price_list) {
+                $("#price-list").append(" <option value=" + price_list.ID + ">" + price_list.Name + "</option>");
+            })
+        }
+
+    });
+    $.ajax({
+        url: '/DiscountItem/GetGroup1',
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (group1s) {
+            $.each(group1s, function (i, group1) {
+                $("#item-group1").append(" <option value=" + group1.ItemG1ID + ">" + group1.Name + "</option>");
+            })
+        }
+
+    });
+    $('#item-group1').change(function (e) {
+        let group1 = $(this).val();
+        $.ajax({
+            url: '/DiscountItem/GetGroup2',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {
+                group1: parseInt(group1)
+            },
+            success: function (group2s) {
+                $('#item-group2 option:not(:first)').remove();
+                $('#item-group3 option:not(:first)').remove();
+                $.each(group2s, function (i, group2) {
+                    $("#item-group2").append(" <option value=" + group2.ItemG2ID + ">" + group2.Name + "</option>");
+                })
+            }
+
+        });
+    });
+    $('#item-group2').change(function (e) {
+        let group2 = $(this).val();
+        let group1 = $('#item-group1').val();
+        $.ajax({
+            url: '/DiscountItem/GetGroup3',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {
+                group1: parseInt(group1),
+                group2: parseInt(group2)
+            },
+            success: function (group3s) {
+                $('#item-group3 option:not(:first)').remove();
+                $.each(group3s, function (i, group3) {
+                    $("#item-group3").append(" <option value=" + group3.ID + ">" + group3.Name + "</option>");
+                })
+            }
+
+        });
+    });
+    $('#type-dis').change(function () {
+        let value = parseFloat($("#discount-input").val());
+        let type_dis = $('#type-dis').val();
+        db.from('tb_discount_item').where(function (item) {
+    @* item.Discount = value;  *@
+            item.TypeDis = type_dis;
+        }) 
+    })
+    $('#add-item').click(function () {
+        let promot_id = $('#promotion-id').val();
+        if (promot_id != null) {
+            let DiscountItem = {
+                PromotionID: promot_id,
+                DiscountItemDetails: db.from("tb_discount_item")
+            };
+            $.ajax({
+                url: '/DiscountItem/SetPromotionDisountItem',
+                type: 'POST',
+                dataType: 'JSON',
+                data: { data: JSON.stringify(DiscountItem),type:$("#type-dis").val()},
+                success: function (response) {
+                    window.location.href = "/DiscountItem/Index"
+                }
+            });
+        }
+        else {
+            $('#promotion-id').addClass("is-null");
+        }
+
+    })
+    $('#promotion-id').change(function () {
+        $('#promotion-id').removeClass('is-null');
+    });
+    $('#discount-input').keyup(function () {
+        let value = parseFloat($("#discount-input").val());
+        let type_dis = $('#type-dis').val();
+        if (type_dis == 'Percent') {
+            if (value > 100) {
+                $(".discount-value").val('');
+
+                return;
+            }
+        }
+        if (!isNaN(value)) {
+            $(".discount-value").val(value);
+            db.from('tb_discount_item').where(function (item) {
+                item.Discount = value;
+                item.TypeDis = type_dis;
+            })
+        }
+        else {
+            $(".discount-value").val('');
+        }
+    })
+
+    $("#filter-item").click(function (e) {
+
+        let pricelist_id = parseInt($('#price-list').val());
+        let group1 = parseFloat($('#item-group1').val());
+        let group2 = parseFloat($('#item-group2').val());
+        let group3 = parseFloat($('#item-group3').val());
+        let promoid=parseFloat($('#promotion-id').val());
+        $.ajax({
+            url: '/DiscountItem/GetItems',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {
+                PriceListID: pricelist_id,
+                Group1: group1,
+                Group2: group2,
+                Group3: group3,
+                PromoID:promoid
+            },
+            success: function (items) {
+                if (items.length > 0) {
+                    items.checked = false;
+                    items_arr = items;
+                    db.insert("tb_discount_item", items, 'ID');
+                    apply_pagination(items_arr);
+                }
+                else {
+                     tr = $('<tr/>');
+                    tr.append("<td colspan='11' class='text-center'>@Localizer["NoData"]</td>");
+                    $('#item-list').html(tr);
+                }
+
+
+            }
+
+        });
+    })
+    //appy pagination
+    function apply_pagination(items) {
+
+        records = items;
+        totalRecords = records.length;
+        totalPages = Math.ceil(totalRecords / recPerPage);
+        displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
+        endRec = (displayRecordsIndex) + recPerPage;
+        displayRecords = records.slice(displayRecordsIndex, endRec);
+
+        displayData();
+        $pagination.twbsPagination('destroy');
+        $pagination.twbsPagination({
+            totalPages: totalPages,
+            visiblePages: 5,
+            onPageClick: function (e, page) {
+                displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
+                endRec = (displayRecordsIndex) + recPerPage;
+                displayRecords = records.slice(displayRecordsIndex, endRec);
+                displayData();
+            }
+        });
+    }
+    function displayData() {
+        var tr;
+        $('#item-list').children().remove();
+
+        for (var i = 0; i < displayRecords.length; i++) {
+            tr = $('<tr/>');
+            displayRecords.checked = false;
+            if (displayRecords.length == 0) {
+                tr = $('<tr/>');
+                tr.append("<td colspan='11' class='text-center'>@Localizer["NoData"]</td>");
+                $('#item-list').append(tr);
+            }
+            else {
+                let j = i + 1;
+                let item_dis = db.get('tb_discount_item').get(displayRecords[i].ID);
+                tr = $('<tr/>');
+                tr.append("<td hidden>" + displayRecords[i].ID + "</td>");
+                tr.append("<td>" + displayRecords[i].Code + "</td>");
+                tr.append("<td>" + displayRecords[i].KhmerName + "</td>");
+                tr.append("<td>" + displayRecords[i].EnglishName + "</td>");
+                tr.append("<td>" + displayRecords[i].Uom + "</td>");
+                tr.append("<td>" + displayRecords[i].Price + "</td>");
+                $(tr.append("<td>" + displayRecords[i].Currency + "</td>"));
+                if (item_dis == undefined) {
+                    $(tr.append($("<td></td>").html($("<input data-id=" + displayRecords[i].ID + " value=" + displayRecords[i].Discount + " class='discount-value' " + displayRecords[i].Discount + " />").on("keyup", discountItem))));
+                }
+                else {
+                    $(tr.append($("<td></td>").html($("<input data-id=" + displayRecords[i].ID + " value=" + item_dis.Discount + " class='discount-value' " + item_dis.Discount + " />").on("keyup", discountItem))));
+                }
+                $('#item-list').append(tr);
+            }
+        }
+
+    }
+    function discountItem() {
+        let id = parseFloat($(this).data('id'));
+        let value = parseFloat($(this).val());
+        let item_update = db.get('tb_discount_item').get(id);
+        item_update.Discount = value;
+        db.insert('tb_discount_item', item_update, 'ID');
+
+    }
+
+
+</script>

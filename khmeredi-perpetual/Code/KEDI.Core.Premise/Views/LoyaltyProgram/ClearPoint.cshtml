@@ -1,0 +1,223 @@
+<style>
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+<div class="card card-body">
+    <div class="row">
+        <ul class="widget-tab" style="height: 70vh; width: 79vw">
+            <li class="tab-sheet active" id="item">
+                <div class="tab-title">@Localizer["Clear Point"]</div>
+                <div class="tab-content widget-scrollbar">
+                    <table class="item-detail">
+                        <thead>
+                            <tr>
+                                <th class="text-center"><i id="add-new-item" class="fas fa-plus-square cursor"></i></th>
+                                <th class="text-center">@Localizer["Code"]</th>
+                                <th class="text-center">@Localizer["Name"]</th>
+                                <th class="text-center">@Localizer["Total Point"]</th>
+                                <th class="text-center">@Localizer["Clear Point"]</th>
+                                <th class="text-center">@Localizer["After Clear"]</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <input hidden id="item-id" />
+    <div id="error-summary"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-kernel btn-xs" id="Update">@Localizer["Clear Point"]</button>
+            <button class="btn btn-kernel btn-xs" onclick="location.reload()">
+                @Localizer["Cancel"]
+            </button>
+        </div>
+    </div>
+</div>
+@* //================================model box of bussiness partner================================================ *@
+
+<div class="customer_contener" style="display: none; ">
+    <div class="group-search-boxes" style="display:flex;justify-content:flex-end">
+        <div id="text-search" class="wrap-search-box ">
+            <div class="wrap-input show">
+                <i id="i-search" class="i-search fas fa-search"></i>
+                <input class="ignore" id="search-dataemp" autocomplete="off" type="text"
+                    placeholder="@Localizer["Search ..."]">
+                <i id="i-close" class="i-close far fa-times-circle"></i>
+            </div>
+            <div id="btn-search" class="btn-search" style="display: none;"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+    <div style="overflow: auto">
+        <table id="list-cus" class="mt-2">
+            <tr>
+                <th>@Localizer["Code."]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Total Point"]</th>
+                <th>@Localizer["Tel"]</th>
+                <th>@Localizer["Choose"]</th>
+
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        let $table = ViewTable({
+            keyField: "LineID",
+            selector: ".item-detail",
+            indexed: true,
+            paging: {
+                enabled: true,
+                pageSize: 10
+            },
+            visibleFields: [
+                "Code",
+                "Name",
+                "TotalPoint",
+                "ClearPoints",
+                "OutstandPoint"
+            ],
+            columns: [
+                {
+                    name: "Code",
+                    template: "<input  >",
+                    on: {
+                        "click": function (e) {
+                            $.ajax({
+                                url: "/LoyaltyProgram/GetBussinessCustomer",
+                                type: "Get",
+                                dataType: "Json",
+                                data: { data: "True" },
+                                success: function (response) {
+                                    bindCustomer(response, e);
+                                }
+                            });
+                            updateDetails($table.yield(), "LineID", e.key, "ID", e.data.ID);
+                        }
+                    }
+                },
+                {
+                    name: "Name",
+                    template: "<input disabled>",
+                    on: {
+                        "click": function (e) {
+                            $.ajax({
+                                url: "/LoyaltyProgram/GetBussinessCustomer",
+                                type: "Get",
+                                dataType: "Json",
+                                data: { data: "True" },
+                                success: function (response) {
+                                    bindCustomer(response, e);
+                                }
+                            });
+                            updateDetails($table.yield(), "LineID", e.key, "ID", e.data.ID);
+                        }
+                    }
+                },
+                {
+                    name: "ClearPoints",
+                    template: "<input >",
+                    on: {
+                        "keyup": function (e) {
+                            let afterclear = e.data.TotalPoint - parseInt(this.value);
+                            $table.updateColumn(e.key, "OutstandPoint", afterclear);
+                            updateDetails($table.yield(), "LineID", e.key, "OutstandPoint", afterclear);
+                        }
+                    }
+                },
+
+            ],
+        });
+        $("#add-new-item").click(function () {
+            $.get("/LoyaltyProgram/GetTablePoints", function (res) {
+                $table.addRow(res);
+            })
+        });
+        @* GetingCustomerPoints(function (glex) {
+                $table.bindRows(glex);
+                });
+                function GetingCustomerPoints(succuss) {
+                $.get("/LoyaltyProgram/GetCustomerPoints", succuss);
+                } *@
+            function bindCustomer(res, _e) {
+                console.log("Code", res);
+                let dialog = new DialogBox({
+                    content: {
+                        selector: ".customer_contener"
+                    },
+                    caption: "Customers"
+                });
+                dialog.invoke(function () {
+                    const __listBussinesPartner = ViewTable({
+                        keyField: "ID",
+                        selector: "#list-cus",
+                        paging: {
+                            pageSize: 25,
+                            enabled: true
+                        },
+                        visibleFields: ["Code", "Name", "OutstandPoint", "Phone", "Choose"],
+                        actions: [
+                            {
+                                template: `<i class="fas fa-arrow-circle-down" id="close"  ></i>`,
+                                on: {
+                                    "click": function (e) {
+                                        updateDetails($table.yield(), "LineID", e.key, "ID", e.data.ID);
+                                        $table.updateColumn(_e.key, "ID", e.data.ID);
+                                        $table.updateColumn(_e.key, "Code", e.data.Code);
+                                        $table.updateColumn(_e.key, "Name", e.data.Name);
+                                        $table.updateColumn(_e.key, "TotalPoint", e.data.OutstandPoint);
+                                        dialog.shutdown();
+                                    }
+                                },
+                            }
+                        ]
+                    });
+                    __listBussinesPartner.bindRows(res)
+                });
+                dialog.confirm(function () {
+                    dialog.shutdown();
+                })
+            }
+
+
+        function updateDetails(data, keyField, keyValue, prop, propValue) {
+            if (isValidArray(data)) {
+                data.forEach(i => {
+                    if (i[keyField] === keyValue)
+                        i[prop] = propValue
+                })
+            }
+        }
+        function isValidArray(values) {
+            return Array.isArray(values) && values.length > 0;
+        }
+
+        $("#Update").click(function () {
+            console.log("data", $table.yield());
+
+            $.ajax({
+                url: "/LoyaltyProgram/ClearPoint",
+                type: "POST",
+                dataType: "JSON",
+                @* data: { _data: JSON.stringify($table.yield()) }, *@
+                data: { _data: $table.yield() },
+
+                success: function (respones) {
+                    const errorMessage = new ViewMessage({
+                        summary: {
+                            selector: "#error-summary"
+                        },
+                    }, respones);
+                    if (respones.IsApproved) {
+                        errorMessage.refresh(1000)
+                    }
+                }
+            });
+    });
+    });
+</script>

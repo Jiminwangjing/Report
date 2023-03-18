@@ -1,0 +1,53 @@
+﻿@model CKBS.Models.ServicesClass.DashboardSettingView.DashBoardSettingViewModel
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-12">
+            <form id="form-dashboard-privileges" asp-controller="SettingDashboard" asp-action="UpdateDashboardPrivilege" method="post">
+                @Html.AntiForgeryToken()
+                <div class="wrap-table list">
+                    <table id="MyDashTable">
+                        <thead>
+                            <tr>
+                                <th class="text-dark" style="width:100px;">@Localizer["Name"]</th>
+                                <th class="text-dark text-center" style="width:50px;">
+                                    @Localizer["Show"]
+                                    <input name="checks" type="checkbox" class="m0" id="select-all" />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="list-user-privileges">
+                            @if (Model.DashboardSettings.Count() > 0)
+                            {
+                                for (var i = 0; i < Model.DashboardSettings.Count(); i++)
+                                {
+                                    <tr>
+
+                                        <td hidden><input asp-for="DashboardSettings[i].ID" /></td>
+                                        <td hidden><input asp-for="DashboardSettings[i].CompanyID" /></td>
+                                        <td>@Model.DashboardSettings[i].Code <input asp-for="DashboardSettings[i].Code" hidden /></td>
+                                        <td><input type="checkbox" asp-for="DashboardSettings[i].Show" /></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row" style="margin:10px 0;">
+                    <button type="submit" style=" margin-right:5px" class="btn btn-sm btn-kernel" title="Save">@Localizer["Save"]</button>
+                    <a class="btn btn-sm btn-kernel" asp-action="DashboardPrivileges" title="Back">@Localizer["Back"]</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $('#select-all').change(function () {
+        let checkbox = $("#list-user-privileges tr td input");
+        if ($(this).is(":checked")) {
+            checkbox.prop("checked", true);
+
+        } else {
+            checkbox.prop("checked", false);
+        }
+    });
+</script>
